@@ -11,6 +11,7 @@ namespace SOM.Controllers
         // GET: Manage
         public ActionResult Index()
         {
+
             return View();
         }
         public ActionResult SuperAdministrator()

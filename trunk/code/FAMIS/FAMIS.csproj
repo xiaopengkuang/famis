@@ -101,12 +101,23 @@
     <Content Include="Content\LeftMenu.css" />
     <Content Include="Content\mainPage.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="CSS\lrtk\lrtk.css" />
     <Content Include="Global.asax" />
     <Content Include="images\content\1px.png" />
     <Content Include="images\content\dotted.png" />
     <Content Include="images\layout_top\baibao_logo.png" />
     <Content Include="images\leftMenu\pro_down.png" />
     <Content Include="images\leftMenu\pro_left.png" />
+    <Content Include="images\lrtk\owl-login%402x.png" />
+    <Content Include="images\lrtk\owl-login-arm%402x.png" />
+    <Content Include="images\lrtk\owl-login-arm.png" />
+    <Content Include="images\lrtk\owl-login.png" />
+    <Content Include="images\lrtk\ph-owl-arm%402x.png" />
+    <Content Include="images\lrtk\ph-owl-arm.png" />
+    <Content Include="images\lrtk\ph-owl-arml%402x.png" />
+    <Content Include="images\lrtk\ph-owl-arml.png" />
+    <Content Include="images\lrtk\signup-arm%402x.png" />
+    <Content Include="images\lrtk\signup-arm.png" />
     <Content Include="images\tabs\tabs_bpic.png" />
     <Content Include="images\tabs\tabs_bpic_C.png" />
     <Content Include="images\tabs\tabs_bpic_qs.png" />
@@ -201,6 +212,7 @@
     <Content Include="LIB_easyUI\DataTables-1.10.6\Contributing.md" />
     <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\Sorting icons.psd" />
     <Content Include="LIB_easyUI\DataTables-1.10.6\Readme.md" />
+    <Content Include="fonts\lrtk\fontawesome-webfont.woff" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -393,6 +405,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AcountController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
@@ -478,6 +491,7 @@
     <Content Include="Views\Verify\Inventory.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
+    <Content Include="Views\About\ForgetPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
