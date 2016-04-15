@@ -7595,7 +7595,7 @@ header .navbar-default .navbar-nav.navbar-right > li > a {
 #browsers .browser#left.on,
 #browsers .browser#right.on {
   opacity: 1;
-  -ms-filter: none;
+  /*-ms-filter: none;*/
   filter: none;
   -webkit-transform: translateX(0) scale(1);
   -moz-transform: translateX(0) scale(1);
@@ -7769,7 +7769,7 @@ header .navbar-default .navbar-nav.navbar-right > li > a {
 }
 #browsers .browser#main.on .b-bottom-row .b-bullet {
   opacity: 1;
-  -ms-filter: none;
+  /*-ms-filter: none;*/
   filter: none;
   -webkit-transform: scale(1.3);
   -moz-transform: scale(1.3);
@@ -8380,11 +8380,11 @@ hr.dots:before {
   -o-transition: 0.25s ease-out 0.25s;
   -ms-transition: 0.25s ease-out 0.25s;
   transition: 0.25s ease-out 0.25s;
-  -webkit-transform: perspective(400px) rotateY(0deg);
-  -moz-transform: perspective(400px) rotateY(0deg);
-  -o-transform: perspective(400px) rotateY(0deg);
-  -ms-transform: perspective(400px) rotateY(0deg);
-  transform: perspective(400px) rotateY(0deg);
+  /*-webkit-transform: perspective(400px) rotateY(0deg);*/
+  /*-moz-transform: perspective(400px) rotateY(0deg);*/
+  /*-o-transform: perspective(400px) rotateY(0deg);*/
+  /*-ms-transform: perspective(400px) rotateY(0deg);*/
+  /*transform: perspective(400px) rotateY(0deg);*/
   position: absolute;
   top: 3px;
   left: 0;
@@ -8406,11 +8406,11 @@ hr.dots:before {
   -o-transition: 0.25s ease-out;
   -ms-transition: 0.25s ease-out;
   transition: 0.25s ease-out;
-  -webkit-transform: perspective(400px) rotateY(-90deg);
-  -moz-transform: perspective(400px) rotateY(-90deg);
-  -o-transform: perspective(400px) rotateY(-90deg);
-  -ms-transform: perspective(400px) rotateY(-90deg);
-  transform: perspective(400px) rotateY(-90deg);
+  /*-webkit-transform: perspective(400px) rotateY(-90deg);*/
+  /*-moz-transform: perspective(400px) rotateY(-90deg);*/
+  /*-o-transform: perspective(400px) rotateY(-90deg);*/
+  /*-ms-transform: perspective(400px) rotateY(-90deg);*/
+  /*transform: perspective(400px) rotateY(-90deg);*/
   background-color: #e28450;
 }
 .icon.a .book-front-open:before {
@@ -8690,11 +8690,11 @@ hr.dots:before {
   border-radius: 0 5px 5px 0;
 }
 .content-block:hover .a .book-front {
-  -webkit-transform: perspective(400px) rotateY(-90deg) translateY(0px);
-  -moz-transform: perspective(400px) rotateY(-90deg) translateY(0px);
-  -o-transform: perspective(400px) rotateY(-90deg) translateY(0px);
-  -ms-transform: perspective(400px) rotateY(-90deg) translateY(0px);
-  transform: perspective(400px) rotateY(-90deg) translateY(0px);
+  /*-webkit-transform: perspective(400px) rotateY(-90deg) translateY(0px);*/
+  /*-moz-transform: perspective(400px) rotateY(-90deg) translateY(0px);*/
+  /*-o-transform: perspective(400px) rotateY(-90deg) translateY(0px);*/
+  /*-ms-transform: perspective(400px) rotateY(-90deg) translateY(0px);*/
+  /*transform: perspective(400px) rotateY(-90deg) translateY(0px);*/
   -webkit-transition: 0.25s ease-out;
   -moz-transition: 0.25s ease-out;
   -o-transition: 0.25s ease-out;
@@ -8702,11 +8702,11 @@ hr.dots:before {
   transition: 0.25s ease-out;
 }
 .content-block:hover .a .book-front-open {
-  -webkit-transform: perspective(400px) rotateY(-180deg) translateY(0px);
-  -moz-transform: perspective(400px) rotateY(-180deg) translateY(0px);
-  -o-transform: perspective(400px) rotateY(-180deg) translateY(0px);
-  -ms-transform: perspective(400px) rotateY(-180deg) translateY(0px);
-  transform: perspective(400px) rotateY(-180deg) translateY(0px);
+  /*-webkit-transform: perspective(400px) rotateY(-180deg) translateY(0px);*/
+  /*-moz-transform: perspective(400px) rotateY(-180deg) translateY(0px);*/
+  /*-o-transform: perspective(400px) rotateY(-180deg) translateY(0px);*/
+  /*-ms-transform: perspective(400px) rotateY(-180deg) translateY(0px);*/
+  /*transform: perspective(400px) rotateY(-180deg) translateY(0px);*/
   -webkit-transition: 0.25s ease-out 0.25s;
   -moz-transition: 0.25s ease-out 0.25s;
   -o-transition: 0.25s ease-out 0.25s;
@@ -9567,7 +9567,7 @@ hr.dots:before {
 }
 #spinner-show.swap .next {
   opacity: 1;
-  -ms-filter: none;
+  /*-ms-filter: none;*/
   filter: none;
   -webkit-transform: translateY(0px);
   -moz-transform: translateY(0px);
@@ -10034,7 +10034,7 @@ hr.dots:before {
 }
 #beta.clone .closer:hover {
   opacity: 1;
-  -ms-filter: none;
+  /*-ms-filter: none;*/
   filter: none;
 }
 #beta .beta {
@@ -10073,7 +10073,7 @@ hr.dots:before {
 #beta .beta-applied.on {
   display: block;
   opacity: 1;
-  -ms-filter: none;
+  /*-ms-filter: none;*/
   filter: none;
 }
 #beta ::-webkit-input-placeholder {
@@ -10266,7 +10266,7 @@ footer .pf {
 }
 footer .pf:hover {
   opacity: 1;
-  -ms-filter: none;
+  /*-ms-filter: none;*/
   filter: none;
 }
 footer .pf .spacer {
@@ -10802,7 +10802,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05) rotate(-2deg);
     -moz-transform: scale(1.05) rotate(-2deg);
@@ -10819,7 +10819,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -10841,7 +10841,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05) rotate(-2deg);
     -moz-transform: scale(1.05) rotate(-2deg);
@@ -10858,7 +10858,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -10880,7 +10880,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05) rotate(-2deg);
     -moz-transform: scale(1.05) rotate(-2deg);
@@ -10897,7 +10897,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -10919,7 +10919,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05) rotate(-2deg);
     -moz-transform: scale(1.05) rotate(-2deg);
@@ -10936,7 +10936,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12006,7 +12006,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05);
     -moz-transform: scale(1.05);
@@ -12023,7 +12023,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12045,7 +12045,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05);
     -moz-transform: scale(1.05);
@@ -12062,7 +12062,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12084,7 +12084,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05);
     -moz-transform: scale(1.05);
@@ -12101,7 +12101,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12123,7 +12123,7 @@ etc */ .popover h3 {
   }
   50% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.05);
     -moz-transform: scale(1.05);
@@ -12140,7 +12140,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12338,7 +12338,7 @@ etc */ .popover h3 {
   }
   70% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.5);
     -moz-transform: scale(1.5);
@@ -12348,7 +12348,7 @@ etc */ .popover h3 {
   }
   85% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(0.85);
     -moz-transform: scale(0.85);
@@ -12358,7 +12358,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12380,7 +12380,7 @@ etc */ .popover h3 {
   }
   70% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.5);
     -moz-transform: scale(1.5);
@@ -12390,7 +12390,7 @@ etc */ .popover h3 {
   }
   85% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(0.85);
     -moz-transform: scale(0.85);
@@ -12400,7 +12400,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12422,7 +12422,7 @@ etc */ .popover h3 {
   }
   70% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.5);
     -moz-transform: scale(1.5);
@@ -12432,7 +12432,7 @@ etc */ .popover h3 {
   }
   85% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(0.85);
     -moz-transform: scale(0.85);
@@ -12442,7 +12442,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);
@@ -12464,7 +12464,7 @@ etc */ .popover h3 {
   }
   70% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1.5);
     -moz-transform: scale(1.5);
@@ -12474,7 +12474,7 @@ etc */ .popover h3 {
   }
   85% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(0.85);
     -moz-transform: scale(0.85);
@@ -12484,7 +12484,7 @@ etc */ .popover h3 {
   }
   100% {
     opacity: 1;
-    -ms-filter: none;
+    /*-ms-filter: none;*/
     filter: none;
     -webkit-transform: scale(1);
     -moz-transform: scale(1);

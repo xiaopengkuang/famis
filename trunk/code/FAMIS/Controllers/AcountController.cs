@@ -40,6 +40,17 @@ namespace FAMIS.Controllers
             return View();
          
         }
+
+        /**
+         *根据账号类型跳转到对应的页面
+         * */
+        public void JumpByAccount(FormCollection fc)
+        {
+            string email = fc["email"];
+            string password = fc["password"];
+
+        }
+
         public ActionResult Register()
         {
             return View();

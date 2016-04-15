@@ -232,6 +232,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
+    <Content Include="Scripts\Login\Login.js" />
     <Content Include="Scripts\menu\CreateLeftMenu.js" />
     <Content Include="Scripts\menu\index.js" />
     <Content Include="Scripts\menu\LeftMenu.js" />
@@ -492,6 +493,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
     <Content Include="Views\About\ForgetPassword.cshtml" />
+    <Content Include="Views\Acount\JumpByAccount.cshtml" />
+    <Content Include="Views\User\ErrorLogin.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
