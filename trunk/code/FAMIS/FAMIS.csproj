@@ -1,0 +1,525 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{71D0C475-96F3-4ED4-B0F4-A6E3A71E2A83}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>FAMIS</RootNamespace>
+    <AssemblyName>FAMIS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Configuration">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.1.2\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.1.2\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.1.2\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.1.2\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.1.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.1.2\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\LeftMenu.css" />
+    <Content Include="Content\mainPage.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Global.asax" />
+    <Content Include="images\content\1px.png" />
+    <Content Include="images\content\dotted.png" />
+    <Content Include="images\layout_top\baibao_logo.png" />
+    <Content Include="images\leftMenu\pro_down.png" />
+    <Content Include="images\leftMenu\pro_left.png" />
+    <Content Include="images\tabs\tabs_bpic.png" />
+    <Content Include="images\tabs\tabs_bpic_C.png" />
+    <Content Include="images\tabs\tabs_bpic_qs.png" />
+    <Content Include="images\tabs\tabs_bpic_s.png" />
+    <Content Include="images\tabs\tabs_bpic_s_h.png" />
+    <Content Include="images\tabs\tabs_bpic_s_n.png" />
+    <Content Include="images\tabs\tabs_bpic_ys.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\images\sample.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\s.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_flat_55_fbec88_40x100.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_glass_75_d0e5f5_1x400.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_glass_85_dfeffc_1x400.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_gloss-wave_55_5c9ccc_500x100.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_inset-hard_100_f5f8f9_1x100.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-bg_inset-hard_100_fcfdfd_1x100.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-icons_217bc0_256x240.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-icons_469bdd_256x240.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-icons_6da8d5_256x240.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-icons_d8e7f3_256x240.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\images\ui-icons_f9bd01_256x240.png" />
+    <Content Include="LIB_easyUI\CleverTabs\context\themes\base\jquery-ui.css" />
+    <Content Include="LIB_easyUI\CleverTabs\index.htm" />
+    <Content Include="LIB_easyUI\CleverTabs\scripts\jquery-ui.js" />
+    <Content Include="LIB_easyUI\CleverTabs\scripts\jquery.cleverTabs.js" />
+    <Content Include="LIB_easyUI\CleverTabs\scripts\jquery.contextMenu.js" />
+    <Content Include="LIB_easyUI\CleverTabs\scripts\jquery.js" />
+    <Content Include="LIB_easyUI\CleverTabs\tmp.htm" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\license.txt" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\css\jquery.dataTables.css" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\css\jquery.dataTables.min.css" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\css\jquery.dataTablesNew.css" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\css\jquery.dataTables_themeroller.css" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\favicon.ico" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\sort_asc.png" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\sort_asc_disabled.png" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\sort_both.png" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\sort_desc.png" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\sort_desc_disabled.png" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\js\jquery.dataTables.js" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\js\jquery.dataTables.min.js" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\js\jquery.js" />
+    <Content Include="LIB_easyUI\lhgdialog\lhgdialog.min.js" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue.css" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\iblue_s.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\iblue_s2.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_b.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_l.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_lb.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_lt.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_lt2.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_r.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_rb.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_rt.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_rt2.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_t.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\iblue\ie6\ui_t2.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\32X32\fail.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\32X32\hits.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\32X32\i.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\32X32\succ.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\alert.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\confirm.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\discuz_bg.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\error.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\face-sad.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\face-smile.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\gb_tip_layer.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\gb_tip_layer_ie6.png" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\lhgcore.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\loading.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\prompt.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\success.gif" />
+    <Content Include="LIB_easyUI\lhgdialog\skins\icons\tips.gif" />
+    <Content Include="LIB_easyUI\My97DatePicker\calendar.js" />
+    <Content Include="LIB_easyUI\My97DatePicker\lang\en.js" />
+    <Content Include="LIB_easyUI\My97DatePicker\lang\zh-cn.js" />
+    <Content Include="LIB_easyUI\My97DatePicker\lang\zh-tw.js" />
+    <Content Include="LIB_easyUI\My97DatePicker\skin\datePicker.gif" />
+    <Content Include="LIB_easyUI\My97DatePicker\skin\default\datepicker.css" />
+    <Content Include="LIB_easyUI\My97DatePicker\skin\default\img.gif" />
+    <Content Include="LIB_easyUI\My97DatePicker\skin\WdatePicker.css" />
+    <Content Include="LIB_easyUI\My97DatePicker\skin\whyGreen\bg.jpg" />
+    <Content Include="LIB_easyUI\My97DatePicker\skin\whyGreen\datepicker.css" />
+    <Content Include="LIB_easyUI\My97DatePicker\skin\whyGreen\img.gif" />
+    <Content Include="LIB_easyUI\My97DatePicker\WdatePicker.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\Contributing.md" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\media\images\Sorting icons.psd" />
+    <Content Include="LIB_easyUI\DataTables-1.10.6\Readme.md" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
+    <Content Include="Scripts\jquery-1.8.3.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-2.1.0.debug.js" />
+    <Content Include="Scripts\knockout-2.1.0.js" />
+    <Content Include="Scripts\menu\CreateLeftMenu.js" />
+    <Content Include="Scripts\menu\index.js" />
+    <Content Include="Scripts\menu\LeftMenu.js" />
+    <Content Include="Scripts\menu\lib_easyUI\jquery-1.4.2.min.js" />
+    <Content Include="Scripts\menu\lib_easyUI\jquery.beautyOfCode.js" />
+    <Content Include="Scripts\menu\lib_easyUI\jquery.easyui.min-1.1.2.js" />
+    <Content Include="Scripts\menu\lib_easyUI\jquery.easyui.min-1.2.0.js" />
+    <Content Include="Scripts\menu\lib_easyUI\locale\easyui-lang-zh_CN.js" />
+    <Content Include="Scripts\menu\lib_easyUI\main-frame.js" />
+    <Content Include="Scripts\menu\lib_easyUI\outlook.js" />
+    <Content Include="Scripts\menu\lib_easyUI\outlook2.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\index.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shAutoloader.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushAppleScript.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushAS3.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushBash.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushColdFusion.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushCpp.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushCSharp.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushCss.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushDelphi.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushDiff.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushErlang.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushGroovy.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushJava.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushJavaFX.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushJScript.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushPerl.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushPhp.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushPlain.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushPowerShell.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushPython.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushRuby.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushSass.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushScala.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushSql.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushVb.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shBrushXml.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shCore.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\scripts\shLegacy.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\src\shAutoloader.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\src\shCore.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\src\shLegacy.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCore.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreDefault.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreDjango.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreEclipse.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreEmacs.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreFadeToGrey.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreMDUltra.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreMidnight.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shCoreRDark.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeDefault.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeDjango.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeEclipse.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeEmacs.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeFadeToGrey.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeMDUltra.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeMidnight.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\styles\shThemeRDark.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\brushes\sass.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\brushes_tests.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\001_basic.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\002_brushes.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\003_script_tag.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\004_url_parsing.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\005_no_gutter.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\006_pad_line_numbers.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\007_collapse.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\007_collapse_interaction.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\008_first_line.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\009_class_name.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\010_highlight.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\011_smart_tabs.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\012_server_side.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\013_html_script.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\cases\014_legacy.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\commonjs_tests.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\js\jquery-1.4.2.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\js\qunit.css" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\js\qunit.js" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\syntaxhighlighter_tests.html" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\theme_tests.html" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\accordion.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\combobox.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\combotree.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\datagrid.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\dialog.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\easyui.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\button_a_bg.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\button_plain_hover.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\button_span_bg.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\combo_arrow.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\datagrid_header_bg.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\datagrid_sort_asc.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\datagrid_sort_desc.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\datagrid_title_bg.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\layout_button_down.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\layout_button_left.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\layout_button_right.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\layout_button_up.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\menu.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\menu_downarrow.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\menu_rightarrow.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\menu_sep.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\menu_split_downarrow.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\messager_error.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\messager_info.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\messager_question.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\messager_warning.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\pagination_first.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\pagination_last.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\pagination_load.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\pagination_loading.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\pagination_next.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\pagination_prev.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\panel_loading.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\panel_title.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\panel_tools.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\panel_tool_collapse.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\panel_tool_expand.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tabs_active.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tabs_close.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tabs_enabled.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tabs_leftarrow.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tabs_rightarrow.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tree_arrows.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tree_file.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tree_folder.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tree_folder_open.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\tree_loading.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\validatebox_pointer.gif" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\validatebox_warning.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\layout.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\linkbutton.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\menu.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\menubutton.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\messager.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\pagination.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\panel.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\splitbutton.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\tabs.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\tree.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\validatebox.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\window.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icon.css" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\back.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\cancel.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\cut.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\edit_add.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\edit_remove.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\filesave.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\help.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\no.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\ok.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\pencil.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\print.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\redo.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\reload.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\search.png" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icons\undo.png" />
+    <Content Include="Scripts\menu\MBY2_LeftMenu.js" />
+    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\tabs\tabs.js" />
+    <None Include="Scripts\_references.js" />
+    <Content Include="Views\Shared\Navigation.ascx" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AcountController.cs" />
+    <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\DictController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\SysSettingController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VerifyController.cs" />
+    <Compile Include="DAL\AccountContext.cs" />
+    <Compile Include="DAL\AccountInitializer.cs" />
+    <Compile Include="DAL\AssetContext.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Asset.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config" />
+    <Content Include="Views\Acount\Login.cshtml" />
+    <Content Include="Views\Acount\Index.cshtml" />
+    <Content Include="Views\Assets\Create.cshtml" />
+    <Content Include="Views\Assets\Delete.cshtml" />
+    <Content Include="Views\Assets\Details.cshtml" />
+    <Content Include="Views\Assets\Edit.cshtml" />
+    <Content Include="Views\Assets\Index.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="Scripts\menu\lib_easyUI\outlook.js.bak" />
+    <Content Include="Scripts\menu\lib_easyUI\outlook2.js.bak" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83.zip" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\config.rb" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCore.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreDefault.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreDjango.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreEclipse.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreEmacs.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreFadeToGrey.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreMDUltra.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreMidnight.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shCoreRDark.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeDefault.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeDjango.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeEclipse.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeEmacs.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeFadeToGrey.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeMDUltra.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeMidnight.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\shThemeRDark.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\compass\_theme_template.scss" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\LGPL-LICENSE" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\MIT-LICENSE" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\.rvmrc" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\webrick.rb" />
+    <Content Include="Scripts\menu\lib_easyUI\syntaxhighlighter_3.0.83\tests\webrick.sh" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\easyui.css.bak" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\default\images\Thumbs.db" />
+    <Content Include="Scripts\menu\lib_easyUI\themes\icon.css.bak" />
+    <Content Include="Views\Asset\Accounting.cshtml" />
+    <Content Include="Views\Asset\allocation.cshtml" />
+    <Content Include="Views\Asset\collar.cshtml" />
+    <Content Include="Views\Asset\reduction.cshtml" />
+    <Content Include="Views\Dict\Asset_type.cshtml" />
+    <Content Include="Views\Dict\dataDict.cshtml" />
+    <Content Include="Views\Dict\staff.cshtml" />
+    <Content Include="Views\Dict\supplier.cshtml" />
+    <Content Include="Views\Home\Welcome.cshtml" />
+    <Content Include="Views\Manage\index.cshtml" />
+    <Content Include="Views\Manage\SuperAdministrator.cshtml" />
+    <Content Include="Views\Manage\SuperAdministrator_Test.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_Layout_dt.cshtml" />
+    <Content Include="Views\SysSetting\RoleManage.cshtml" />
+    <Content Include="Views\SysSetting\SysConfig.cshtml" />
+    <Content Include="Views\SysSetting\UserManage.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\Login.cshtml" />
+    <Content Include="Views\User\Register.cshtml" />
+    <Content Include="Views\Verify\Depreciation.cshtml" />
+    <Content Include="Views\Verify\Inventory.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Home\index.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\App_LocalResources\" />
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>20313</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:20313/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
