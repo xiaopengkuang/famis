@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - 固 定 资 产 管 理 系 统</title>
+    <link rel="stylesheet" type="text/css" href="~/Content/MBY2.css" />     
+    <script type="text/javascript" src="~/Scripts/jquery.js"></script>
+
+    
+</head>
+<body id="bg">
+
+    <!-- top LOGO  d登录-->
+     <div id="top_layout" class="top_layout">
+         <div id="top_layout_left" class="top_layout_left">
+                   <img src="/images/layout_top/baibao_logo.png" height="45" width="45" style="vertical-align:middle;">
+                  <span style="font-size:28px; font-family:'Microsoft Himalaya';height:45px ;color:white;align-content:center; font-weight:bolder;vertical-align:middle;margin:auto auto auto auto; ">固定资产管理系统</span>
+         </div>
+         <div id="top_layout_right" class="top_layout_right">
+             <div></div>
+         </div>
+
+     </div>
+
+    <div id="MenuList_layout" class="MenuList_layout">
+
+    
+	<div class="leftsidebar_box">
+		<div class="line"></div>
+		<dl class="system_log">
+			<dt onClick="changeImage()">资产管理<img src="/images/leftMenu/select_xl01.png"></dt>
+			<dd class="first_dd"><a href="#">资产台账</a></dd>
+			<dd><a href="#">资产领用</a></dd>
+			<dd><a href="#">资产调拨</a></dd>
+			<dd><a href="#">资产减少</a></dd>
+		</dl>
+	
+		<dl class="custom">
+			<dt onClick="changeImage()">折旧盘点<img src="/images/leftMenu/select_xl01.png"></dt>
+			<dd class="first_dd"><a href="#">折旧管理</a></dd>
+			<dd><a href="#">盘点管理</a></dd>
+		</dl>
+	
+		<dl class="channel">
+			<dt>参数设置<img src="/images/leftMenu/select_xl01.png"></dt>
+			<dd class="first_dd"><a href="#">数据字典</a></dd>
+			<dd><a href="#">资产类别</a></dd>
+			<dd><a href="#">供应商</a></dd>
+			<dd><a href="#">部门员工</a></dd>
+			
+		</dl>
+	
+		<dl class="app">
+			<dt onClick="changeImage()">系统设置<img src="/images/leftMenu/select_xl01.png"></dt>
+			<dd class="first_dd"><a href="#">用户管理</a></dd>
+			<dd><a href="#">角色管理</a></dd>
+			<dd><a href="#">系统设置</a></dd>
+		</dl>
+	
+		
+	
+    <script type="text/javascript" src="~/Scripts/menu/MBY2_LeftMenu.js"></script>
+	</div>
+    
+    </div>
+
+     <div id="mainBody_layout" class="mainBody_layout">
+             @RenderBody()
+        </div>
+        <div id="footer_layout" class="footer_layout">
+            © 2003-2016 
+            ADA 版权所有
+        </div>
+
+
+</body>
+</html>
