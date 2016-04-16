@@ -1,13 +1,14 @@
 ﻿
 #container {
-    width: 100%;
-    background-image:url(/images/content/dotted.png);
-    background-repeat:repeat;
+    width: 100%!important;
+    /*background-image:url(/images/content/dotted.png);*/
+    /*background-repeat:repeat;*/
+    background-color:#dcdadb;
 
     
 }
 #header,#footer,#mainBody{
-    width: 100%;
+    width: 99.8%!important;
    
     
 }
@@ -44,8 +45,8 @@
 #rightside {
     float: left;
     width: 89%;
-    
-    margin-left:1px;
+    min-height:600px;
+    margin-left:2px;
     
 }
 #footer {

@@ -1,9 +1,9 @@
 ﻿var tabs;
-$(function () {
+
 
     $(function () {
         var h = $(document).height() - 100;
-        
+        //h = $("#leftside").height;
         $("#tabs").height(h); //关于这里我要说明一下，如果不设置高度的话，它默认并不是发100%占满屏幕的，所以我这里使用了计算的方式，初始化界面高度
         tabs = $('#tabs').cleverTabs();
         $(window).bind('resize', function () {
@@ -17,7 +17,7 @@ $(function () {
         });
         $('input[type="button"]').button();
     });
-});
+
 function addTab(url, name) {
     //$("#tabs").height($("#leftside").height());
     tabs.add({

@@ -18,7 +18,7 @@ namespace SOM.Controllers
             return View();
         }
 
-        public ActionResult Index2()
+        public ActionResult Test()
         {
             return View();
         }
