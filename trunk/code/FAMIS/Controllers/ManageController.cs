@@ -14,6 +14,13 @@ namespace SOM.Controllers
 
             return View();
         }
+
+        public ActionResult MainPage()
+        {
+
+            return View();
+        }
+        
         public ActionResult SuperAdministrator()
         {
             return View();
