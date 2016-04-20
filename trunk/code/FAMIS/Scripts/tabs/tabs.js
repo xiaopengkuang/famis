@@ -1,8 +1,8 @@
-﻿
+﻿var tabs;
 $(document).ready(function () {
 
 
-    var tabs;
+    
 
 
     $(function () {

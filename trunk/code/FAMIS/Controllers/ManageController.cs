@@ -20,6 +20,12 @@ namespace SOM.Controllers
 
             return View();
         }
+
+        public ActionResult MainPage_IE()
+        {
+
+            return View();
+        }
         
         public ActionResult SuperAdministrator()
         {

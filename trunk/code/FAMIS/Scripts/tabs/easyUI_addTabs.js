@@ -15,7 +15,11 @@ function goNewPage(url, title) {
     addTab(title, url);
 }
 
-$(function () {
+$(document).ready(function () {
+
+    goNewPage("/Home/Welcome", "Welcom");
+});
+$( function () {
     goNewPage("/Home/Welcome", "Welcom");
 });
 
