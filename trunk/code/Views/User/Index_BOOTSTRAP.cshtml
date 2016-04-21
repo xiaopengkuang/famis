@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+
+    <title>后台管理</title>
+
+    <link rel="stylesheet" href="../../LIB/bootstrap_tabs/css/bootstrap.min.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../LIB/bootstrap_tabs/css/bootstrap-addtabs.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../../CSS/MainPage/MenuLeft.css" media="screen" type="text/css" />
+    <script src="../../LIB/bootstrap_tabs/js/jquery.min.js"></script>
+    <script src="../../Scripts/tabs/bootstrap_addtabs_ALL.js"></script>
+    <script src="../../Scripts/menu/index_MenuLeft.js"></script>
+    <script src="../../LIB/bootstrap_tabs/js/bootstrap.min.js"></script>
+    <!--<script src="../../LIB/bootstrap_tabs/js/bootstrap-addtabs2.js"></script>-->
+
+
+
+
+
+    <!--[if lte IE 9]>
+    <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript">
+        //$(function () {
+        //    $('#tabs').addtabs({ monitor: '.topbar' });
+        //    $('#accordion li ul li a').click(function () {
+        //        Addtabs.add({
+        //            id: $(this).attr('id'),
+        //            title: $(this).attr('title') ? $(this).attr('title') : $(this).html(),
+        //            content: Addtabs.options.content ? Addtabs.options.content : $(this).attr('content'),
+        //            url: $(this).attr('name'),
+        //            ajax: false
+        //        })
+        //    });
+        //})
+    </script>
+</head>
+<body>
+    <header class="topbar admin-header">
+        <div class="brand">
+            <strong>后台管理</strong>
+            <small></small>
+        </div>
+        <div class="topbar-collapse">
+        </div>
+
+    </header>
+
+
+    <div class="col-md-12" style="min-height: 500px">
+        <div class="col-md-2" id="Menu_LeftSide">
+            <!-- Contenedor -->
+            <ul id="accordion" class="accordion">
+                <li>
+                    <div class="link"><i class="fa fa-paint-brush"></i>资产管理<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                        <li><a id="Accounting" name="/Asset/Accounting" title="资产台账">资产台账</a></li>
+                        <li><a id="allocation" name="/Asset/allocation" title="资产调拨">资产调拨</a></li>
+                        <li><a id="reduction" name="/Asset/reduction" title="资产减少">资产减少</a></li>
+                        <li><a id="collar" name="/Asset/collar" title="资产领用">资产领用</a></li>
+
+                    </ul>
+                </li>
+
+                <li>
+                    <div class="link"><i class="fa fa-mobile"></i>折旧盘点<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+
+                        <li><a id="Depreciation" name="/Verify/Depreciation" title="折旧管理">折旧管理</a></li>
+                        <li><a id="Inventory" name="/Verify/Inventory" title="盘点管理">盘点管理</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="link"><i class="fa fa-code"></i>数据字典<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                       <li><a id="dataDict" name="/Dict/dataDict" title="数据字典">数据字典</a></li>
+                        <li><a id="Asset_type" name="/Dict/Asset_type" title="资产类型">资产类型</a></li>
+                        <li><a id="staff" name="/Dict/staff" title="员工管理">员工管理</a></li>
+                        <li><a id="supplier" name="/Dict/supplier" title="供应商">供应商</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <div class="link"><i class="fa fa-globe"></i>系统设置<i class="fa fa-chevron-down"></i></div>
+                    <ul class="submenu">
+                         <li><a id="RoleManage" name="/SysSetting/RoleManage" title="角色管理">角色管理</a></li>
+                        <li><a id="SysConfig" name="/SysSetting/SysConfig" title="系统配置">系统配置</a></li>
+                        <li><a id="UserManage" name="/SysSetting/UserManage" title="用户管理">用户管理</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10">
+            <div id="tabs">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" id="tab_home" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content" id="tab_content_Static">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+
+                       
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+    <div class="col-md-12">
+        <footer style="text-align: center">
+            版权所有
+        
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+﻿
+#container {
+    width: 100%!important;
+    /*background-image:url(/images/content/dotted.png);*/
+    /*background-repeat:repeat;*/
+    background-color:#dcdadb;
+
+    
+}
+#header,#footer,#mainBody{
+    width: 99.8%!important;
+   
+    
+}
+#header{
+   height:50px;
+   margin-top:0px;
+   background-color:#b7b7b7;
+}
+
+#top_layout_left{
+     left:0;
+     float:left;
+     min-width:49%;
+     
+}
+
+#top_layout_right{
+     
+     right:0; 
+      
+      text-align:right;
+     min-width:49%;
+}
+#mainBody {
+     clear: both;
+      
+}
+#leftside {
+    float: left;
+    min-height:600px;
+    width: 10%;    
+    
+}
+#rightside {
+    float: left;
+    width: 89%;
+    min-height:600px;
+    margin-left:2px;
+    
+}
+#footer {
+    height:30px;
+    clear: both;
+}
