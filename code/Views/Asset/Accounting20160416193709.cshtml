@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "资产台账";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="../../CSS/SubPage/SubPageLayout.css" />
+    <link rel="StyleSheet" href="../../CSS/dtree/dtree.css" type="text/css" />
+	<script type="text/javascript" src="../../Scripts/dtree/dtree.js"></script>
+    
+  
+
+</head>
+<body style="width:100%;">
+
+    
+
+    <div id="sub_left_side" class="lunquanBorder">
+        <div style="width:100%" >
+        <div>
+            <p><span style="font-size:18px">查询条件</span>  </p>
+            <hr style="height:2px;border:none;border-top:1px groove #d7d8d8;" />
+        </div>
+        
+        <div>
+            <p><a href="javascript: d.openAll();"><span style="font-size:18px">刷新</span></a> |<a href="javascript: d.openAll();"><span style="font-size:18px">展开</span></a> | <a href="javascript: d.closeAll();"><span style="font-size:18px">收起</span></a></p>
+            <hr style="height:2px;border:none;border-top:1px groove #d7d8d8;" />
+        </div>
+	    
+        </div>
+       <div class="dtree" style="overflow:hidden;min-height:500px ;height:100%!important;max-width:100%!important;">
+       
+	    <script type="text/javascript">
+		
+
+	        d = new dTree('d');
+	        d.add(0, -1, '全部', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(1, 0, '使用部门', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(2, 0, '资产类别', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(3, 0, '存放地址', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(4, 0, '资产状态', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(5, 0, '增加方式', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(6, 0, '减少方式', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(7, 0, '使用人员', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(8, 0, '供应商', 'all', '', '', '/images/dtree/bank.png');
+	        d.add(9, 1, '部门1', 'all', '', '', '/images/dtree/user.png');
+	        d.add(10, 2, '类别1', 'all', '', '', '/images/dtree/user.png');
+	        d.add(11, 3, '地点1', 'all', '', '', '/images/dtree/user.png');
+	        d.add(12, 4, '转台', 'all', '', '', '/images/dtree/user.png');
+	        d.add(13, 5, '加1', 'all', '', '', '/images/dtree/user.png');
+	        d.add(14, 6, '件1', 'all', '', '', '/images/dtree/user.png');
+	        d.add(15, 7, 'BYRD', 'all', '', '', '/images/dtree/user.png');
+	        d.add(16, 8, 'SOny', 'all', '', '', '/images/dtree/user.png');
+	        d.add(17, 2, '类别2', 'all', '', '', '/images/dtree/user.png');
+	        d.add(18, 17, '类别2_1', 'all', '', '', '/images/dtree/user.png');
+	        d.add(19, 17, '类别2_1', 'all', '', '', '/images/dtree/user.png');
+	        d.add(20, 17, '类别2_1', 'all', '', '', '/images/dtree/user.png');
+            document.write(d);
+
+        
+	    </script>
+        
+        </div>
+
+    </div>
+
+     
+
+    <div id="sub_right_side" class="lunquanBorder">
+        <div id="title_right"></div>
+        <div id="Condition"></div>
+        <div id="ViewChange"></div>
+    </div>
+    
+   
+</body>
+</html>
+

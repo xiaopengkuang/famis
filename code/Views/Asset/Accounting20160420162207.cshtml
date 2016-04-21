@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "资产台账";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    
+    <title></title>
+     <link type="text/css" rel="stylesheet" href="../../CSS/SubPage/SubPageLayout.css" />
+    <!--EasyUI-->
+     <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.4.5/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.4.5/themes/icon.css"/>
+	<link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.4.5/demo/demo.css"/>
+	<script type="text/javascript" src="../../LIB/jquery-easyui-1.4.5/jquery.min.js"></script>
+	<script type="text/javascript" src="../../LIB/jquery-easyui-1.4.5/jquery.easyui.min.js"></script>
+
+
+   
+    <link rel="StyleSheet" href="../../CSS/dtree/dtree.css" type="text/css" />
+	<script type="text/javascript" src="../../Scripts/dtree/dtree.js"></script>
+    
+  
+
+</head>
+<body style="width:100%;">
+
+    
+
+    <div id="sub_left_side"   style="width:15% ;height:100%;float:left;">
+  
+         <div title="查询条件" class="easyui-panel">
+            <p> <a href="javascript: d.openAll();" class="easyui-linkbutton" data-options="plain:true"><span style="font-size:18px">刷新</span></a> |<a href="javascript: d.openAll();" class="easyui-linkbutton" data-options="plain:true"><span style="font-size:18px">展开</span></a> | <a href="javascript: d.closeAll();"   class="easyui-linkbutton" data-options="plain:true"><span style="font-size:18px">收起</span></a></p>
+            
+        </div>   
+       <div class="dtree"  style="overflow:hidden;min-height:99%;height:100%;">
+       
+	    <script type="text/javascript">
+		    <!--
+
+        d = new dTree('d');
+        d.add(0, -1, '全部', 'all', '', '');
+        d.add(1, 0, '使用部门', 'all', '', '');
+        d.add(2, 0, '资产类别', 'all', '', '');
+        d.add(3, 0, '存放地址', 'all', '', '');
+        d.add(4, 0, '资产状态', 'all', '', '');
+        d.add(5, 0, '增加方式', 'all', '', '');
+        d.add(6, 0, '减少方式', 'all', '', '');
+        d.add(7, 0, '使用人员', 'all', '', '');
+        d.add(8, 0, '供应商', 'all', '', '');
+        d.add(9, 1, '部门1', 'all', '', '', '/images/dtree/user.png');
+        d.add(10, 2, '类别1', 'all', '', '', '/images/dtree/user.png');
+        d.add(11, 3, '地点1', 'all', '', '', '/images/dtree/user.png');
+        d.add(12, 4, '转台', 'all', '', '', '/images/dtree/user.png');
+        d.add(13, 5, '加1', 'all', '', '', '/images/dtree/user.png');
+        d.add(14, 6, '件1', 'all', '', '', '/images/dtree/user.png');
+        d.add(15, 7, 'BYRD', 'all', '', '', '/images/dtree/user.png');
+        d.add(16, 8, 'SOny', 'all', '', '', '/images/dtree/user.png');
+        d.add(17, 2, '类别2', 'all', '', '', '/images/dtree/user.png');
+        d.add(18, 17, '类别2_1', 'all', '', '', '/images/dtree/user.png');
+        d.add(19, 17, '类别2_1', 'all', '', '', '/images/dtree/user.png');
+        d.add(20, 17, '类别2_1', 'all', '', '', '/images/dtree/user.png');
+        document.write(d);
+
+    //-->
+	    </script>
+        
+        </div>
+
+    </div>
+
+     
+
+    <div id="sub_right_side"  style="width:83%!important ;height:100%;float:left; margin-left:5px">
+       
+        <!--<%--表格显示区--%>-->  
+   <table id="tt" title="资产基本信息" class="easyui-datagrid"     style="min-height:500px;width:100%;"     
+       idfield="itemid" pagination="true" data-options="iconCls:'icon-save',rownumbers:true,url:'SetAdmin.ashx/ProcessRequest',pageSize:5, pageList:[5,10,15,20],method:'get',toolbar:'#tb',striped:true" fitcolumns="true"> 
+       <!--<%--striped="true"--%>-->  
+       <!--<%-- 表格标题--%>-->  
+       <thead>  
+           <tr>  
+               <th data-options="field:'AdminID',checkbox:true"></th>  
+               <th data-options="field:'AdminName',width:50">资产编号</th>  
+               <th data-options="field:'AdminPassword',width:50,align:'right'">资产名称</th>  
+               <th data-options="field:'AdminRightName',width:50,align:'right'">资产类别</th>  
+               <th data-options="field:'ActiveDate',width:50">使用人</th>                 
+               <th data-options="field:'ActiveDate',width:50">使用部门</th>   
+               <th data-options="field:'ActiveDate',width:50">规格型号</th>                 
+               <th data-options="field:'ActiveDate',width:50">计量单位</th>                 
+               <th data-options="field:'ActiveDate',width:50">增加方式</th>                 
+               <th data-options="field:'ActiveDate',width:50">存放地点</th>                 
+               <th data-options="field:'ActiveDate',width:50">资产状态</th>                 
+               <th data-options="field:'ActiveDate',width:50">购置日期</th>                 
+               <th data-options="field:'ActiveDate',width:50">供应商</th>                 
+           </tr>  
+       </thead>  
+        <!--<%--表格内容--%>-->  
+   </table>  
+   <!--<%--功能区--%>-->  
+   <div id="tb" style="padding: 5px; height: auto">  
+       <!--<%-- 包括添加管理员，修改、删除管理员 --%>-->  
+       <div style="margin-bottom: 5px">  
+           <a href="javascript:void(0)" onclick="newUser()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true"></a>  
+           <a href="javascript:void(0)" onclick="editUser() " class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true"></a>  
+           <a href="javascript:void(0)" onclick="removeUser()" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true"></a>  
+       </div>  
+       <!--<%-- 查找管理员信息，根据时间、管理员名 --%>-->  
+       <div>  
+           时间从:  
+           <input id="StartTime" class ="easyui-datebox" style="width: 100px" />  
+           到:  
+           <input id="EndTime" class="easyui-datebox" style="width: 100px" />   
+          管理员名:   
+           <input id="AdminName"/>   
+           按权限：  
+             <select id="quanxian" class="easyui-combobox" name="state" datatextfield="AdminRightName" datavaluefield="AdminRightName" style="width: 150px;" panelheight="auto"  runat="server">  
+             </select>  
+           <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="reloadgrid()">Search</a>  
+       </div>  
+   </div>  
+
+    </div>
+    
+   
+</body>
+</html>
+

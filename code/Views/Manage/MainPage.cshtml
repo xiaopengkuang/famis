@@ -1,0 +1,94 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>布局固定宽度</title>
+    <link rel="stylesheet" type="text/css"  href="../../CSS/MainPage/mainPage.css" />
+
+     <!--accordion加载-->
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.4.5/themes/default/easyui.css"/>
+	<link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.4.5/themes/icon.css"/>
+	<link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.4.5/demo/demo.css"/>
+	<script type="text/javascript" src="../../LIB/jquery-easyui-1.4.5/jquery.min.js"></script>
+	<script type="text/javascript" src="../../LIB/jquery-easyui-1.4.5/jquery.easyui.min.js"></script>
+    <!--tabs加载-->
+   <script type="text/javascript" src="../../Scripts/tabs/easyUI_addTabs.js"></script>
+ 
+  
+    
+</head>
+<body>
+<div id="container">
+    <div id="header" class="lunquanBorder">
+        <div id="top_layout_left" >
+                   <img src="/images/layout_top/baibao_logo.png" height="40" width="40">
+                  <span style="font-size:28px; font-family:'Microsoft Himalaya';height:45px ;color:white;font-weight:bolder;">固定资产管理系统</span>
+         </div>
+         <div id="top_layout_right">
+             <label id="UserLogin">欢迎您：@ViewBag.UserName</label> <a href="/User/Login"><span style="color:white; margin-right:20px; height:45px;width:45px ;font-size:28px;">退出</span></a>
+         </div>
+    </div>
+    <div id="mainBody">
+         <div id="leftside"  class="sidebar fleft lunquanBorder">
+       <div class="easyui-accordion" style="height:100%!important;width:100%">
+		
+        
+           <div title="资产管理" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
+
+            <ul class="m-list">
+                <li> <a  onclick="goNewPage('/Asset/Accounting','资产台账');">资产台账</a></li>
+                <li><a onclick="goNewPage('/Asset/collar','资产领用');">资产领用</a></li>
+                <li> <a onclick="goNewPage('/Asset/allocation','资产调拨');">资产调拨</a></li>
+                <li><a onclick="goNewPage('/Asset/reduction','资产减少');">资产减少</a></li>
+            </ul>
+	        	
+		           
+			     
+			        
+                  
+              
+		</div>
+		<div title="折旧盘点" data-options="iconCls:'icon-help'" style="padding:10px;">
+		  <ul class="m-list">
+          <li><a onclick="goNewPage('/Verify/Depreciation','折旧管理');">折旧管理</a></li>
+          <li><a onclick="goNewPage('/Verify/Inventory','盘点管理');">盘点管理</a></li>
+            </ul>
+		</div>
+		<div title="参数设置" data-options="iconCls:'icon-search'" style="padding:10px;">
+			  <ul class="m-list">
+               <li><a onclick="goNewPage('/Dict/dataDict','数据字典');">数据字典</a></li>
+               <li><a onclick="goNewPage('/Dict/Asset_type','资产类别');">资产类别</a></li>
+               <li><a onclick="goNewPage('/Dict/supplier','供应商');">供应商</a></li>
+               <li><a onclick="goNewPage('/Dict/staff','部门员工');">部门员工</a></li>
+            </ul>
+		</div>
+        <div title="系统设置" data-options="iconCls:'icon-search'" style="padding:10px;">
+			  <ul class="m-list">
+                <li><a onclick="goNewPage('/SysSetting/RoleManage','用户管理');">用户管理</a></li>
+                <li><a onclick="goNewPage('/SysSetting/UserManage','角色管理');">角色管理</a></li>
+                <li><a onclick="goNewPage('/SysSetting/SysConfig','系统设置');">系统设置</a></li>
+            </ul>
+		</div>
+	</div>
+         
+        </div>
+        <div id="rightside" class="lunquanBorder">
+
+            <div id="tabs" class="easyui-tabs" style="height:100%;width:100%">
+			   
+			  
+		    </div>
+        </div>
+    </div>
+ 
+    <div id="footer">
+        <h2 style="font-size:14px; text-align:center"> © 2016-2017 ADA 版权所有</h2>
+    </div>
+     
+</div>
+</body>
+</html>
