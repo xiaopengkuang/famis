@@ -1,0 +1,82 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>布局固定宽度</title>
+<link rel="stylesheet" type="text/css"  href="../../Content/mainPage.css" />
+
+
+      <!--tabs加载-->
+    <link href="/LIB_easyUI/CleverTabs/context/themes/base/jquery-ui.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript"  src="/Scripts/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/LIB_easyUI/CleverTabs/scripts/jquery-ui.js"></script>
+    <script type="text/javascript"  src="/LIB_easyUI/CleverTabs/scripts/jquery.cleverTabs.js"></script>
+    <script type="text/javascript"  src="/LIB_easyUI/CleverTabs/scripts/jquery.contextMenu.js"></script>
+     <script type="text/javascript" src="../../Scripts/tabs/tabs.js"></script>
+ 
+    <link rel="stylesheet" type="text/css"  href="../../Content/LeftMenu.css" />
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <div id="top_layout_left" >
+                   <img src="/images/layout_top/baibao_logo.png" height="45" width="45" style="vertical-align:middle;">
+                  <span style="font-size:28px; font-family:'Microsoft Himalaya';height:45px ;color:white;align-content:center; font-weight:bolder;vertical-align:middle;margin:auto auto auto auto; ">固定资产管理系统</span>
+         </div>
+         <div id="top_layout_right">
+            <a href="/Login/Login"><span style="color:white; margin-right:20px; height:45px;width:45px ;font-size:28px;">退出</span></a>
+         </div>
+    </div>
+    <div id="mainBody">
+         <div id="leftside"  class="sidebar fleft">
+        <!-- 代码部分begin -->
+            <div id="firstpane" class="menu_list">
+	            <h3 class="menu_head current">资产管理</h3>
+	            <div style="display:block" class="menu_body">
+		           <a onclick="goNewPage('/Asset/Taizhang','资产台账');">资产台账</a>
+		           <a onclick="goNewPage('/Asset/Lingyong','资产领用');">资产领用</a>
+			        <a onclick="goNewPage('/Asset/Diaobo','资产调拨');">资产调拨</a>
+			        <a onclick="goNewPage('/Asset/Jianshao','资产减少');">资产减少</a>
+	            </div>
+	            <h3 class="menu_head">折旧盘点</h3>
+	            <div style="display:none" class="menu_body">
+		          <a onclick="goNewPage('/Asset/Lingyong','折旧管理');">折旧管理</a>
+			      <a onclick="goNewPage('/Asset/Lingyong','盘点管理');">盘点管理</a>
+	            </div>
+	            <h3 class="menu_head" >参数设置</h3>
+	            <div style="display:none" class="menu_body">
+		            <a onclick="goNewPage('/Dict/dataDict','数据字典');">数据字典</a>
+			        <a onclick="goNewPage('/Dict/Asset_type','资产类别');">资产类别</a>
+			        <a onclick="goNewPage('/Dict/supplier','供应商');">供应商</a>
+			        <a onclick="goNewPage('/Dict/staff','部门员工');">部门员工</a>
+	            </div>
+	            <h3 class="menu_head">系统设置</h3>
+	            <div style="display:none" class="menu_body">
+		           <a onclick="goNewPage('/Asset/Lingyong','用户管理');">用户管理</a>
+			        <a onclick="goNewPage('/Asset/Lingyong','角色管理');">角色管理</a>
+                    <a onclick="goNewPage('/Asset/Lingyong','系统设置');">系统设置</a>
+	            </div>
+	         <script type="text/javascript" src="../../Scripts/menu/LeftMenu.js"></script>
+            </div>
+             
+        </div>
+        <div id="rightside">
+            <div id="tabs" style="overflow:hidden; padding-top:0px;width:100%; height:100%; ">
+                <ul>
+                     
+                 </ul>
+              
+             </div>
+        </div>
+    </div>
+   
+    <div id="footer">
+        <h2 style="font-size:14px"> © 2016-2017 ADA 版权所有</h2>
+    </div>
+</div>
+</body>
+</html>

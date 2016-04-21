@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout=null;
+}
+
+<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
+
+<!DOCTYPE html>
+<html>
+<head runat="server">
+    <title>Index</title>
+    <link href="../../Content/jquery-easyui-1.3.1/themes/icon.css" rel="stylesheet" />
+    <link href="../../Content/jquery-easyui-1.3.1/themes/default/easyui.css" rel="stylesheet" />
+    <script src="../../Scripts/jquery-1.7.1.js"></script>
+    <script src="../../Scripts/jquery.easyui.min.js"></script>
+    <script src="../../Scripts/easyui-lang-zh_CN.js"></script>
+    <style type="text/css">
+        .menuLink {
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript">
+        
+        //获取菜单
+        $(function () {
+// $.getJSON("/Admin/LoadMenuData", { channelID: "6fabd404-9d79-42a2-a98d-a4b0eb607812" },  这个你自己要重写了。MVC 的Action返回一个json，就是菜单要的数据了。
+            $.getJSON("/Admin/LoadMenuData", { channelID: "6fabd404-9d79-42a2-a98d-a4b0eb607812" }, function (data) {
+                $.each(data, function (i, item) {
+                    var groupInfo = item;
+                    var strMenuItemHTML = "";
+                    $.each(item.MenuItems, function (j, menu) {//font-weight:bold
+                        strMenuItemHTML += '<div style="height:22px;padding-top:10px;font-size:10pt;"><a onclick="AddTab(this)" src="' + menu.Src + '" class="menuLink">' + menu.MenuName + '</a></div>';
+                    });
+                    $("#MenuGroup").accordion('add', {
+                        title: groupInfo.GroupName,
+                        content: strMenuItemHTML,
+                        selected: false
+                    });
+                });
+                //$("#MenuGroup").accordion('select', groupInfo.GroupName);
+
+            });
+        })
+        var AddTab = function (obj) {
+            var _obj = $(obj);
+            var title = _obj.text();
+            var src = _obj.attr("src");
+            CreateTabs();
+            var strHtml = '<iframe id="frmWorkArea" width="100%" height="100%" frameborder="0" scrolling="yes" src="' + src + '"></iframe>';
+            //判断Tab标签中是否有相同的数据标签
+            var isExist = $("#Tabs").tabs('exists', title);
+            if (!isExist) {
+                $('#Tabs').tabs('add', {
+                    title: title,
+                    fit: true,
+                    content: strHtml,
+                    closable: true
+                });
+            }
+            else {
+                $('#Tabs').tabs('select', title);
+            }
+        }
+
+        var CreateTabs = function () {
+            if ($("#Tabs").length > 0) {
+                $("#Tabs").show();
+                return;
+            }
+            $("#Main").html('<div id="Tabs""></div>');
+            $('#Tabs').tabs({
+                border: false,
+                fit: true,
+                onClose: ClearTabs
+            });
+        }
+        var ClearTabs = function () {
+            if ($('#Tabs').tabs("tabs").length == 0) {
+                $("#Tabs").hide();
+            }
+        }
+    </script>
+</head>
+<body class="easyui-layout">
+    <div style="height: 60px; background: #B3DFDA; padding: 10px; ">north region</div>
+    <div " title="菜单导航" style="width: 150px;">
+        <div id="MenuGroup" class="easyui-accordion" style="text-align: center;">
+        </div>
+    </div>
+    <div  id="Main" title="用户管理">
+    </div>
+
+</body>
+</html>

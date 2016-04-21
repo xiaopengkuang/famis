@@ -1,0 +1,12 @@
+[
+{"id":1,"parendId":0,"name":"Foods"},
+{"id":2,"parentId":1,"name":"Fruits"},
+{"id":3,"parentId":1,"name":"Vegetables"},
+{"id":4,"parentId":2,"name":"apple"},
+{"id":5,"parentId":2,"name":"orange"},
+{"id":6,"parentId":3,"name":"tomato"},
+{"id":7,"parentId":3,"name":"carrot"},
+{"id":8,"parentId":3,"name":"cabbage"},
+{"id":9,"parentId":3,"name":"potato"},
+{"id":10,"parentId":3,"name":"lettuce"}
+]

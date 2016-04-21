@@ -1,0 +1,122 @@
+﻿@model FAMIS.Models.Asset
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+    <div>
+        <h4>Asset</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Asset_No)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Asset_No)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Asset_Name)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Asset_Name)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Asset_Type)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Asset_Type)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Asset_User)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Asset_User)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_Variety)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_Variety)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_Unit)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_Unit)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_Add_Model)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_Add_Model)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_Arrange_Place)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_Arrange_Place)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_State)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_State)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_Purchase_Date)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_Purchase_Date)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_Supplier)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_Supplier)
+            </dd>
+    
+            <dt>
+                @Html.DisplayNameFor(model => model.Assert_GB_Code)
+            </dt>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Assert_GB_Code)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>
