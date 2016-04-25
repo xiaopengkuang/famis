@@ -47,6 +47,8 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -1751,6 +1753,7 @@
     <Content Include="Scripts\tabs\easyUI_addTabs.js" />
     <Content Include="Scripts\tabs\tabs.js" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\UI\js_Accounting.js" />
     <Content Include="Scripts\UI\LoadTreeMenu.js" />
     <Content Include="Views\Shared\Navigation.ascx" />
     <Content Include="Views\Asset\datagrid_data1.json" />
@@ -1783,6 +1786,26 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Asset.cs" />
+    <Compile Include="DAL\ElementModel.cs" />
+    <Compile Include="Models\tb_Asset.cs" />
+    <Compile Include="Models\tb_Asset_colla.cs" />
+    <Compile Include="Models\tb_Asset_colla_detail.cs" />
+    <Compile Include="Models\tb_Asset__allocation.cs" />
+    <Compile Include="Models\tb_Asset__Reduction.cs" />
+    <Compile Include="Models\tb_dataDict.cs" />
+    <Compile Include="Models\tb_dataDict_para.cs" />
+    <Compile Include="Models\tb_department.cs" />
+    <Compile Include="Models\tb_detail__allocation.cs" />
+    <Compile Include="Models\tb_Menu.cs" />
+    <Compile Include="Models\tb_reduction_detail.cs" />
+    <Compile Include="Models\tb_role.cs" />
+    <Compile Include="Models\tb_role__authorization.cs" />
+    <Compile Include="Models\tb_staff.cs" />
+    <Compile Include="Models\tb_supplier.cs" />
+    <Compile Include="Models\tb_user.cs" />
+    <Compile Include="Models\tb__Asset_type.cs" />
+    <Compile Include="Models\tb__inventory.cs" />
+    <Compile Include="Models\tb__inventory__Details.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewCommon\TreeViewCommon.cs" />
