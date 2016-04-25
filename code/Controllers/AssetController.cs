@@ -4,11 +4,15 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FAMIS.ViewCommon;
+using FAMIS.DAL;
+using FAMIS.Models;
 
 namespace FAMIS.Controllers
 {
     public class AssetController : Controller
     {
+
+        ElementModel DB_Connecting = new ElementModel();
         // GET: Asset
         public ActionResult Accounting()
         {
@@ -39,24 +43,24 @@ namespace FAMIS.Controllers
 
         public JsonResult getpageOrder(int? page, int? rows)
         {
-            //page = page == null ? 1 : page;
-            //rows = rows == null ? 1 : rows;
-            //List<TSYS_USER> list = erp.TSYS_USER.OrderBy(a => a.PKID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
-
-            //var json = new
-            //{
-            //    total = erp.TSYS_USER.Count(),
-            //    rows = (from r in list
-            //            select new TSYS_USER()
-            //            {
-            //                PKID = r.PKID,
-            //                REAL_NAME = r.REAL_NAME,
-            //                MOBILE = r.MOBILE,
-            //                STAFF_CODE = r.STAFF_CODE
-            //            }).ToArray()
-            //};
-            //return Json(json, JsonRequestBehavior.AllowGet);
-            return null;
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
+            List<tb_user> list = DB_Connecting.tb_user.OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+            //List<tb_user> list = DB_Connecting.tb_user.ToList();
+            var json = new
+            {
+                total = DB_Connecting.tb_user.Count(),
+                rows = (from r in list
+                        select new tb_user()
+                        {
+                            ID = r.ID,
+                            name_User = r.name_User,
+                            roleID_User = r.roleID_User,
+                            time_LastLogined = r.time_LastLogined
+                        }).ToArray()
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+            
         }
 
 
