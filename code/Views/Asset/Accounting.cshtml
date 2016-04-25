@@ -16,18 +16,21 @@
     <!--<script type="text/javascript" src="../../Scripts/UI/js_Accounting.js"></script>-->
     <script type="text/javascript">
         $(function () {
-            LoadInitData();
-
-
-
+            LoadInitData_Detail();
+            $(".SC_Date_Accounting").show();
+            $(".SC_Content_Accounting").hide();
             $("#Accounting_SC").combobox({
-                selected: 'GZRQ',
                 onChange: function (n, o) {
                     //n 表示new  value
                     //o 表示 old value
-                    if (o == "GZRQ" || o == "DJRQ") {
-
+                    if (n == "GZRQ" || n == "DJRQ") {
+                        $(".SC_Date_Accounting").show();
+                        $(".SC_Content_Accounting").hide();
+                    } else {
+                        $(".SC_Date_Accounting").hide();
+                        $(".SC_Content_Accounting").show();
                     }
+
 
                 }
 
@@ -36,15 +39,36 @@
 
 
         });
+        function chanegeTableType_Radio()
+        {
+            var selectType = $("input[name='table_TYPE']:checked").val();
+            alert(selectType);
+        }
+        
 
-        function LoadInitData() {
+        function getTime(/** timestamp=0 **/) {
+            var ts = arguments[0] || 0;
+            var t, y, m, d, h, i, s;
+            t = ts ? new Date(ts * 1000) : new Date();
+            y = t.getFullYear();
+            m = t.getMonth() + 1;
+            d = t.getDate();
+            h = t.getHours();
+            i = t.getMinutes();
+            s = t.getSeconds();
+            // 可根据需要在这里定义时间格式  
+            return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (i < 10 ? '0' + i : i) + ':' + (s < 10 ? '0' + s : s);
+        }
+
+        function LoadInitData_Detail() {
+
+            //获取查询条件
             $('#lefttree').tree({
                 animate: true,
                 checkbox: true,
-
-                url: 'loadSearchTreeByRole?role=admin',
+                method: 'get', //默认是post,不允许对静态文件访问
+                url: '/Asset/loadSearchTreeByRole?role=1',
                 onClick: function (node) {
-
                     if (node.id != null) {
                         alert(node.id);
                         //alert("s");
@@ -109,7 +133,7 @@
                 //    }
                 //}
                 ],
-                url: '/Asset/getpageOrder',
+                url: '/Asset/getpageOrder?role=1&tableType=1',
                 method: 'get', //默认是post,不允许对静态文件访问
                 width: 'auto',
                 iconCls: 'icon-save',
@@ -121,11 +145,18 @@
                 pageNumber: 1, //默认显示第几页 
                 pageList: [15, 30, 45],//分页中下拉选项的数值 
                 columns: [[
-                    { field: 'ck', checkbox: true },
-                    { field: 'ID', title: '用户名ID' },
-                    { field: 'name_User', title: '用户名' },
-                    { field: 'roleID_User', title: '角色编号' },
-                    { field: 'time_LastLogined', title: '上次登录时间' }
+                    { field: 'ck', checkbox: true, width: 100 },
+                    { field: 'ID', title: '用户名ID', width: 100 },
+                    { field: 'name_User', title: '用户名', width: 100 },
+                    { field: 'roleID_User', title: '角色编号', width: 100 },
+                    {
+                        field: 'time_LastLogined', title: '上次登录时间', width: 100,
+                        formatter: function (date) {
+                            var pa = /.*\((.*)\)/;
+                            var unixtime = date.match(pa)[1].substring(0, 10);
+                            return getTime(unixtime);
+                        }
+                    }
                 ]],
                 singleSelect: false, //允许选择多行
                 selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
@@ -211,38 +242,58 @@
         <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true">
 
             <!--查询条件-->
-            <div>
-                <div style="width: auto; float: left">
-                    <select class="easyui-combobox" name="state" id="Accounting_SC" style="width: 200px;" onchange="changeSC()">
-                        <option value="DJRQ">登记日期</option>
+            <div style="width: 100%">
+                <div style="float: left">
+                    <select class="easyui-combobox" name="state" id="Accounting_SC">
+                        <option value="DJRQ" selected="selected">登记日期</option>
                         <option value="GZRQ">购置日期</option>
                         <option value="ZCBH">资产编号</option>
                         <option value="ZCMC">资产名称</option>
                         <option value="ZCXH">资产型号</option>
                     </select>
                 </div>
-                <div style="width:auto;float:left;" id="field_date_SC">
-                   <table id="SC_Date">
+                <div style="float: left" id="field_date_SC">
+                    <table>
+                        <tr>
+                            <td class="SC_Date_Accounting">开始时间：</td>
+                            <td class="SC_Date_Accounting">
+                                <input class="easyui-datebox" data-options="sharedCalendar:'#cc'">
+                            </td>
+                            <td class="SC_Date_Accounting">结束时间:</td>
+                            <td class="SC_Date_Accounting">
+                                <input class="easyui-datebox" data-options="sharedCalendar:'#cc'">
+                            </td>
+                            <td class="SC_Content_Accounting">
+                                <input class="easyui-textbox" style="margin-left: 10px" id="SC_Content" placeholder="请输入查询调价" />
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div style="width: 100%;clear:both">
+                <table>
                     <tr>
-                        <td>开始时间：</td>
                         <td>
-                            <input class="easyui-datebox" data-options="sharedCalendar:'#cc'">
+                            <select class="easyui-combobox" name="state" id="Accounting_SC_ZCTY">
+                                <option value="GDZC" selected="selected">固定资产</option>
+                                <option value="DZYHP">低值易耗品</option>
+
+                            </select>
                         </td>
-                        <td>结束时间:</td>
+                        <td style="margin-left: 5px">
+                            <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a>
+                        </td>
                         <td>
-                            <input class="easyui-datebox" data-options="sharedCalendar:'#cc'">
+                            <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-reload'">重置</a>
+                        </td>
+                        <td>
+                           <input type="radio" name="table_TYPE" onchange="chanegeTableType_Radio()" value="0" />汇总
+                           <input type="radio" name="table_TYPE" onchange="chanegeTableType_Radio()"  value="1" checked="checked" />明细
                         </td>
                     </tr>
                 </table>
-                </div>
-
-
-               
-
-                <input class="easyui-textbox" id="SC_Content" placeholder="请输入查询调价" />
-
             </div>
-
 
 
 

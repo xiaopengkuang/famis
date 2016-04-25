@@ -31,6 +31,7 @@ namespace FAMIS.Controllers
             return View();
         }
 
+         [HttpGet]
         public String loadSearchTreeByRole(String roleName)
         {
 
@@ -40,16 +41,21 @@ namespace FAMIS.Controllers
             return jsonStr;
         }
 
-
-        public JsonResult getpageOrder(int? page, int? rows)
+        [HttpGet]
+        public JsonResult getpageOrder(int? page, int? rows, int? role,int? tableType)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
+
+          
+
             List<tb_user> list = DB_Connecting.tb_user.OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+
+         
             //List<tb_user> list = DB_Connecting.tb_user.ToList();
             var json = new
             {
-                total = DB_Connecting.tb_user.Count(),
+                total = list.Count(),
                 rows = (from r in list
                         select new tb_user()
                         {
