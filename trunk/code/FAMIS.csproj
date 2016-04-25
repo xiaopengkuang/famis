@@ -1712,6 +1712,8 @@
     <Content Include="LIB\UIlib\css\default.css.bak" />
     <Content Include="LIB\UIlib\js\themes\default\images\Thumbs.db" />
     <Content Include="LIB\UIlib\js\themes\gray\images\Thumbs.db" />
+    <Content Include="Content\jsonData\tree_data1.json" />
+    <Content Include="ashx\TreeHandler.ashx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\html5shiv.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -1749,8 +1751,11 @@
     <Content Include="Scripts\tabs\easyUI_addTabs.js" />
     <Content Include="Scripts\tabs\tabs.js" />
     <None Include="Scripts\_references.js" />
+    <Content Include="Scripts\UI\LoadTreeMenu.js" />
     <Content Include="Views\Shared\Navigation.ascx" />
     <Content Include="Views\Asset\datagrid_data1.json" />
+    <Content Include="Views\Asset\tree_data1.json" />
+    <Content Include="Views\Asset\tree_data2.json" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -1758,6 +1763,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="ashx\TreeHandler.ashx.cs">
+      <DependentUpon>TreeHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AcountController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
@@ -1777,6 +1785,7 @@
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewCommon\TreeViewCommon.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -1836,8 +1845,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
-    <Folder Include="Filter\" />
-    <Folder Include="Scripts\UI\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\Customer\" />
   </ItemGroup>
@@ -1865,6 +1872,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
+      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
