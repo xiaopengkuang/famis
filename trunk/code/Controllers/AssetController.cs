@@ -12,7 +12,7 @@ namespace FAMIS.Controllers
     public class AssetController : Controller
     {
 
-        ElementModel DB_Connecting = new ElementModel();
+        DAL_TBFamisModel DB_Connecting = new DAL_TBFamisModel();
         // GET: Asset
         public ActionResult Accounting()
         {
@@ -47,9 +47,9 @@ namespace FAMIS.Controllers
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
 
-          
 
-            List<tb_user> list = DB_Connecting.tb_user.OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+
+            List<tb_Asset> list = DB_Connecting.tb_Asset.OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
 
          
             //List<tb_user> list = DB_Connecting.tb_user.ToList();
@@ -57,12 +57,20 @@ namespace FAMIS.Controllers
             {
                 total = list.Count(),
                 rows = (from r in list
-                        select new tb_user()
+                        select new tb_Asset()
                         {
                             ID = r.ID,
-                            name_User = r.name_User,
-                            roleID_User = r.roleID_User,
-                            time_LastLogined = r.time_LastLogined
+                            serial_number = r.serial_number,
+                            name_Asset = r.name_Asset,
+                            type_Asset = r.type_Asset,
+                            specification = r.specification,
+                            unit_price = r.unit_price,
+                            amount = r.amount,
+                            department_Using = r.department_Using,
+                            address = r.address,
+                            state_asset = r.state_asset,
+                            value = r.value,
+                            supplierID = r.supplierID
                         }).ToArray()
             };
             return Json(json, JsonRequestBehavior.AllowGet);
@@ -70,6 +78,10 @@ namespace FAMIS.Controllers
         }
 
 
+        public ActionResult AddAsset()
+        {
+            return View();
+        }
       
       
     }
