@@ -1756,9 +1756,7 @@
     <Content Include="Scripts\UI\js_Accounting.js" />
     <Content Include="Scripts\UI\LoadTreeMenu.js" />
     <Content Include="Views\Shared\Navigation.ascx" />
-    <Content Include="Views\Asset\datagrid_data1.json" />
-    <Content Include="Views\Asset\tree_data1.json" />
-    <Content Include="Views\Asset\tree_data2.json" />
+    <Content Include="Views\Asset\AddAsset.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -1786,7 +1784,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Asset.cs" />
-    <Compile Include="DAL\ElementModel.cs" />
+    <Compile Include="DAL\DAL_TBFamisModel.cs" />
     <Compile Include="Models\tb_Asset.cs" />
     <Compile Include="Models\tb_Asset_colla.cs" />
     <Compile Include="Models\tb_Asset_colla_detail.cs" />
@@ -1850,10 +1848,7 @@
     <Content Include="Views\User\ErrorLogin.cshtml" />
     <Content Include="Views\User\Test.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
-    <Content Include="Views\Asset\Accounting_OLD_1.cshtml" />
-    <Content Include="Views\Asset\Accounting20160416193709.cshtml" />
     <Content Include="Views\Manage\MainPage.cshtml" />
-    <Content Include="Views\Asset\Accounting20160416230155.cshtml" />
     <Content Include="Views\Manage\MainPage_IE.cshtml" />
     <Content Include="Views\Manage\index.cshtml" />
     <Content Include="Views\Manage\index2016年4月19日170615.cshtml" />

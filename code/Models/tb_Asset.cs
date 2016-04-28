@@ -45,5 +45,7 @@ namespace FAMIS.Models
 
         [StringLength(20)]
         public string supplierID { get; set; }
+
+        public DateTime? Time_Purchase { get; set; }
     }
 }
