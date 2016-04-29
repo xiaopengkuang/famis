@@ -21,5 +21,13 @@ namespace FAMIS.Models
         public string father_MenuID_Type { get; set; }
 
         public int? treeLevel { get; set; }
+
+        public int? measurement { get; set; }
+
+        public int? method_Depreciation { get; set; }
+
+        public int? period_Depreciation { get; set; }
+
+        public double? Net_residual_rate { get; set; }
     }
 }

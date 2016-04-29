@@ -93,3 +93,4 @@ E:\WorkSpace_Project\CODE\FAMIS\FAMIS\bin\zh-Hans\System.Web.Helpers.resources.d
 E:\WorkSpace_Project\CODE\FAMIS\FAMIS\bin\zh-Hans\System.Web.Mvc.resources.dll
 E:\WorkSpace_Project\CODE\FAMIS\FAMIS\obj\Debug\FAMIS.dll
 E:\WorkSpace_Project\CODE\FAMIS\FAMIS\obj\Debug\FAMIS.pdb
+E:\WorkSpace_Project\CODE\famis\FAMIS\obj\Debug\FAMIS.csprojResolveAssemblyReference.cache
