@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using FAMIS.Models;
+using FAMIS.DAL;
 namespace FAMIS.DAL
 {
     public class AssetContext:DbContext

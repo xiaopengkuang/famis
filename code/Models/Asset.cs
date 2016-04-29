@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace FAMIS.Models
+namespace FAMIS.DAL
 {
     public class Asset
     {

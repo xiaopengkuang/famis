@@ -7,12 +7,13 @@ using FAMIS.ViewCommon;
 using FAMIS.DAL;
 using FAMIS.Models;
 
+
 namespace FAMIS.Controllers
 {
     public class AssetController : Controller
     {
 
-        DAL_TBFamisModel DB_Connecting = new DAL_TBFamisModel();
+        FAMISDBTBModels DB_Connecting = new FAMISDBTBModels();
         // GET: Asset
         public ActionResult Accounting()
         {
@@ -55,7 +56,9 @@ namespace FAMIS.Controllers
             //List<tb_user> list = DB_Connecting.tb_user.ToList();
             var json = new
             {
-                total = list.Count(),
+
+
+                total = DB_Connecting.tb_Asset.OrderBy(a => a.ID).ToList().Count(),
                 rows = (from r in list
                         select new tb_Asset()
                         {
@@ -81,6 +84,12 @@ namespace FAMIS.Controllers
         public ActionResult AddAsset()
         {
             return View();
+        }
+
+
+        public String InsertAssets(FormCollection fc)
+        {
+            return "InsetCorret";
         }
       
       

@@ -7,11 +7,277 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    <title>添加资产</title>
+
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            loadInitDate();
+
+            $("#Num_PLTJ_add").hide();
+            //alert(111);
+        });
+
+        function loadInitDate()
+        {
+            load_GYS_add();
+        }
+
+        function load_GYS_add()
+        {
+            $('#GYS_add').combogrid({
+                panelWidth: 300,
+                value: '006',
+                idField: 'code',
+                textField: 'name',
+                url: '/Dict/load_GYS_add',
+                method: 'get', //默认是post,不允许对静态文件访问
+                columns: [[
+                { field: 'name_supplier', title: '供应商', width: 100 },
+                { field: 'linkman', title: '联系人', width: 50 },
+                { field: 'address', title: '地址', width: 150 }
+                ]]
+            });
+        }
+
+        function load_ZJFS_add()
+        {
+
+        }
+
+
+
+
+
+
+
+
+
+        function ReComputeAssetValue() {
+            alert(12);
+            //var dj_asset = ($("#Other_ZCSL_add").val());
+            //alert(dj_asset);
+            //var sl_asset = ($("#Other_ZCDJ_add").val());
+            ////var jz_asset = dj_asset * sl_asset;
+            //alert(jz_asset);
+            //$("#Other_ZCJZ_add").val();
+        }
+
+
+        function loadNewAssetCode()
+        {
+            alert("刷新数据");
+        }
+
+        function loadNewAssetCode_Blocked() {
+            alert("批量添加不支持刷新编号");
+        }
+
+
+
+        function showAreaNum_PLTJ_add() {
+            $("#Num_PLTJ_add").toggle();
+
+            if ($("#Num_PLTJ_add").is(":hidden")) {
+                //当前是hide状态
+                //alert("当前是hide状态");
+                var objBt = document.getElementById("New_ZCBH_add");
+                objBt.onclick = loadNewAssetCode;
+                //$("#New_ZCBH_add").attr("onclick", "loadNewAssetCode");
+
+            } else {
+                //当前是show状态
+                //alert("当前是show状态");
+                //$("#New_ZCBH_add").removeAttr("onclick");
+                var objBt = document.getElementById("New_ZCBH_add");
+                objBt.onclick = loadNewAssetCode_Blocked;
+            }
+        }
+
+
+    </script>
+
+
 </head>
 <body>
-    <div>
-    添加资产
+
+    <div class="easyui-tabs" style="height: 500px">
+        <div title="基础资料" data-options="iconCls:'icon-edit',closable:false" fit="true" style="height: 500px">
+            <div class="easyui-panel" style="height: 500px;" fit="true">
+                <div id="jcsx_add" class="easyui-panel" title="基础属性" style="height: 200px; width: auto; padding: 2px;"
+                    data-options="collapsible:true">
+                    <table>
+                        <tr>
+                            <td>资产编号:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="刷新自动生成" id="ZCBH_add" name="ZCBH_add" readonly="readonly" style="width: 100px;" />
+                                <a href="javaScript:void(0);" class="easyui-linkbutton" id="New_ZCBH_add" onclick="loadNewAssetCode()" style="width: auto">刷新</a>
+                            </td>
+                            <td>资产性质:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入资产性质" id="ZCXZ_add" name="ZCXZ_add" style="width: 150px;" />
+                            </td>
+                            <td>资产类别:</td>
+                            <td>
+                                <select class="easyui-combotree" id="ZCLB_add" name="ZCLB_add" style="width: 150px;">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>资产名称:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入资产名称" id="ZCMC_add" name="ZCMC_add" style="width: 150px;" />
+                            </td>
+                            <td>规格型号:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入规格型号" id="ZCXH_add" name="ZCXH_add" style="width: 150px;" />
+                            </td>
+                            <td>计量单位:</td>
+                            <td>
+                                <select class="easyui-combotree" id="JLDW_add" name="JLDW_add" style="width: 150px;">
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>所在部门:</td>
+                            <td>
+                                <select class="easyui-combotree" id="SZBM_add" name="SZBM_add" style="width: 150px;">
+                                </select>
+                            </td>
+                            <td>使用人:</td>
+                            <td>
+                                <select class="easyui-combotree" id="SYR_add" name="SYR_add" style="width: 150px;">
+                                </select>
+                            </td>
+                            <td>存放地点:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入存放地点" id="CFDD_add" name="CFDD_add" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>增加方式:</td>
+                            <td>
+                                <select class="easyui-combotree" id="ZJFS_add" name="ZJFS_add" style="width: 150px;">
+                                </select>
+                            </td>
+                            <td>供应商:</td>
+                            <td>
+                                <select class="" id="GYS_add" name="GYS_add" style="width: 150px;">
+                                </select>
+                            </td>
+                            <td>联系人:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="输入联系人" id="LXR_add" name="LXR_add" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>购置日期:</td>
+                            <td>
+                                <input class="easyui-datebox" name="GZRQ_add" id="GZRQ_add" data-options="sharedCalendar:'#cc'" style="width: 150px;">
+                            </td>
+                            <td>供应商地址:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入供应商地址" id="GYSDD_add" name="GYSDD_add" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="width: 100%">
+                        <tr style="width: 100%">
+                            <td style="width: 49%">
+                                <input type="checkbox" name="Check_PLZJ_add" onclick="showAreaNum_PLTJ_add()" id="Check_PLZJ_add" value="1" />批量添加(最多添加99)
+                            </td>
+                            <td style="width: 49%">
+                                <input class="easyui-textbox" placeholder="请输入添加数量" id="Num_PLTJ_add" name="Num_PLTJ_add" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="qtsx_add" class="easyui-panel" title="其他属性" style="width: auto; height: 150px; padding: 1px;"
+                    data-options="collapsible:true">
+
+                    <table>
+                        <tr>
+                            <td>使用年限:</td>
+                            <td>
+                                <select class="easyui-combotree" id="Other_SYNX_add" name="Other_SYNX_add" style="width: 150px;">
+                                </select>
+                            </td>
+                            <td>折旧方式:</td>
+                            <td>
+                                <select class="easyui-combotree" id="Other_ZJFS_add" name="Other_ZJFS_add" style="width: 150px;">
+                                </select>
+                            </td>
+                            <td>净残值率:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入净残值率" id="Other_JCZL_add" name="Other_JCZL_add" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>资产单价:</td>
+                            <td>
+                                <input class="easyui-numberspinner" value="0" id="Other_ZCDJ_add"  name="Other_ZCDJ_add" data-options="increment:1,min:0" style="width: 150px;" />
+                            </td>
+                            <td>资产数量:</td>
+                            <td>
+                                <input class="easyui-numberspinner" value="0" id="Other_ZCSL_add"  name="Other_ZCSL_add" data-options="increment:1,min:0" style="width: 150px;" />
+                            </td>
+                            <td>资产价值:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入资产价值" id="Other_ZCJZ_add" name="Other_ZCJZ_add" style="width: 100px;" />
+                                <a onclick="ReComputeAssetValue()"><i class="icon-reload"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>月提折旧:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入月提折旧" id="Other_YTZJ_add" name="Other_YTZJ_add" style="width: 150px;" />
+                            </td>
+                            <td>累计折旧:</td>
+                            <td>
+                                <input class="easyui-textbox"  placeholder="请输入累计折旧" id="Other_LJZJ_add" name="Other_LJZJ_add" style="width: 150px;" />
+                            </td>
+                            <td>净值:</td>
+                            <td>
+                                <input class="easyui-textbox" placeholder="请输入净值" id="Other_JZ_add" name="Other_JZ_add" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="zdysx_add" class="easyui-panel" title="自定义属性" style="width: auto; height: 80px; padding: 1px;"
+                    data-options="collapsible:true">
+                </div>
+            </div>
+
+
+        </div>
+        <div title="附件设备" data-options="iconCls:'icon-edit',closable:false" style="padding: 10px; height: 500px">
+            暂不支持添加附件设备
+        </div>
+        <div title="附属文件" data-options="iconCls:'icon-edit',closable:false" style="padding: 10px; height: 500px">
+            暂不支持添加附属文件
+        </div>
+        <div title="附属图片" data-options="iconCls:'icon-edit',closable:false" style="padding: 10px; height: 500px">
+            暂不支持添加附属图片
+        </div>
     </div>
+
+    <div style="text-align: center; padding: 5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">Submit</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
+    </div>
+
+
+
+
+
 </body>
 </html>

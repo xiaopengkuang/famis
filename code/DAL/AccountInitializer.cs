@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using FAMIS.Models;
+using FAMIS.DAL;
 using System.Data.Entity;
 namespace FAMIS.DAL
 {

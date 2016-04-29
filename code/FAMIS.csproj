@@ -1784,7 +1784,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Asset.cs" />
-    <Compile Include="DAL\DAL_TBFamisModel.cs" />
+    <Compile Include="DAL\FAMISDBTBModels.cs" />
+    <Compile Include="Models\tb_Address_AssetStore.cs" />
     <Compile Include="Models\tb_Asset.cs" />
     <Compile Include="Models\tb_Asset_colla.cs" />
     <Compile Include="Models\tb_Asset_colla_detail.cs" />
@@ -1795,6 +1796,7 @@
     <Compile Include="Models\tb_department.cs" />
     <Compile Include="Models\tb_detail__allocation.cs" />
     <Compile Include="Models\tb_Menu.cs" />
+    <Compile Include="Models\tb_Method_Add.cs" />
     <Compile Include="Models\tb_reduction_detail.cs" />
     <Compile Include="Models\tb_role.cs" />
     <Compile Include="Models\tb_role__authorization.cs" />
