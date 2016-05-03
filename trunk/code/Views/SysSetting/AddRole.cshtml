@@ -1,0 +1,58 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加角色</title>
+    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+
+    <script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        //多选框
+
+        //为登录按钮注册单击事件
+        $('#Add_Role_btn').click(function () {
+            $.ajax({
+
+                type: "post",
+                url: "/SysSetting/AddRole",
+                data: { name: $("#name").val(), description: $("#des").val() },
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                   
+
+
+
+                }, error: function (msg) {
+                    alert("Error");
+                }
+            });
+
+        });
+    });
+
+
+    </script>
+</head>
+<body>
+    <div style="right:500px">
+        <label>角色名<font color="#F00">*</font></label>
+        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+        <input id="name" type="text" value=@Request.QueryString["name"] />
+    </div>
+    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+    &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp  &nbsp
+    <div style="right:500px">
+        <label>角色描述<font color="#F00">*</font></label>
+        &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp 
+        <input id="des" type="text" style="height:51px;width:449px" value=@Request.QueryString["description"] />
+        <input id="Add_Role_btn" type="button" value="button" />
+    </div>
+</body>
+</html>
