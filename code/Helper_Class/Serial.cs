@@ -122,16 +122,18 @@ namespace FAMIS.Helper_Class
 
 
         }
-        public ArrayList Serial_View(string rule, int serial_num, int bits) // 编号位数，编号个数，字母缩写，年，月，日
+
+        public ArrayList Mul_Serial (string serial, string rule, int bits, int serial_num) // 编号位数，编号个数，字母缩写，年，月，日
         {
-
-
             ArrayList al = new ArrayList();
+            if (serial == null)
+                al;
+
             string shead = rule.Substring(0, 2);
             string temp = "";
             if (rule.Contains("DD"))
             {
-                temp = this.GetSerialNumber("0", bits, shead, true, true, true);
+                temp = this.GetSerialNumber(serial, bits, shead, true, true, true);
 
                 for (int i = 0; i < serial_num; i++)
                 {
@@ -142,7 +144,7 @@ namespace FAMIS.Helper_Class
             else
                 if (rule.Contains("MM"))
                 {
-                    temp = this.GetSerialNumber("0", bits, shead, true, true, false);
+                    temp = this.GetSerialNumber(serial, bits, shead, true, true, false);
 
                     for (int i = 0; i < serial_num; i++)
                     {
@@ -153,7 +155,50 @@ namespace FAMIS.Helper_Class
                 else
                     if (rule.Contains("yyyy"))
                     {
-                        temp = this.GetSerialNumber("0", bits, shead, true, false, false);
+                        temp = this.GetSerialNumber(serial, bits, shead, true, false, false);
+
+                        for (int i = 0; i < serial_num; i++)
+                        {
+                            al.Add(temp);
+                            temp = this.GetSerialNumber(temp, bits, shead, true, false, false);
+                        }
+                    }
+            return al;
+
+        }
+        public ArrayList Serial_View(string serial, string rule, int bits, int serial_num) // 编号位数，编号个数，字母缩写，年，月，日
+        {
+            ArrayList al = new ArrayList();
+            if (serial == null)
+                al;
+            
+            string shead = rule.Substring(0, 2);
+            string temp = "";
+            if (rule.Contains("DD"))
+            {
+                temp = this.GetSerialNumber(serial, bits, shead, true, true, true);
+
+                for (int i = 0; i < serial_num; i++)
+                {
+                    al.Add(temp);
+                    temp = this.GetSerialNumber(temp, bits, shead, true, true, true);
+                }
+            }
+            else
+                if (rule.Contains("MM"))
+                {
+                    temp = this.GetSerialNumber(serial, bits, shead, true, true, false);
+
+                    for (int i = 0; i < serial_num; i++)
+                    {
+                        al.Add(temp);
+                        temp = this.GetSerialNumber(temp, bits, shead, true, true, false);
+                    }
+                }
+                else
+                    if (rule.Contains("yyyy"))
+                    {
+                        temp = this.GetSerialNumber(serial, bits, shead, true, false, false);
 
                         for (int i = 0; i < serial_num; i++)
                         {
