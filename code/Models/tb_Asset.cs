@@ -47,5 +47,19 @@ namespace FAMIS.Models
         public string supplierID { get; set; }
 
         public DateTime? Time_Purchase { get; set; }
+
+        public int? YearService_month { get; set; }
+
+        public int? Method_depreciation { get; set; }
+
+        public int? Net_residual_rate { get; set; }
+
+        [StringLength(50)]
+        public string depreciation_Month { get; set; }
+
+        [StringLength(50)]
+        public string depreciation_tatol { get; set; }
+
+        public double? Net_value { get; set; }
     }
 }

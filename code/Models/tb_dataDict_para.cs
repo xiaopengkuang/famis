@@ -10,7 +10,7 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        public int? ID_dataDict { get; set; }
+        public int ID_dataDict { get; set; }
 
         [StringLength(20)]
         public string name_para { get; set; }
@@ -18,6 +18,14 @@ namespace FAMIS.Models
         [StringLength(300)]
         public string description { get; set; }
 
-        public DateTime? create_Time { get; set; }
+        public DateTime create_Time { get; set; }
+
+        public int fatherid { get; set; }
+
+        [StringLength(30)]
+        public string url { get; set; }
+
+        [StringLength(20)]
+        public string orderID { get; set; }
     }
 }

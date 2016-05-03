@@ -30,6 +30,7 @@ namespace FAMIS.Models
         public virtual DbSet<tb_reduction_detail> tb_reduction_detail { get; set; }
         public virtual DbSet<tb_role> tb_role { get; set; }
         public virtual DbSet<tb_role__authorization> tb_role__authorization { get; set; }
+        public virtual DbSet<tb_Rule_Generate> tb_Rule_Generate { get; set; }
         public virtual DbSet<tb_staff> tb_staff { get; set; }
         public virtual DbSet<tb_supplier> tb_supplier { get; set; }
         public virtual DbSet<tb_user> tb_user { get; set; }
@@ -137,6 +138,14 @@ namespace FAMIS.Models
                 .Property(e => e.supplierID)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_Asset>()
+                .Property(e => e.depreciation_Month)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset>()
+                .Property(e => e.depreciation_tatol)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset__allocation>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
@@ -233,6 +242,14 @@ namespace FAMIS.Models
                 .Property(e => e.description)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.url)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.orderID)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_department>()
                 .Property(e => e.ID_Department)
                 .IsUnicode(false);
@@ -319,6 +336,14 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_role__authorization>()
                 .Property(e => e.type)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Rule_Generate>()
+                .Property(e => e.Name_SeriaType)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Rule_Generate>()
+                .Property(e => e.Rule_Generate)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_staff>()

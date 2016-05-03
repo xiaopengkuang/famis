@@ -32,6 +32,7 @@
             load_JLDW_add();
             load_SZBM_add();
             load_ZCLB_add();
+            load_CFDD_add();
         }
 
 
@@ -56,8 +57,36 @@
                        $('#ZCLB_add').combotree('clear');
                    } else {
 
+                       //资产类别
+                       $('#ZCXH_add').combobox('clear');
+                       load_ZCXH_add(node.text);
                    }
-                   //
+                 
+
+
+
+                   //资产性质
+                   var parent = node;
+                   var tree = $('#ZCLB_add').combotree('tree');
+                   var path = new Array();
+                   
+                   while (parent) {
+                       path.unshift(parent.id+"-"+parent.text);
+                   
+                       var parent = tree.tree('getParent', parent.target);
+                   };
+                   
+
+                   //获得根节点
+                   var rootText = "";
+                   
+                   if (path.length > 0)
+                   {
+                       rootText = path[0];
+                   }
+
+                   //$.messager.alert('提示', rootText, 'warning');
+                   $('#ZCXZ_add').val(rootText.trim());
 
 
                }, //全部折叠
@@ -130,7 +159,37 @@
             });
 
         }
+        function load_CFDD_add()
+        {
+            $('#CFDD_add').combotree
+          ({
+              url: '/Dict/load_CFDD_add?id_di=9',
+              valueField: 'id',
+              textField: 'nameText',
+              required: true,
+              method: 'get',
+              editable: false,
+              //选择树节点触发事件  
+              onSelect: function (node) {
+                  //返回树对象  
+                  var tree = $(this).tree;
+                  //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
+                  var isLeaf = tree('isLeaf', node.target);
+                  if (!isLeaf) {
+                      //清除选中  
+                      $('#CFDD_add').combotree('clear');
+                  } else {
+                      load_SYR_add(node.id);
+                  }
+                  //
 
+
+              }, //全部折叠
+              onLoadSuccess: function (node, data) {
+                  $('#CFDD_add').combotree('tree').tree("collapseAll");
+              }
+          });
+        }
 
 
         function load_GYS_add() {
@@ -177,7 +236,20 @@
         }
 
 
-
+        //加载规格型号
+        function load_ZCXH_add(assetType)
+        {
+            $("#ZCXH_add").combobox({
+                valueField: 'ZCXH',
+                method: 'get',
+                textField: 'ZCXH',
+                url: '/Dict/load_ZCXH_add?assetType=' + assetType,
+                onSelect: function (rec) {
+                    $('#ZCXH_add').combobox('setValue', rec.ZCXH);
+                    $('#ZCXH_add').combobox('setText', rec.ZCXH);
+                }
+            });
+        }
 
 
 
@@ -196,18 +268,32 @@
 
 
         function loadNewAssetCode() {
-            alert("刷新数据");
+            $.ajax({
+                type: "POST",
+                url: "/Common/GetOneSerialNumber?ruleType=ZC&num=1",
+                data: "",
+                success: function (data) {
+                    if (data == $("#ZCBH_add").val())
+                    {
+                        $.messager.alert('提示', '已经是最新编号!无须重复刷新', 'info');
+                    } else {
+                        $("#ZCBH_add").val(data);
+                    }
+                }
+            });
         }
 
+
+
+
         function loadNewAssetCode_Blocked() {
-            alert("批量添加不支持刷新编号");
+            $.messager.alert('提示', '批量添加不支持刷新编号!', 'warning');
         }
 
 
 
         function showAreaNum_PLTJ_add() {
             $("#Num_PLTJ_add").toggle();
-
             if ($("#Num_PLTJ_add").is(":hidden")) {
                 //当前是hide状态
                 //alert("当前是hide状态");
@@ -226,7 +312,7 @@
 
         function submitForm()
         {
-
+            var d_ZCBH_add;
         }
 
 
@@ -247,12 +333,13 @@
                         <tr>
                             <td>资产编号:</td>
                             <td>
-                                <input class="easyui-textbox" placeholder="刷新自动生成" id="ZCBH_add" name="ZCBH_add" readonly="readonly" style="width: 100px;" />
-                                <a href="javaScript:void(0);" class="easyui-linkbutton" id="New_ZCBH_add" onclick="loadNewAssetCode()" style="width: auto">刷新</a>
+                                <input class="easyui-textbox" placeholder="刷新自动生成" id="ZCBH_add" name="ZCBH_add" readonly="readonly" style="width: 140px;" />
+                                <img src="../../LIB/jquery-easyui-1.3.2/themes/icons/reload.png"  id="New_ZCBH_add" onclick="loadNewAssetCode()" style="width:15px;height:15px" />
+                                <!--<a href="javaScript:void(0);" class="easyui-linkbutton" id="New_ZCBH_add" onclick="loadNewAssetCode()" style="width: auto">刷新</a>-->
                             </td>
                             <td>资产性质:</td>
                             <td>
-                                <input class="easyui-textbox" placeholder="请输入资产性质" id="ZCXZ_add" name="ZCXZ_add" style="width: 150px;" />
+                                <input class="easyui-textbox" placeholder="请输入资产性质" readonly="readonly" id="ZCXZ_add" name="ZCXZ_add" style="width: 150px;" />
                             </td>
                             <td>资产类别:</td>
                             <td>
@@ -267,7 +354,7 @@
                             </td>
                             <td>规格型号:</td>
                             <td>
-                                <input class="easyui-textbox" placeholder="请输入规格型号" id="ZCXH_add" name="ZCXH_add" style="width: 150px;" />
+                                <input class="easyui-combobox" placeholder="请输入规格型号" readonly="readonly" id="ZCXH_add" name="ZCXH_add" style="width: 150px;" />
                             </td>
                             <td>计量单位:</td>
                             <td>
