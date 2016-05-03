@@ -36,5 +36,8 @@ namespace FAMIS.Models
         [Column("operator")]
         [StringLength(20)]
         public string _operator { get; set; }
+
+        [StringLength(20)]
+        public string name { get; set; }
     }
 }

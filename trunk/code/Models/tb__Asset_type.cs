@@ -29,5 +29,11 @@ namespace FAMIS.Models
         public int? period_Depreciation { get; set; }
 
         public double? Net_residual_rate { get; set; }
+
+        [StringLength(100)]
+        public string url { get; set; }
+
+        [StringLength(20)]
+        public string orderID { get; set; }
     }
 }

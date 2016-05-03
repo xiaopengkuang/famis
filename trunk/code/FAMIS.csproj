@@ -1780,11 +1780,17 @@
     <Compile Include="DAL\AccountContext.cs" />
     <Compile Include="DAL\AccountInitializer.cs" />
     <Compile Include="DAL\AssetContext.cs" />
+    <Compile Include="DTO\dto_Asset.cs" />
+    <Compile Include="DTO\dto_AssetType.cs" />
+    <Compile Include="DTO\dto_DataDict_para.cs" />
+    <Compile Include="DTO\dto_department.cs" />
+    <Compile Include="DTO\dto_Staff.cs" />
+    <Compile Include="DTO\dto_supplier.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Asset.cs" />
-    <Compile Include="DAL\FAMISDBTBModels.cs" />
+    <Compile Include="Models\FAMISDBTBModels.cs" />
     <Compile Include="Models\tb_Address_AssetStore.cs" />
     <Compile Include="Models\tb_Asset.cs" />
     <Compile Include="Models\tb_Asset_colla.cs" />
@@ -1808,6 +1814,7 @@
     <Compile Include="Models\tb__inventory__Details.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewCommon\TreeCommon.cs" />
     <Compile Include="ViewCommon\TreeViewCommon.cs" />
   </ItemGroup>
   <ItemGroup>

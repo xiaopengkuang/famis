@@ -26,13 +26,114 @@
             //alert(111);
         });
 
-        function loadInitDate()
-        {
+        function loadInitDate() {
             load_GYS_add();
+            load_ZJFS_add();
+            load_JLDW_add();
+            load_SZBM_add();
+            load_ZCLB_add();
         }
 
-        function load_GYS_add()
-        {
+
+
+        function load_ZCLB_add() {
+            $('#ZCLB_add').combotree
+           ({
+               url: '/Dict/load_ZCLB',
+               valueField: 'id',
+               textField: 'nameText',
+               required: true,
+               method: 'get',
+               editable: false,
+               //选择树节点触发事件  
+               onSelect: function (node) {
+                   //返回树对象  
+                   var tree = $(this).tree;
+                   //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
+                   var isLeaf = tree('isLeaf', node.target);
+                   if (!isLeaf) {
+                       //清除选中  
+                       $('#ZCLB_add').combotree('clear');
+                   } else {
+
+                   }
+                   //
+
+
+               }, //全部折叠
+               onLoadSuccess: function (node, data) {
+                   $('#SZBM_add').combotree('tree').tree("collapseAll");
+               }
+           });
+        }
+
+
+        function load_SYR_add(SZBM_ID) {
+
+            $("#SYR_add").combobox({
+                valueField: 'id',
+                method: 'get',
+                textField: 'name',
+                url: '/Dict/load_SYR_add?SZBM_ID=' + SZBM_ID,
+                onSelect: function (rec) {
+                    $('#SYR_add').combobox('setValue', rec.id);
+                    $('#SYR_add').combobox('setText', rec.name);
+                }
+            });
+
+        }
+
+
+        function load_JLDW_add() {
+            $("#JLDW_add").combobox({
+                valueField: 'ID',
+                method: 'get',
+                textField: 'name_para',
+                url: '/Dict/load_FS_add?TypeID=2',
+                onSelect: function (rec) {
+                    $('#JLDW_add').combobox('setValue', rec.ID);
+                    $('#JLDW_add').combobox('setText', rec.name_para);
+                }
+            });
+        }
+
+
+        function load_SZBM_add() {
+
+            $('#SZBM_add').combotree
+            ({
+                url: '/Dict/load_SZBM',
+                valueField: 'id',
+                textField: 'nameText',
+                required: true,
+                method: 'get',
+                editable: false,
+                //选择树节点触发事件  
+                onSelect: function (node) {
+                    //返回树对象  
+                    var tree = $(this).tree;
+                    //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
+                    var isLeaf = tree('isLeaf', node.target);
+                    if (!isLeaf) {
+                        //清除选中  
+                        $('#SZBM_add').combotree('clear');
+                    } else {
+                        load_SYR_add(node.id);
+                    }
+                    //
+
+
+                }, //全部折叠
+                onLoadSuccess: function (node, data) {
+                    $('#SZBM_add').combotree('tree').tree("collapseAll");
+                }
+            });
+
+        }
+
+
+
+        function load_GYS_add() {
             $('#GYS_add').combogrid({
                 panelWidth: 300,
                 value: '006',
@@ -41,16 +142,38 @@
                 url: '/Dict/load_GYS_add',
                 method: 'get', //默认是post,不允许对静态文件访问
                 columns: [[
-                { field: 'name_supplier', title: '供应商', width: 100 },
-                { field: 'linkman', title: '联系人', width: 50 },
-                { field: 'address', title: '地址', width: 150 }
-                ]]
+                { field: 'name_supplier', title: '供应商', width: 99 },
+                { field: 'linkman', title: '联系人', width: 99 },
+                { field: 'address', title: '地址', width: 99 }
+                ]],
+                onClickRow: function (index, row) {
+                    search = false;
+                    $('#GYS_add').combogrid('hidePanel');
+                    $('#GYS_add').combogrid('setValue', row.name_supplier);
+                    $('#GYS_add').combogrid('setText', row.name_supplier);
+                    $("#LXR_add").val(row.linkman);
+                    //$("#LXR_add").text()(row.linkman);
+                    $("#GYSDD_add").val(row.address);
+                    //$("#GYSDD_add").textbox('setText', row.address);
+                    setTimeout(function () {
+                        search = true;
+                    }, 1000);
+
+                }
             });
         }
 
-        function load_ZJFS_add()
-        {
-
+        function load_ZJFS_add() {
+            $("#ZJFS_add").combobox({
+                valueField: 'ID',
+                method: 'get',
+                textField: 'name_para',
+                url: '/Dict/load_FS_add?TypeID=3',
+                onSelect: function (rec) {
+                    $('#ZJFS_add').combobox('setValue', rec.ID);
+                    $('#ZJFS_add').combobox('setText', rec.name_para);
+                }
+            });
         }
 
 
@@ -72,8 +195,7 @@
         }
 
 
-        function loadNewAssetCode()
-        {
+        function loadNewAssetCode() {
             alert("刷新数据");
         }
 
@@ -101,6 +223,13 @@
                 objBt.onclick = loadNewAssetCode_Blocked;
             }
         }
+
+        function submitForm()
+        {
+
+        }
+
+
 
 
     </script>
@@ -154,7 +283,7 @@
                             </td>
                             <td>使用人:</td>
                             <td>
-                                <select class="easyui-combotree" id="SYR_add" name="SYR_add" style="width: 150px;">
+                                <select class="easyui-textbox" id="SYR_add" name="SYR_add" style="width: 150px;">
                                 </select>
                             </td>
                             <td>存放地点:</td>
@@ -165,7 +294,7 @@
                         <tr>
                             <td>增加方式:</td>
                             <td>
-                                <select class="easyui-combotree" id="ZJFS_add" name="ZJFS_add" style="width: 150px;">
+                                <select class="easyui-combobox" id="ZJFS_add" name="ZJFS_add" style="width: 150px;">
                                 </select>
                             </td>
                             <td>供应商:</td>
@@ -175,7 +304,7 @@
                             </td>
                             <td>联系人:</td>
                             <td>
-                                <input class="easyui-textbox" placeholder="输入联系人" id="LXR_add" name="LXR_add" style="width: 150px;" />
+                                <input class="easyui-textbox" placeholder="输入联系人" readonly="readonly" id="LXR_add" name="LXR_add" style="width: 150px;" />
                             </td>
                         </tr>
                         <tr>
@@ -185,7 +314,7 @@
                             </td>
                             <td>供应商地址:</td>
                             <td>
-                                <input class="easyui-textbox" placeholder="请输入供应商地址" id="GYSDD_add" name="GYSDD_add" style="width: 150px;" />
+                                <input class="easyui-textbox" placeholder="请输入供应商地址" readonly="readonly" id="GYSDD_add" name="GYSDD_add" style="width: 150px;" />
                             </td>
                         </tr>
                     </table>
@@ -208,12 +337,11 @@
                         <tr>
                             <td>使用年限:</td>
                             <td>
-                                <select class="easyui-combotree" id="Other_SYNX_add" name="Other_SYNX_add" style="width: 150px;">
-                                </select>
+                                <input class="easyui-numberspinner" value="0" id="Other_SYNX_add" name="Other_SYNX_add" data-options="increment:1,min:0" style="width: 150px;" />
                             </td>
                             <td>折旧方式:</td>
                             <td>
-                                <select class="easyui-combotree" id="Other_ZJFS_add" name="Other_ZJFS_add" style="width: 150px;">
+                                <select class="easyui-combobox" id="Other_ZJFS_add" name="Other_ZJFS_add" style="width: 150px;">
                                 </select>
                             </td>
                             <td>净残值率:</td>
@@ -224,11 +352,11 @@
                         <tr>
                             <td>资产单价:</td>
                             <td>
-                                <input class="easyui-numberspinner" value="0" id="Other_ZCDJ_add"  name="Other_ZCDJ_add" data-options="increment:1,min:0" style="width: 150px;" />
+                                <input class="easyui-numberspinner" value="0" id="Other_ZCDJ_add" name="Other_ZCDJ_add" data-options="increment:1,min:0" style="width: 150px;" />
                             </td>
                             <td>资产数量:</td>
                             <td>
-                                <input class="easyui-numberspinner" value="0" id="Other_ZCSL_add"  name="Other_ZCSL_add" data-options="increment:1,min:0" style="width: 150px;" />
+                                <input class="easyui-numberspinner" value="0" id="Other_ZCSL_add" name="Other_ZCSL_add" data-options="increment:1,min:0" style="width: 150px;" />
                             </td>
                             <td>资产价值:</td>
                             <td>
@@ -243,7 +371,7 @@
                             </td>
                             <td>累计折旧:</td>
                             <td>
-                                <input class="easyui-textbox"  placeholder="请输入累计折旧" id="Other_LJZJ_add" name="Other_LJZJ_add" style="width: 150px;" />
+                                <input class="easyui-textbox" placeholder="请输入累计折旧" id="Other_LJZJ_add" name="Other_LJZJ_add" style="width: 150px;" />
                             </td>
                             <td>净值:</td>
                             <td>
@@ -271,8 +399,8 @@
     </div>
 
     <div style="text-align: center; padding: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">Submit</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
     </div>
 
 

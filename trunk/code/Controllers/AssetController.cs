@@ -5,7 +5,10 @@ using System.Web;
 using System.Web.Mvc;
 using FAMIS.ViewCommon;
 using FAMIS.DAL;
+using System.Web.Script.Serialization;
 using FAMIS.Models;
+using System.Runtime.Serialization.Json;
+using FAMIS.DTO;
 
 
 namespace FAMIS.Controllers
@@ -60,7 +63,7 @@ namespace FAMIS.Controllers
 
                 total = DB_Connecting.tb_Asset.OrderBy(a => a.ID).ToList().Count(),
                 rows = (from r in list
-                        select new tb_Asset()
+                        select new dto_Asset()
                         {
                             ID = r.ID,
                             serial_number = r.serial_number,
@@ -86,6 +89,7 @@ namespace FAMIS.Controllers
             return View();
         }
 
+       
 
         public String InsertAssets(FormCollection fc)
         {

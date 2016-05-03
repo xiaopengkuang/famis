@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data;
+using System.Text;
 using System.Web.Mvc;
 using FAMIS.DAL;
+using System.Web.Script.Serialization;
 using FAMIS.Models;
+using System.Runtime.Serialization.Json;
+using FAMIS.DTO;
 
 namespace FAMIS.Controllers
 {
@@ -13,6 +18,8 @@ namespace FAMIS.Controllers
 
 
         FAMISDBTBModels DB_Connecting = new FAMISDBTBModels();
+        StringBuilder result_tree_department = new StringBuilder();
+        StringBuilder sb_tree_department = new StringBuilder();
         // GET: Dict
         public ActionResult staff()
         {
@@ -40,7 +47,7 @@ namespace FAMIS.Controllers
             {
                 total = list.Count(),
                 rows = (from r in list
-                        select new tb_supplier()
+                        select new dto_supplier()
                         {
                             name_supplier = r.name_supplier,
                             linkman = r.linkman,
@@ -52,21 +59,217 @@ namespace FAMIS.Controllers
 
 
 
-        public JsonResult load_ZJFS_add()
+        [HttpGet]
+        /**
+         * 加载增加方式
+         * */
+        public String load_FS_add(int? TypeID)
         {
-            List<tb_supplier> list = DB_Connecting.tb_supplier.OrderBy(a => a.ID).ToList();
-            var json = new
-            {
-                total = list.Count(),
-                rows = (from r in list
-                        select new tb_supplier()
-                        {
-                            name_supplier = r.name_supplier,
-                            linkman = r.linkman,
-                            address = r.address
-                        }).ToArray()
-            };
-            return Json(json, JsonRequestBehavior.AllowGet);
+
+            List<tb_dataDict_para> list = DB_Connecting.tb_dataDict_para.Where(a => a.ID_dataDict == TypeID).OrderBy(a => a.ID).ToList();
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            var result = (from r in list
+                          select new dto_DataDict_para()
+                          {
+                              ID = r.ID,
+                              name_para = r.name_para
+                          }).ToList(); ;
+
+            String json = jss.Serialize(result).ToString().Replace("\\", "");
+            return json;
         }
+
+        [HttpGet]
+        public String load_SYR_add(String SZBM_ID)
+        {
+            List<tb_staff> list = DB_Connecting.tb_staff.Where(a => a.code_Departmen == SZBM_ID).OrderBy(a => a.ID).ToList();
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            var result = (from r in list
+                          select new dto_Staff()
+                          {
+                              id = r.ID_Staff,
+                              name = r.name
+                          }).ToList(); ;
+
+            String json = jss.Serialize(result).ToString().Replace("\\", "");
+            return json;
+        }
+
+
+
+
+         [HttpGet]
+        public String load_SZBM()
+        {
+
+            //List<tb_department> list = DB_Connecting.tb_department.OrderBy(a => a.ID).ToList();
+            
+            //JavaScriptSerializer jss = new JavaScriptSerializer();
+            //var result = (from r in list
+            //              select new dto_department()
+            //              {
+            //                  id=r.ID_Department,
+            //                  fatherID = r.ID_Father_Department,
+            //                  nameText=r.name_Department
+            //              }).ToList(); ;
+
+            //String json = jss.Serialize(result).ToString().Replace("\\", "");
+            //return json;
+            return GenerateTree_Department();
+        }
+
+         public String load_ZCLB()
+         {
+           return   GenerateTree_AssetType();
+         }
+
+
+
+
+         public String GenerateTree_AssetType()
+         {
+             List<tb__Asset_type> list_de_AT = DB_Connecting.tb__Asset_type.ToList();
+             result_tree_department.Clear();
+             sb_tree_department.Clear();
+             List<dto_AssetType> list_dto_AT = new List<dto_AssetType>();
+             list_de_AT.ForEach(item =>
+             {
+                 dto_AssetType tmp_dto_AT = new dto_AssetType();
+
+                 tmp_dto_AT.id = item.assetTypeCode;
+                 tmp_dto_AT.fatherID = item.father_MenuID_Type;
+                 tmp_dto_AT.nameText = item.name_Asset_Type;
+                 tmp_dto_AT.url = item.url;
+                 tmp_dto_AT.orderID = item.orderID;
+                 list_dto_AT.Add(tmp_dto_AT);
+             });
+             DataSet ds_de = ConvertToDataSet(list_dto_AT);
+             DataTable dt_de = new DataTable();
+             dt_de = ds_de.Tables[0];
+
+             string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
+             return json;
+         }
+
+
+
+         public String GenerateTree_Department()
+         {
+             List<tb_department> list_de = DB_Connecting.tb_department.ToList();
+             result_tree_department.Clear();
+             sb_tree_department.Clear();
+             List<dto_department> list_dto=new List<dto_department>();
+             list_de.ForEach(item =>
+             {
+                 dto_department tmp_dto=new dto_department();
+
+                 tmp_dto.id = item.ID_Department;
+                 tmp_dto.fatherID = item.ID_Father_Department;
+                 tmp_dto.nameText = item.name_Department;
+                 tmp_dto.url = item.url;
+                 tmp_dto.orderNum = item.orderNum;
+                 list_dto.Add(tmp_dto);
+             });
+
+
+
+
+             DataSet ds_de = ConvertToDataSet(list_dto); 
+             DataTable dt_de = new DataTable();
+             dt_de = ds_de.Tables[0];
+
+             string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
+             return json;
+  
+         }
+
+
+
+
+
+         public DataSet ConvertToDataSet<T>(IList<T> list)
+         {
+             if (list == null || list.Count <= 0)
+             {
+                 return null;
+             }
+
+             DataSet ds = new DataSet();
+             DataTable dt = new DataTable(typeof(T).Name);
+             DataColumn column;
+             DataRow row;
+
+             System.Reflection.PropertyInfo[] myPropertyInfo = typeof(T).GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+             foreach (T t in list)
+             {
+                 if (t == null)
+                 {
+                     continue;
+                 }
+
+                 row = dt.NewRow();
+
+                 for (int i = 0, j = myPropertyInfo.Length; i < j; i++)
+                 {
+                     System.Reflection.PropertyInfo pi = myPropertyInfo[i];
+
+                     string name = pi.Name;
+
+                     if (dt.Columns[name] == null)
+                     {
+                         column = new DataColumn(name, pi.PropertyType);
+                         dt.Columns.Add(column);
+                     }
+
+                     row[name] = pi.GetValue(t, null);
+                 }
+
+                 dt.Rows.Add(row);
+             }
+
+             ds.Tables.Add(dt);
+
+             return ds;
+         }
+
+				
+
+
+        public String GetTreeJsonByTable_Department(DataTable tabel, string idCol, string txtCol, string url, string rela, object pId)
+        {
+            result_tree_department.Append(sb_tree_department.ToString());
+            sb_tree_department.Clear();
+            if (tabel.Rows.Count > 0)
+            {
+                sb_tree_department.Append("[");
+                string filer = string.Format("{0}='{1}'", rela, pId);
+                DataRow[] rows = tabel.Select(filer);
+                if (rows.Length > 0)
+                {
+                    foreach (DataRow row in rows)
+                    {
+                        sb_tree_department.Append("{\"id\":\"" + row[idCol] + "\",\"text\":\"" + row[txtCol] + "\",\"attributes\":\"" + row[url] + "\",\"state\":\"open\"");
+                        if (tabel.Select(string.Format("{0}='{1}'", rela, row[idCol])).Length > 0)
+                        {
+                            sb_tree_department.Append(",\"children\":");
+                            GetTreeJsonByTable_Department(tabel, idCol, txtCol, url, rela, row[idCol]);
+                            result_tree_department.Append(sb_tree_department.ToString());
+                            sb_tree_department.Clear();
+                        }
+                        result_tree_department.Append(sb_tree_department.ToString());
+                        sb_tree_department.Clear();
+                        sb_tree_department.Append("},");
+                    }
+                    sb_tree_department = sb_tree_department.Remove(sb_tree_department.Length - 1, 1);
+                }
+                sb_tree_department.Append("]");
+                result_tree_department.Append(sb_tree_department.ToString());
+                sb_tree_department.Clear();
+            }
+            return result_tree_department.ToString();
+        }
+
+
     }
 }
