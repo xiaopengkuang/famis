@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace FAMIS.Controllers
+{
+    public class adsasd : Controller
+    {
+        // GET: Verify
+        public ActionResult Depreciation()
+        {
+            return View();
+        }
+
+        public ActionResult Inventory()
+        {
+            return View();
+        }
+    }
+}
