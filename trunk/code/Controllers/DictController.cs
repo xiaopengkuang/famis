@@ -20,6 +20,9 @@ namespace FAMIS.Controllers
         FAMISDBTBModels DB_Connecting = new FAMISDBTBModels();
         StringBuilder result_tree_department = new StringBuilder();
         StringBuilder sb_tree_department = new StringBuilder();
+
+        StringBuilder result_tree_Address = new StringBuilder();
+        StringBuilder sb_tree_Address = new StringBuilder();
         // GET: Dict
         public ActionResult staff()
         {
@@ -57,7 +60,32 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public String load_ZCXH_add(String assetType)
+        {
+             List<tb_Asset> list;
+             if (assetType != "" && assetType != "all")
+             {
+                 list = DB_Connecting.tb_Asset.Where(a => a.type_Asset == assetType).Distinct().ToList() ;
+             }
+             else {
+                 list =  DB_Connecting.tb_Asset.Distinct().ToList() ;
+             }
 
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            var result = (from r in list
+                          select new dto_Asset_ZCXH()
+                          {
+                              ZCXH = r.specification
+                             
+                          }).Distinct().ToList(); ;
+
+            String json = jss.Serialize(result).ToString().Replace("\\", "");
+            return json;
+        }
+
+
+      
 
         [HttpGet]
         /**
@@ -101,20 +129,6 @@ namespace FAMIS.Controllers
          [HttpGet]
         public String load_SZBM()
         {
-
-            //List<tb_department> list = DB_Connecting.tb_department.OrderBy(a => a.ID).ToList();
-            
-            //JavaScriptSerializer jss = new JavaScriptSerializer();
-            //var result = (from r in list
-            //              select new dto_department()
-            //              {
-            //                  id=r.ID_Department,
-            //                  fatherID = r.ID_Father_Department,
-            //                  nameText=r.name_Department
-            //              }).ToList(); ;
-
-            //String json = jss.Serialize(result).ToString().Replace("\\", "");
-            //return json;
             return GenerateTree_Department();
         }
 
@@ -136,10 +150,10 @@ namespace FAMIS.Controllers
              {
                  dto_AssetType tmp_dto_AT = new dto_AssetType();
 
-                 tmp_dto_AT.id = item.assetTypeCode;
-                 tmp_dto_AT.fatherID = item.father_MenuID_Type;
-                 tmp_dto_AT.nameText = item.name_Asset_Type;
-                 tmp_dto_AT.url = item.url;
+                 tmp_dto_AT.id = item.assetTypeCode.Trim();
+                 tmp_dto_AT.fatherID = item.father_MenuID_Type.Trim();
+                 tmp_dto_AT.nameText = item.name_Asset_Type.Trim();
+                 tmp_dto_AT.url = item.url.Trim();
                  tmp_dto_AT.orderID = item.orderID;
                  list_dto_AT.Add(tmp_dto_AT);
              });
@@ -152,7 +166,38 @@ namespace FAMIS.Controllers
          }
 
 
+         [HttpGet]
+         public String load_CFDD_add(int id_di)
+         {
+             List<tb_dataDict_para> list_ad_AT = DB_Connecting.tb_dataDict_para.Where(a => a.ID_dataDict == id_di).ToList();
+             result_tree_department.Clear();
+             sb_tree_department.Clear();
+             List<dto_CFDD_Asset> list_dto_ad_AT = new List<dto_CFDD_Asset>();
+             list_ad_AT.ForEach(item =>
+             {
+                 dto_CFDD_Asset tmp_dto_AT = new dto_CFDD_Asset();
 
+                 tmp_dto_AT.id = item.ID;
+                 tmp_dto_AT.fatherid = item.fatherid;
+                 tmp_dto_AT.url = item.url;
+                 tmp_dto_AT.nameText = item.name_para;
+                 tmp_dto_AT.orderID = item.orderID;
+                 list_dto_ad_AT.Add(tmp_dto_AT);
+             });
+             DataSet ds_ad = ConvertToDataSet(list_dto_ad_AT);
+             DataTable dt_ad = new DataTable();
+             dt_ad = ds_ad.Tables[0];
+
+             string json = GetTreeJsonByTable_Address(dt_ad, "id", "nameText", "url", "fatherID", "0");
+             return json;
+         }
+
+
+
+
+
+
+       
          public String GenerateTree_Department()
          {
              List<tb_department> list_de = DB_Connecting.tb_department.ToList();
@@ -268,6 +313,42 @@ namespace FAMIS.Controllers
                 sb_tree_department.Clear();
             }
             return result_tree_department.ToString();
+        }
+
+
+
+        public String GetTreeJsonByTable_Address(DataTable tabel, string idCol, string txtCol, string url, string rela, object pId)
+        {
+            result_tree_Address.Append(sb_tree_Address.ToString());
+            sb_tree_Address.Clear();
+            if (tabel.Rows.Count > 0)
+            {
+                sb_tree_Address.Append("[");
+                string filer = string.Format("{0}='{1}'", rela, pId);
+                DataRow[] rows = tabel.Select(filer);
+                if (rows.Length > 0)
+                {
+                    foreach (DataRow row in rows)
+                    {
+                        sb_tree_Address.Append("{\"id\":\"" + row[idCol] + "\",\"text\":\"" + row[txtCol] + "\",\"attributes\":\"" + row[url] + "\",\"state\":\"open\"");
+                        if (tabel.Select(string.Format("{0}='{1}'", rela, row[idCol])).Length > 0)
+                        {
+                            sb_tree_Address.Append(",\"children\":");
+                            GetTreeJsonByTable_Address(tabel, idCol, txtCol, url, rela, row[idCol]);
+                            result_tree_Address.Append(sb_tree_Address.ToString());
+                            sb_tree_Address.Clear();
+                        }
+                        result_tree_Address.Append(sb_tree_Address.ToString());
+                        sb_tree_Address.Clear();
+                        sb_tree_Address.Append("},");
+                    }
+                    sb_tree_Address = sb_tree_Address.Remove(sb_tree_Address.Length - 1, 1);
+                }
+                sb_tree_Address.Append("]");
+                result_tree_Address.Append(sb_tree_Address.ToString());
+                sb_tree_Address.Clear();
+            }
+            return result_tree_Address.ToString();
         }
 
 

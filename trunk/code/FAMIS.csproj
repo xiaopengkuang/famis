@@ -1774,6 +1774,7 @@
     <Compile Include="Controllers\AcountController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\DictController.cs" />
     <Compile Include="Controllers\FAMIS.Inforamtion_Count\ZC_ViewController.cs" />
     <Compile Include="Controllers\FAMIS.System_setup\Asset_Depart.cs" />
@@ -1791,8 +1792,11 @@
     <Compile Include="DAL\ElementModel.cs" />
     <Compile Include="DTO\dto_Asset.cs" />
     <Compile Include="DTO\dto_AssetType.cs" />
+    <Compile Include="DTO\dto_Asset_ZCXH.cs" />
+    <Compile Include="DTO\dto_CFDD_Asset.cs" />
     <Compile Include="DTO\dto_DataDict_para.cs" />
     <Compile Include="DTO\dto_department.cs" />
+    <Compile Include="DTO\dto_rule_Generate.cs" />
     <Compile Include="DTO\dto_Staff.cs" />
     <Compile Include="DTO\dto_supplier.cs" />
     <Compile Include="Global.asax.cs">
@@ -1816,6 +1820,7 @@
     <Compile Include="Models\tb_reduction_detail.cs" />
     <Compile Include="Models\tb_role.cs" />
     <Compile Include="Models\tb_role__authorization.cs" />
+    <Compile Include="Models\tb_Rule_Generate.cs" />
     <Compile Include="Models\tb_staff.cs" />
     <Compile Include="Models\tb_supplier.cs" />
     <Compile Include="Models\tb_user.cs" />
@@ -1881,6 +1886,7 @@
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
     <Folder Include="ViewModel\" />
+    <Folder Include="Views\Common\" />
     <Folder Include="Views\Customer\" />
   </ItemGroup>
   <PropertyGroup>
