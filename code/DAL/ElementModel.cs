@@ -207,9 +207,9 @@ namespace FAMIS.Models
                 .Property(e => e.url_icon)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_dataDict_para>()
+           /* modelBuilder.Entity<tb_dataDict_para>()
                 .Property(e => e.ID_dataDict)
-                .IsUnicode(false);
+                .IsUnicode(false);*/
 
             modelBuilder.Entity<tb_dataDict_para>()
                 .Property(e => e.name_para)

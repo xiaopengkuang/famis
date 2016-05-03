@@ -1757,6 +1757,9 @@
     <Content Include="Scripts\UI\LoadTreeMenu.js" />
     <Content Include="Views\Shared\Navigation.ascx" />
     <Content Include="Views\Asset\AddAsset.cshtml" />
+    <Content Include="Views\Rule\Index.cshtml" />
+    <Content Include="Views\SysSetting\AddRole.cshtml" />
+    <Content Include="Views\SysSetting\loadSearchTreeByRole.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -1772,6 +1775,11 @@
     <Compile Include="Controllers\AssetController.cs" />
     <Compile Include="Controllers\AssetsController.cs" />
     <Compile Include="Controllers\DictController.cs" />
+    <Compile Include="Controllers\FAMIS.Inforamtion_Count\ZC_ViewController.cs" />
+    <Compile Include="Controllers\FAMIS.System_setup\Asset_Depart.cs" />
+    <Compile Include="Controllers\FAMIS.System_setup\ClickCountModel.cs" />
+    <Compile Include="Controllers\FAMIS.System_setup\RuleController.cs" />
+    <Compile Include="Controllers\FAMIS.System_setup\TestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\SysSettingController.cs" />
@@ -1780,6 +1788,7 @@
     <Compile Include="DAL\AccountContext.cs" />
     <Compile Include="DAL\AccountInitializer.cs" />
     <Compile Include="DAL\AssetContext.cs" />
+    <Compile Include="DAL\ElementModel.cs" />
     <Compile Include="DTO\dto_Asset.cs" />
     <Compile Include="DTO\dto_AssetType.cs" />
     <Compile Include="DTO\dto_DataDict_para.cs" />
@@ -1789,6 +1798,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper_Class\Serial.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\FAMISDBTBModels.cs" />
     <Compile Include="Models\tb_Address_AssetStore.cs" />
@@ -1857,10 +1867,8 @@
     <Content Include="Views\User\ErrorLogin.cshtml" />
     <Content Include="Views\User\Test.cshtml" />
     <Content Include="Views\Home\Test.cshtml" />
-    <Content Include="Views\Manage\MainPage.cshtml" />
-    <Content Include="Views\Manage\MainPage_IE.cshtml" />
-    <Content Include="Views\Manage\index.cshtml" />
-    <Content Include="Views\Manage\index2016年4月19日170615.cshtml" />
+    <Content Include="Views\ZC_View\ZC_View.cshtml" />
+    <Content Include="Views\ZC_View\AddRight.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
