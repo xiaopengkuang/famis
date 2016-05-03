@@ -116,7 +116,10 @@ namespace FAMIS.ViewCommon
             dt.Rows.Add("JSFS1", "减少方式", "ALL", "", "1");
             dt.Rows.Add("GYS1", "供应商", "ALL", "", "1");
             dt.Rows.Add("ZJFS1", "增加方式", "ALL", "", "1");
-
+            dt.Rows.Add("SYFS", "实验方式", "ALL", "", "1");
+            dt.Rows.Add("asdsad", "sadsadggfd", "0", "", "1");
+            dt.Rows.Add("ZJFS1", "增加方式", "ALL", "", "1");
+            dt.Rows.Add("SYFS", "实验方式", "ALL", "", "1");
             //dt.Rows.Add("M0101", "深圳", "M01", "", "100");
             //dt.Rows.Add("M010101", "南山区", "M0101", "", "1000");
             //dt.Rows.Add("M010102", "罗湖区", "M0101", "", "1001");
