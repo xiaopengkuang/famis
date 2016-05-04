@@ -61,5 +61,8 @@ namespace FAMIS.Models
         public string depreciation_tatol { get; set; }
 
         public double? Net_value { get; set; }
+
+        [StringLength(20)]
+        public string Method_add { get; set; }
     }
 }

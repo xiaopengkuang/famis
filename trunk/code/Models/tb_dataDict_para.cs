@@ -18,7 +18,7 @@ namespace FAMIS.Models
         [StringLength(300)]
         public string description { get; set; }
 
-        public DateTime create_Time { get; set; }
+        public DateTime? create_Time { get; set; }
 
         public int fatherid { get; set; }
 

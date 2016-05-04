@@ -57,7 +57,8 @@ namespace FAMIS.Controllers
             if (currentNum_DB != null && currentNum_DB != "" && ruleDTO != null && ruleDTO.rule != null && ruleDTO.rule != "" && ruleDTO.length > 0)
             {
                 Serial serialGenerator = new Serial();
-                newSerialNumber = serialGenerator.Generate_SN_Interface(ruleDTO.rule.ToString(), num, ruleDTO.length, currentNum_DB.ToString());
+                int length=int.Parse(ruleDTO.length.ToString());
+                newSerialNumber = serialGenerator.Generate_SN_Interface(ruleDTO.rule.ToString(), num, length, currentNum_DB.ToString());
                 
             }
             return newSerialNumber;

@@ -8,7 +8,7 @@ namespace FAMIS.Models
     public partial class FAMISDBTBModels : DbContext
     {
         public FAMISDBTBModels()
-            : base("name=FAMISDBTBModels")
+            : base("name=FAMISDBTBModels1")
         {
         }
 
@@ -144,6 +144,10 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.depreciation_tatol)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset>()
+                .Property(e => e.Method_add)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset__allocation>()

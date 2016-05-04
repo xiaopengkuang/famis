@@ -18,60 +18,14 @@
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
 
     <script type="text/javascript">
-
-        //==================================global data==========================================//
-        var d_SZBM_add;
-        var d_ZCLB_add;
-        var d_CFDD_add;
-        var d_Other_SYNX_add=0;
-        var d_Other_ZCDJ_add=0;
-        var d_Other_ZCSL_add = 0;
-        //==================================global data==========================================//
-
-
-
         $(function () {
 
             loadInitDate();
 
             $("#Num_PLTJ_add").hide();
-
-            $("#Other_ZCDJ_add").numberspinner({
-                min: 0,
-                editable: false,
-                onChange: function (value) {
-                    $('#Other_ZCDJ_add').numberspinner('setValue', value);
-                    //d_Other_ZCDJ_add = value;
-                    
-                }
-
-            });
-
-
-            $("#Other_SYNX_add").numberspinner({
-                min: 0,
-                editable: false,
-                onChange: function (value) {
-                    $('#Other_SYNX_add').numberspinner('setValue', value);
-                    //d_Other_SYNX_add = value;
-                    //alert(  $('#Other_SYNX_add').numberspinner('getValue'));
-                }
-
-            });
-
-
-            $("#Other_ZCSL_add").numberspinner({
-                min: 0,
-                editable: false,
-                onChange: function (value) {
-                    $('#Other_ZCSL_add').numberspinner('setValue', value);
-                    //d_Other_ZCSL_add = value;
-                }
-
-            });
             //alert(111);
         });
-      
+
         function loadInitDate() {
             load_GYS_add();
             load_ZJFS_add();
@@ -102,7 +56,7 @@
                        //清除选中  
                        $('#ZCLB_add').combotree('clear');
                    } else {
-                       d_ZCLB_add = $('#ZCLB_add').combotree("getValue")
+
                        //资产类别
                        $('#ZCXH_add').combobox('clear');
                        load_ZCXH_add(node.text);
@@ -136,7 +90,7 @@
 
                }, //全部折叠
                onLoadSuccess: function (node, data) {
-                   $('#ZCLB_add').combotree('tree').tree("collapseAll");
+                   $('#SZBM_add').combotree('tree').tree("collapseAll");
                }
            });
         }
@@ -192,9 +146,7 @@
                         //清除选中  
                         $('#SZBM_add').combotree('clear');
                     } else {
-                        d_SZBM_add = $('#SZBM_add').combotree('getValue');
                         load_SYR_add(node.id);
-
                     }
                     //
 
@@ -225,7 +177,7 @@
                       //清除选中  
                       $('#CFDD_add').combotree('clear');
                   } else {
-                      d_CFDD_add = $('#CFDD_add').combotree('getValue');
+                      load_SYR_add(node.id);
                   }
                   //
 
@@ -354,10 +306,6 @@
             }
         }
 
-
-
-
-
         function submitForm() {
 
             //============================基础属性========================================//
@@ -380,18 +328,7 @@
                 }
             }
 
-            if (d_ZCLB_add == "" || d_ZCLB_add == null) {
-
-                d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
-                if (d_ZCLB_add == "" || d_ZCLB_add == undefined) {
-                    //$.messager.alert('提示', "调皮的肖金龙", 'info'); return;
-                }
-
-            }
-
-            //var d_ZCLB_add;
-            //= $("#ZCLB_add").combotree("getValue");
-
+            var d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
 
             var d_ZCMC_add = $("#ZCMC_add").val();
 
@@ -399,30 +336,11 @@
 
             var d_JLDW_add = $("#JLDW_add").val();
 
-
-            if (d_SZBM_add == "" || d_SZBM_add == null) {
-
-                d_SZBM_add = $("#SZBM_add").combotree("getValue");
-                if (d_SZBM_add == "" || d_SZBM_add == undefined) {
-                    //$.messager.alert('提示', "调皮的肖金龙2", 'info'); return;
-                }
-            }
-
-            //var d_SZBM_add;
-            //= $("#SZBM_add").combotree("gettext")
+            var d_SZBM_add = $("#SZBM_add").combotree("getValue");
 
             var d_SYR_add = $("#SYR_add").val();;
 
-
-            if (d_CFDD_add == "" || d_CFDD_add == null) {
-                d_CFDD_add = $("#CFDD_add").combotree("getValue");
-                if (d_CFDD_add == "" || d_CFDD_add == undefined) {
-                    //$.messager.alert('提示', "调皮的肖金龙3", 'info'); return;
-                }
-            }
-
-            //var d_CFDD_add;
-            //= $("#CFDD_add").combotree("getValue");
+            var d_CFDD_add = $("#CFDD_add").combotree("getValue");
 
             var d_ZJFS_add = $("#ZJFS_add").val();
 
@@ -439,25 +357,16 @@
             var d_Num_PLTJ_add = d_Check_PLZJ_add == true ? 1 : $("#Num_PLTJ_add").val();
 
             //===============================其他属性===================================//
-
-            //var d_Other_SYNX_add = document.getElementById("Other_SYNX_add").lastChild.value();
-                //parseInt($("#Other_SYNX_add").numberspinner("getValue").text);
-            //= $("#Other_SYNX_add").val();
-
-            d_Other_SYNX_add=  $('#Other_SYNX_add').numberspinner('getValue')
+            var d_Other_SYNX_add = $("Other_SYNX_add").numberspinner("getValue");;
 
             var d_Other_ZJFS_add = $("#Other_ZJFS_add").val();
 
             var d_Other_JCZL_add = $("#Other_JCZL_add").val();
 
-            //var v = $('#ss').numberspinner('getValue');  // get value
+            var d_Other_ZCDJ_add = $("#Other_ZCDJ_add").numberspinner("getValue");
 
-            d_Other_ZCDJ_add = $('#Other_ZCDJ_add').numberspinner('getValue')
-            //var d_Other_ZCDJ_add =$('#Other_ZCDJ_add').numberspinner('getValue');  
-            //= $("#Other_ZCDJ_add").val();
+            var d_Other_ZCSL_add = $("#Other_ZCSL_add").numberspinner("getValue");
 
-            //var d_Other_ZCSL_add = $("#Other_ZCSL_add").val();
-            d_Other_ZCSL_add = $('#Other_ZCSL_add').numberspinner('getValue')
             var d_Other_ZCJZ_add = $("#Other_ZCJZ_add").val();
 
             var d_Other_YTZJ_add = $("#Other_YTZJ_add").val();;
@@ -471,44 +380,18 @@
 
             //封装成json格式创给后台
             var Asset_add = {
-                "d_ZCBH_add": d_ZCBH_add,
-                "d_ZCXZ_ID_add": d_ZCXZ_ID_add,
-                "d_ZCXZ_Name_add": d_ZCXZ_Name_add,
-                "d_ZCLB_add": d_ZCLB_add,
-                "d_ZCMC_add": d_ZCMC_add,
-                "d_ZCXH_add": d_ZCXH_add,
-                "d_JLDW_add": d_JLDW_add,
-                "d_SZBM_add": d_SZBM_add,
-                "d_SYR_add": d_SYR_add,
-                "d_ZJFS_add": d_ZJFS_add,
-                "d_GYS_add": d_GYS_add,
-                "d_LXR_add": d_LXR_add,
-                "d_GZRQ_add": d_GZRQ_add,
-                "d_GYSDD_add": d_GYSDD_add,
-                "d_Check_PLZJ_add": d_Check_PLZJ_add,
-                "d_Num_PLTJ_add": d_Num_PLTJ_add,
-                "d_CFDD_add":d_CFDD_add,
-                "d_Other_SYNX_add": d_Other_SYNX_add,
-                "d_Other_ZJFS_add": d_Other_ZJFS_add,
-                "d_Other_JCZL_add": d_Other_JCZL_add,
-                "d_Other_ZCDJ_add": d_Other_ZCDJ_add,
-                "d_Other_ZCSL_add": d_Other_ZCSL_add,
-                "d_Other_ZCJZ_add": d_Other_ZCJZ_add,
-                "d_Other_YTZJ_add": d_Other_YTZJ_add,
-                "d_Other_LJZJ_add": d_Other_LJZJ_add,
-                "d_Other_JZ_add": d_Other_JZ_add
+                "name": "feichexia",
+                "age": 23,
+                "email": "feichexia@yahoo.com.cn"
             };
 
-            //$.messager.alert('提示', d_Other_SYNX_add + "|" + d_Other_ZCSL_add + "|" + d_Other_ZCDJ_add, 'info');
             $.post(
-                "/Asset/addNewAsset_hanlder",
+                "/Home/Index",
                 {
-                    "Asset_add": JSON.stringify(Asset_add)
-                    //"Asset_add": JSON.stringify("\"A\":1")
+                    "person": encodeURIComponent(JSON.stringify(person))
                 },
                  function (data) {
                      // TODO  
-                     alert(data);
                  }
             );
 
@@ -533,12 +416,12 @@
                             <td>资产编号:</td>
                             <td>
                                 <input class="easyui-textbox" placeholder="刷新自动生成" id="ZCBH_add" name="ZCBH_add" readonly="readonly" style="width: 140px;" />
-                                <img src="../../LIB/jquery-easyui-1.3.2/themes/icons/reload.png" id="New_ZCBH_add" onclick="loadNewAssetCode()" style="width: 15px; height: 15px" />
+                                <img src="../../LIB/jquery-easyui-1.3.2/themes/icons/reload.png"  id="New_ZCBH_add" onclick="loadNewAssetCode()" style="width:15px;height:15px" />
                                 <!--<a href="javaScript:void(0);" class="easyui-linkbutton" id="New_ZCBH_add" onclick="loadNewAssetCode()" style="width: auto">刷新</a>-->
                             </td>
                             <td>资产性质:</td>
                             <td>
-                                <input class="easyui-textbox" readonly="readonly" id="ZCXZ_add" name="ZCXZ_add" style="width: 150px;" />
+                                <input class="easyui-textbox"  readonly="readonly" id="ZCXZ_add" name="ZCXZ_add" style="width: 150px;" />
                             </td>
                             <td>资产类别:</td>
                             <td>
@@ -553,11 +436,11 @@
                             </td>
                             <td>规格型号:</td>
                             <td>
-                                <input class="easyui-combobox" readonly="readonly" id="ZCXH_add" name="ZCXH_add" style="width: 150px;" />
+                                <input class="easyui-combobox"  readonly="readonly" id="ZCXH_add" name="ZCXH_add" style="width: 150px;" />
                             </td>
                             <td>计量单位:</td>
                             <td>
-                                <select class="easyui-combobox" id="JLDW_add" name="JLDW_add" style="width: 150px;">
+                                <select class="easyui-combotree" id="JLDW_add" name="JLDW_add" style="width: 150px;">
                                 </select>
                             </td>
                         </tr>
@@ -574,7 +457,7 @@
                             </td>
                             <td>存放地点:</td>
                             <td>
-                                <input class="easyui-textbox" id="CFDD_add" name="CFDD_add" style="width: 150px;" />
+                                <input class="easyui-textbox"  id="CFDD_add" name="CFDD_add" style="width: 150px;" />
                             </td>
                         </tr>
                         <tr>
@@ -623,7 +506,7 @@
                         <tr>
                             <td>使用年限(月):</td>
                             <td>
-                                <input class="easyui-numberspinner" value="0" id="Other_SYNX_add" name="Other_SYNX_add" data-options="increment:1,min:0" style="width: 150px;" />
+                                <input class="easyui-numberspinner" value="0" id="Other_SYNX_add" name="Other_SYNX_add" data-options="increment:1,min:60" style="width: 150px;" />
                             </td>
                             <td>折旧方式:</td>
                             <td>
