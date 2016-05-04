@@ -1760,6 +1760,7 @@
     <Content Include="Views\Rule\Index.cshtml" />
     <Content Include="Views\SysSetting\AddRole.cshtml" />
     <Content Include="Views\SysSetting\loadSearchTreeByRole.cshtml" />
+    <Content Include="Views\Asset\EditAsset.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -1790,6 +1791,7 @@
     <Compile Include="DAL\AccountInitializer.cs" />
     <Compile Include="DAL\AssetContext.cs" />
     <Compile Include="DAL\ElementModel.cs" />
+    <Compile Include="DTO\Json_Asset_add.cs" />
     <Compile Include="DTO\dto_Asset.cs" />
     <Compile Include="DTO\dto_AssetType.cs" />
     <Compile Include="DTO\dto_Asset_ZCXH.cs" />

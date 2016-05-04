@@ -101,7 +101,7 @@ namespace FAMIS.Controllers
                           {
                               ID = r.ID,
                               name_para = r.name_para
-                          }).ToList(); ;
+                          }).ToList(); 
 
             String json = jss.Serialize(result).ToString().Replace("\\", "");
             return json;
@@ -169,6 +169,7 @@ namespace FAMIS.Controllers
          [HttpGet]
          public String load_CFDD_add(int id_di)
          {
+
              List<tb_dataDict_para> list_ad_AT = DB_Connecting.tb_dataDict_para.Where(a => a.ID_dataDict == id_di).ToList();
              result_tree_department.Clear();
              sb_tree_department.Clear();

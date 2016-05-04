@@ -13,6 +13,6 @@ namespace FAMIS.DTO
         //[StringLength(30)]
         public string rule { get; set; }
 
-        public int length { get; set; }
+        public int? length { get; set; }
     }
 }
