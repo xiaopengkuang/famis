@@ -13,7 +13,7 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string name_dataDict { get; set; }
 
-        public int father_ID { get; set; }
+        public int? father_ID { get; set; }
 
         public int? treeLevel { get; set; }
 

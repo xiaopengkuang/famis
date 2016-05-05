@@ -23,8 +23,8 @@
         var d_SZBM_add;
         var d_ZCLB_add;
         var d_CFDD_add;
-        var d_Other_SYNX_add=0;
-        var d_Other_ZCDJ_add=0;
+        var d_Other_SYNX_add = 0;
+        var d_Other_ZCDJ_add = 0;
         var d_Other_ZCSL_add = 0;
         //==================================global data==========================================//
 
@@ -42,7 +42,7 @@
                 onChange: function (value) {
                     $('#Other_ZCDJ_add').numberspinner('setValue', value);
                     //d_Other_ZCDJ_add = value;
-                    
+
                 }
 
             });
@@ -71,7 +71,7 @@
             });
             //alert(111);
         });
-      
+
         function loadInitDate() {
             load_GYS_add();
             load_ZJFS_add();
@@ -79,6 +79,7 @@
             load_SZBM_add();
             load_ZCLB_add();
             load_CFDD_add();
+            load_Other_ZJFS_add();
         }
 
 
@@ -297,6 +298,19 @@
         }
 
 
+        function load_Other_ZJFS_add()
+        {
+            $("#Other_ZJFS_add").combobox({
+                valueField: 'ID',
+                method: 'get',
+                textField: 'name_para',
+                url: '/Dict/load_FS_add?TypeID=10',
+                onSelect: function (rec) {
+                    $('#Other_ZJFS_add').combobox('setValue', rec.ID);
+                    $('#Other_ZJFS_add').combobox('setText', rec.name_para);
+                }
+            });
+        }
 
 
 
@@ -331,7 +345,7 @@
 
 
         function loadNewAssetCode_Blocked() {
-            $.messager.alert('提示', '批量添加不支持刷新编号!', 'warning');
+            $.messager.alert('提示', '批量添加不支持刷新编号!', 'info');
         }
 
 
@@ -370,15 +384,15 @@
 
             var d_ZCXZ_ID_add;
 
-            var d_ZCXZ_Name_add;
+            //var d_ZCXZ_Name_add;
 
-            if (zcxz != "" && zcxz != null) {
-                var zcxz_arr = zcxz.split("-");
-                if (zcxz_arr.length == 2) {
-                    d_ZCXZ_ID_add = parseInt(zcxz_arr[0]);
-                    d_ZCXZ_Name_add = zcxz_arr[1];
-                }
-            }
+            //if (zcxz != "" && zcxz != null) {
+            //    var zcxz_arr = zcxz.split("-");
+            //    if (zcxz_arr.length == 2) {
+            //        d_ZCXZ_ID_add = parseInt(zcxz_arr[0]);
+            //        d_ZCXZ_Name_add = zcxz_arr[1];
+            //    }
+            //}
 
             if (d_ZCLB_add == "" || d_ZCLB_add == null) {
 
@@ -395,9 +409,10 @@
 
             var d_ZCMC_add = $("#ZCMC_add").val();
 
-            var d_ZCXH_add = $("#ZCXH_add").val();
+            var d_ZCXH_add = $('#ZCXH_add').combobox("getValue");
+            //alert(d_ZCXH_add);
 
-            var d_JLDW_add = $("#JLDW_add").val();
+            var d_JLDW_add = $("#JLDW_add").combobox("getValue");
 
 
             if (d_SZBM_add == "" || d_SZBM_add == null) {
@@ -411,7 +426,7 @@
             //var d_SZBM_add;
             //= $("#SZBM_add").combotree("gettext")
 
-            var d_SYR_add = $("#SYR_add").val();;
+            var d_SYR_add = $("#SYR_add").combobox("getValue");
 
 
             if (d_CFDD_add == "" || d_CFDD_add == null) {
@@ -420,11 +435,12 @@
                     //$.messager.alert('提示', "调皮的肖金龙3", 'info'); return;
                 }
             }
+            d_CFDD_add = d_CFDD_add == "" ? -1 : parseInt(d_CFDD_add);
 
             //var d_CFDD_add;
             //= $("#CFDD_add").combotree("getValue");
 
-            var d_ZJFS_add = $("#ZJFS_add").val();
+            var d_ZJFS_add = $("#ZJFS_add").combobox("getValue") == "" ? -1 : parseInt($("#ZJFS_add").combobox("getValue"));
 
             var d_GYS_add = $("#GYS_add").combogrid("getValue");
 
@@ -441,39 +457,47 @@
             //===============================其他属性===================================//
 
             //var d_Other_SYNX_add = document.getElementById("Other_SYNX_add").lastChild.value();
-                //parseInt($("#Other_SYNX_add").numberspinner("getValue").text);
+            //parseInt($("#Other_SYNX_add").numberspinner("getValue").text);
             //= $("#Other_SYNX_add").val();
 
-            d_Other_SYNX_add=  $('#Other_SYNX_add').numberspinner('getValue')
+            d_Other_SYNX_add = $('#Other_SYNX_add').numberspinner('getValue')
+            d_Other_SYNX_add = d_Other_SYNX_add == "" ? -1 : parseInt(d_Other_SYNX_add);
 
-            var d_Other_ZJFS_add = $("#Other_ZJFS_add").val();
+            var d_Other_ZJFS_add =$("#Other_ZJFS_add").combobox('getValue');
+            d_Other_ZJFS_add = d_Other_ZJFS_add == "" ? -1 : parseInt(d_Other_ZJFS_add);
 
             var d_Other_JCZL_add = $("#Other_JCZL_add").val();
-
+            d_Other_JCZL_add = d_Other_JCZL_add == "" ? -1 : parseInt(d_Other_JCZL_add);
             //var v = $('#ss').numberspinner('getValue');  // get value
 
             d_Other_ZCDJ_add = $('#Other_ZCDJ_add').numberspinner('getValue')
+            d_Other_ZCDJ_add = d_Other_ZCDJ_add == "" ? -1 : parseInt(d_Other_ZCDJ_add);
             //var d_Other_ZCDJ_add =$('#Other_ZCDJ_add').numberspinner('getValue');  
             //= $("#Other_ZCDJ_add").val();
 
             //var d_Other_ZCSL_add = $("#Other_ZCSL_add").val();
             d_Other_ZCSL_add = $('#Other_ZCSL_add').numberspinner('getValue')
+            d_Other_ZCSL_add = d_Other_ZCSL_add == "" ? -1 : parseInt(d_Other_ZCSL_add);
+
             var d_Other_ZCJZ_add = $("#Other_ZCJZ_add").val();
+            d_Other_ZCJZ_add = d_Other_ZCJZ_add == "" ? -1 : parseFloat(d_Other_ZCJZ_add);
 
             var d_Other_YTZJ_add = $("#Other_YTZJ_add").val();;
+            d_Other_YTZJ_add = d_Other_YTZJ_add == "" ? -1 : parseFloat(d_Other_YTZJ_add);
 
             var d_Other_LJZJ_add = $("#Other_LJZJ_add").val();
+            d_Other_LJZJ_add = d_Other_LJZJ_add == "" ? -1 : parseFloat(d_Other_LJZJ_add);
 
             var d_Other_JZ_add = $("#Other_JZ_add").val();
-
+            d_Other_JZ_add = d_Other_JZ_add == "" ? -1 : parseFloat(d_Other_JZ_add);
 
             //===============================自定义属性===================================//
 
             //封装成json格式创给后台
             var Asset_add = {
                 "d_ZCBH_add": d_ZCBH_add,
-                "d_ZCXZ_ID_add": d_ZCXZ_ID_add,
-                "d_ZCXZ_Name_add": d_ZCXZ_Name_add,
+                //"d_ZCXZ_ID_add": d_ZCXZ_ID_add,
+                //"d_ZCXZ_Name_add": d_ZCXZ_Name_add,
                 "d_ZCLB_add": d_ZCLB_add,
                 "d_ZCMC_add": d_ZCMC_add,
                 "d_ZCXH_add": d_ZCXH_add,
@@ -482,12 +506,12 @@
                 "d_SYR_add": d_SYR_add,
                 "d_ZJFS_add": d_ZJFS_add,
                 "d_GYS_add": d_GYS_add,
-                "d_LXR_add": d_LXR_add,
+                //"d_LXR_add": d_LXR_add,
                 "d_GZRQ_add": d_GZRQ_add,
-                "d_GYSDD_add": d_GYSDD_add,
+                //"d_GYSDD_add": d_GYSDD_add,
                 "d_Check_PLZJ_add": d_Check_PLZJ_add,
                 "d_Num_PLTJ_add": d_Num_PLTJ_add,
-                "d_CFDD_add":d_CFDD_add,
+                "d_CFDD_add": d_CFDD_add,
                 "d_Other_SYNX_add": d_Other_SYNX_add,
                 "d_Other_ZJFS_add": d_Other_ZJFS_add,
                 "d_Other_JCZL_add": d_Other_JCZL_add,
@@ -500,21 +524,40 @@
             };
 
             //$.messager.alert('提示', d_Other_SYNX_add + "|" + d_Other_ZCSL_add + "|" + d_Other_ZCDJ_add, 'info');
-            $.post(
-                "/Asset/addNewAsset_hanlder",
-                {
+            $.ajax({
+                url:"/Asset/addNewAsset_hanlder",
+                type: 'POST',
+                data:{
                     "Asset_add": JSON.stringify(Asset_add)
                     //"Asset_add": JSON.stringify("\"A\":1")
                 },
-                 function (data) {
-                     // TODO  
-                     alert(data);
+               beforeSend:ajaxLoading,
+               success: function (data) {
+                   ajaxLoadEnd();
+                     //// TODO  
+                     ////alert(data);
+                     //$("#printLable").text(data);
+                     //$("#printLable").val(data);
+                     //$.messager.alert('提示', "调皮的肖金龙3", 'info'); return;
+                     var result = data > 0 ? "成功插入" + data + "条记录！" : "插入失败！"
+                     $.messager.alert('提示', result, 'info');
                  }
-            );
+            } );
 
         }
 
 
+        //采用jquery easyui loading css效果
+        function ajaxLoading() {
+            $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+            $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+        }
+        function ajaxLoadEnd() {
+            $(".datagrid-mask").remove();
+            $(".datagrid-mask-msg").remove();
+        }
+
+       
 
 
     </script>
@@ -553,7 +596,7 @@
                             </td>
                             <td>规格型号:</td>
                             <td>
-                                <input class="easyui-combobox" readonly="readonly" id="ZCXH_add" name="ZCXH_add" style="width: 150px;" />
+                                <input class="easyui-combobox" id="ZCXH_add" name="ZCXH_add" style="width: 150px;" />
                             </td>
                             <td>计量单位:</td>
                             <td>
@@ -569,7 +612,7 @@
                             </td>
                             <td>使用人:</td>
                             <td>
-                                <select class="easyui-textbox" id="SYR_add" name="SYR_add" style="width: 150px;">
+                                <select class="easyui-combobox" id="SYR_add" name="SYR_add" style="width: 150px;">
                                 </select>
                             </td>
                             <td>存放地点:</td>
@@ -590,7 +633,7 @@
                             </td>
                             <td>联系人:</td>
                             <td>
-                                <input class="easyui-textbox" readonly="readonly" id="LXR_add" name="LXR_add" style="width: 150px;" />
+                                <input class="easyui-textbox" id="LXR_add" name="LXR_add" style="width: 150px;" />
                             </td>
                         </tr>
                         <tr>
@@ -600,7 +643,7 @@
                             </td>
                             <td>供应商地址:</td>
                             <td>
-                                <input class="easyui-textbox" readonly="readonly" id="GYSDD_add" name="GYSDD_add" style="width: 150px;" />
+                                <input class="easyui-textbox" id="GYSDD_add" name="GYSDD_add" style="width: 150px;" />
                             </td>
                         </tr>
                     </table>
@@ -611,7 +654,7 @@
                                 <input type="checkbox" name="Check_PLZJ_add" onclick="showAreaNum_PLTJ_add()" id="Check_PLZJ_add" value="1" />批量添加(最多添加99)
                             </td>
                             <td style="width: 49%">
-                                <input class="easyui-textbox" placeholder="请输入添加数量" id="Num_PLTJ_add" name="Num_PLTJ_add" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" style="width: 150px;" />
+                                <input class="easyui-textbox"  id="Num_PLTJ_add" name="Num_PLTJ_add" onkeypress="if (event.keyCode < 48 || event.keyCode > 57) event.returnValue = false;" style="width: 150px;" />
                             </td>
                         </tr>
                     </table>
@@ -628,6 +671,7 @@
                             <td>折旧方式:</td>
                             <td>
                                 <select class="easyui-combobox" id="Other_ZJFS_add" name="Other_ZJFS_add" style="width: 150px;">
+                                  
                                 </select>
                             </td>
                             <td>净残值率:</td>
@@ -668,6 +712,7 @@
                 </div>
                 <div id="zdysx_add" class="easyui-panel" title="自定义属性" style="width: auto; height: 80px; padding: 1px;"
                     data-options="collapsible:true">
+                    <label id="printLable"></label>
                 </div>
             </div>
 

@@ -104,8 +104,8 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.address)
-                .IsUnicode(false);
+                .Property(e => e.addressCF);
+                //.IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.people_using)

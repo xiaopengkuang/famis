@@ -351,6 +351,7 @@
     <Content Include="CODE_ASSI\jquery-ui-bootstrap-jquery-ui-bootstrap-57bfc05\third-party\wijmo\jquery.mousewheel.min.js" />
     <Content Include="CODE_ASSI\jquery-ui-bootstrap-jquery-ui-bootstrap-57bfc05\third-party\wijmo\jquery.wijmo-open.1.5.0.css" />
     <Content Include="CODE_ASSI\jquery-ui-bootstrap-jquery-ui-bootstrap-57bfc05\third-party\wijmo\jquery.wijmo-open.1.5.0.min.js" />
+    <Content Include="CODE_ASSI\SQL_HLEP\InsertAssetMuti.sql" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -1790,7 +1791,9 @@
     <Compile Include="DAL\AccountContext.cs" />
     <Compile Include="DAL\AccountInitializer.cs" />
     <Compile Include="DAL\AssetContext.cs" />
+    <Compile Include="DAL\CommonConnecting.cs" />
     <Compile Include="DAL\ElementModel.cs" />
+    <Compile Include="DAL\SQLRunner.cs" />
     <Compile Include="DTO\Json_Asset_add.cs" />
     <Compile Include="DTO\dto_Asset.cs" />
     <Compile Include="DTO\dto_AssetType.cs" />
