@@ -16,7 +16,7 @@ namespace FAMIS.DTO
         [StringLength(20)]
         public string name_Asset { get; set; }
 
-        [StringLength(20)]
+         [StringLength(20)]
         public string type_Asset { get; set; }
 
         [StringLength(20)]
@@ -34,8 +34,8 @@ namespace FAMIS.DTO
         [StringLength(20)]
         public string department_Using { get; set; }
 
-        [StringLength(200)]
-        public string address { get; set; }
+      
+        public int? address { get; set; }
 
         [StringLength(20)]
         public string people_using { get; set; }

@@ -8,7 +8,7 @@ namespace FAMIS.Models
     public partial class FAMISDBTBModels : DbContext
     {
         public FAMISDBTBModels()
-            : base("name=FAMISDBTBModels1")
+            : base("name=FAMISDBTBModels")
         {
         }
 
@@ -39,7 +39,6 @@ namespace FAMIS.Models
         {
             modelBuilder.Entity<tb__Asset_type>()
                 .Property(e => e.assetTypeCode)
-                .IsFixedLength()
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb__Asset_type>()
@@ -123,10 +122,6 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.address)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.people_using)
                 .IsUnicode(false);
 
@@ -136,18 +131,6 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.supplierID)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.depreciation_Month)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.depreciation_tatol)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.Method_add)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset__allocation>()

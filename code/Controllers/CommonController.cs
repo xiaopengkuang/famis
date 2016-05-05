@@ -48,16 +48,18 @@ namespace FAMIS.Controllers
 
 
              ArrayList newSerialNumber = new ArrayList();
-           
+
+             //获取Type规则
+             dto_rule_Generate ruleDTO = getRuleByType(ruleType);
+
             //获取数据库中的最新的数列号
-            String currentNum_DB = getLastestSerialNumber(ruleType);
-            //获取Type规则
-            dto_rule_Generate ruleDTO = getRuleByType(ruleType);
+            String currentNum_DB = getLastestSerialNumber(ruleType,ruleDTO);
+            
             //生成数据
             if (currentNum_DB != null && currentNum_DB != "" && ruleDTO != null && ruleDTO.rule != null && ruleDTO.rule != "" && ruleDTO.length > 0)
             {
                 Serial serialGenerator = new Serial();
-                int length=int.Parse(ruleDTO.length.ToString());
+                int length = ruleDTO.length;
                 newSerialNumber = serialGenerator.Generate_SN_Interface(ruleDTO.rule.ToString(), num, length, currentNum_DB.ToString());
                 
             }
@@ -81,12 +83,19 @@ namespace FAMIS.Controllers
             return rule;
         }
 
-        public String getLastestSerialNumber(String type)
+        public String getLastestSerialNumber(String type,dto_rule_Generate dto_rule)
         {
             String SerialNum_Latest = "";
+
+            //计算长度
+            int targtLength = computeLength_serialNumber(dto_rule);
+
+
+
+
             if (type.Equals("ZC"))
             {
-                List<tb_Asset> list = DBConnecting.tb_Asset.OrderByDescending(a => a.serial_number).Take(1).ToList();
+                List<tb_Asset> list = DBConnecting.tb_Asset.Where(b => b.serial_number.Length == targtLength).OrderByDescending(a => a.serial_number).Take(1).ToList();
                 if (list.Count() > 0)
                 {
                     list.ForEach(item =>
@@ -113,6 +122,43 @@ namespace FAMIS.Controllers
 
             }
             return SerialNum_Latest;
+        }
+
+        public int computeLength_serialNumber(dto_rule_Generate dto_rule)
+        {
+
+            int length = 0;
+            String tmpRule;
+            String flag;
+            if (!dto_rule.rule.Contains(":"))
+            {
+                flag = ":";
+                tmpRule = dto_rule.rule.Replace("}{", flag);
+            }
+            else
+            {
+                flag = "::";
+                tmpRule = dto_rule.rule.Replace("}{", flag);
+            }
+            tmpRule = tmpRule.Replace("{", "").Replace("}", "").Trim();
+
+            String[] dataR = tmpRule.Split(flag.ToCharArray());
+            for (int i = 0; i < dataR.Length;i++ )
+            {
+                if (dataR[i].Trim() == "NO")
+                {
+
+                    length += dto_rule.length;
+                }
+                else {
+                    length += dataR[i].Trim().Length;
+                }
+            }
+
+            return length;
+
+
+
         }
 
     }

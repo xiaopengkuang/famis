@@ -34,8 +34,7 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string department_Using { get; set; }
 
-        [StringLength(200)]
-        public string address { get; set; }
+        public int? addressCF { get; set; }
 
         [StringLength(20)]
         public string people_using { get; set; }
@@ -54,15 +53,14 @@ namespace FAMIS.Models
 
         public int? Net_residual_rate { get; set; }
 
-        [StringLength(50)]
-        public string depreciation_Month { get; set; }
+        public double? depreciation_Month { get; set; }
 
-        [StringLength(50)]
-        public string depreciation_tatol { get; set; }
+        public double? depreciation_tatol { get; set; }
 
         public double? Net_value { get; set; }
 
-        [StringLength(20)]
-        public string Method_add { get; set; }
+        public int? Method_add { get; set; }
+
+        public bool? flag { get; set; }
     }
 }
