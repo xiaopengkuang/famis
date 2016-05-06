@@ -103,7 +103,7 @@
         function LoadInitData_Detail() {
 
             $('#TableList_0_1').datagrid({
-                url: '/Asset/getpageOrder?role=1&tableType=1',
+                url: '/Asset/LoadAssets?role=1&tableType=1&flag=true',
                 method: 'get', //默认是post,不允许对静态文件访问
                 width: 'auto',
                 height:'300px',
@@ -117,7 +117,7 @@
                 pageNumber: 1, //默认显示第几页 
                 pageList: [15, 30, 45],//分页中下拉选项的数值 
                 columns: [[
-                    { field: 'ck', checkbox: true, width: 50 },
+                    { field: 'ID', checkbox: true, width: 50 },
                     { field: 'serial_number', title: '资产编号', width: 50 },
                     { field: 'name_Asset', title: '资产名称', width: 50 },
                     { field: 'type_Asset', title: '资产类型', width: 50 },
@@ -153,8 +153,6 @@
                     iconCls: 'icon-add',
                     height: 50,
                     handler: function () {
-
-
                         var $winADD;
                         $winADD = $('#modalwindow').window({
                             title: '添加资产',
@@ -168,7 +166,23 @@
                             closed: true,
                             minimizable: false,
                             maximizable: false,
-                            collapsible: false
+                            collapsible: false,
+                            onClose: function ()
+                            {
+                                $('#TableList_0_1').datagrid('reload');
+                               var  resultAlert = "成功插入" + data + "条记录！";
+                                $.messager.show({
+                                    title: '提示',
+                                    msg: resultAlert,
+                                    showType: 'slide',
+                                    style: {
+                                        right: '',
+                                        top: document.body.scrollTop + document.documentElement.scrollTop,
+                                        bottom: ''
+                                    }
+                                });
+                               
+                            }
                         });
                         $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/AddAsset'></iframe>");
                         $winADD.window('open');
@@ -183,11 +197,44 @@
                     iconCls: 'icon-remove',
                     height: 50,
                     handler: function () {
-                        var row = $('#TableList_0_1').datagrid('getSelected');
-                        if (row) {
-                            var index = $('#TableList_0_1').datagrid('getRowIndex', row);
-                            $('#TableList_0_1').datagrid('deleteRow', index);
+                        //获取选择行
+                        var rows = $('#TableList_0_1').datagrid('getSelections');
+                        var IDS = [];
+                        for (var i = 0; i < rows.length; i++) {
+                            IDS[i] = rows[i].ID;
                         }
+                        //将数据传入后台
+                        $.ajax({
+                            url: '/Asset/deleteAssets',
+                            data: { "selectedIDs": IDS },
+                            //data: _list,  
+                            dataType: "json",
+                            type: "POST",
+                            traditional: true,
+                            success: function (data) {
+                                // your logic  
+                                if (data > 0) {
+
+                                    $('#TableList_0_1').datagrid('reload');
+                                    var resultAlert = "成功删除" + data + "条记录！";
+                                    $.messager.show({
+                                        title: '提示',
+                                        msg: resultAlert,
+                                        showType: 'slide',
+                                        style: {
+                                            right: '',
+                                            top: document.body.scrollTop + document.documentElement.scrollTop,
+                                            bottom: ''
+                                        }
+                                    });
+                                } else {
+                                    resultAlert = "系统正忙，请稍后继续！";
+                                    $.messager.alert('警告', resultAlert, 'warning');
+                                }
+                            }
+                        });
+
+
                     }
                 },
                 {
@@ -244,7 +291,7 @@
 
         function LoadInitData_Summary() {
             $('#TableList_0_1').datagrid({
-                url: '/Asset/getpageOrder?role=1&tableType=1',
+                url: '/Asset/LoadAssets?role=1&tableType=1&flag=true',
                 method: 'get', //默认是post,不允许对静态文件访问
                 width: 'auto',
                 iconCls: 'icon-save',
@@ -257,7 +304,7 @@
                 pageNumber: 1, //默认显示第几页 
                 pageList: [15, 30, 45],//分页中下拉选项的数值 
                 columns: [[
-                    { field: 'ck', checkbox: true, width: 50 },
+                    { field: 'ID', checkbox: true, width: 50 },
                     { field: 'serial_number', title: '资产编号', width: 50 },
                     { field: 'name_Asset', title: '资产名称', width: 50 },
                     { field: 'type_Asset', title: '资产类型', width: 50 },
