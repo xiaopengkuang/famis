@@ -18,7 +18,14 @@ namespace FAMIS.DAL
             int count_do = 0;
             SqlCommand cmd = new SqlCommand(sql, cn);
             cn.Open();
-             count_do= cmd.ExecuteNonQuery();
+            try
+            {
+                count_do = cmd.ExecuteNonQuery();
+            }catch(Exception e)
+            {
+                count_do = 0;
+            }
+             
             cn.Close();
             return count_do;
         }

@@ -249,22 +249,21 @@ namespace FAMIS.Controllers
         }
 
         [HttpGet]
-        public JsonResult getpageOrder(int? page, int? rows, int? role,int? tableType)
+         public JsonResult LoadAssets(int? page, int? rows, int? role, int? tableType,bool flag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
+            
 
 
 
-            List<tb_Asset> list = DB_Connecting.tb_Asset.OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+            List<tb_Asset> list = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
 
          
             //List<tb_user> list = DB_Connecting.tb_user.ToList();
             var json = new
             {
-
-
-                total = DB_Connecting.tb_Asset.OrderBy(a => a.ID).ToList().Count(),
+                total = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).Count(),
                 rows = (from r in list
                         select new dto_Asset()
                         {
@@ -285,6 +284,35 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
             
         }
+
+        public int deleteAssets(List<int> selectedIDs)
+        {
+
+            String deleteSQL = getDeleteAssetSQL(selectedIDs);
+            SQLRunner sqlRunner = new SQLRunner();
+            int result = sqlRunner.executesql(deleteSQL);
+            return result;
+
+        }
+
+        public String getDeleteAssetSQL(List<int> selectedIDs)
+        {
+            String deleteIIIDDD="";
+            for (int i = 0; i < selectedIDs.Count; i++)
+            {
+                if (i == 0)
+                {
+                    deleteIIIDDD = selectedIDs[i]+"";
+                }
+                else {
+                    deleteIIIDDD += "," + selectedIDs[i];
+                }
+            }
+            String deleteSQL = "update tb_Asset set flag=0 where ID in (" + deleteIIIDDD + ");";
+            return deleteSQL;
+        }
+
+
 
 
         public ActionResult AddAsset()
