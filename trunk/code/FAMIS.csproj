@@ -1794,6 +1794,7 @@
     <Compile Include="DAL\CommonConnecting.cs" />
     <Compile Include="DAL\ElementModel.cs" />
     <Compile Include="DAL\SQLRunner.cs" />
+    <Compile Include="DTO\dto_Asset_Summary.cs" />
     <Compile Include="DTO\Json_Asset_add.cs" />
     <Compile Include="DTO\dto_Asset.cs" />
     <Compile Include="DTO\dto_AssetType.cs" />
@@ -1812,6 +1813,7 @@
     <Compile Include="Models\FAMISDBTBModels.cs" />
     <Compile Include="Models\tb_Address_AssetStore.cs" />
     <Compile Include="Models\tb_Asset.cs" />
+    <Compile Include="Models\tb_AssetType.cs" />
     <Compile Include="Models\tb_Asset_colla.cs" />
     <Compile Include="Models\tb_Asset_colla_detail.cs" />
     <Compile Include="Models\tb_Asset__allocation.cs" />
@@ -1820,6 +1822,8 @@
     <Compile Include="Models\tb_dataDict_para.cs" />
     <Compile Include="Models\tb_department.cs" />
     <Compile Include="Models\tb_detail__allocation.cs" />
+    <Compile Include="Models\tb_inventory.cs" />
+    <Compile Include="Models\tb_inventory_Details.cs" />
     <Compile Include="Models\tb_Menu.cs" />
     <Compile Include="Models\tb_Method_Add.cs" />
     <Compile Include="Models\tb_reduction_detail.cs" />
@@ -1829,7 +1833,6 @@
     <Compile Include="Models\tb_staff.cs" />
     <Compile Include="Models\tb_supplier.cs" />
     <Compile Include="Models\tb_user.cs" />
-    <Compile Include="Models\tb__Asset_type.cs" />
     <Compile Include="Models\tb__inventory.cs" />
     <Compile Include="Models\tb__inventory__Details.cs" />
     <Compile Include="Models\User.cs" />

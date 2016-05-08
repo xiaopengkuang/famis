@@ -12,7 +12,7 @@ namespace FAMIS.Models
         {
         }
 
-        public virtual DbSet<tb__Asset_type> tb__Asset_type { get; set; }
+        public virtual DbSet<tb_AssetType> tb__Asset_type { get; set; }
         public virtual DbSet<tb__inventory> tb__inventory { get; set; }
         public virtual DbSet<tb__inventory__Details> tb__inventory__Details { get; set; }
         public virtual DbSet<tb_Asset> tb_Asset { get; set; }
@@ -34,16 +34,16 @@ namespace FAMIS.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<tb__Asset_type>()
+            modelBuilder.Entity<tb_AssetType>()
                 .Property(e => e.assetTypeCode)
                 .IsFixedLength()
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb__Asset_type>()
+            modelBuilder.Entity<tb_AssetType>()
                 .Property(e => e.name_Asset_Type)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb__Asset_type>()
+            modelBuilder.Entity<tb_AssetType>()
                 .Property(e => e.father_MenuID_Type)
                 .IsUnicode(false);
 
@@ -96,8 +96,8 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.measurement)
-                .IsUnicode(false);
+                .Property(e => e.measurement);
+                //.IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.department_Using)

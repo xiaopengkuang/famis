@@ -23,8 +23,8 @@ namespace FAMIS.DTO
         [StringLength(20)]
         public string d_ZCXH_add { get; set; }
 
-        [StringLength(20)]
-        public string d_JLDW_add { get; set; }
+        
+        public int? d_JLDW_add { get; set; }
 
         [StringLength(20)]
         public string d_SZBM_add { get; set; }

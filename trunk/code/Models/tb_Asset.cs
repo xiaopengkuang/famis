@@ -16,14 +16,13 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string name_Asset { get; set; }
 
-        [StringLength(20)]
+        [StringLength(8)]
         public string type_Asset { get; set; }
 
         [StringLength(20)]
         public string specification { get; set; }
 
-        [StringLength(20)]
-        public string measurement { get; set; }
+        public int? measurement { get; set; }
 
         public double? unit_price { get; set; }
 
