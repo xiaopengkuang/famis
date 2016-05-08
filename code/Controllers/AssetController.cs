@@ -11,6 +11,7 @@ using FAMIS.Models;
 using System.Runtime.Serialization.Json;
 using FAMIS.DTO;
 using System.Collections;
+using System.Data;
 using System.Data.SqlClient;
 
 
@@ -248,22 +249,120 @@ namespace FAMIS.Controllers
             return jsonStr;
         }
 
+
+
+
         [HttpGet]
-         public JsonResult LoadAssets(int? page, int? rows, int? role, int? tableType,bool flag)
+         public JsonResult LoadAssets(int? page, int? rows, int role, int tableType,int flag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
+
+            if (tableType == 1)
+            {
+                return loadAsset_detail_1(page,rows,role,flag);
+            }
+            else if(tableType==0)
+            {
+
+                return loadAsset_Summary_0(page,rows,role,flag);
+            }else{
+                return null;
+            }
+
             
+            
+            //page = page == null ? 1 : page;
+            //rows = rows == null ? 1 : rows;
+            //List<tb_Asset> list = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).OrderByDescending(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+            ////List<tb_user> list = DB_Connecting.tb_user.ToList();
+            //var json = new
+            //{
+            //    total = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).Count(),
+            //    rows = (from r in list
+            //            select new dto_Asset()
+            //            {
+            //                ID = r.ID,
+            //                serial_number = r.serial_number,
+            //                name_Asset = r.name_Asset,
+            //                type_Asset = r.type_Asset,
+            //                specification = r.specification,
+            //                unit_price = r.unit_price,
+            //                amount = r.amount,
+            //                department_Using = r.department_Using,
+            //                address = r.addressCF,
+            //                state_asset = r.state_asset,
+            //                value = r.value,
+            //                supplierID = r.supplierID
+            //            }).ToArray()
+            //};
+            //return Json(json, JsonRequestBehavior.AllowGet);
+            
+        }
 
 
+        [HttpGet]
+        public JsonResult loadAsset_Summary_0(int? page, int? rows, int role,int flag)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
 
-            List<tb_Asset> list = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+            int beginIndex = ((int)page - 1) * (int)rows+1;
+
+            int endIndex = (int)page*(int)rows;
+            String loadAssetSummarySQL = "select top " + rows + " * from (select ROW_NUMBER() OVER (ORDER BY a.name_Asset) as RowNo,a.name_Asset AssetName,c.name_Asset_Type AssetType,b.name_para measurement,a.specification,SUM(a.amount) amount,Sum(a.value) value from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag + "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type) s_tb where s_tb.RowNo between "+beginIndex+" and "+endIndex ;
+            
+            String loadAssetSumCounter = "select ROW_NUMBER() OVER (ORDER BY a.name_Asset) as RowNo,a.name_Asset AssetName,c.name_Asset_Type AssetType,b.name_para measurement,a.specification,SUM(a.amount) amount,Sum(a.value) value from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag  + "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type";
+
+            SQLRunner sqlRuner = new SQLRunner();
+
+            DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(loadAssetSummarySQL);
+          
+
+           int resultCount = sqlRuner.runSelectSQL_dto_AssetSumm_Counter(loadAssetSumCounter);
+
+           List<dto_Asset_Summary> list = new List<dto_Asset_Summary>();
+           for (int i = 0; i < dt.Rows.Count; i++)
+           {
+
+               dto_Asset_Summary tmp = new dto_Asset_Summary();
+
+               tmp.RowNo = int.Parse(dt.Rows[i]["RowNo"].ToString());
+               tmp.AssetName = dt.Rows[i]["AssetName"].ToString();
+               tmp.AssetType = dt.Rows[i]["AssetType"].ToString();
+               tmp.specification = dt.Rows[i]["specification"].ToString();
+               tmp.measurement = dt.Rows[i]["measurement"].ToString();
+               tmp.amount = int.Parse(dt.Rows[i]["amount"].ToString());
+               tmp.value = double.Parse(dt.Rows[i]["value"].ToString());
+               list.Add(tmp);
+           }    
 
          
-            //List<tb_user> list = DB_Connecting.tb_user.ToList();
+        
+          var json = new
+          {
+              total = resultCount,
+              rows = list.ToArray()
+
+          };
+
+          return Json(json, JsonRequestBehavior.AllowGet);
+            
+        }
+
+
+        /**
+         * 加载详细列表
+         * */
+        public JsonResult loadAsset_detail_1(int? page, int? rows, int role,int flag)
+        {
+            //page = page == null ? 1 : page;
+            //rows = rows == null ? 1 : rows;
+            Boolean fllag=flag==1?true:false;
+            List<tb_Asset> list = DB_Connecting.tb_Asset.Where(b => b.flag == fllag).OrderByDescending(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
             var json = new
             {
-                total = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).Count(),
+                total = DB_Connecting.tb_Asset.Where(b => b.flag == fllag).Count(),
                 rows = (from r in list
                         select new dto_Asset()
                         {
@@ -284,6 +383,7 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
             
         }
+
 
         public int deleteAssets(List<int> selectedIDs)
         {

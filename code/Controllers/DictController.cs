@@ -142,7 +142,7 @@ namespace FAMIS.Controllers
 
          public String GenerateTree_AssetType()
          {
-             List<tb__Asset_type> list_de_AT = DB_Connecting.tb__Asset_type.ToList();
+             List<tb_AssetType> list_de_AT = DB_Connecting.tb_AssetType.ToList();
              result_tree_department.Clear();
              sb_tree_department.Clear();
              List<dto_AssetType> list_dto_AT = new List<dto_AssetType>();
