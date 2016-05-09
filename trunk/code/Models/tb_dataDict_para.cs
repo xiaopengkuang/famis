@@ -20,7 +20,7 @@ namespace FAMIS.Models
 
         public DateTime? create_Time { get; set; }
 
-        public int fatherid { get; set; }
+        public int? fatherid { get; set; }
 
         [StringLength(30)]
         public string url { get; set; }

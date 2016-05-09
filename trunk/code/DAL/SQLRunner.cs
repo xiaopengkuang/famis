@@ -11,7 +11,7 @@ namespace FAMIS.DAL
     public class SQLRunner
     {
         SqlConnection cn = new SqlConnection(CommonConnecting.connectionstring);
-        SqlDataAdapter da;
+        
         DataSet ds = new DataSet();
        
         public int executesql(string sql)

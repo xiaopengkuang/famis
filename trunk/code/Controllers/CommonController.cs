@@ -77,7 +77,7 @@ namespace FAMIS.Controllers
                 rule = new dto_rule_Generate();
                 list.ForEach(item => {
                     rule.rule = item.Rule_Generate;
-                    rule.length = item.serialNum_length;
+                    rule.length = (int)item.serialNum_length;
                 });
             }
             return rule;

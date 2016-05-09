@@ -1,13 +1,15 @@
-namespace FAMIS.Models
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
 
-    public partial class tb_Asset
+namespace FAMIS.DTO
+{
+    public class dto_Asset_Detail
     {
+
+        public int RowNo { get; set; }
         public int ID { get; set; }
 
         [StringLength(20)]
@@ -22,7 +24,7 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string specification { get; set; }
 
-        public int? measurement { get; set; }
+        public String measurement { get; set; }
 
         public double? unit_price { get; set; }
 
@@ -33,12 +35,13 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string department_Using { get; set; }
 
-        public int? addressCF { get; set; }
+        public String addressCF { get; set; }
 
         [StringLength(20)]
         public string people_using { get; set; }
 
-        public int? state_asset { get; set; }
+        [StringLength(10)]
+        public string state_asset { get; set; }
 
         [StringLength(20)]
         public string supplierID { get; set; }
@@ -57,10 +60,7 @@ namespace FAMIS.Models
 
         public double? Net_value { get; set; }
 
-        public int? Method_add { get; set; }
+        public String Method_add { get; set; }
 
-        public bool? flag { get; set; }
-
-        public DateTime? Time_add { get; set; }
     }
 }

@@ -16,6 +16,6 @@ namespace FAMIS.Models
         [StringLength(30)]
         public string Rule_Generate { get; set; }
 
-        public int serialNum_length { get; set; }
+        public int? serialNum_length { get; set; }
     }
 }

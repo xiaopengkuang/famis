@@ -10,11 +10,9 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(8)]
-        public string ID_Department { get; set; }
+        public int? ID_Department { get; set; }
 
-        [StringLength(8)]
-        public string ID_Father_Department { get; set; }
+        public int? ID_Father_Department { get; set; }
 
         [StringLength(20)]
         public string name_Department { get; set; }
