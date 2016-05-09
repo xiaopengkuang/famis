@@ -210,7 +210,6 @@ namespace FAMIS.Controllers
         public tb_Asset convertAssetTbByJson(Json_Asset_add data)
         {
             tb_Asset tb_asset_add = new tb_Asset();
-
             tb_asset_add.serial_number = data.d_ZCBH_add;
             tb_asset_add.name_Asset = data.d_ZCMC_add;
             tb_asset_add.type_Asset = data.d_ZCLB_add;
@@ -231,7 +230,6 @@ namespace FAMIS.Controllers
             tb_asset_add.depreciation_tatol = data.d_Other_LJZJ_add;
             tb_asset_add.Net_value =data.d_Other_JZ_add;
             tb_asset_add.Method_add = data.d_ZJFS_add;
-
             return tb_asset_add;
         }
 
@@ -239,88 +237,200 @@ namespace FAMIS.Controllers
 
 
 
-         [HttpGet]
-        public String loadSearchTreeByRole(String roleName)
-        {
+        // [HttpPost]
+        //public String loadSearchTreeByRole(String roleName)
+        //{
+        //     //Do something with RoleName
+        //    // Str
+        //    //SQLRunner sqlRuner = new SQLRunner();
+        //    //DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(loadAssetSummarySQL);
+        //    TreeViewCommon treeviewCommon = new TreeViewCommon();
+        //    String jsonStr = treeviewCommon.GetModule(roleName);
+        //    return jsonStr;
+        //}
+        // public String getSearchTreeSQL(String roleName)
+        // {
+        //     String sql = "select ID,name_para,ID_dataDict fatherid,url,orderID from  tb_dataDict_para  dic_PL where dic_PL.ID_dataDict in (select ID from tb_dataDict dic where dic.flag_search=1)"
+        //            +" union all "
+        //            +" select di_L.ID,di_L.name_dataDict name_para,0 fatherid,'' url,di_L.ID orederID from tb_dataDict di_L where di_L.flag_search=1 "
+        //            +" union all "
+        //            +" select deTB.ID_Department ID,deTB.name_Department name_para,deTB.ID_Father_Department fatherid,'' url,deTB.ID orderID from tb_department deTB "
+        //            +" union all "
+        //            +" select stf.ID,stf.name name_para,13 fatherid,'' url,stf.ID orderID from tb_staff stf";
+        //     return sql;
+        // }
 
 
-            TreeViewCommon treeviewCommon = new TreeViewCommon();
-            String jsonStr = treeviewCommon.GetModule(roleName);
-            return jsonStr;
-        }
 
 
-
-
-        [HttpGet]
-         public JsonResult LoadAssets(int? page, int? rows, int role, int tableType,int flag)
+        [HttpPost]
+         public JsonResult LoadAssets(int? page, int? rows, int role, int tableType, int flag, String searchCondtiion)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
+
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            dto_SearchCondition dto_condition = null;
+            String condSC = "";
+            if (searchCondtiion != null)
+            {
+                dto_condition = serializer.Deserialize<dto_SearchCondition>(searchCondtiion);
+                 condSC = TranslateSearchConditionToString(dto_condition);
+            }
+            else {
+                condSC = "";
+            }
+
+          
 
             if (tableType == 1)
             {
-                return loadAsset_detail_1(page,rows,role,flag);
+                
+                return loadAsset_detail_1(page, rows, role, flag, condSC);
             }
             else if(tableType==0)
             {
-
-                return loadAsset_Summary_0(page,rows,role,flag);
+                int aa = 01;
+                return loadAsset_Summary_0(page, rows, role, flag, condSC);
             }else{
                 return null;
             }
-
-            
-            
-            //page = page == null ? 1 : page;
-            //rows = rows == null ? 1 : rows;
-            //List<tb_Asset> list = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).OrderByDescending(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
-            ////List<tb_user> list = DB_Connecting.tb_user.ToList();
-            //var json = new
-            //{
-            //    total = DB_Connecting.tb_Asset.Where(b=>b.flag==flag).Count(),
-            //    rows = (from r in list
-            //            select new dto_Asset()
-            //            {
-            //                ID = r.ID,
-            //                serial_number = r.serial_number,
-            //                name_Asset = r.name_Asset,
-            //                type_Asset = r.type_Asset,
-            //                specification = r.specification,
-            //                unit_price = r.unit_price,
-            //                amount = r.amount,
-            //                department_Using = r.department_Using,
-            //                address = r.addressCF,
-            //                state_asset = r.state_asset,
-            //                value = r.value,
-            //                supplierID = r.supplierID
-            //            }).ToArray()
-            //};
-            //return Json(json, JsonRequestBehavior.AllowGet);
-            
         }
 
 
-        [HttpGet]
-        public JsonResult loadAsset_Summary_0(int? page, int? rows, int role,int flag)
+        public String TranslateSearchConditionToString(dto_SearchCondition cond)
+        {
+            String condStr = "";
+            if (cond == null)
+            {
+                condStr = "";
+            }
+            else
+            {
+
+                if (cond.typeFlag=="left"&&cond.nodeText!=null)
+                {
+                    int nodeid = (int)cond.nodeID;
+                    //获取DictParaID
+                    List<tb_dataDict> dic = DB_Connecting.tb_dataDict.Where(a => a.flag_Search == true).Take(1).ToList();
+                    int ratio=100000;
+                    if (dic.Count > 0)
+                    {
+                        ratio =(int)dic[0].ratio;
+                    }
+                    int dicID = nodeid / ratio;
+                    int dic_paraID = nodeid - (ratio * dicID);
+                    condStr = getSC_DicParaLeft(dicID, dic_paraID,cond.nodeText);
+                }
+                else if (cond.typeFlag == "right"&&cond.DataType!=null)
+                {
+                    if (cond.DataType == "Date")
+                    {
+                        condStr = getSC_Date(cond);
+                    }
+                    else if (cond.DataType == "content")
+                    {
+                        condStr = getSC_content(cond);
+                    }
+                    else { 
+
+                    }
+                }
+                else { 
+
+                }
+
+
+            }
+            return condStr;
+        }
+
+
+        public String getSC_Date(dto_SearchCondition cond)
+        {
+            string condStr = "";
+
+            String beginTime = ((DateTime)cond.begin).ToString("yyyy-MM-dd") + " 00:00:00";
+            String endTime = ((DateTime)cond.end).ToString("yyyy-MM-dd") + " 23:59:59";
+            if (cond.dataName == "GZRQ")
+            {
+                condStr = " and Time_Purchase between '" + beginTime + "'and '" + endTime + "'";
+            }
+            else if (cond.dataName == "DJRQ")
+            {
+
+                condStr = " and Time_add between '" + beginTime + "'and '" + endTime + "'";
+            }
+            else { 
+
+            }
+            return condStr;
+            
+        }
+        public String getSC_content(dto_SearchCondition cond)
+        {
+
+            //like '%A%'包含A的字符串
+            String condStr = "";
+            switch (cond.dataName)
+            {
+                case "ZCBH": condStr = " and serial_number like'%" + cond.contentSC+"%'"; break;
+
+                case "ZCMC": condStr = " and  name_Asset like'%" + cond.contentSC + "%'"; break;
+
+                case "ZCXH": condStr = " and  specification like '%" + cond.contentSC+"%'"; break;
+
+                default :condStr=""; break; 
+            }
+
+            return condStr;
+            
+
+        }
+
+
+        public String getSC_DicParaLeft(int dicID,int dic_paraID,String nodetext)
+        {
+            String condStr = "";
+            switch (dicID){ 
+            case 3 : condStr=" and Method_add="+dic_paraID; break;
+
+            case 4: condStr =""; break;
+
+            case 5: condStr = " and  state_asset=" + dic_paraID; break;
+
+            case 9: condStr = "  and addressCF=" + dic_paraID; break;
+
+            case 11: condStr = "  and department_Using=" + dic_paraID; break;
+
+            case 12: condStr = "  and type_Asset=" + dic_paraID; break;
+
+            case 13: condStr = "  and people_using=" + dic_paraID; break;
+
+            case 14: condStr = "  and supplierID='" + nodetext+"'"; break; 
+
+            default :condStr=""; break; 
+            }
+
+            return condStr;
+        }
+
+
+
+
+        [HttpPost]
+        public JsonResult loadAsset_Summary_0(int? page, int? rows, int role,int flag,String condition)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
 
-            int beginIndex = ((int)page - 1) * (int)rows+1;
-
-            int endIndex = (int)page*(int)rows;
-            String loadAssetSummarySQL = "select top " + rows + " * from (select ROW_NUMBER() OVER (ORDER BY a.name_Asset) as RowNo,a.name_Asset AssetName,c.name_Asset_Type AssetType,b.name_para measurement,a.specification,SUM(a.amount) amount,Sum(a.value) value from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag + "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type) s_tb where s_tb.RowNo between "+beginIndex+" and "+endIndex ;
-            
-            String loadAssetSumCounter = "select ROW_NUMBER() OVER (ORDER BY a.name_Asset) as RowNo,a.name_Asset AssetName,c.name_Asset_Type AssetType,b.name_para measurement,a.specification,SUM(a.amount) amount,Sum(a.value) value from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag  + "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type";
+            String loadAssetSummarySQL = getAssetSQL_Summary(page, rows, role, flag,condition);
+            String loadAssetSumCounter = getAssetSQL_Summary_Counter(page, rows, role, flag,condition);
 
             SQLRunner sqlRuner = new SQLRunner();
-
             DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(loadAssetSummarySQL);
-          
-
            int resultCount = sqlRuner.runSelectSQL_dto_AssetSumm_Counter(loadAssetSumCounter);
-
            List<dto_Asset_Summary> list = new List<dto_Asset_Summary>();
            for (int i = 0; i < dt.Rows.Count; i++)
            {
@@ -336,13 +446,11 @@ namespace FAMIS.Controllers
                tmp.value = double.Parse(dt.Rows[i]["value"].ToString());
                list.Add(tmp);
            }    
-
-         
-        
           var json = new
           {
               total = resultCount,
-              rows = list.ToArray()
+              rows = list.ToArray(),
+              sql = loadAssetSummarySQL
 
           };
 
@@ -354,36 +462,84 @@ namespace FAMIS.Controllers
         /**
          * 加载详细列表
          * */
-        public JsonResult loadAsset_detail_1(int? page, int? rows, int role,int flag)
+        public JsonResult loadAsset_detail_1(int? page, int? rows, int role, int flag, String condition)
         {
-            //page = page == null ? 1 : page;
-            //rows = rows == null ? 1 : rows;
-            Boolean fllag=flag==1?true:false;
-            List<tb_Asset> list = DB_Connecting.tb_Asset.Where(b => b.flag == fllag).OrderByDescending(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
+            String selectSQL = getAssetSQL_detail(page, rows, role, flag, condition);
+            String selectSQLCounter = getAssetSQL_detail_Counter(page, rows, role, flag, condition);
+
+
+            SQLRunner sqlRuner = new SQLRunner();
+            DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(selectSQL);
+            int resultCount = sqlRuner.runSelectSQL_dto_AssetSumm_Counter(selectSQLCounter);
+
+            List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+
+                dto_Asset_Detail tmp = new dto_Asset_Detail();
+
+                tmp.RowNo = int.Parse(dt.Rows[i]["RowNo"].ToString());
+                tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
+                tmp.serial_number = dt.Rows[i]["serial_number"].ToString();
+                tmp.name_Asset = dt.Rows[i]["name_Asset"].ToString();
+                tmp.type_Asset = dt.Rows[i]["type_Asset"].ToString();
+                tmp.specification = dt.Rows[i]["specification"].ToString();
+                tmp.people_using = dt.Rows[i]["specification"].ToString();
+                tmp.department_Using = dt.Rows[i]["department_Using"].ToString();
+                tmp.measurement = dt.Rows[i]["measurement"].ToString();
+                tmp.unit_price = double.Parse(dt.Rows[i]["unit_price"].ToString());
+                tmp.addressCF = dt.Rows[i]["addressCF"].ToString();
+                tmp.amount = int.Parse(dt.Rows[i]["amount"].ToString());
+                tmp.value = double.Parse(dt.Rows[i]["value"].ToString());
+                tmp.state_asset = dt.Rows[i]["state_asset"].ToString();
+                tmp.supplierID = dt.Rows[i]["supplierID"].ToString();
+                tmp.Method_add = dt.Rows[i]["Method_add"].ToString();
+                list.Add(tmp);
+            }
             var json = new
             {
-                total = DB_Connecting.tb_Asset.Where(b => b.flag == fllag).Count(),
-                rows = (from r in list
-                        select new dto_Asset()
-                        {
-                            ID = r.ID,
-                            serial_number = r.serial_number,
-                            name_Asset = r.name_Asset,
-                            type_Asset = r.type_Asset,
-                            specification = r.specification,
-                            unit_price = r.unit_price,
-                            amount = r.amount,
-                            department_Using = r.department_Using,
-                            address = r.addressCF,
-                            state_asset = r.state_asset,
-                            value = r.value,
-                            supplierID = r.supplierID
-                        }).ToArray()
+                total = resultCount,
+                rows = list.ToArray(),
+                  sql = selectSQL
             };
+
             return Json(json, JsonRequestBehavior.AllowGet);
             
         }
 
+        public String getAssetSQL_detail(int? page, int? rows, int role, int flag, String condition)
+        {
+            int beginIndex = ((int)page - 1) * (int)rows + 1;
+            int endIndex = (int)page * (int)rows;
+
+
+            //String sqlStr = "select top " + rows + " * from (select  ROW_NUMBER() OVER (ORDER BY a.ID) as RowNo,a.ID,a.name_Asset,t.name_Asset_Type type_Asset,dd.name_para addressCF,a.serial_number,dep.name_Department department_Using,a.unit_price,a.amount,a.supplierID,st.name,a.value,m.name_para measurement,zt.name_para state_asset,f.name_para Method_add,a.specification from tb_Asset a left join tb_AssetType t on a.type_Asset=t.assetTypeCode left join tb_dataDict_para m on a.measurement=m.ID left join tb_dataDict_para f on a.Method_add=f.ID left join tb_staff st on a.people_using=st.ID left join tb_department dep on a.department_Using=dep.ID_Department left join tb_dataDict_para zt on a.state_asset=zt.ID left join tb_dataDict_para dd on a.addressCF=dd.ID where flag=" + flag + ") sList where sList.RowNo between " + beginIndex + " and " + endIndex;
+            String sqlStr = "select top " + rows + " * from (select  ROW_NUMBER() OVER (ORDER BY a.ID) as RowNo,a.ID,dd.name_para addressCF, a.name_Asset,t.name_Asset_Type type_Asset ,a.serial_number,dep.name_Department department_Using,a.unit_price,a.amount,a.supplierID,st.name,a.value,m.name_para measurement,zt.name_para state_asset,f.name_para Method_add,a.specification from tb_Asset a left join tb_AssetType t on a.type_Asset=t.assetTypeCode left join tb_dataDict_para m on a.measurement=m.ID left join tb_dataDict_para f on a.Method_add=f.ID left join tb_staff st on a.people_using=st.ID left join tb_department dep on a.department_Using=dep.ID_Department left join tb_dataDict_para zt on a.state_asset=zt.ID left join tb_dataDict_para dd on a.addressCF=dd.ID where flag=" + flag + condition+") sList where sList.RowNo between " + beginIndex + " and " + endIndex;
+            return sqlStr;
+        }
+
+
+        public String getAssetSQL_detail_Counter(int? page, int? rows, int role, int flag, String condition)
+        {
+            String sqlStr = "select  ROW_NUMBER() OVER (ORDER BY a.ID) as RowNo,a.ID,t.name_Asset_Type name_Asset,a.serial_number,dep.name_Department department_Using,a.unit_price,a.amount,a.supplierID,st.name department_Using,a.value,m.name_para measurement,zt.name_para state_asset,f.name_para Method_add,a.specification from tb_Asset a left join tb_AssetType t on a.type_Asset=t.assetTypeCode left join tb_dataDict_para m on a.measurement=m.ID left join tb_dataDict_para f on a.Method_add=f.ID left join tb_staff st on a.people_using=st.ID left join tb_department dep on a.department_Using=dep.ID_Department left join tb_dataDict_para zt on a.state_asset=zt.ID where flag=" + flag +condition;
+            return sqlStr;
+        }
+        public String getAssetSQL_Summary(int? page, int? rows, int role, int flag, String condition)
+        {
+            int beginIndex = ((int)page - 1) * (int)rows + 1;
+            int endIndex = (int)page * (int)rows;
+            String sqlStr = "select top " + rows + " * from (select ROW_NUMBER() OVER (ORDER BY a.name_Asset) as RowNo,a.name_Asset AssetName,c.name_Asset_Type AssetType,b.name_para measurement,a.specification,SUM(a.amount) amount,Sum(a.value) value from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag + condition+"   group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type) s_tb where s_tb.RowNo between " + beginIndex + " and " + endIndex;
+            return sqlStr;
+        }
+
+
+        public String getAssetSQL_Summary_Counter(int? page, int? rows, int role, int flag, String condition)
+        {
+            String sqlStr = "select ROW_NUMBER() OVER (ORDER BY a.name_Asset) as RowNo,a.name_Asset AssetName,c.name_Asset_Type AssetType,b.name_para measurement,a.specification,SUM(a.amount) amount,Sum(a.value) value from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag +condition+ "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type";
+            return sqlStr;
+        }
 
         public int deleteAssets(List<int> selectedIDs)
         {

@@ -19,5 +19,17 @@ namespace FAMIS.Models
 
         [StringLength(100)]
         public string url_icon { get; set; }
+
+        public bool? flag_Search { get; set; }
+
+        [StringLength(30)]
+        public string url { get; set; }
+
+        public int? orderID { get; set; }
+
+        [StringLength(30)]
+        public string tb_Ref { get; set; }
+
+        public int? ratio { get; set; }
     }
 }
