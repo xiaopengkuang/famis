@@ -48,7 +48,7 @@ namespace FAMIS.DAL
             cn.Close();
             return result;
         }
-        public DataTable runSelectSQL_dto_AssetSumm(String sql)
+        public DataTable runSelectSQL_dto(String sql)
         {
             SqlCommand cmd = new SqlCommand(sql, cn);
             DataTable dt = new DataTable();
@@ -78,7 +78,7 @@ namespace FAMIS.DAL
         }
 
 
-        public int runSelectSQL_dto_AssetSumm_Counter(String sql)
+        public int runSelectSQL_dto_Counter(String sql)
         {
             int result = 0;
             SqlCommand cmd = new SqlCommand(sql, cn);

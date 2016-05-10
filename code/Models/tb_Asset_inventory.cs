@@ -6,7 +6,7 @@ namespace FAMIS.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class tb_Asset_allocation
+    public partial class tb_Asset_inventory
     {
         public int ID { get; set; }
 
@@ -15,22 +15,25 @@ namespace FAMIS.Models
 
         public DateTime? date { get; set; }
 
-        public int? department_allocation { get; set; }
+        public int? amountOfSys { get; set; }
 
-        public int? person { get; set; }
+        public int? amountOfInv { get; set; }
 
-        public int? addree_Storage { get; set; }
+        public int? difference { get; set; }
 
-        public bool? flag { get; set; }
+        [StringLength(20)]
+        public string property { get; set; }
 
         [Column("operator")]
-        public int? _operator { get; set; }
+        [StringLength(20)]
+        public string _operator { get; set; }
 
-        public DateTime? date_Operated { get; set; }
+        [StringLength(10)]
+        public string state { get; set; }
+
+        public DateTime? date_Create { get; set; }
 
         [StringLength(200)]
         public string ps { get; set; }
-
-        public int? state_List { get; set; }
     }
 }

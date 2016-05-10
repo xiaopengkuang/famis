@@ -306,9 +306,9 @@
                     height: 50,
                     iconCls: 'icon-save',
                     handler: function () {
-
+                        var filename = getNowFormatDate_FileName();
                         
-                        Export('导出excel', $('#TableList_0_1'));
+                        Export(filename, $('#TableList_0_1'));
                     }
                 }],
                 beforePageText: '第',//页数文本框前显示的汉字  
@@ -317,10 +317,10 @@
             });
         }
 
-        function getNowFormatDate() {
+        function getNowFormatDate_FileName() {
             var date = new Date();
-            var seperator1 = "-";
-            var seperator2 = ":";
+            var seperator1 = "";
+            var seperator2 = "";
             var month = date.getMonth() + 1;
             var strDate = date.getDate();
             if (month >= 1 && month <= 9) {
@@ -330,7 +330,7 @@
                 strDate = "0" + strDate;
             }
             var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
-                    + " " + date.getHours() + seperator2 + date.getMinutes()
+                    + "" + date.getHours() + seperator2 + date.getMinutes()
                     + seperator2 + date.getSeconds();
             return currentdate;
         }
@@ -351,7 +351,8 @@
                     height: 50,
                     handler: function () {
                         //将要选择的数据导出到Excel
-                        Export('导出excel', $('#TableList_0_1'));
+                        var filename = getNowFormatDate_FileName();
+                        Export(filename, $('#TableList_0_1'));
                     }
                 }],
                 beforePageText: '第',//页数文本框前显示的汉字  
@@ -435,9 +436,9 @@
 <body>
 
 
-    <div class="easyui-layout" style="width: 100%; height: 600px;">
+    <div class="easyui-layout" style="width: 100%; height: 700px;" fit="true">
 
-        <div data-options="region:'west',split:true" title="查询条件" style="width: 260px;">
+        <div data-options="region:'west',split:true" title="查询条件" style="width: 260px;height:100%">
             <div style="margin: 5px 0;" data-options="border:true,region:'west'">
                 <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">查询</a>
                 <a href="javascript:void(0);" class="easyui-linkbutton" onclick="collapseAll()">收起</a>
@@ -463,12 +464,12 @@
         </div>
 
 
-        <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true">
+        <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true" style="height:100%">
 
             <!--查询条件-->
             <div style="width: 100%!important; border-spacing: 2px; left: 10px">
                 <div style="float: left; border-spacing: 2px">
-                    <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC">
+                    <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC" >
                         <option value="DJRQ" selected="selected">登记日期</option>
                         <option value="GZRQ">购置日期</option>
                         <option value="ZCBH">资产编号</option>

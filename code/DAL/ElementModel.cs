@@ -12,71 +12,39 @@ namespace FAMIS.Models
         {
         }
 
-        public virtual DbSet<tb_AssetType> tb__Asset_type { get; set; }
-        public virtual DbSet<tb_inventory> tb__inventory { get; set; }
-        public virtual DbSet<tb_inventory_Details> tb__inventory__Details { get; set; }
+
+        public virtual DbSet<tb_Address_AssetStore> tb_Address_AssetStore { get; set; }
         public virtual DbSet<tb_Asset> tb_Asset { get; set; }
-        public virtual DbSet<tb_Asset_allocation> tb_Asset__allocation { get; set; }
-        public virtual DbSet<tb_Asset_Reduction> tb_Asset__Reduction { get; set; }
+        public virtual DbSet<tb_Asset_allocation> tb_Asset_allocation { get; set; }
+        public virtual DbSet<tb_Asset_allocation_detail> tb_Asset_allocation_detail { get; set; }
         public virtual DbSet<tb_Asset_colla> tb_Asset_colla { get; set; }
         public virtual DbSet<tb_Asset_colla_detail> tb_Asset_colla_detail { get; set; }
+        public virtual DbSet<tb_Asset_inventory> tb_Asset_inventory { get; set; }
+        public virtual DbSet<tb_Asset_inventory_Details> tb_Asset_inventory_Details { get; set; }
+        public virtual DbSet<tb_Asset_Reduction> tb_Asset_Reduction { get; set; }
+        public virtual DbSet<tb_Asset_Reduction_detail> tb_Asset_Reduction_detail { get; set; }
+        public virtual DbSet<tb_AssetType> tb_AssetType { get; set; }
         public virtual DbSet<tb_dataDict> tb_dataDict { get; set; }
         public virtual DbSet<tb_dataDict_para> tb_dataDict_para { get; set; }
         public virtual DbSet<tb_department> tb_department { get; set; }
-        public virtual DbSet<tb_detail_allocation> tb_detail__allocation { get; set; }
         public virtual DbSet<tb_Menu> tb_Menu { get; set; }
-        public virtual DbSet<tb_reductionDetail> tb_reduction_detail { get; set; }
+        public virtual DbSet<tb_Method_Add> tb_Method_Add { get; set; }
         public virtual DbSet<tb_role> tb_role { get; set; }
-        public virtual DbSet<tb_role_authorization> tb_role__authorization { get; set; }
+        public virtual DbSet<tb_role_authorization> tb_role_authorization { get; set; }
+        public virtual DbSet<tb_Rule_Generate> tb_Rule_Generate { get; set; }
         public virtual DbSet<tb_staff> tb_staff { get; set; }
+        public virtual DbSet<tb_State> tb_State { get; set; }
         public virtual DbSet<tb_supplier> tb_supplier { get; set; }
         public virtual DbSet<tb_user> tb_user { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<tb_AssetType>()
-                .Property(e => e.assetTypeCode);
-                //.IsFixedLength()
-                //.IsUnicode(false);
-
-            modelBuilder.Entity<tb_AssetType>()
-                .Property(e => e.name_Asset_Type)
+            modelBuilder.Entity<tb_Address_AssetStore>()
+                .Property(e => e.Name_Address)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_AssetType>()
-                .Property(e => e.father_MenuID_Type);
-                //.IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory>()
-                .Property(e => e.serial_number)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory>()
-                .Property(e => e.property)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory>()
-                .Property(e => e._operator)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory>()
-                .Property(e => e.state)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory>()
-                .Property(e => e.ps)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory_Details>()
-                .Property(e => e.serial_number)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory_Details>()
-                .Property(e => e.state)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_inventory_Details>()
-                .Property(e => e.serial_number_Asset)
+            modelBuilder.Entity<tb_Address_AssetStore>()
+                .Property(e => e.Detail_Address)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
@@ -96,24 +64,12 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.measurement);
-                //.IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.department_Using)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.addressCF);
-                //.IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.people_using)
                 .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.state_asset);
-                //.IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.supplierID)
@@ -124,35 +80,75 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_allocation>()
+                .Property(e => e.ps)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_allocation_detail>()
+                .Property(e => e.serial_number)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_allocation_detail>()
+                .Property(e => e.serial_number_Asset)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_allocation_detail>()
                 .Property(e => e.department_allocation)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_allocation>()
-                .Property(e => e.person)
+            modelBuilder.Entity<tb_Asset_allocation_detail>()
+                .Property(e => e.user_allocation)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_allocation>()
-                .Property(e => e.addree_Storage)
+            modelBuilder.Entity<tb_Asset_allocation_detail>()
+                .Property(e => e.address_allocation)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_allocation>()
-                .Property(e => e.state)
+            modelBuilder.Entity<tb_Asset_colla>()
+                .Property(e => e.serial_number)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_allocation>()
+            modelBuilder.Entity<tb_Asset_colla_detail>()
+                .Property(e => e.serial_number)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_colla_detail>()
+                .Property(e => e.serial_number_Asset)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_inventory>()
+                .Property(e => e.serial_number)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_inventory>()
+                .Property(e => e.property)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_inventory>()
                 .Property(e => e._operator)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_allocation>()
+            modelBuilder.Entity<tb_Asset_inventory>()
+                .Property(e => e.state)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_inventory>()
                 .Property(e => e.ps)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_inventory_Details>()
+                .Property(e => e.serial_number)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_inventory_Details>()
+                .Property(e => e.state)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_inventory_Details>()
+                .Property(e => e.serial_number_Asset)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Reduction>()
                 .Property(e => e.Serial_number)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_Reduction>()
-                .Property(e => e.reductionMethod)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Reduction>()
@@ -163,40 +159,24 @@ namespace FAMIS.Models
                 .Property(e => e.Approver)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_Reduction>()
-                .Property(e => e.state)
+            modelBuilder.Entity<tb_Asset_Reduction_detail>()
+                .Property(e => e.serial_number_Reduction)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_Reduction>()
-                .Property(e => e.Person_Operator)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_colla>()
-                .Property(e => e.serial_number)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_colla>()
-                .Property(e => e.person)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_colla>()
-                .Property(e => e.addree_Storage)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_colla>()
-                .Property(e => e.state)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_colla>()
-                .Property(e => e.person_Operator)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_colla_detail>()
-                .Property(e => e.serial_number)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_colla_detail>()
+            modelBuilder.Entity<tb_Asset_Reduction_detail>()
                 .Property(e => e.serial_number_Asset)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_AssetType>()
+                .Property(e => e.name_Asset_Type)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_AssetType>()
+                .Property(e => e.url)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_AssetType>()
+                .Property(e => e.orderID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_dataDict>()
@@ -207,9 +187,13 @@ namespace FAMIS.Models
                 .Property(e => e.url_icon)
                 .IsUnicode(false);
 
-           /* modelBuilder.Entity<tb_dataDict_para>()
-                .Property(e => e.ID_dataDict)
-                .IsUnicode(false);*/
+            modelBuilder.Entity<tb_dataDict>()
+                .Property(e => e.url)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_dataDict>()
+                .Property(e => e.tb_Ref)
+                .IsUnicode(false);
 
             modelBuilder.Entity<tb_dataDict_para>()
                 .Property(e => e.name_para)
@@ -219,13 +203,13 @@ namespace FAMIS.Models
                 .Property(e => e.description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_department>()
-                .Property(e => e.ID_Department);
-                //.IsUnicode(false);
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.url)
+                .IsUnicode(false);
 
-            modelBuilder.Entity<tb_department>()
-                .Property(e => e.ID_Father_Department);
-                //.IsUnicode(false);
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.orderID)
+                .IsUnicode(false);
 
             modelBuilder.Entity<tb_department>()
                 .Property(e => e.name_Department)
@@ -235,24 +219,12 @@ namespace FAMIS.Models
                 .Property(e => e._operator)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_detail_allocation>()
-                .Property(e => e.serial_number)
+            modelBuilder.Entity<tb_department>()
+                .Property(e => e.url)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_detail_allocation>()
-                .Property(e => e.serial_number_Asset)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_detail_allocation>()
-                .Property(e => e.department_allocation)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_detail_allocation>()
-                .Property(e => e.user_allocation)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_detail_allocation>()
-                .Property(e => e.address_allocation)
+            modelBuilder.Entity<tb_department>()
+                .Property(e => e.orderNum)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Menu>()
@@ -275,12 +247,8 @@ namespace FAMIS.Models
                 .Property(e => e.url)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_reductionDetail>()
-                .Property(e => e.serial_number_Reduction)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_reductionDetail>()
-                .Property(e => e.serial_number_Asset)
+            modelBuilder.Entity<tb_Method_Add>()
+                .Property(e => e.Name_Method)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_role>()
@@ -293,6 +261,14 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_role_authorization>()
                 .Property(e => e.type)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Rule_Generate>()
+                .Property(e => e.Name_SeriaType)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Rule_Generate>()
+                .Property(e => e.Rule_Generate)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_staff>()
@@ -317,6 +293,18 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_staff>()
                 .Property(e => e._operator)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_staff>()
+                .Property(e => e.name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_State>()
+                .Property(e => e.Name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_State>()
+                .Property(e => e.detail)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_supplier>()
