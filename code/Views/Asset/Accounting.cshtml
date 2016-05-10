@@ -301,6 +301,13 @@
                         $('#TableList_0_1').datagrid('reload');
                         //alert('刷新');
                     }
+                }, {
+                    text: '导出',
+                    height: 50,
+                    iconCls: 'icon-save',
+                    handler: function () {
+                        Export('导出excel', $('#TableList_0_1'));
+                    }
                 }],
                 beforePageText: '第',//页数文本框前显示的汉字  
                 afterPageText: '页    共 {pages} 页',
@@ -320,10 +327,11 @@
                     }
                 }, {
                     text: '导出',
-                    iconCls: 'icon-print',
+                    iconCls: 'icon-save',
                     height: 50,
                     handler: function () {
                         //将要选择的数据导出到Excel
+                        Export('导出excel', $('#TableList_0_1'));
                     }
                 }],
                 beforePageText: '第',//页数文本框前显示的汉字  
@@ -396,7 +404,7 @@
 
     </script>
 
-
+    <script src="../../Scripts/ExcelJS/export.js" type="text/javascript"></script>
 
     <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
