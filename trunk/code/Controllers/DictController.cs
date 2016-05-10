@@ -169,6 +169,7 @@ namespace FAMIS.Controllers
              });
              DataSet ds_de = ConvertToDataSet(list_dto_AT);
              DataTable dt_de = new DataTable();
+             
              dt_de = ds_de.Tables[0];
 
              string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
