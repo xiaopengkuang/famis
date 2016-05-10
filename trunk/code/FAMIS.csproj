@@ -1490,6 +1490,7 @@
     <Content Include="LIB_easyUI\My97DatePicker\skin\whyGreen\datepicker.css" />
     <Content Include="LIB_easyUI\My97DatePicker\skin\whyGreen\img.gif" />
     <Content Include="LIB_easyUI\My97DatePicker\WdatePicker.js" />
+    <Content Include="MidPages\export.aspx" />
     <Content Include="Scripts\Accordion\addMenu_accordion.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -1718,6 +1719,7 @@
     <Content Include="Content\jsonData\tree_data1.json" />
     <Content Include="ashx\TreeHandler.ashx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\ExcelJS\export.js" />
     <Content Include="Scripts\html5shiv.min.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1813,6 +1815,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper_Class\Serial.cs" />
+    <Compile Include="MidPages\export.aspx.cs">
+      <DependentUpon>export.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MidPages\export.aspx.designer.cs">
+      <DependentUpon>export.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\FAMISDBTBModels.cs" />
     <Compile Include="Models\tb_Address_AssetStore.cs" />
