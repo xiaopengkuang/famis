@@ -31,6 +31,85 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+
+
+        public JsonResult LoadAllocation(int? page, int? rows, int role, int flag, String searchCondtiion)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+
+
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            dto_SC_Allocation dto_condition = null;
+            String condSC = "";
+            if (searchCondtiion != null)
+            {
+                dto_condition = serializer.Deserialize<dto_SC_Allocation>(searchCondtiion);
+                condSC = SC_To_String(dto_condition);
+            }
+            else
+            {
+                condSC = "";
+            }
+
+            return loadAllocationList(page, rows, role, flag, condSC);
+
+
+        }
+
+        public JsonResult loadAllocationList(int? page, int? rows, int role, int flag,String cond)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+
+            String SQL_Str = GetAllocationSelectSQL(page, rows, role, flag, cond);
+            String SQL_Counter_Str = GetAllocationSelectSQL_Counter(page, rows, role, flag, cond);
+            SQLRunner sqlRuner = new SQLRunner();
+            DataTable dt = sqlRuner.runSelectSQL_dto(SQL_Str);
+            int resultCount = sqlRuner.runSelectSQL_dto_Counter(SQL_Counter_Str);
+            List<dto_allocation> list = new List<dto_allocation>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                dto_allocation tmp = new dto_allocation();
+                tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
+                tmp.serialNumber = dt.Rows[i]["serialNumber"].ToString();
+                tmp.operatorUser = dt.Rows[i]["operatorUser"].ToString();
+                tmp.staff = dt.Rows[i]["staff"].ToString();
+                tmp.state = dt.Rows[i]["state"].ToString();
+                tmp.address = dt.Rows[i]["address"].ToString();
+                tmp.department = dt.Rows[i]["department"].ToString();
+                //tmp.date_allocation =(DateTime)dt.Rows[i]["date_allocation"];
+                //tmp.date_Operated = (DateTime)dt.Rows[i]["date_Operated"];
+                list.Add(tmp);
+            }
+            var json = new
+            {
+                total = resultCount,
+                rows = list.ToArray()
+
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+            
+        }
+
+        public String GetAllocationSelectSQL(int? page, int? rows, int role, int flag, String cond)
+        {
+            String sql = "select a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date date_allocation,a.date_Operated from tb_Asset_allocation a left join tb_department de on a.department_allocation=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond + " order by a.date_Operated desc";
+            return sql;
+        }
+
+        public String GetAllocationSelectSQL_Counter(int? page, int? rows, int role, int flag, String cond)
+        {
+            String sql = "select a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date date_allocation,a.date_Operated from tb_Asset_allocation a left join tb_department de on a.department_allocation=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond + " order by a.date_Operated desc";
+            return sql;
+        }
+
+        public String SC_To_String(dto_SC_Allocation cond)
+        {
+            String condStr = "";
+            return condStr;
+        }
+
         public ActionResult collar()
         {
             return View();
@@ -39,6 +118,12 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+
+
+
+
+
+
 
         [HttpPost]
         public int addNewAsset_hanlder(string Asset_add)
@@ -157,6 +242,8 @@ namespace FAMIS.Controllers
                 //
 
                 //info += dto_aa.d_ZCBH_add;
+                dto_aa.flag = true;
+                dto_aa.OperateTime = new DateTime();
                 DB_Connecting.tb_Asset.Add(convertAssetTbByJson(dto_aa));
                 //DB_Connecting.tb_Asset.Add(dto_aa);
 
@@ -174,6 +261,8 @@ namespace FAMIS.Controllers
 
                     dto_aa.d_ZCBH_add = serailNums[i].ToString().Trim();
                     //info += dto_aa.d_ZCBH_add;
+                    dto_aa.flag = true;
+                    dto_aa.OperateTime = new DateTime();
                     datasToadd.Add(convertAssetTbByJson(dto_aa));
 
                 }
@@ -221,6 +310,8 @@ namespace FAMIS.Controllers
             tb_asset_add.department_Using = data.d_SZBM_add;
             tb_asset_add.addressCF = data.d_CFDD_add;
             tb_asset_add.people_using = data.d_SYR_add;
+            tb_asset_add.flag =data.flag ;
+            tb_asset_add.Time_add = data.OperateTime;
             tb_asset_add.supplierID = data.d_GYS_add;
             tb_asset_add.Time_Purchase = data.d_GZRQ_add;
             tb_asset_add.YearService_month = data.d_Other_SYNX_add;
@@ -271,11 +362,11 @@ namespace FAMIS.Controllers
 
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            dto_SearchCondition dto_condition = null;
+            dto_SC_Asset dto_condition = null;
             String condSC = "";
             if (searchCondtiion != null)
             {
-                dto_condition = serializer.Deserialize<dto_SearchCondition>(searchCondtiion);
+                dto_condition = serializer.Deserialize<dto_SC_Asset>(searchCondtiion);
                  condSC = TranslateSearchConditionToString(dto_condition);
             }
             else {
@@ -291,7 +382,6 @@ namespace FAMIS.Controllers
             }
             else if(tableType==0)
             {
-                int aa = 01;
                 return loadAsset_Summary_0(page, rows, role, flag, condSC);
             }else{
                 return null;
@@ -299,7 +389,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public String TranslateSearchConditionToString(dto_SearchCondition cond)
+        public String TranslateSearchConditionToString(dto_SC_Asset cond)
         {
             String condStr = "";
             if (cond == null)
@@ -347,7 +437,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public String getSC_Date(dto_SearchCondition cond)
+        public String getSC_Date(dto_SC_Asset cond)
         {
             string condStr = "";
 
@@ -368,7 +458,7 @@ namespace FAMIS.Controllers
             return condStr;
             
         }
-        public String getSC_content(dto_SearchCondition cond)
+        public String getSC_content(dto_SC_Asset cond)
         {
 
             //like '%A%'包含A的字符串
@@ -429,8 +519,8 @@ namespace FAMIS.Controllers
             String loadAssetSumCounter = getAssetSQL_Summary_Counter(page, rows, role, flag,condition);
 
             SQLRunner sqlRuner = new SQLRunner();
-            DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(loadAssetSummarySQL);
-           int resultCount = sqlRuner.runSelectSQL_dto_AssetSumm_Counter(loadAssetSumCounter);
+            DataTable dt = sqlRuner.runSelectSQL_dto(loadAssetSummarySQL);
+           int resultCount = sqlRuner.runSelectSQL_dto_Counter(loadAssetSumCounter);
            List<dto_Asset_Summary> list = new List<dto_Asset_Summary>();
            for (int i = 0; i < dt.Rows.Count; i++)
            {
@@ -449,11 +539,9 @@ namespace FAMIS.Controllers
           var json = new
           {
               total = resultCount,
-              rows = list.ToArray(),
-              sql = loadAssetSummarySQL
+              rows = list.ToArray()
 
           };
-
           return Json(json, JsonRequestBehavior.AllowGet);
             
         }
@@ -471,8 +559,8 @@ namespace FAMIS.Controllers
 
 
             SQLRunner sqlRuner = new SQLRunner();
-            DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(selectSQL);
-            int resultCount = sqlRuner.runSelectSQL_dto_AssetSumm_Counter(selectSQLCounter);
+            DataTable dt = sqlRuner.runSelectSQL_dto(selectSQL);
+            int resultCount = sqlRuner.runSelectSQL_dto_Counter(selectSQLCounter);
 
             List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -502,7 +590,6 @@ namespace FAMIS.Controllers
             {
                 total = resultCount,
                 rows = list.ToArray(),
-                  sql = selectSQL
             };
 
             return Json(json, JsonRequestBehavior.AllowGet);

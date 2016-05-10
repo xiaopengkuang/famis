@@ -354,7 +354,7 @@ namespace FAMIS.Controllers
          {
              String sql = getSearchTreeSQL("");
              SQLRunner sqlRuner = new SQLRunner();
-             DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(sql);
+             DataTable dt = sqlRuner.runSelectSQL_dto(sql);
              return dt.Rows.Count;
          }
          public String getSearchTreeSQL(String roleName)
