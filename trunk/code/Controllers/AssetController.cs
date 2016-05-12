@@ -33,7 +33,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public JsonResult LoadAllocation(int? page, int? rows, int role, int flag, String searchCondtiion)
+        public JsonResult LoadCollars(int? page, int? rows, int role, int flag, String searchCondtiion)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -52,25 +52,25 @@ namespace FAMIS.Controllers
                 condSC = "";
             }
 
-            return loadAllocationList(page, rows, role, flag, condSC);
+            return LoadCollarsList(page, rows, role, flag, condSC);
 
 
         }
 
-        public JsonResult loadAllocationList(int? page, int? rows, int role, int flag,String cond)
+        public JsonResult LoadCollarsList(int? page, int? rows, int role, int flag, String cond)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
 
-            String SQL_Str = GetAllocationSelectSQL(page, rows, role, flag, cond);
-            String SQL_Counter_Str = GetAllocationSelectSQL_Counter(page, rows, role, flag, cond);
+            String SQL_Str = GetCollarSelectSQL(page, rows, role, flag, cond);
+            String SQL_Counter_Str = GetCollarSelectSQL_Counter(page, rows, role, flag, cond);
             SQLRunner sqlRuner = new SQLRunner();
             DataTable dt = sqlRuner.runSelectSQL_dto(SQL_Str);
-            int resultCount = sqlRuner.runSelectSQL_dto_Counter(SQL_Counter_Str);
-            List<dto_allocation> list = new List<dto_allocation>();
+            int resultCount = sqlRuner.runSelectSQL_Counter(SQL_Counter_Str,"total");
+            List<dto_Collar> list = new List<dto_Collar>();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                dto_allocation tmp = new dto_allocation();
+                dto_Collar tmp = new dto_Collar();
                 tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
                 tmp.serialNumber = dt.Rows[i]["serialNumber"].ToString();
                 tmp.operatorUser = dt.Rows[i]["operatorUser"].ToString();
@@ -92,15 +92,15 @@ namespace FAMIS.Controllers
             
         }
 
-        public String GetAllocationSelectSQL(int? page, int? rows, int role, int flag, String cond)
+        public String GetCollarSelectSQL(int? page, int? rows, int role, int flag, String cond)
         {
-            String sql = "select a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date date_allocation,a.date_Operated from tb_Asset_allocation a left join tb_department de on a.department_allocation=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond + " order by a.date_Operated desc";
+            String sql = "select top "+rows+" a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date date_allocation,a.date_Operated from tb_Asset_collar a left join tb_department de on a.department_collar=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 "+cond+"order by a.date_Operated desc";
             return sql;
         }
 
-        public String GetAllocationSelectSQL_Counter(int? page, int? rows, int role, int flag, String cond)
+        public String GetCollarSelectSQL_Counter(int? page, int? rows, int role, int flag, String cond)
         {
-            String sql = "select a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date date_allocation,a.date_Operated from tb_Asset_allocation a left join tb_department de on a.department_allocation=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond + " order by a.date_Operated desc";
+            String sql = "select count(*) as total from tb_Asset_collar a left join tb_department de on a.department_collar=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond ;
             return sql;
         }
 
@@ -358,7 +358,7 @@ namespace FAMIS.Controllers
          public JsonResult LoadAssets(int? page, int? rows, int role, int tableType, int flag, String searchCondtiion)
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
 
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -513,14 +513,14 @@ namespace FAMIS.Controllers
         public JsonResult loadAsset_Summary_0(int? page, int? rows, int role,int flag,String condition)
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
 
             String loadAssetSummarySQL = getAssetSQL_Summary(page, rows, role, flag,condition);
             String loadAssetSumCounter = getAssetSQL_Summary_Counter(page, rows, role, flag,condition);
 
             SQLRunner sqlRuner = new SQLRunner();
             DataTable dt = sqlRuner.runSelectSQL_dto(loadAssetSummarySQL);
-           int resultCount = sqlRuner.runSelectSQL_dto_Counter(loadAssetSumCounter);
+           int resultCount = sqlRuner.runSelectSQL_Counter(loadAssetSumCounter,"total");
            List<dto_Asset_Summary> list = new List<dto_Asset_Summary>();
            for (int i = 0; i < dt.Rows.Count; i++)
            {
@@ -553,14 +553,14 @@ namespace FAMIS.Controllers
         public JsonResult loadAsset_detail_1(int? page, int? rows, int role, int flag, String condition)
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
             String selectSQL = getAssetSQL_detail(page, rows, role, flag, condition);
             String selectSQLCounter = getAssetSQL_detail_Counter(page, rows, role, flag, condition);
 
 
             SQLRunner sqlRuner = new SQLRunner();
             DataTable dt = sqlRuner.runSelectSQL_dto(selectSQL);
-            int resultCount = sqlRuner.runSelectSQL_dto_Counter(selectSQLCounter);
+            int resultCount = sqlRuner.runSelectSQL_Counter(selectSQLCounter,"total");
 
             List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -610,7 +610,7 @@ namespace FAMIS.Controllers
 
         public String getAssetSQL_detail_Counter(int? page, int? rows, int role, int flag, String condition)
         {
-            String sqlStr = "select  ROW_NUMBER() OVER (ORDER BY a.ID) as RowNo,a.ID,t.name_Asset_Type name_Asset,a.serial_number,dep.name_Department department_Using,a.unit_price,a.amount,a.supplierID,st.name department_Using,a.value,m.name_para measurement,zt.name_para state_asset,f.name_para Method_add,a.specification from tb_Asset a left join tb_AssetType t on a.type_Asset=t.assetTypeCode left join tb_dataDict_para m on a.measurement=m.ID left join tb_dataDict_para f on a.Method_add=f.ID left join tb_staff st on a.people_using=st.ID left join tb_department dep on a.department_Using=dep.ID_Department left join tb_dataDict_para zt on a.state_asset=zt.ID where flag=" + flag +condition;
+            String sqlStr = "select count(*) as total from tb_Asset a left join tb_AssetType t on a.type_Asset=t.assetTypeCode left join tb_dataDict_para m on a.measurement=m.ID left join tb_dataDict_para f on a.Method_add=f.ID left join tb_staff st on a.people_using=st.ID left join tb_department dep on a.department_Using=dep.ID_Department left join tb_dataDict_para zt on a.state_asset=zt.ID where flag=" + flag +condition;
             return sqlStr;
         }
         public String getAssetSQL_Summary(int? page, int? rows, int role, int flag, String condition)
@@ -624,7 +624,7 @@ namespace FAMIS.Controllers
 
         public String getAssetSQL_Summary_Counter(int? page, int? rows, int role, int flag, String condition)
         {
-            String sqlStr = "select ROW_NUMBER() OVER (ORDER BY a.name_Asset) as RowNo,a.name_Asset AssetName,c.name_Asset_Type AssetType,b.name_para measurement,a.specification,SUM(a.amount) amount,Sum(a.value) value from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag +condition+ "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type";
+            String sqlStr = "select  count(*) as total from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag + condition + "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type";
             return sqlStr;
         }
 
@@ -660,6 +660,11 @@ namespace FAMIS.Controllers
 
         public ActionResult AddAsset()
         {
+            return View();
+        }
+
+        public ActionResult AddCollar()
+        { 
             return View();
         }
 

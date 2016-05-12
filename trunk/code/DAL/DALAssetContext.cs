@@ -21,15 +21,15 @@ namespace FAMIS.DAL
 
         public DbSet<tb_Asset_Reduction> AssetReduction { get; set; }
 
-        public DbSet<tb_Asset_colla> AssetColla { get; set; }
+        public DbSet<tb_Asset_collar> AssetColla { get; set; }
 
-        public DbSet<tb_Asset_colla_detail> AssetCollaDetail { get; set; }
+        public DbSet<tb_Asset_collar_detail> AssetCollaDetail { get; set; }
 
         public DbSet<tb_AssetType> AssetType { get; set; }
 
-        public DbSet<tb_detail_allocation> AssetAllocationDetail { get; set; }
+        public DbSet<tb_Asset_allocation_detail> AssetAllocationDetail { get; set; }
 
-        public DbSet<tb_reductionDetail> AssetReductionDetail { get; set; }
+        public DbSet<tb_Asset_Reduction_detail> AssetReductionDetail { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

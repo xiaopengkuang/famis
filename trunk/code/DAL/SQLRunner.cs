@@ -78,36 +78,66 @@ namespace FAMIS.DAL
         }
 
 
-        public int runSelectSQL_dto_Counter(String sql)
+
+        //返回行数
+        public int runSelectSQL_Counter(String sql,String name)
         {
             int result = 0;
             SqlCommand cmd = new SqlCommand(sql, cn);
+            DataTable dt = new DataTable();
             cn.Open();
-            try
-            {
+            try {
+
+                SqlDataAdapter adp = new SqlDataAdapter(cmd);
+                adp.Fill(dt);
+
                 SqlDataReader sqldReader = cmd.ExecuteReader();
-
-
-
-                while (sqldReader.Read())
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-
-                    result++;
-                }
-                if (!sqldReader.IsClosed)
-                {
-                    sqldReader.Close();
+                    result = (int)dt.Rows[i][name];
                 }
 
-            }
-            catch
-            {
 
+                    if (!sqldReader.IsClosed)
+                    {
+                        sqldReader.Close();
+                    }
             }
+            catch { }
             cn.Close();
             return result;
-
         }
+
+        //public int runSelectSQL_dto_Counter(String sql)
+        //{
+        //    int result = 0;
+        //    SqlCommand cmd = new SqlCommand(sql, cn);
+        //    cn.Open();
+        //    try
+        //    {
+        //        SqlDataReader sqldReader = cmd.ExecuteReader();
+
+
+
+        //        while (sqldReader.Read())
+        //        {
+
+        //            result++;
+        //        }
+        //        if (!sqldReader.IsClosed)
+        //        {
+        //            sqldReader.Close();
+        //        }
+
+        //    }
+        //    catch
+        //    {
+
+        //    }
+        //    cn.Close();
+        //    return result;
+
+        //}
 
     }
 }
