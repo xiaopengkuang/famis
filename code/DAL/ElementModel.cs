@@ -17,8 +17,8 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset> tb_Asset { get; set; }
         public virtual DbSet<tb_Asset_allocation> tb_Asset_allocation { get; set; }
         public virtual DbSet<tb_Asset_allocation_detail> tb_Asset_allocation_detail { get; set; }
-        public virtual DbSet<tb_Asset_colla> tb_Asset_colla { get; set; }
-        public virtual DbSet<tb_Asset_colla_detail> tb_Asset_colla_detail { get; set; }
+        public virtual DbSet<tb_Asset_collar> tb_Asset_colla { get; set; }
+        public virtual DbSet<tb_Asset_collar_detail> tb_Asset_colla_detail { get; set; }
         public virtual DbSet<tb_Asset_inventory> tb_Asset_inventory { get; set; }
         public virtual DbSet<tb_Asset_inventory_Details> tb_Asset_inventory_Details { get; set; }
         public virtual DbSet<tb_Asset_Reduction> tb_Asset_Reduction { get; set; }
@@ -33,7 +33,7 @@ namespace FAMIS.Models
         public virtual DbSet<tb_role_authorization> tb_role_authorization { get; set; }
         public virtual DbSet<tb_Rule_Generate> tb_Rule_Generate { get; set; }
         public virtual DbSet<tb_staff> tb_staff { get; set; }
-        public virtual DbSet<tb_State> tb_State { get; set; }
+        public virtual DbSet<tb_State_List> tb_State { get; set; }
         public virtual DbSet<tb_supplier> tb_supplier { get; set; }
         public virtual DbSet<tb_user> tb_user { get; set; }
 
@@ -103,15 +103,15 @@ namespace FAMIS.Models
                 .Property(e => e.address_allocation)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_colla>()
+            modelBuilder.Entity<tb_Asset_collar>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_colla_detail>()
+            modelBuilder.Entity<tb_Asset_collar_detail>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_colla_detail>()
+            modelBuilder.Entity<tb_Asset_collar_detail>()
                 .Property(e => e.serial_number_Asset)
                 .IsUnicode(false);
 
@@ -299,11 +299,11 @@ namespace FAMIS.Models
                 .Property(e => e.name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_State>()
+            modelBuilder.Entity<tb_State_List>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_State>()
+            modelBuilder.Entity<tb_State_List>()
                 .Property(e => e.detail)
                 .IsUnicode(false);
 
