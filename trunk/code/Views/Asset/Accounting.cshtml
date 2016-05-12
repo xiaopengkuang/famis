@@ -20,15 +20,15 @@
 </head>
 <body>
 
-
     <div class="easyui-layout" style="width: 100%; height: 700px;" fit="true">
 
-        <div data-options="region:'west',split:true" title="查询条件" style="width: 260px;height:100%">
+        <div data-options="region:'west',split:true" title="查询条件" style="width: 210px; height: 100%">
             <div style="margin: 5px 0;" data-options="border:true,region:'west'">
-                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">查询</a>
-                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="collapseAll()">收起</a>
-                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="expandAll()">展开</a>
-
+                <div class="easyui-panel" style="padding: 5px;">
+                    <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">刷新</a>
+                    <a href="javascript:void(0);" class="easyui-linkbutton" onclick="collapseAll()">收起</a>
+                    <a href="javascript:void(0);" class="easyui-linkbutton" onclick="expandAll()">展开</a>
+                </div>
             </div>
 
             <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true">
@@ -40,21 +40,20 @@
                 function expandAll() {
                     $('#lefttree').tree('expandAll');
                 }
-
                 function C_query() {
-
+                    $('#lefttree').tree("reload");
                 }
             </script>
 
         </div>
 
 
-        <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true" style="height:100%">
+        <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true" style="height: 100%">
 
             <!--查询条件-->
             <div style="width: 100%!important; border-spacing: 2px; left: 10px">
                 <div style="float: left; border-spacing: 2px">
-                    <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC" >
+                    <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC">
                         <option value="DJRQ" selected="selected">登记日期</option>
                         <option value="GZRQ">购置日期</option>
                         <option value="ZCBH">资产编号</option>
@@ -74,7 +73,7 @@
                                 <input class="easyui-datebox" id="endDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
                             </td>
                             <td class="SC_Content_Accounting">
-                                <input class="easyui-textbox" style="margin-left: 10px" id="SC_Content"/>
+                                <input class="easyui-textbox" style="margin-left: 10px" id="SC_Content" />
                             </td>
 
                         </tr>
