@@ -220,17 +220,17 @@ function loadPageTool_Detail() {
                     collapsible: false,
                     onClose: function () {
                         $('#TableList_0_1').datagrid('reload');
-                        var resultAlert = "成功插入记录！";
-                        $.messager.show({
-                            title: '提示',
-                            msg: resultAlert,
-                            showType: 'slide',
-                            style: {
-                                right: '',
-                                top: document.body.scrollTop + document.documentElement.scrollTop,
-                                bottom: ''
-                            }
-                        });
+                    //    var resultAlert = "成功插入记录！";
+                    //    $.messager.show({
+                    //        title: '提示',
+                    //        msg: resultAlert,
+                    //        showType: 'slide',
+                    //        style: {
+                    //            right: '',
+                    //            top: document.body.scrollTop + document.documentElement.scrollTop,
+                    //            bottom: ''
+                    //        }
+                    //    });
                     }
                 });
                 $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/AddAsset'></iframe>");
@@ -257,17 +257,17 @@ function loadPageTool_Detail() {
                     traditional: true,
                     success: function () {
                         $('#TableList_0_1').datagrid('reload');
-                        var resultAlert = "成功删除记录！";
-                        $.messager.show({
-                            title: '提示',
-                            msg: resultAlert,
-                            showType: 'slide',
-                            style: {
-                                right: '',
-                                top: document.body.scrollTop + document.documentElement.scrollTop,
-                                bottom: ''
-                            }
-                        });
+                        //var resultAlert = "成功删除记录！";
+                        //$.messager.show({
+                        //    title: '提示',
+                        //    msg: resultAlert,
+                        //    showType: 'slide',
+                        //    style: {
+                        //        right: '',
+                        //        top: document.body.scrollTop + document.documentElement.scrollTop,
+                        //        bottom: ''
+                        //    }
+                        //});
                     }
                 });
             }

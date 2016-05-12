@@ -31,6 +31,10 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        public ActionResult Collar_SelectAsset()
+        {
+            return View();
+        }
 
 
         public JsonResult LoadCollars(int? page, int? rows, int role, int flag, String searchCondtiion)
@@ -378,7 +382,7 @@ namespace FAMIS.Controllers
             if (tableType == 1)
             {
                 
-                return loadAsset_detail_1(page, rows, role, flag, condSC);
+                return loadAsset_detail_1(page, rows, role, flag, condSC,null);
             }
             else if(tableType==0)
             {
@@ -388,7 +392,110 @@ namespace FAMIS.Controllers
             }
         }
 
+        public JsonResult Load_Asset_Collor(int? page, int? rows, int role, int? state, int flag, String searchCondtiion, String selectedIDs)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+            state = state == null ? 16 : state;
+            List<int> checkIDS = ConvertStringToIntList(selectedIDs);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            dto_SC_Asset dto_condition = null;
+            String condSC = "";
+            if (searchCondtiion != null)
+            {
+                dto_condition = serializer.Deserialize<dto_SC_Asset>(searchCondtiion);
+                condSC = TranslateSearchConditionToString(dto_condition);
+            }
+            else
+            {
+                condSC = "";
+            }
 
+
+            condSC = addAssetState(condSC, state);
+
+
+            return loadAsset_detail_1(page, rows, role, flag, condSC, checkIDS);
+           
+        }
+
+        public JsonResult Load_SelectedAsset(int? page, int? rows, int role, int? state, int flag, String selectedIDs)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+            state = state == null ? 16 : state;
+            
+            List<int> checkIDS = ConvertStringToIntList(selectedIDs);
+            String cond=getSelectAsset_ID_cond(checkIDS);
+
+            String selectSQL = getSelectAssets(flag, cond, rows, page);
+            String selectSQLCounter = getSelectAsset_Counter(flag,cond);
+
+
+            SQLRunner sqlRuner = new SQLRunner();
+            DataTable dt = sqlRuner.runSelectSQL_dto(selectSQL);
+            int resultCount = sqlRuner.runSelectSQL_Counter(selectSQLCounter, "total");
+
+            List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+
+                dto_Asset_Detail tmp = new dto_Asset_Detail();
+
+
+                tmp.RowNo = int.Parse(dt.Rows[i]["RowNo"].ToString());
+                tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
+                tmp.serial_number = dt.Rows[i]["serial_number"].ToString();
+                tmp.name_Asset = dt.Rows[i]["name_Asset"].ToString();
+                tmp.type_Asset = dt.Rows[i]["type_Asset"].ToString();
+                tmp.specification = dt.Rows[i]["specification"].ToString();
+                tmp.people_using = dt.Rows[i]["specification"].ToString();
+                tmp.department_Using = dt.Rows[i]["department_Using"].ToString();
+                tmp.measurement = dt.Rows[i]["measurement"].ToString();
+                tmp.unit_price = double.Parse(dt.Rows[i]["unit_price"].ToString());
+                tmp.addressCF = dt.Rows[i]["addressCF"].ToString();
+                tmp.amount = int.Parse(dt.Rows[i]["amount"].ToString());
+                tmp.value = double.Parse(dt.Rows[i]["value"].ToString());
+                tmp.state_asset = dt.Rows[i]["state_asset"].ToString();
+                tmp.supplierID = dt.Rows[i]["supplierID"].ToString();
+                tmp.Method_add = dt.Rows[i]["Method_add"].ToString();
+                list.Add(tmp);
+            }
+            var json = new
+            {
+                total = resultCount,
+                rows = list.ToArray(),
+                sql=selectSQL
+
+            };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+
+        public List<int> ConvertStringToIntList(String idStr)
+        {
+            List<int> results = new List<int>();
+
+            if(idStr!=null&&idStr!="")
+            { 
+                String[] ids = idStr.Split('_');
+                foreach (String i in ids)
+                {
+                    results.Add(int.Parse(i));
+                }
+            }
+            return results;
+        }
+        public String addAssetState(String Cond,int? state)
+        {
+            int id = state == null ? 15 : (int)state;
+            return Cond + " and state_asset=" + id + " ";
+        }
         public String TranslateSearchConditionToString(dto_SC_Asset cond)
         {
             String condStr = "";
@@ -550,7 +657,7 @@ namespace FAMIS.Controllers
         /**
          * 加载详细列表
          * */
-        public JsonResult loadAsset_detail_1(int? page, int? rows, int role, int flag, String condition)
+        public JsonResult loadAsset_detail_1(int? page, int? rows, int role, int flag, String condition, List<int> selectedIDs)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -563,10 +670,24 @@ namespace FAMIS.Controllers
             int resultCount = sqlRuner.runSelectSQL_Counter(selectSQLCounter,"total");
 
             List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
+
             for (int i = 0; i < dt.Rows.Count; i++)
             {
 
                 dto_Asset_Detail tmp = new dto_Asset_Detail();
+
+
+                if (selectedIDs != null && selectedIDs.Count > 0)
+                {
+                    //过滤selectedIDs
+                    if (selectedIDs.Contains(int.Parse(dt.Rows[i]["ID"].ToString())))
+                    {
+                        continue;
+                    }
+                }
+
+               
+
 
                 tmp.RowNo = int.Parse(dt.Rows[i]["RowNo"].ToString());
                 tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
@@ -595,6 +716,10 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
             
         }
+
+
+
+
 
         public String getAssetSQL_detail(int? page, int? rows, int role, int flag, String condition)
         {
@@ -696,5 +821,45 @@ namespace FAMIS.Controllers
             }
 
         }
+        public String getSelectAssets(int flag,String cond,int? rows,int? page)
+        {
+            int beginIndex = ((int)page - 1) * (int)rows + 1;
+            int endIndex = (int)page * (int)rows;
+            String sql = "select top "+rows+" * from (select  ROW_NUMBER() OVER (ORDER BY a.ID) as RowNo, a.ID,dd.name_para addressCF, a.name_Asset,t.name_Asset_Type type_Asset ,a.serial_number,dep.name_Department department_Using,a.unit_price,a.amount,a.supplierID,st.name,a.value,m.name_para measurement,zt.name_para state_asset,f.name_para Method_add,a.specification from tb_Asset a left join tb_AssetType t on a.type_Asset=t.assetTypeCode left join tb_dataDict_para m on a.measurement=m.ID left join tb_dataDict_para f on a.Method_add=f.ID left join tb_staff st on a.people_using=st.ID left join tb_department dep on a.department_Using=dep.ID_Department left join tb_dataDict_para zt on a.state_asset=zt.ID left join tb_dataDict_para dd on a.addressCF=dd.ID where flag=" + flag + " " + cond + ") sList where sList.RowNo between " + beginIndex + " and " + endIndex;
+            return sql;
+        }
+
+        public String getSelectAsset_Counter(int flag, String cond)
+        {
+            String sql = "select count(*) as total from tb_Asset a left join tb_AssetType t on a.type_Asset=t.assetTypeCode left join tb_dataDict_para m on a.measurement=m.ID left join tb_dataDict_para f on a.Method_add=f.ID left join tb_staff st on a.people_using=st.ID left join tb_department dep on a.department_Using=dep.ID_Department left join tb_dataDict_para zt on a.state_asset=zt.ID left join tb_dataDict_para dd on a.addressCF=dd.ID where flag=" + flag + " " + cond;
+            return sql;
+        }
+
+        public String getSelectAsset_ID_cond(List<int> selectedID)
+        {
+            String cond = "";
+            if (selectedID != null && selectedID.Count > 0)
+            {
+                cond = " and a.ID in ( ";
+                for (int i = 0; i < selectedID.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        cond += selectedID[i];
+                    }
+                    else
+                    {
+                        cond += "," + selectedID[i];
+                    }
+                }
+                cond += " )";
+            }
+            else
+            {
+                cond = " and a.ID in (0) ";
+            }
+            return cond;
+        }
+
     }
 }

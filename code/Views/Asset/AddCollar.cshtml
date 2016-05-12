@@ -18,60 +18,67 @@
 </head>
 <body>
 
-            <div class="easyui-panel" style="height: 500px;"  fit="true">
-                <div id="jcsx_add" class="easyui-panel" title="基础属性" style="height: 200px;   padding: 2px;"
-                    data-options="collapsible:true">
-                    <table style="width:100%">
-                        <tr>
-                            <td style="width:100px"><span style="width:100px"> 单据号:</span></td>
-                            <td>
-                                <input class="easyui-textbox" placeholder="*自动生成*" id="ZCBH_add" name="ZCBH_add" readonly="readonly" style="width:200px ;" />
-                            </td>
-                            <td style="width:100px"><span style="width:100px"> 领用日期:</span></td>
-                            <td>
-                                  <input class="easyui-datebox" name="GZRQ_add" id="GZRQ_add" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
-                            </td>
-                            <td style="width:100px"><span style="width:100px"> 领用原因:</span></td>
-                            <td>
-                                 <input class="easyui-textbox" placeholder="请输入资产名称" id="ZCMC_add" name="ZCMC_add" style="width: 200px;" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>领用部门:</td>
-                            <td>
-                                <select class="easyui-combotree"  aria-readonly="true" id="LYBM_add" name="LYBM_add" style="width: 200px;">
-                                </select>
-                            </td>
-                             <td>领用使用人:</td>
-                            <td>
-                                <select class="easyui-combobox" id="SYR_add"  aria-readonly="true" name="SYR_add" style="width: 200px;">
-                                </select>
-                            </td>
-                            <td>存放地点:</td>
-                            <td>
-                                <input class="easyui-textbox" id="CFDD_add"  aria-readonly="true" name="CFDD_add" style="width: 200px;" />
-                            </td>
-                        </tr>
-                    </table>
-                    <table>
-                        <tr>
-                            <td style="width:100px"> 备注：</td>
-                            <td><input class="easyui-textbox"  id="Num_PLTJ_add" name="Num_PLTJ_add"  style="width:500px; " /></td>
-                        </tr>
-                    </table>
-                    
-                  
-                </div>
-                <div id="qtsx_add" class="easyui-panel" title="明细信息" style="width: auto; height:300px; padding: 1px;"
-                    data-options="collapsible:true">
-                    <table id="allocationDetail_DG" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
-                    </table>
-                </div>
-                
-            </div>
+    <div class="easyui-panel" style="height: 500px;" fit="true">
+        <div class="easyui-panel" style="padding: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" onclick="saveData()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'" onclick="cancelData()">取消</a>
+        </div>
+
+        <div id="jcsx_add" class="easyui-panel" title="基础属性" style="height: 120px; padding: 2px;"
+            data-options="collapsible:true">
+            <table style="width: 100%">
+                <tr>
+                    <td style="width: 100px"><span style="width: 100px">单据号:</span></td>
+                    <td>
+                        <input class="easyui-textbox" placeholder="*自动生成*" id="ZCBH_add" name="ZCBH_add" readonly="readonly" style="width: 200px;" />
+                    </td>
+                    <td style="width: 100px"><span style="width: 100px">领用日期:</span></td>
+                    <td>
+                        <input class="easyui-datebox" name="GZRQ_add" id="GZRQ_add" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                    </td>
+                    <td style="width: 100px"><span style="width: 100px">领用原因:</span></td>
+                    <td>
+                        <input class="easyui-textbox" placeholder="请输入资产名称" id="ZCMC_add" name="ZCMC_add" style="width: 200px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>领用部门:</td>
+                    <td>
+                        <select class="easyui-combotree" aria-readonly="true" id="LYBM_add" name="LYBM_add" style="width: 200px;">
+                        </select>
+                    </td>
+                    <td>领用使用人:</td>
+                    <td>
+                        <select class="easyui-combobox" id="SYR_add" aria-readonly="true" name="SYR_add" style="width: 200px;">
+                        </select>
+                    </td>
+                    <td>存放地点:</td>
+                    <td>
+                        <input class="easyui-textbox" id="CFDD_add" aria-readonly="true" name="CFDD_add" style="width: 200px;" />
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td style="width: 100px">备注：</td>
+                    <td>
+                        <input class="easyui-textbox" id="Num_PLTJ_add" name="Num_PLTJ_add" style="width: 500px;" /></td>
+                </tr>
+            </table>
 
 
-
+        </div>
+        <div id="qtsx_add" class="easyui-panel" title="明细信息" style="width: auto; height: 500px; padding: 1px;"
+            data-options="collapsible:true" fit="true">
+            <!--<div>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="showAsset()">添加</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="">删除</a>
+            </div>-->
+            <table id="collar_DG" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
+            </table>
+        </div>
+        <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
+    </div>
 
 
 </body>

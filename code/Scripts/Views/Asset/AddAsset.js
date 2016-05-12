@@ -89,8 +89,6 @@ function load_ZCLB_add() {
            }
 
 
-
-
            //资产性质
            var parent = node;
            var tree = $('#ZCLB_add').combotree('tree');
