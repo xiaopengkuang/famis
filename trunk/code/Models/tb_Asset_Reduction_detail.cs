@@ -11,12 +11,9 @@ namespace FAMIS.Models
         public int ID { get; set; }
 
         [StringLength(20)]
-        public string serial_number_Reduction { get; set; }
+        public string serial_number { get; set; }
 
         [StringLength(20)]
         public string serial_number_Asset { get; set; }
-
-        [Column("amount_ Reduction")]
-        public int? amount__Reduction { get; set; }
     }
 }

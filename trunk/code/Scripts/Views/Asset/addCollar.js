@@ -251,20 +251,10 @@ function updateCurrentList(addList)
     }
     CurrentList = tmp;
 }
-function saveData()
-{
 
-}
-
-function cancelData() {
-    $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
-        if (r) {
-            window.parent.$('#tabs').tabs('close', '添加领用单');
-        } 
-    });
-}
 
 //==================================================================================//
+
 
 
 //function showAsset() {
@@ -290,3 +280,93 @@ function cancelData() {
 //    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/Collar_SelectAsset'></iframe>");
 //    $winADD.window('open');
 //}
+
+
+//==============================================================获取表单数据===========================================================================//
+function saveData() {
+
+    //获取页面数据
+    var d_Date_LY = $('#date_add').datebox('getValue');
+
+    var d_LYYY = $("#LYYY_add").val();
+
+    var d_LYBM = $("#LYBM_add").combotree("getValue");
+
+    var d_CFDD = $("#CFDD_add").combotree("getValue");
+
+    var d_SYR = $("#SYR_add").combobox("getValue");
+
+    var d_PS = $("#PS_add").val();
+
+    //alert(d_Date_LY + ":" + d_LYYY + ":" + d_LYBM + ":" + d_CFDD + ":" + d_SYR + ":" + d_PS);
+    //封装成json格式创给后台
+    var listA = getListAseet_();
+    var collar_add = {
+        "date_LY": d_Date_LY,
+        "reason_LY": d_LYYY,
+        "department_LY": d_LYBM,
+        "address_LY": d_CFDD,
+        "people_LY": d_SYR,
+        "ps_LY": d_PS,
+        "statelist":1,
+       "assetList": listA
+    };
+
+    //$.messager.alert('提示', d_Other_SYNX_add + "|" + d_Other_ZCSL_add + "|" + d_Other_ZCDJ_add, 'info');
+  
+    $.ajax({
+        url: "/Asset/InsertNewCollor",
+        type: 'POST',
+        data: {
+            "collar_add": JSON.stringify(collar_add)
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+
+
+        }
+    });
+}
+
+function getListAseet_()
+{
+    var _list = "";
+    for (var i = 0; i < CurrentList.length; i++) {
+        if (i == 0) {
+            _list = CurrentList[i] + "";
+        } else {
+            _list = _list + "_" + CurrentList[i];
+        }
+    }
+    return _list;
+}
+
+
+
+
+function cancelData() {
+
+    $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
+        if (r) {
+            window.parent.$('#tabs').tabs('close', '添加领用单');
+        }
+    });
+
+
+}
+
+
+
+//采用jquery easyui loading css效果
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
+
+
+//==============================================================获取表单数据===========================================================================//

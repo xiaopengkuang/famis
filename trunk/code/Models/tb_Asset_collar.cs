@@ -29,5 +29,8 @@ namespace FAMIS.Models
         public int? state_List { get; set; }
 
         public int? department_collar { get; set; }
+
+        [StringLength(200)]
+        public string reason { get; set; }
     }
 }

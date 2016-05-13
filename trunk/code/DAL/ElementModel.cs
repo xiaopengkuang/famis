@@ -91,17 +91,7 @@ namespace FAMIS.Models
                 .Property(e => e.serial_number_Asset)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_allocation_detail>()
-                .Property(e => e.department_allocation)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_allocation_detail>()
-                .Property(e => e.user_allocation)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_allocation_detail>()
-                .Property(e => e.address_allocation)
-                .IsUnicode(false);
+        
 
             modelBuilder.Entity<tb_Asset_collar>()
                 .Property(e => e.serial_number)
@@ -160,7 +150,7 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Reduction_detail>()
-                .Property(e => e.serial_number_Reduction)
+                .Property(e => e.serial_number)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Reduction_detail>()

@@ -15,14 +15,5 @@ namespace FAMIS.Models
 
         [StringLength(20)]
         public string serial_number_Asset { get; set; }
-
-        [StringLength(20)]
-        public string department_allocation { get; set; }
-
-        [StringLength(20)]
-        public string user_allocation { get; set; }
-
-        [StringLength(200)]
-        public string address_allocation { get; set; }
     }
 }

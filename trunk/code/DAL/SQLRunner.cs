@@ -8,13 +8,13 @@ using FAMIS.DTO;
 
 namespace FAMIS.DAL
 {
-    public class SQLRunner
+    public  class SQLRunner
     {
-        SqlConnection cn = new SqlConnection(CommonConnecting.connectionstring);
+         SqlConnection cn = new SqlConnection(CommonConnecting.connectionstring);
         
-        DataSet ds = new DataSet();
-       
-        public int executesql(string sql)
+         DataSet ds = new DataSet();
+
+        public  int executesql(string sql)
         {
             int count_do = 0;
             SqlCommand cmd = new SqlCommand(sql, cn);
@@ -32,7 +32,7 @@ namespace FAMIS.DAL
         }
 
 
-        public int runSelectSQLCounter(String sql)
+        public  int runSelectSQLCounter(String sql)
         {
             int result = 0;
             SqlCommand cmd = new SqlCommand(sql, cn);
@@ -48,7 +48,7 @@ namespace FAMIS.DAL
             cn.Close();
             return result;
         }
-        public DataTable runSelectSQL_dto(String sql)
+        public  DataTable runSelectSQL_dto(String sql)
         {
             SqlCommand cmd = new SqlCommand(sql, cn);
             DataTable dt = new DataTable();
@@ -80,7 +80,7 @@ namespace FAMIS.DAL
 
 
         //返回行数
-        public int runSelectSQL_Counter(String sql,String name)
+        public  int runSelectSQL_Counter(String sql, String name)
         {
             int result = 0;
             SqlCommand cmd = new SqlCommand(sql, cn);
@@ -104,6 +104,20 @@ namespace FAMIS.DAL
                     }
             }
             catch { }
+            cn.Close();
+            return result;
+        }
+
+        public  int run_Update_SQL(String sql)
+        {
+            int result = -1;
+            SqlCommand cmd = new SqlCommand(sql,cn);
+            cn.Open();
+            try {
+                result=cmd.ExecuteNonQuery();
+            }
+            catch {
+            }
             cn.Close();
             return result;
         }
