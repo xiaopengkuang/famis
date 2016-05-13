@@ -125,8 +125,8 @@ namespace FAMIS.Controllers
             var result = (from r in list
                           select new dto_Staff()
                           {
-                              id = r.ID_Staff,
-                              name = r.name
+                              id = r.ID.ToString(),
+                              name = r.ID_Staff.Trim()+"-"+r.name
                           }).ToList(); ;
 
             String json = jss.Serialize(result).ToString().Replace("\\", "");

@@ -13,6 +13,9 @@ using FAMIS.DTO;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
+using System.ComponentModel;
+using System.Reflection;
+using System.Threading.Tasks;
 
 
 
@@ -70,7 +73,7 @@ namespace FAMIS.Controllers
             String SQL_Counter_Str = GetCollarSelectSQL_Counter(page, rows, role, flag, cond);
             SQLRunner sqlRuner = new SQLRunner();
             DataTable dt = sqlRuner.runSelectSQL_dto(SQL_Str);
-            int resultCount = sqlRuner.runSelectSQL_Counter(SQL_Counter_Str,"total");
+            int resultCount = sqlRuner.runSelectSQL_Counter(SQL_Counter_Str, "total");
             List<dto_Collar> list = new List<dto_Collar>();
             for (int i = 0; i < dt.Rows.Count; i++)
             {
@@ -232,6 +235,9 @@ namespace FAMIS.Controllers
 
             return dataStr;
         }
+
+
+     
 
 
         [HttpPost]
@@ -480,15 +486,21 @@ namespace FAMIS.Controllers
         public List<int> ConvertStringToIntList(String idStr)
         {
             List<int> results = new List<int>();
-
-            if(idStr!=null&&idStr!="")
-            { 
-                String[] ids = idStr.Split('_');
-                foreach (String i in ids)
+            try
+            {
+                if (idStr != null && idStr != "")
                 {
-                    results.Add(int.Parse(i));
+                    String[] ids = idStr.Split('_');
+                    foreach (String i in ids)
+                    {
+                        results.Add(int.Parse(i));
+                    }
                 }
             }
+            catch (Exception e){
+                Console.Write(e.ToString());
+            }
+           
             return results;
         }
         public String addAssetState(String Cond,int? state)
@@ -627,7 +639,7 @@ namespace FAMIS.Controllers
 
             SQLRunner sqlRuner = new SQLRunner();
             DataTable dt = sqlRuner.runSelectSQL_dto(loadAssetSummarySQL);
-           int resultCount = sqlRuner.runSelectSQL_Counter(loadAssetSumCounter,"total");
+            int resultCount = sqlRuner.runSelectSQL_Counter(loadAssetSumCounter, "total");
            List<dto_Asset_Summary> list = new List<dto_Asset_Summary>();
            for (int i = 0; i < dt.Rows.Count; i++)
            {
@@ -667,7 +679,7 @@ namespace FAMIS.Controllers
 
             SQLRunner sqlRuner = new SQLRunner();
             DataTable dt = sqlRuner.runSelectSQL_dto(selectSQL);
-            int resultCount = sqlRuner.runSelectSQL_Counter(selectSQLCounter,"total");
+            int resultCount = sqlRuner.runSelectSQL_Counter(selectSQLCounter, "total");
 
             List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
 
@@ -793,6 +805,128 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public int InsertNewCollor(String collar_add)
+        {
+            int insertNum = 0;
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_Collar_addNew Json_collar = serializer.Deserialize<Json_Collar_addNew>(collar_add);
+
+            CommonController cct = new CommonController();
+
+            String serialNumber_collar = cct.getLatestOneSerialNumber("LY");
+            DateTime dateNow=new DateTime();
+            int operatorID=1;
+            tb_Asset_collar collar_new = ConvertJsonTo_CollorTB(Json_collar,serialNumber_collar,true,dateNow,operatorID);
+         
+            //添加明细
+            List<int> AssetIDs = ConvertStringToIntList(Json_collar.assetList);
+            List<tb_Asset_collar_detail> details = convertToList_CollarDetail(serialNumber_collar, getAssetByID(AssetIDs));
+            
+            try {
+
+                if (collar_new != null)
+                {
+                    DB_Connecting.tb_Asset_collar.Add(collar_new);
+                    if (details != null && details.Count > 0)
+                    {
+                        DB_Connecting.tb_Asset_collar_detail.AddRange(details);
+                    }
+                    //将领用的Asset 设置为在用
+                    //TODO:
+                    int flag = 1;
+                    int state = 15;
+                    update_Asset_State(flag, Json_collar.assetList, state);
+                    //DB_Connecting.SaveChanges();
+                    insertNum = 1;
+                }
+               
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            return insertNum;
+        }
+
+        public int update_Asset_State(int flag,String idStr,int state) 
+        {
+
+            String UpdateSql = get_Update_Asset_State(flag, idStr, state);
+            SQLRunner SqlRunner = new SQLRunner();
+            return SqlRunner.run_Update_SQL(UpdateSql);
+        }
+
+
+
+        public List<tb_Asset_collar_detail> convertToList_CollarDetail(String serialNumber,List<tb_Asset> assets)
+        {
+            List<tb_Asset_collar_detail> list = new List<tb_Asset_collar_detail>();
+            if (assets != null)
+            {
+                for (int i = 0; i < assets.Count; i++)
+                {
+                    tb_Asset_collar_detail detail = new tb_Asset_collar_detail();
+                    detail.serial_number = serialNumber;
+                    detail.serial_number_Asset = assets[i].serial_number;
+                    list.Add(detail);
+                }
+            }
+            return list;
+ 
+        }
+
+
+        public List<tb_Asset> getAssetByID(List<int> IDS)
+        {
+            List<tb_Asset> list = new List<tb_Asset>();
+
+            String sql = getSQL_SelectAsset_By_ID(IDS);
+
+            SQLRunner sqlRunner = new SQLRunner();
+
+            DataTable dt = sqlRunner.runSelectSQL_dto(sql);
+
+            List<tb_Asset> assets = CommonController.ConvertToObject<tb_Asset>(dt);
+
+            return list;
+        }
+
+
+
+      
+
+
+        public String getSQL_SelectAsset_By_ID(List<int> IDS)
+        {
+
+            String cond = getSelectAsset_ID_cond(IDS);
+            String sql = "select * from tb_Asset_collar a where flag=1  " + cond;
+            return sql;
+        }
+
+
+
+        public tb_Asset_collar ConvertJsonTo_CollorTB(Json_Collar_addNew json_collar,String SerialNumber,Boolean flag,DateTime dateNow,int operatorID)
+        {
+            tb_Asset_collar collar = new tb_Asset_collar();
+
+            collar.serial_number = SerialNumber;
+            collar.state_List = json_collar.statelist;
+            collar.person = json_collar.people_LY;
+            collar.reason = json_collar.reason_LY;
+            collar.flag = flag;
+            collar.date = json_collar.date_LY;
+            collar.date_Operated = dateNow;
+            collar.addree_Storage = json_collar.address_LY;
+            collar._operator = operatorID;
+            return collar;
+
+        }
+       
+
+
+
        
 
         public String InsertAssets(FormCollection fc)
@@ -861,5 +995,43 @@ namespace FAMIS.Controllers
             return cond;
         }
 
+        public String getSelectAsset_ID_cond_WithOut_A(List<int> selectedID)
+        {
+            String cond = "";
+            if (selectedID != null && selectedID.Count > 0)
+            {
+                cond = " and ID in ( ";
+                for (int i = 0; i < selectedID.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        cond += selectedID[i];
+                    }
+                    else
+                    {
+                        cond += "," + selectedID[i];
+                    }
+                }
+                cond += " )";
+            }
+            else
+            {
+                cond = " and ID in (0) ";
+            }
+            return cond;
+        }
+
+
+        public String get_Update_Asset_State(int flag,String IdsStr,int state)
+        {
+            List<int> idList = ConvertStringToIntList(IdsStr);
+            String cond = getSelectAsset_ID_cond_WithOut_A(idList);
+            String SQL = "update tb_Asset a set state_asset="+state+" where flag="+flag+" "+cond;
+            return SQL;
+        }
+
     }
+
+    
+
 }

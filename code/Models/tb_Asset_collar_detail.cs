@@ -15,7 +15,5 @@ namespace FAMIS.Models
 
         [StringLength(20)]
         public string serial_number_Asset { get; set; }
-
-        public int? amount_collar { get; set; }
     }
 }
