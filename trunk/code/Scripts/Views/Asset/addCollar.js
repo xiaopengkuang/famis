@@ -323,7 +323,7 @@ function saveData() {
         beforeSend: ajaxLoading,
         success: function (data) {
             ajaxLoadEnd();
-
+            window.parent.$('#tabs').tabs('close', '添加领用单');
 
         }
     });
