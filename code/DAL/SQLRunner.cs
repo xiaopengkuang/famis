@@ -25,6 +25,7 @@ namespace FAMIS.DAL
             }catch(Exception e)
             {
                 count_do = 0;
+                Console.WriteLine(e.ToString());
             }
              
             cn.Close();
@@ -41,9 +42,9 @@ namespace FAMIS.DAL
             {
                 result = cmd.ExecuteNonQuery();
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.WriteLine(e.ToString());
             }
             cn.Close();
             return result;
@@ -59,18 +60,15 @@ namespace FAMIS.DAL
                
                 SqlDataAdapter adp = new SqlDataAdapter(cmd); 
                 adp.Fill(dt); 
-
                SqlDataReader sqldReader=cmd.ExecuteReader();
-
-              
                if (!sqldReader.IsClosed)
                {
                    sqldReader.Close();
                }
             }
-            catch
+            catch (Exception e)
             {
-               
+                Console.WriteLine(e.ToString());
             }
             cn.Close();
             return dt;
@@ -103,7 +101,10 @@ namespace FAMIS.DAL
                         sqldReader.Close();
                     }
             }
-            catch { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             cn.Close();
             return result;
         }
@@ -116,11 +117,65 @@ namespace FAMIS.DAL
             try {
                 result=cmd.ExecuteNonQuery();
             }
-            catch {
+            catch(Exception e) {
+                Console.WriteLine(e.ToString());
             }
             cn.Close();
             return result;
         }
+
+        public int run_Insert_SQL(String sql)
+        {
+            int result = -1;
+            SqlCommand cmd = new SqlCommand(sql, cn);
+            cn.Open();
+            try
+            {
+                result = cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            cn.Close();
+            return result;
+        }
+
+
+        //public int run_SQL_Combine(List<String> SqlList)
+        //{
+        //    int result = -1;
+
+        //    String combinSQL = CombineSql(SqlList);
+
+
+        //    SqlCommand cmd = new SqlCommand(combinSQL, cn);
+        //    cn.Open();
+        //    try {
+        //        result = cmd.ExecuteNonQuery();
+        //    }
+        //    catch(Exception e) {
+        //        Console.WriteLine(e.ToString());
+        //    }
+        //    cn.Close();
+        //    return result;
+
+        //}
+
+
+        //public String CombineSql(List<String> sqlList)
+        //{
+        //    String sql = "";
+        //    if(sqlList!=null)
+        //    {
+        //        for (int i = 0; i < sqlList.Count; i++)
+        //        {
+        //            sql += sqlList[i] + " ;";
+        //        }
+        //    }
+        //    return sql;
+            
+        //}
 
         //public int runSelectSQL_dto_Counter(String sql)
         //{
