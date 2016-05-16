@@ -141,7 +141,8 @@ namespace FAMIS.Controllers
 
                 return Json(json_NULL, JsonRequestBehavior.AllowGet);
             }
-            List<tb_Asset_collar_detail> acd = DB_Connecting.tb_Asset_collar_detail.Where(b=>b.flag==true).Where(a => a.serial_number.ToString().Trim().Equals(collar[0].serial_number.ToString().Trim())).ToList();
+            String serNum = collar[0].serial_number;
+            List<tb_Asset_collar_detail> acd = DB_Connecting.tb_Asset_collar_detail.Where(b=>b.flag==true).Where(a => a.serial_number==serNum).ToList();
 
             String cond = getSQLCond_SerialNumber(acd);
 
@@ -1325,18 +1326,18 @@ namespace FAMIS.Controllers
                 {
                     if (i == 0)
                     {
-                        cond += list[i].serial_number;
+                        cond += "'"+list[i].serial_number_Asset+"'";
                     }
                     else
                     {
-                        cond += "," + list[i].serial_number;
+                        cond += ",'" + list[i].serial_number_Asset+"'";
                     }
                 }
                 cond += " )";
             }
             else
             {
-                cond = "";
+                cond = "and a.serial_number in ('0')";
             }
             return cond;
 
