@@ -98,6 +98,10 @@ namespace FAMIS.Models
                 .Property(e => e.reason)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_Asset_collar>()
+                .Property(e => e.ps)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset_collar_detail>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);

@@ -38,23 +38,23 @@ function LoadInitDatagrid() {
             { field: 'state', title: '状态', width: 50 },
             { field: 'address', title: '地址', width: 50 },
             { field: 'department', title: '领用部门', width: 50 }
-            //,
-            //{
-            //    field: 'date_allocation', title: '领用时间', width: 100,
-            //    formatter: function (date) {
-            //        var pa = /.*\((.*)\)/;
-            //        var unixtime = date.match(pa)[1].substring(0, 10);
-            //        return getTime(unixtime);
-            //    }
-            //},
-            //{
-            //    field: 'date_Operated', title: '登记时间', width: 100,
-            //    formatter: function (date) {
-            //        var pa = /.*\((.*)\)/;
-            //        var unixtime = date.match(pa)[1].substring(0, 10);
-            //        return getTime(unixtime);
-            //    }
-            //}
+            ,
+            {
+                field: 'data_collar', title: '领用时间', width: 100,
+                formatter: function (date) {
+                    var pa = /.*\((.*)\)/;
+                    var unixtime = date.match(pa)[1].substring(0, 10);
+                    return getTime(unixtime);
+                }
+            },
+            {
+                field: 'date_Operated', title: '登记时间', width: 100,
+                formatter: function (date) {
+                    var pa = /.*\((.*)\)/;
+                    var unixtime = date.match(pa)[1].substring(0, 10);
+                    return getTime(unixtime);
+                }
+            }
         ]],
         singleSelect: true, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
@@ -88,6 +88,40 @@ function loadPageTool() {
                
             }
         }, {
+            text: '删除',
+            height: 50,
+            iconCls: 'icon-cancel',
+            handler: function () {
+
+                //获取选择行
+                var rows = $('#allocationDG').datagrid('getSelections');
+                var IDS = [];
+                for (var i = 0; i < rows.length; i++) {
+                    IDS[i] = rows[i].ID;
+                }
+
+                if (rows.length > 0)
+                {
+                    //将数据传入后台
+                    $.ajax({
+                        url: '/Asset/deleteCollars',
+                        data: { "selectedIDs": IDS },
+                        //data: _list,  
+                        dataType: "json",
+                        type: "POST",
+                        traditional: true,
+                        success: function () {
+                            $('#allocationDG').datagrid('reload');
+                        }
+                    });
+                }
+
+               
+
+
+
+            }
+        }, {
             text: '刷新',
             height: 50,
             iconCls: 'icon-reload',
@@ -97,11 +131,53 @@ function loadPageTool() {
             }
         },
         {
-            text: '查看明细',
+            text: '明细',
             height: 50,
-            iconCls: 'icon-search',
+            iconCls: 'icon-tip',
             handler: function () {
-                $('#allocationDG').datagrid('reload');
+                var rows = $('#allocationDG').datagrid('getSelections');
+                var id_;
+                if(rows.length==1)
+                {
+                    id_=rows[0].ID;
+                } else {
+                    var resultAlert = "请选择领用单！";
+                    $.messager.show({
+                        title: '提示',
+                        msg: resultAlert,
+                        showType: 'slide',
+                        style: {
+                            right: '',
+                            top: document.body.scrollTop + document.documentElement.scrollTop,
+                            bottom: ''
+                        }
+                    });
+                    return;
+                }
+
+                
+
+                var $winADD;
+                $winADD = $('#modalwindow').window({
+                    title: '领用明细',
+                    width: 860,
+                    height: 540,
+                    top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
+                    left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+                    shadow: true,
+                    modal: true,
+                    iconCls: 'icon-add',
+                    closed: true,
+                    minimizable: false,
+                    maximizable: false,
+                    collapsible: false,
+                    onClose: function () {
+                        //$('#allocationDG').datagrid('reload');
+                        
+                    }
+                });
+                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/DetailCollar?id=" + id_ + "'></iframe>");
+                $winADD.window('open');
                 //alert('刷新');
             }
         },
@@ -128,7 +204,6 @@ function loadPageTool() {
                iconCls: 'icon-save',
                handler: function () {
                    var filename = getNowFormatDate_FileName();
-
                    Export(filename, $('#allocationDG'));
                }
            }],
