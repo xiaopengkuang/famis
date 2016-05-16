@@ -60,6 +60,22 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult DetailCollar(int id) {
+
+            ViewBag.selectID = id;
+            //获取领用单信息
+            dto_collar_detail collar_detail = loadCollarByID(id);
+            ViewBag.serialNumber = collar_detail.serialNumber;
+            ViewBag.address = collar_detail.address;
+            ViewBag.data_collar = collar_detail.data_collar;
+            ViewBag.department = collar_detail.department;
+            ViewBag.operatorUser = collar_detail.operatorUser;
+            ViewBag.staff = collar_detail.staff;
+            ViewBag.reason = collar_detail.reason;
+            ViewBag.ps = collar_detail.ps;
+            return View();
+        }
+
 
 
         //===============================================================View  Area===================================================================================//
@@ -106,6 +122,111 @@ namespace FAMIS.Controllers
 
             return LoadCollarsList(page, rows, role, flag, condSC);
         }
+
+        public JsonResult Load_Asset_By_CollarID(int? page, int? rows,int flag,int ID)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+            List<tb_Asset_collar> collar = DB_Connecting.tb_Asset_collar.Where(a => a.ID == ID).ToList();
+            if (collar.Count!= 1)
+            {
+                List<dto_Asset_Detail> list_null = new List<dto_Asset_Detail>();
+                var json_NULL = new
+                {
+                    total = 0,
+                    rows = list_null.ToArray()
+                    //sql = selectSQL
+
+                };
+
+                return Json(json_NULL, JsonRequestBehavior.AllowGet);
+            }
+            List<tb_Asset_collar_detail> acd = DB_Connecting.tb_Asset_collar_detail.Where(b=>b.flag==true).Where(a => a.serial_number.ToString().Trim().Equals(collar[0].serial_number.ToString().Trim())).ToList();
+
+            String cond = getSQLCond_SerialNumber(acd);
+
+            String selectSQL = getSelectAssets(flag, cond, rows, page);
+            String selectSQLCounter = getSelectAsset_Counter(flag, cond);
+
+
+            SQLRunner sqlRuner = new SQLRunner();
+            DataTable dt = sqlRuner.runSelectSQL_dto(selectSQL);
+            int resultCount = sqlRuner.runSelectSQL_Counter(selectSQLCounter, "total");
+            List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                dto_Asset_Detail tmp = new dto_Asset_Detail();
+
+                tmp.RowNo = int.Parse(dt.Rows[i]["RowNo"].ToString());
+                tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
+                tmp.serial_number = dt.Rows[i]["serial_number"].ToString();
+                tmp.name_Asset = dt.Rows[i]["name_Asset"].ToString();
+                tmp.type_Asset = dt.Rows[i]["type_Asset"].ToString();
+                tmp.specification = dt.Rows[i]["specification"].ToString();
+                tmp.people_using = dt.Rows[i]["specification"].ToString();
+                tmp.department_Using = dt.Rows[i]["department_Using"].ToString();
+                tmp.measurement = dt.Rows[i]["measurement"].ToString();
+                tmp.unit_price = double.Parse(dt.Rows[i]["unit_price"].ToString());
+                tmp.addressCF = dt.Rows[i]["addressCF"].ToString();
+                tmp.amount = int.Parse(dt.Rows[i]["amount"].ToString());
+                tmp.value = double.Parse(dt.Rows[i]["value"].ToString());
+                tmp.state_asset = dt.Rows[i]["state_asset"].ToString();
+                tmp.supplierID = dt.Rows[i]["supplierID"].ToString();
+                tmp.Method_add = dt.Rows[i]["Method_add"].ToString();
+                list.Add(tmp);
+            }
+            var json = new
+            {
+                total = resultCount,
+                rows = list.ToArray()
+                //sql = selectSQL
+
+            };
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+       
+
+
+        public List<dto_collar_detail> LoadCollars_By_ID_LIST(List<int> ids)
+        {
+            SQLRunner sqlRuner = new SQLRunner();
+            String sql = GetCollarSelectSQL(ids);
+            DataTable dt= sqlRuner.runSelectSQL_dto(sql);
+            return converTo_dto_Collar_detail(dt);
+             
+        }
+
+        public dto_collar_detail loadCollarByID(int id)
+        {
+            List<int> ids = new List<int>();
+            ids.Add(id);
+            List<dto_collar_detail> list = new List<dto_collar_detail>();
+            list = LoadCollars_By_ID_LIST(ids);
+            if (list.Count == 1)
+            {
+                return list[0];
+            }
+            else {
+                return new dto_collar_detail();
+            }
+
+        }
+
+
+        [HttpPost]
+        public int deleteCollars(List<int> selectedIDs)
+        {
+            String deleteSQL = getDeleteCollarSQL(selectedIDs); 
+            SQLRunner sqlRunner = new SQLRunner();
+            int result = sqlRunner.executesql(deleteSQL);
+            return result;
+        }
+
         public int InsertNewCollor(String collar_add)
         {
             int insertNum = 0;
@@ -249,8 +370,8 @@ namespace FAMIS.Controllers
             var json = new
             {
                 total = resultCount,
-                rows = list.ToArray(),
-                sql = selectSQL
+                rows = list.ToArray()
+                //sql = selectSQL
 
             };
 
@@ -437,8 +558,8 @@ namespace FAMIS.Controllers
                 tmp.state = dt.Rows[i]["state"].ToString();
                 tmp.address = dt.Rows[i]["address"].ToString();
                 tmp.department = dt.Rows[i]["department"].ToString();
-                //tmp.date_allocation =(DateTime)dt.Rows[i]["date_allocation"];
-                //tmp.date_Operated = (DateTime)dt.Rows[i]["date_Operated"];
+                tmp.data_collar = (DateTime)dt.Rows[i]["data_collar"];
+                tmp.date_Operated = (DateTime)dt.Rows[i]["date_Operated"];
                 list.Add(tmp);
             }
             var json = new
@@ -523,6 +644,17 @@ namespace FAMIS.Controllers
 
 
 
+
+
+
+       
+
+      
+
+
+        //===============================================================Convert  Area===================================================================================//
+
+
         /**
          *根据ID获取到AssetList 
          * */
@@ -571,16 +703,28 @@ namespace FAMIS.Controllers
 
             return list;
         }
+        public List<dto_collar_detail> converTo_dto_Collar_detail(DataTable dt)
+        {
+            List<dto_collar_detail> list = new List<dto_collar_detail>();
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                dto_collar_detail tmp = new dto_collar_detail();
+                tmp.serialNumber = dt.Rows[i]["serialNumber"].ToString();
+                tmp.operatorUser = dt.Rows[i]["operatorUser"].ToString();
+                tmp.staff = dt.Rows[i]["staff"].ToString();
+                tmp.state = dt.Rows[i]["state"].ToString();
+                tmp.address = dt.Rows[i]["address"].ToString();
+                tmp.department = dt.Rows[i]["department"].ToString();
+                tmp.reason = dt.Rows[i]["reason"].ToString();
+                tmp.ps = dt.Rows[i]["ps"].ToString();
+                tmp.data_collar = (DateTime)dt.Rows[i]["data_collar"];
+                tmp.date_Operated = (DateTime)dt.Rows[i]["date_Operated"];
+                list.Add(tmp);
+            }
+            return list;
+        }
 
 
-
-
-       
-
-      
-
-
-        //===============================================================Convert  Area===================================================================================//
 
         public String TranslateSearchConditionToString(dto_SC_Asset cond)
         {
@@ -716,6 +860,7 @@ namespace FAMIS.Controllers
             collar.person = json_collar.people_LY;
             collar.reason = json_collar.reason_LY;
             collar.flag = flag;
+            collar.department_collar = json_collar.department_LY;
             collar.date = json_collar.date_LY;
             collar.date_Operated = dateNow;
             collar.addree_Storage = json_collar.address_LY;
@@ -723,6 +868,9 @@ namespace FAMIS.Controllers
             return collar;
 
         }
+
+
+        
 
         public List<tb_Asset_collar_detail> convertToList_CollarDetail(String serialNumber, List<dto_Asset_Detail> assets)
         {
@@ -826,7 +974,7 @@ namespace FAMIS.Controllers
             return cond;
         }
 
-        public String getSelectAsset_ID_cond_WithOut_A(List<int> selectedID)
+        public String getSelect_ID_cond_WithOut_A(List<int> selectedID)
         {
             String cond = "";
             if (selectedID != null && selectedID.Count > 0)
@@ -851,15 +999,31 @@ namespace FAMIS.Controllers
             }
             return cond;
         }
+
+        public String GetCollarSelectSQL(List<int> ids)
+        {
+            if (ids!=null&&ids.Count > 0)
+            {
+
+            }
+            else {
+                return "";
+            }
+
+            String condID = getSelectAsset_ID_cond(ids);
+            String sql = "select a.reason,a.ps,a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date data_collar,a.date_Operated from tb_Asset_collar a left join tb_department de on a.department_collar=de.ID_Department left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + condID + " order by a.date_Operated desc";
+            return sql;
+        }
+
         public String GetCollarSelectSQL(int? page, int? rows, int role, int flag, String cond)
         {
-            String sql = "select top " + rows + " a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date date_allocation,a.date_Operated from tb_Asset_collar a left join tb_department de on a.department_collar=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond + "order by a.date_Operated desc";
+            String sql = "select top " + rows + " a.ID,a.serial_number serialNumber, de.name_Department department,st.name staff,dd.name_para address,us.name_User operatorUser,stL.Name state,a.date data_collar,a.date_Operated from tb_Asset_collar a left join tb_department de on a.department_collar=de.ID_Department left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond + "order by a.date_Operated desc";
             return sql;
         }
 
         public String GetCollarSelectSQL_Counter(int? page, int? rows, int role, int flag, String cond)
         {
-            String sql = "select count(*) as total from tb_Asset_collar a left join tb_department de on a.department_collar=de.ID left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond;
+            String sql = "select count(*) as total from tb_Asset_collar a left join tb_department de on a.department_collar=de.ID_Department left join tb_staff st on a.person=st.ID left join tb_dataDict_para dd on a.addree_Storage=dd.ID left join tb_user us on a.operator=us.ID left join tb_State_List stL on a.state_List=stl.id where a.flag=1 " + cond;
             return sql;
         }
 
@@ -867,7 +1031,7 @@ namespace FAMIS.Controllers
         public String get_Update_Asset_State(int flag, String IdsStr, int state)
         {
             List<int> idList = ConvertStringToIntList(IdsStr);
-            String cond = getSelectAsset_ID_cond_WithOut_A(idList);
+            String cond = getSelect_ID_cond_WithOut_A(idList);
             String SQL = "update tb_Asset set state_asset=" + state + " where flag=" + flag + " " + cond;
             return SQL;
         }
@@ -878,22 +1042,30 @@ namespace FAMIS.Controllers
             String insertSql = "insert into tb_Asset_collar (addree_Storage,date,date_Operated,department_collar,flag,operator,person,reason,serial_number,state_List) ";
             DateTime date_op = DateTime.Now;
 
-            for (int i = 0; i < collar.Count; i++)
+            if (collar.Count > 0)
             {
-                collar[i].date_Operated = date_op;
-                collar[i].flag = true;
-                if (i == 0)
+                for (int i = 0; i < collar.Count; i++)
                 {
-                    insertSql += ConverToInsertSelectSQLString_Collar(collar[i]);
+                    collar[i].date_Operated = date_op;
+                    collar[i].flag = true;
+                    if (i == 0)
+                    {
+                        insertSql += ConverToInsertSelectSQLString_Collar(collar[i]);
+                    }
+                    else
+                    {
+                        insertSql += " union all " + ConverToInsertSelectSQLString_Collar(collar[i]);
+                    }
+
+
+
                 }
-                else
-                {
-                    insertSql += " union all " + ConverToInsertSelectSQLString_Collar(collar[i]);
-                }
-
-
-
             }
+            else {
+                return "" ;
+            }
+
+          
             return insertSql;
 
         }
@@ -991,6 +1163,11 @@ namespace FAMIS.Controllers
         {
             String insertSql = "insert into tb_Asset_collar_detail (serial_number,serial_number_Asset) ";
 
+            if (details == null || details.Count == 0)
+            {
+                return "";
+            }
+
             for (int i = 0; i < details.Count; i++)
             {
 
@@ -1009,17 +1186,25 @@ namespace FAMIS.Controllers
         public String getDeleteAssetSQL(List<int> selectedIDs)
         {
             String deleteIIIDDD = "";
-            for (int i = 0; i < selectedIDs.Count; i++)
+            if (selectedIDs.Count > 0)
             {
-                if (i == 0)
+                for (int i = 0; i < selectedIDs.Count; i++)
                 {
-                    deleteIIIDDD = selectedIDs[i] + "";
-                }
-                else
-                {
-                    deleteIIIDDD += "," + selectedIDs[i];
+                    if (i == 0)
+                    {
+                        deleteIIIDDD = selectedIDs[i] + "";
+                    }
+                    else
+                    {
+                        deleteIIIDDD += "," + selectedIDs[i];
+                    }
                 }
             }
+            else
+            {
+                deleteIIIDDD = "0";
+            }
+            
             String deleteSQL = "update tb_Asset set flag=0 where ID in (" + deleteIIIDDD + ");";
             return deleteSQL;
         }
@@ -1099,6 +1284,64 @@ namespace FAMIS.Controllers
 
             return condStr;
         }
+
+        public String getDeleteCollarSQL(List<int> SelectedIDS)
+        {
+            if (SelectedIDS!=null&&SelectedIDS.Count > 0)
+            {
+                String IDcond=getSelect_ID_cond_WithOut_A(SelectedIDS);
+
+                String SQL = "update tb_Asset_collar set flag=0 where flag=1 " + IDcond;
+                return SQL;
+            }
+            else {
+                return "";
+            }
+        }
+
+        public String getSQL_SelectAssetBySerialNumber(List<tb_Asset_collar_detail> list)
+        {
+            String sql="";
+            if (list != null && list.Count > 0)
+            {
+
+            }
+            else {
+            }
+
+            return sql;
+
+
+        }
+
+
+        public String getSQLCond_SerialNumber(List<tb_Asset_collar_detail> list)
+        {
+            String cond = "";
+            if (list != null && list.Count > 0)
+            {
+                cond = " and a.serial_number in ( ";
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        cond += list[i].serial_number;
+                    }
+                    else
+                    {
+                        cond += "," + list[i].serial_number;
+                    }
+                }
+                cond += " )";
+            }
+            else
+            {
+                cond = "";
+            }
+            return cond;
+
+        }
+
 
 
 

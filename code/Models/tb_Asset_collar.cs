@@ -32,5 +32,8 @@ namespace FAMIS.Models
 
         [StringLength(200)]
         public string reason { get; set; }
+
+        [StringLength(200)]
+        public string ps { get; set; }
     }
 }
