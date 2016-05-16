@@ -41,7 +41,7 @@
                 pageNumber: 1, //默认显示第几页 
                 pageList: [15, 30, 45],//分页中下拉选项的数值 
                 columns: [[
-                    { field: 'ID', checkbox: true, width: 50 },
+                    { field: 'ID', checkbox: false, width: 50 },
                     { field: 'serial_number', title: '资产编号', width: 50 },
                     { field: 'name_Asset', title: '资产名称', width: 50 },
                     { field: 'type_Asset', title: '资产类型', width: 50 },
@@ -59,6 +59,7 @@
                 selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
                 checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
             });
+            $('#collar_DG').datagrid('hideColumn', 'ID');
             loadPageTool_Detail();
         }
         function loadPageTool_Detail() {
@@ -83,7 +84,7 @@
 </head>
 <body onload="loadDetail_collar(@ViewBag.selectID)">
 
-    <div class="easyui-panel" style="height: 500px;" fit="true">
+    <div class="easyui-panel" style="height: 600px;" fit="true">
         <table style="width: 100%">
             <tr>
                 <td style="width: 100px"><span style="width: 100px">单据号:</span></td>

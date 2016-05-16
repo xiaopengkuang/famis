@@ -35,7 +35,24 @@ function LoadInitDatagrid() {
             { field: 'serialNumber', title: '领用编号', width: 50 },
             { field: 'operatorUser', title: '操作人', width: 50 },
             { field: 'staff', title: '领用人', width: 50 },
-            { field: 'state', title: '状态', width: 50 },
+            { field: 'state', title: '状态', width: 50 ,
+            formatter: function (data)
+            {
+                if (data=="草稿") {
+                    return '<font color="#696969">' + data + '</font>';
+                }
+                else if (data == "待审核") {
+                    return '<font color="#FFD700">' + data + '</font>';
+                } else if (data == "已审核")
+                {
+                    return '<font color="#228B22">' + data + '</font>';
+                } else if (data == "退回") {
+                    return '<font color="#556B2F">' + data + '</font>';
+                } else {
+                    return data;
+                }
+            }
+            },
             { field: 'address', title: '地址', width: 50 },
             { field: 'department', title: '领用部门', width: 50 }
             ,
@@ -56,7 +73,7 @@ function LoadInitDatagrid() {
                 }
             }
         ]],
-        singleSelect: true, //允许选择多行
+        singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
@@ -99,7 +116,6 @@ function loadPageTool() {
                 for (var i = 0; i < rows.length; i++) {
                     IDS[i] = rows[i].ID;
                 }
-
                 if (rows.length > 0)
                 {
                     //将数据传入后台
@@ -115,11 +131,6 @@ function loadPageTool() {
                         }
                     });
                 }
-
-               
-
-
-
             }
         }, {
             text: '刷新',
@@ -137,10 +148,8 @@ function loadPageTool() {
             handler: function () {
                 var rows = $('#allocationDG').datagrid('getSelections');
                 var id_;
-                if(rows.length==1)
+                if (rows == null)
                 {
-                    id_=rows[0].ID;
-                } else {
                     var resultAlert = "请选择领用单！";
                     $.messager.show({
                         title: '提示',
@@ -155,15 +164,30 @@ function loadPageTool() {
                     return;
                 }
 
-                
-
+                if(rows.length==1)
+                {
+                    id_=rows[0].ID;
+                } else {
+                    var resultAlert = "一次只能查看一个单据！";
+                    $.messager.show({
+                        title: '提示',
+                        msg: resultAlert,
+                        showType: 'slide',
+                        style: {
+                            right: '',
+                            top: document.body.scrollTop + document.documentElement.scrollTop,
+                            bottom: ''
+                        }
+                    });
+                    return;
+                }
                 var $winADD;
                 $winADD = $('#modalwindow').window({
                     title: '领用明细',
-                    width: 860,
-                    height: 540,
-                    top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
-                    left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+                    width: 900,
+                    height: 600,
+                    top: (($(window).height() - 900) > 0 ? ($(window).height() - 900) : 200) * 0.5,
+                    left: (($(window).width() - 600) > 0 ? ($(window).width() - 600) : 100) * 0.5,
                     shadow: true,
                     modal: true,
                     iconCls: 'icon-add',
@@ -173,7 +197,6 @@ function loadPageTool() {
                     collapsible: false,
                     onClose: function () {
                         //$('#allocationDG').datagrid('reload');
-                        
                     }
                 });
                 $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/DetailCollar?id=" + id_ + "'></iframe>");
@@ -186,6 +209,46 @@ function loadPageTool() {
               height: 50,
               iconCls: 'icon-redo',
               handler: function () {
+                  var rows = $('#allocationDG').datagrid('getSelections');
+                  var id_;
+                  if (rows == null) {
+                      var resultAlert = "请选择领用单！";
+                      $.messager.show({
+                          title: '提示',
+                          msg: resultAlert,
+                          showType: 'slide',
+                          style: {
+                              right: '',
+                              top: document.body.scrollTop + document.documentElement.scrollTop,
+                              bottom: ''
+                          }
+                      });
+                      return;
+                  }
+
+                  if (rows.length == 1) {
+                      id_ = rows[0].ID;
+                  } else {
+                      for (var ii = 0; ii < rows.length; ii++)
+                      {
+                          if (rows[ii].state != "草稿")
+                          {
+                              MessShow("只有草稿单据才能提交!")
+                              return;
+                          }
+
+                          if (ii == 0) {
+                              id_ = rows[ii].ID;
+                             
+                          } else {
+                              id_ = "_" + rows[ii].ID;
+                          }
+                      }
+                  }
+                  //
+
+
+
                   $('#allocationDG').datagrid('reload');
                   //alert('刷新');
               }
@@ -195,6 +258,46 @@ function loadPageTool() {
                height: 50,
                iconCls: 'icon-ok',
                handler: function () {
+                   var rows = $('#allocationDG').datagrid('getSelections');
+                   var id_;
+                   if (rows == null) {
+                       var resultAlert = "请选择领用单！";
+                       $.messager.show({
+                           title: '提示',
+                           msg: resultAlert,
+                           showType: 'slide',
+                           style: {
+                               right: '',
+                               top: document.body.scrollTop + document.documentElement.scrollTop,
+                               bottom: ''
+                           }
+                       });
+                       return;
+                   }
+
+                   if (rows.length == 1) {
+                       id_ = rows[0].ID;
+                   } else {
+                       for (var ii = 0; ii < rows.length; ii++) {
+                           if (rows[ii].state != "待审核") {
+                               MessShow("只有待审核单据才能提交!")
+                               return;
+                           }
+
+                           if (ii == 0) {
+                               id_ = rows[ii].ID;
+
+                           } else {
+                               id_ = "_" + rows[ii].ID;
+                           }
+                       }
+                   }
+
+
+
+
+
+
                    $('#allocationDG').datagrid('reload');
                    //alert('刷新');
                }
@@ -212,6 +315,29 @@ function loadPageTool() {
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
+
+
+function updateRecordState(state,idStr)
+{
+
+}
+
+
+
+function MessShow(mess)
+{
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}
+
 
 function getTime(/** timestamp=0 **/) {
     var ts = arguments[0] || 0;
