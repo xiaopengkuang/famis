@@ -132,7 +132,7 @@ function LoadInitData_datagrid() {
         }
     }
     
-    $('#collar_DG').datagrid({
+    $('#collar_DG_add').datagrid({
         url: '/Asset/Load_SelectedAsset?role=1&state=16&flag=1&selectedIDs=' + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
@@ -176,7 +176,7 @@ function LoadInitData_datagrid() {
 }
 
 function loadPageTool_Detail() {
-    var pager = $('#collar_DG').datagrid('getPager');	// get the pager of datagrid
+    var pager = $('#collar_DG_add').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '添加明细',
@@ -210,7 +210,7 @@ function loadPageTool_Detail() {
             height: 50,
             handler: function () {
                 //获取选择行
-                var rows = $('#collar_DG').datagrid('getSelections');
+                var rows = $('#collar_DG_add').datagrid('getSelections');
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
                     IDS[i] = rows[i].ID;
@@ -223,7 +223,7 @@ function loadPageTool_Detail() {
             height: 50,
             iconCls: 'icon-reload',
             handler: function () {
-                $('#collar_DG').datagrid('reload');
+                $('#collar_DG_add').datagrid('reload');
                 //alert('刷新');
             }
         }],
@@ -283,8 +283,19 @@ function updateCurrentList(addList)
 
 
 //==============================================================获取表单数据===========================================================================//
-function saveData() {
+function saveData(info) {
 
+    var state_List;
+    if (info == "保存") {
+        state_List = 1;
+        //alert(state_List);
+        
+    } else if (info == "提交") {
+        state_List = 2;
+        //alert(state_List);
+    } else {
+       
+    }
     //获取页面数据
     var d_Date_LY = $('#date_add').datebox('getValue');
 
@@ -308,7 +319,8 @@ function saveData() {
         "address_LY": d_CFDD,
         "people_LY": d_SYR,
         "ps_LY": d_PS,
-        "statelist":1,
+        "flag":1,
+        "statelist": state_List,
        "assetList": listA
     };
 

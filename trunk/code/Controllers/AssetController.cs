@@ -101,6 +101,98 @@ namespace FAMIS.Controllers
         //    return LoadCollarsList(page, rows, role, flag, condSC);
         //}
 
+        public String updateCollarStateByID(int state,String idStr)
+        {
+              String result="";
+            //要通过的审核的单据 须审核其明细中的资产是否全是闲置
+            if (state == 3)
+            {
+                if(Check_AssetStateByCollarID(state, idStr))
+                {
+                      String sql = getSQL_Update_Collar_State(state, idStr);
+                      SQLRunner sqlRunner = new SQLRunner();
+                      result=sqlRunner.executesql(sql)+"";
+                }else{
+                    result="-1";
+                }
+
+            }else{
+                 //将collar设置为相关的状态
+                  String sql = getSQL_Update_Collar_State(state, idStr);
+                  SQLRunner sqlRunner = new SQLRunner();
+                  result=sqlRunner.executesql(sql)+"";
+            }
+           
+
+            //DO more option  
+            //State=3  
+
+            return result;
+        }
+
+
+        /**
+         * state 是单据state
+         *判断单据中明细资产是否全部可用 
+         * */
+        public Boolean Check_AssetStateByCollarID(int state, String idStr)
+        {
+            List<int> idList=ConvertStringToIntList(idStr);
+
+            if (state == 3)
+            {
+               if(idList.Count!=1)
+               {
+                   return false;
+               }
+                List<dto_collar_detail> collars=LoadCollars_By_ID_LIST(idList);
+                if(collars.Count!=1)
+                {
+                    return false;
+                }
+                String SerialNumber_LY_cond = getCond_SerialNumber(collars);
+
+                String Sql_ = getSQL_Select_CollarDetail_BySerial_LY(SerialNumber_LY_cond);
+                
+                SQLRunner runner=new SQLRunner();
+                
+                DataTable dt=runner.runSelectSQL_dto(Sql_);
+                
+                List<dto_Asset_CollarDetail> list = ConvertDataTabelTo_dto_CollarDetail(dt);
+
+                String cond = getCond_SerialNum_By_CollarDetail(list);
+                String SQL_COUNTER = GetSQL_Select_Count_By_SeialNumberCond(cond,16);
+                int counter = runner.runSelectSQL_Counter(SQL_COUNTER, "total");
+                if (counter > 0)
+                {
+                    return false;
+                }
+                //更新Asset状态 再用:15
+               int affect_count=update_Asset_state_By_SerialNumber(cond,15,16);
+               if (affect_count!=list.Count)
+               {
+                   update_Asset_state_By_SerialNumber(cond,16,15);
+               }
+               return true;
+                
+            }
+            else
+            {
+                //暂时不做操作
+                return false;
+            }
+        }
+
+     
+
+
+
+      
+
+
+
+
+
         public JsonResult LoadCollars(int? page, int? rows, int role, int flag, String searchCondtiion)
         {
             page = page == null ? 1 : page;
@@ -238,38 +330,27 @@ namespace FAMIS.Controllers
 
             String serialNumber_collar = cct.getLatestOneSerialNumber("LY");
             DateTime dateNow = new DateTime();
+
             int operatorID = 1;
+            int flag = Json_collar.flag == null ? 1 : (int)Json_collar.flag;
+            int state = 19;
+
             tb_Asset_collar collar_new = ConvertJsonTo_CollorTB(Json_collar, serialNumber_collar, true, dateNow, operatorID);
             List<tb_Asset_collar> collarsList = new List<tb_Asset_collar>();
             collarsList.Add(collar_new);
 
             //添加明细
             List<int> AssetIDs = ConvertStringToIntList(Json_collar.assetList);
-            List<tb_Asset_collar_detail> details = convertToList_CollarDetail(serialNumber_collar, getAssetByID(AssetIDs));
+            List<tb_Asset_collar_detail> details = convertToList_CollarDetail(serialNumber_collar, getAssetByID(AssetIDs),1);
             String Insert_Collar_SQL = get_Insert_collar(collarsList);
-
             String Insert_CollarDetail_SQL = get_Insert_collar_detail(details);
-
-            int flag = 1;
-            int state = 15;
-            String Update_Collar_Asset = get_Update_Asset_State(flag, Json_collar.assetList, state);
-
-            List<String> SqlList = new List<String>();
-            SqlList.Add(Insert_Collar_SQL);
-            SqlList.Add(Insert_CollarDetail_SQL);
-            SqlList.Add(Update_Collar_Asset);
             SQLRunner sqlRunner = new SQLRunner();
-
             try
             {
                 insertNum = sqlRunner.run_Insert_SQL(Insert_Collar_SQL);
                 if (insertNum != -1)
                 {
                     insertNum = sqlRunner.run_Insert_SQL(Insert_CollarDetail_SQL);
-                    if (insertNum != -1)
-                    {
-                        insertNum = sqlRunner.run_Update_SQL(Update_Collar_Asset);
-                    }
                 }
 
             }
@@ -459,7 +540,25 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
 
         }
+        public List<dto_Asset_CollarDetail> ConvertDataTabelTo_dto_CollarDetail(DataTable dt)
+        {
+            List<dto_Asset_CollarDetail> list = new List<dto_Asset_CollarDetail>();
 
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+
+                dto_Asset_CollarDetail tmp = new dto_Asset_CollarDetail();
+                tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
+                tmp.serial_number = dt.Rows[i]["serial_number"].ToString();
+                tmp.serial_number_Asset = dt.Rows[i]["serial_number_Asset"].ToString();
+                tmp.flag = dt.Rows[i]["flag"].ToString();
+
+                list.Add(tmp);
+ 
+            }
+             return list;
+
+        }
 
         /**
          * 加载详细列表
@@ -534,6 +633,13 @@ namespace FAMIS.Controllers
         {
 
             String UpdateSql = get_Update_Asset_State(flag, idStr, state);
+            SQLRunner SqlRunner = new SQLRunner();
+            return SqlRunner.run_Update_SQL(UpdateSql);
+        }
+
+        public int update_Asset_state_By_SerialNumber(String cond_SerialNumber,int state,int oldState)
+        {
+            String UpdateSql = getSQL_Update_Asset_state_By_SerialNumber(state,oldState,cond_SerialNumber);
             SQLRunner SqlRunner = new SQLRunner();
             return SqlRunner.run_Update_SQL(UpdateSql);
         }
@@ -829,7 +935,7 @@ namespace FAMIS.Controllers
         }
         public String ConverToInsertSelectSQLString_CollarDetail(tb_Asset_collar_detail data)
         {
-            String dataStr = "select '" + data.serial_number + "','" + data.serial_number_Asset + "'";
+            String dataStr = "select '" + data.serial_number + "','" + data.serial_number_Asset + "','"+data.flag+"'";
             return dataStr;
         }
         public String ConverToInsertSelectSQLString_Collar(tb_Asset_collar data)
@@ -873,7 +979,7 @@ namespace FAMIS.Controllers
 
         
 
-        public List<tb_Asset_collar_detail> convertToList_CollarDetail(String serialNumber, List<dto_Asset_Detail> assets)
+        public List<tb_Asset_collar_detail> convertToList_CollarDetail(String serialNumber, List<dto_Asset_Detail> assets,int flag)
         {
             List<tb_Asset_collar_detail> list = new List<tb_Asset_collar_detail>();
             if (assets != null)
@@ -883,6 +989,7 @@ namespace FAMIS.Controllers
                     tb_Asset_collar_detail detail = new tb_Asset_collar_detail();
                     detail.serial_number = serialNumber == null ? "" : serialNumber;
                     detail.serial_number_Asset = assets[i].serial_number == null ? "" : assets[i].serial_number;
+                    detail.flag = flag==1?true:false;
                     list.Add(detail);
                 }
             }
@@ -1029,11 +1136,25 @@ namespace FAMIS.Controllers
         }
 
 
+        public String GetSQL_Select_Count_By_SeialNumberCond(String cond,int tagretState)
+        {
+            String sql = "select count(*) as total from tb_Asset where flag=1 and state_asset !=" + tagretState + " and serial_number in(" + cond + ")";
+            return sql;
+        }
+
+
         public String get_Update_Asset_State(int flag, String IdsStr, int state)
         {
             List<int> idList = ConvertStringToIntList(IdsStr);
             String cond = getSelect_ID_cond_WithOut_A(idList);
             String SQL = "update tb_Asset set state_asset=" + state + " where flag=" + flag + " " + cond;
+            return SQL;
+        }
+
+
+        public String getSQL_Update_Asset_state_By_SerialNumber(int state,int oldState,String cond_serialNumber)
+        {
+            String SQL = "update tb_Asset set state_asset=" + state + " where state_asset=" + oldState + " and serial_number in (" + cond_serialNumber + ")";
             return SQL;
         }
 
@@ -1102,6 +1223,62 @@ namespace FAMIS.Controllers
             String sqlStr = "select  count(*) as total from tb_Asset as a left join tb_dataDict_para b on a.measurement=b.ID left join tb_AssetType c on a.type_Asset=c.assetTypeCode where a.flag=" + flag + condition + "  group by a.name_Asset,a.specification,b.name_para,c.name_Asset_Type";
             return sqlStr;
         }
+
+        public String getCond_SerialNumber(List<dto_collar_detail> list)
+        {
+            String cond = "";
+
+            if (list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        cond = "'" + list[i].serialNumber + "'";
+                    }
+                    else
+                    {
+                        cond += ",'" + list[i].serialNumber + "'";
+                    }
+                }
+            }
+            else
+            {
+                cond = "0";
+               
+
+            }
+            return cond;
+
+        }
+        public String getSQL_Update_Collar_State(int state,String idStr)
+        {
+            List<int> idList = ConvertStringToIntList(idStr);
+            String cond = "(";
+            if (idList == null || idList.Count == 0)
+            {
+                cond += "0";
+            }
+            else {
+                for (int i = 0; i < idList.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        cond += idList[i];
+                    }
+                    else
+                    {
+                        cond +=","+ idList[i];
+                    }
+                }
+            }
+            cond += ")";
+
+
+
+            String sql = "update tb_Asset_collar set state_List=" + state + " where ID in " + cond;
+                return sql;
+        }
         public String getAssetInertQueryMuit(Json_Asset_add data)
         {
 
@@ -1159,10 +1336,11 @@ namespace FAMIS.Controllers
             return insertSql;
         }
 
+        
 
         public String get_Insert_collar_detail(List<tb_Asset_collar_detail> details)
         {
-            String insertSql = "insert into tb_Asset_collar_detail (serial_number,serial_number_Asset) ";
+            String insertSql = "insert into tb_Asset_collar_detail (serial_number,serial_number_Asset,flag) ";
 
             if (details == null || details.Count == 0)
             {
@@ -1315,6 +1493,15 @@ namespace FAMIS.Controllers
 
         }
 
+        public String getSQL_Select_CollarDetail_BySerial_LY(String serialNum_LY_cond)
+        {
+            String sql = "select acd.*  from tb_Asset_collar_detail  acd left join tb_Asset_collar ac on acd.serial_number=ac.serial_number where ac.serial_number in (" + serialNum_LY_cond + ")";
+            return sql;
+        }
+
+
+      
+
 
         public String getSQLCond_SerialNumber(List<tb_Asset_collar_detail> list)
         {
@@ -1342,7 +1529,31 @@ namespace FAMIS.Controllers
             return cond;
 
         }
+        public String getCond_SerialNum_By_CollarDetail(List<dto_Asset_CollarDetail> list)
+        {
 
+            if (list.Count > 0)
+            {
+                String cond = "";
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (i == 0)
+                    {
+                        cond = "'" + list[i].serial_number_Asset + "'";
+                    }
+                    else
+                    {
+                        cond+= ",'" + list[i].serial_number_Asset + "'";
+                    }
+                }
+                return cond;
+
+            }
+            else
+            {
+                return "0";
+            }
+        }
 
 
 
