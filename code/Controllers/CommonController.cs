@@ -163,7 +163,7 @@ namespace FAMIS.Controllers
         {
             String serialnumber = RuleType+DateTime.Now.ToString("yyyyMMdd");
 
-            if (rule_dto.length != null && rule_dto.length > 0)
+            if (rule_dto.length > 0)
             {
                 for (int i = 0; i < rule_dto.length; i++)
                 {

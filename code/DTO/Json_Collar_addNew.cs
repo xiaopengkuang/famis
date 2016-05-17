@@ -18,5 +18,7 @@ namespace FAMIS.DTO
         public int? statelist { get; set; }
         public String assetList { get; set; }
 
+        public int? flag { get; set; }
+
     }
 }
