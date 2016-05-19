@@ -333,7 +333,6 @@ namespace FAMIS.Controllers
 
             int operatorID = 1;
             int flag = Json_collar.flag == null ? 1 : (int)Json_collar.flag;
-            int state = 19;
 
             tb_Asset_collar collar_new = ConvertJsonTo_CollorTB(Json_collar, serialNumber_collar, true, dateNow, operatorID);
             List<tb_Asset_collar> collarsList = new List<tb_Asset_collar>();
