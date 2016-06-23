@@ -27,5 +27,8 @@ namespace FAMIS.Models
 
         [StringLength(30)]
         public string url { get; set; }
+
+        public int Role_ID { get; set; } //可能要设置主外键，先放这里。
+         
     }
 }

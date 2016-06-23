@@ -1,0 +1,226 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <!--<link rel="stylesheet" type="text/css" href="../../themes/icon.css">-->
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <!--<link rel="stylesheet" type="text/css" href="../demo.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+    <!--<script type="text/javascript" src="../../jquery-1.8.0.min.js"></script>-->
+    <!--<script type="text/javascript" src="../../jquery.easyui.min.js"></script>-->
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <title>公司职员</title>
+    <script type="text/javascript">
+        $(function () {
+           // test();
+            LoadInitData_Detail();
+           
+
+
+
+        });
+    </script>
+    <script>
+
+
+        //多选框
+
+        //为登录按钮注册单击事件
+
+        function LoadInitData_Detail() {
+
+
+
+            $('#List').datagrid({
+
+                toolbar: [{
+
+                    text: '添加',
+                    iconCls: 'icon-add',
+                    height: 50,
+                    handler: function () {
+                        var row = $('#List').datagrid('getSelected');
+                        //if (row) {
+                        //  var index = $('#List').datagrid('getRowIndex', row);
+                        //var rowdata = $('#List').datagrid('getData');
+                        //alert("asdsad")
+                        //var viewname = rowdata.rows[index].name
+                        //var des = rowdata.rows[index].description
+                        //window.showModalDialog("/SysSetting/AddRole?name=viewname&description=des", window, "dialogWidth=380px;dialogHeight=650px;status=no;center=yes;");
+                        //  window.open("/SysSetting/AddRole?name="+viewname+"&description="+des, "添加角色", "top=300,left=800,width=500,height=400");
+
+                        window.open("/Dict/AddStaff", "", "top=300,left=800,width=500,height=400");
+                        // }
+
+
+                        $('#List').datagrid('endEdit', lastIndex);
+                        lastIndex = $('#List').datagrid('getRows').length - 1;
+                        $('#List').datagrid('selectRow', lastIndex);
+                        $('#List').datagrid('beginEdit', lastIndex);
+                    }
+                }, '-', {
+                    text: '删除',
+                    iconCls: 'icon-remove',
+                    height: 50,
+                    handler: function Delete() {
+                        var row = $('#List').datagrid('getSelected');
+                        if (row) {
+                            var index = $('#List').datagrid('getRowIndex', row);
+                            var rowdata = $('#List').datagrid('getData');
+
+                            var DeleteID = rowdata.rows[index].ID
+                            var del = $('#List').datagrid('deleteRow', index);
+                            alert(DeleteID);
+                            $.ajax({
+
+                                type: "post",
+                                url: "/Sttaff/StaffDelete",
+                                data: { index: DeleteID },
+                                datatype: "json",//数据类型
+
+                                success: function (result) {
+                                    alert("Success!");
+
+
+
+                                }, error: function (msg) {
+                                    alert("Error");
+                                }
+
+
+                            });
+
+
+
+                        }
+                    }
+                }, '-', {
+                    text: '编辑',
+                    iconCls: 'icon-save',
+                    height: 50,
+                    handler: function () {
+                        var row = $('#List').datagrid('getSelected');
+                        if (row != null) {
+                            $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/SysSample/Edit?id=" + row.Id + "&Ieguid=" + GetGuid() + "'></iframe>");
+                            $("#modalwindow").window({ title: '编辑', width: 700, height: 430, iconCls: 'icon-edit' }).window('open');
+                        } else { $.messageBox5s('提示', '请选择要操作的记录'); }
+                    }
+                }, '-', {
+                    text: '刷新',
+                    height: 50,
+                    iconCls: 'icon-undo',
+                    handler: function () {
+                        $('#List').datagrid('reload');
+                        //alert('刷新');
+                    }
+                },
+                ],
+                url: '/Sttaff/getpageOrder?role=1&tableType=1',
+                method: 'post', //默认是post,不允许对静态文件访问
+                width: 'auto',
+                iconCls: 'icon-save',
+                dataType: "json",
+                fitColumns: true,
+                rownumbers: true, //是否加行号
+                pagination: true, //是否显式分页
+                pageSize: 15, //页容量，必须和pageList对应起来，否则会报错
+                pageNumber: 1, //默认显示第几页
+                pageList: [15, 30, 45],//分页中下拉选项的数值
+                columns: [[
+
+                     { field: 'ck', checkbox: true, width: 100 },
+             { field: 'ID_Staff', title: '角色ID', width: 100 },
+              {
+                  field: 'name', title: '姓名', width: 100,
+                  editor: { type: 'validatebox', options: { required: true } }
+              },
+               {
+                   field: 'sex', title: '性别', width: 100,
+                   editor: { type: 'validatebox', options: { required: true } }
+               },
+                {
+                    field: 'entry_Time', title: '入职时间', width: 100,
+                    editor: { type: 'validatebox', options: { required: true } }
+                },
+                 {
+                     field: 'code_Departmen', title: '部门编号', width: 100,
+                     editor: { type: 'validatebox', options: { required: true } }
+                 },
+                  {
+                      field: 'phoneNumber', title: '电话', width: 100,
+                      editor: { type: 'validatebox', options: { required: true } }
+                  },
+                   {
+                       field: 'email', title: '邮箱', width: 100,
+                       editor: { type: 'validatebox', options: { required: true } }
+                   },
+                     
+                     
+                     {
+                         field: 'effective_Flag', title: '是否允许登录', width: 100,
+                         editor: { type: 'validatebox', options: { required: true } }
+                     },
+                    
+                      {
+                          field: 'creat_Time', title: '创建时间', width: 100,
+                          editor: { type: 'validatebox', options: { required: true } }
+                      },
+                      
+
+                                    {
+                                        field: 'invalid_Time', title: '可用时间', width: 100,
+                                      editor: { type: 'validatebox', options: { required: true } }
+                                 },
+                      
+                     
+
+                       
+
+                  
+                
+
+                       
+
+
+
+                ]],
+
+                singleSelect: false, //允许选择多行
+                selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+                checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+
+            })
+        }
+    </script>
+
+</head>
+<body>
+
+    <div data-options="region:'center',title:'角色管理',iconCls:'icon-ok',border:true">
+
+        
+
+
+
+
+        <table id="List" class="easyui-daagrid">
+            
+        </table>
+
+    </div>
+    <!--><div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div><!-->
+
+
+</body>
+</html>
+

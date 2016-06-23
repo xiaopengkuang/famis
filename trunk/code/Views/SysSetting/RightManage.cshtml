@@ -1,0 +1,350 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>权限更改</title>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <!--<link rel="stylesheet" type="text/css" href="../../themes/icon.css">-->
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <!--<link rel="stylesheet" type="text/css" href="../demo.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+    <!--<script type="text/javascript" src="../../jquery-1.8.0.min.js"></script>-->
+    <!--<script type="text/javascript" src="../../jquery.easyui.min.js"></script>-->
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <meta name="viewport" content="width=device-width" />
+    <script>
+         
+            var url = document.URL
+
+            var RoleID = url.substring(url.lastIndexOf("?") + 1, url.length);
+            //alert(RoleID);
+
+            var JSONdata = "";
+
+            $(function () {
+
+                LoadInitData_Detail();
+                Innitial_Right();
+                ATload();
+                InnitialAT_Right();
+
+                function LoadInitData_Detail() {
+
+                    //获取查询条件
+                    $('#lefttree').tree({
+                        animate: true,
+                        checkbox: true,
+                        method: 'get', //默认是post,不允许对静态文件访问
+                        url: '/SysSetting/loadSearchTreeByRole?role=1',
+                        // cascadeCheck :false,
+                        //onlyLeafCheck: true,
+                        success: function (data) {
+                            for (var i = 0; i < data.length; ++i) {
+                                var tmp = data[i];
+                                // 循环输出，用变量替换template中的{{变量}}
+                                alert(tmp);
+                            }
+                        }, error: function (msg) {
+                            alert("Error 2");
+                        },
+
+
+                        onCheck: function (node) {
+
+
+                            /*  $.ajax({
+      
+                                  type: "post",
+                                  url: "/Rule/Jugdement",
+                                  data: { JSON: JSONdata, Name: node.id + "," + node.text },
+                                  datatype: "json",//数据类型
+      
+                                  success: function (result) {
+      
+                                      JSONdata = result.YH_serial;
+                                     // alert(JSONdata);
+      
+                                  }, error: function (msg) {
+                                      alert("Error");
+                                  }
+                              });*/
+
+
+
+
+                        },
+                        onLoadSuccess: function (node, data) {
+                            $('#lefttree').show();
+
+                        }
+                    });
+                }
+
+            });
+            function submitdata() {
+                var fnodes = $('#lefttree').tree('getChecked', 'indeterminate');
+                var nodes = $('#lefttree').tree('getChecked');
+                var s = "";
+
+                for (var i = 0; i < fnodes.length; i++) {
+                    //if (s != '') s += ',';
+                    if (i != fnodes.length - 1)
+                        s += fnodes[i].text + "," + fnodes[i].id
+                        //s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+                    else
+                        s += fnodes[i].text + "," + fnodes[i].id + "o";
+                }
+                for (var i = 0; i < nodes.length; i++) {
+
+
+                    //   s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+                    if (i != nodes.length - 1)
+
+                        s += nodes[i].text + "," + nodes[i].id + "o";
+                    else
+                        s += nodes[i].text + "," + nodes[i].id;
+                }
+                if (s == "")
+                    var JS_Data = RoleID;
+                else
+                    var JS_Data = RoleID + "o" + s;
+
+
+                $.ajax({
+
+                    type: "post",
+                    url: "/Rule/Add_Right",
+                    data: { JSON: JS_Data },
+                    datatype: "json",//数据类型
+
+                    success: function (result) {
+
+
+                        alert("保存成功！");
+
+                    }, error: function (msg) {
+                        alert("Error 3");
+                    }
+                });
+
+            }
+            function submitATdata() {
+                var fnodes = $('#rightttree').tree('getChecked', 'indeterminate');
+                var nodes = $('#righttree').tree('getChecked');
+                var s = "";
+
+                for (var i = 0; i < fnodes.length; i++) {
+                    //if (s != '') s += ',';
+                    if (i != fnodes.length - 1)
+                        s += fnodes[i].text + "," + fnodes[i].id
+                        //s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+                    else
+                        s += fnodes[i].text + "," + fnodes[i].id + "o";
+                }
+                for (var i = 0; i < nodes.length; i++) {
+
+
+                    //   s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+                    if (i != nodes.length - 1)
+
+                        s += nodes[i].text + "," + nodes[i].id + "o";
+                    else
+                        s += nodes[i].text + "," + nodes[i].id;
+                }
+                if (s == "")
+                    var JS_Data = RoleID;
+                else
+                    var JS_Data = RoleID + "o" + s;
+
+
+                $.ajax({
+
+                    type: "post",
+                    url: "/Rule/Add_ATRight",
+                    data: { JSON: JS_Data },
+                    datatype: "json",//数据类型
+
+                    success: function (result) {
+
+
+                        alert("保存成功！");
+
+                    }, error: function (msg) {
+                        alert("Error 3");
+                    }
+                });
+
+            }
+            function Innitial_Right() {
+
+                $.ajax({
+
+                    type: "post",
+                    url: "/Rule/Get_Selected_Url",
+                    data: { JSON: RoleID },
+                    datatype: "string",//数据类型
+
+                    success: function (result) {
+
+                        //
+
+                        var str = String(result);
+
+
+                        var arr = str.split(",");
+                        for (var i = 0; i <= str.split(",").length; i++) {
+                            if (arr[i] == "1" || arr[i] == "2" || arr[i] == "3" || arr[i] == "4")
+                                continue;
+                            var node = $('#lefttree').tree('find', arr[i]);
+                            $('#lefttree').tree('check', node.target);
+                        }
+
+
+
+
+                    }, error: function (msg) {
+                        alert("Error 4");
+                    }
+                });
+
+                //for (var i = 0; i < a.split(",").length(); i++) {
+                //   alert(a.split(",", 1));
+                //}
+
+            }
+            function InnitialAT_Right() {
+
+                $.ajax({
+
+                    type: "post",
+                    url: "/Rule/Get_ATSelected_Url",
+                    data: { JSON: RoleID },
+                    datatype: "string",//数据类型
+
+                    success: function (result) {
+
+                        //
+
+                        var str = String(result);
+
+
+                        var arr = str.split(",");
+                        for (var i = 0; i <= str.split(",").length; i++) {
+                            if (arr[i].split("_").length==0)
+                                continue;
+                            var node = $('#righttree').tree('find', arr[i]);
+                            $('#righttree').tree('check', node.target);
+                        }
+
+
+
+
+                    }, error: function (msg) {
+                        alert("Error 4");
+                    }
+                });
+
+                //for (var i = 0; i < a.split(",").length(); i++) {
+                //   alert(a.split(",", 1));
+                //}
+
+            }
+            function ATload() {
+
+                $('#righttree').tree({
+                    animate: true,
+                    checkbox: true,
+                    method: 'get', //默认是post,不允许对静态文件访问
+                    url: '/SysSetting/loadATByRole?role=1',
+                    // cascadeCheck :false,
+                    //onlyLeafCheck: true,
+                    success: function (data) {
+                        for (var i = 0; i < data.length; ++i) {
+                            var tmp = data[i];
+                            // 循环输出，用变量替换template中的{{变量}}
+                            alert(tmp);
+                        }
+                    }, error: function (msg) {
+                        alert("Error 2");
+                    },
+
+
+                    onCheck: function (node) {
+
+
+                        /*  $.ajax({
+  
+                              type: "post",
+                              url: "/Rule/Jugdement",
+                              data: { JSON: JSONdata, Name: node.id + "," + node.text },
+                              datatype: "json",//数据类型
+  
+                              success: function (result) {
+  
+                                  JSONdata = result.YH_serial;
+                                 // alert(JSONdata);
+  
+                              }, error: function (msg) {
+                                  alert("Error");
+                              }
+                          });*/
+
+
+
+
+                    },
+                    onLoadSuccess: function (node, data) {
+                        $('#lefttree').show();
+
+                    }
+                });
+
+            }
+            function aa() {
+                alert("keyi");
+                $('#lefttree').tree('reload');
+
+            }
+        </script>
+</head>
+<body style="text-align:center">
+
+     
+    <div data-options="region:'center',title:'角色管理',iconCls:'icon-ok',border:true">
+        
+            <div class="easyui-layout" style="text-align:center; width:100%;height:455px;">
+
+
+
+                <div data-options="region:'center',title:'权限更改',iconCls:'icon-tip'">
+                    <div class="easyui-tabs" data-options="fit:true,border:false,plain:true">
+                      
+                         
+                        <div title="菜单权限" data-options="javascript:Innitial_Right()" style="padding:10px">
+                            <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
+                            <div style="text-align: center; padding: 5px;">
+                                <a href=" javascript:submitdata()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
+                                <a href="javascript:window.opener=null;window.open('','_self');window.close()" class="easyui-linkbutton" onclick="clearform()" style="text-align:center">退出</a>
+                                </div>
+                            </div>
+                        <div title="资产类别权限" data-options="javascript: InnitialAT_Right() " style="padding:5px">
+                            <ul id="righttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
+                            <div style="text-align: center; padding: 5px;">
+                                <a href=" javascript:submitATdata()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
+                                <a href="javascript:window.opener=null;window.open('','_self');window.close()" class="easyui-linkbutton" onclick="clearform()" style="text-align:center">退出</a>
+                            </div>
+                        </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
