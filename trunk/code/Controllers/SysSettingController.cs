@@ -131,6 +131,16 @@ namespace FAMIS.Controllers
            //String jsonStr = treeviewCommon.GetModule(roleName);
            return jsonStr;
        }
+       [HttpGet]
+       public String loadDPByRole(String roleName)
+       {
+
+
+           TreeViewCommon treeviewCommon = new TreeViewCommon();
+           String jsonStr = treeviewCommon.GetDepartment(roleName);
+           //String jsonStr = treeviewCommon.GetModule(roleName);
+           return jsonStr;
+       }
         [HttpPost]
         public ActionResult AddRole([Bind(Include = "name,description")] tb_role role)
         {

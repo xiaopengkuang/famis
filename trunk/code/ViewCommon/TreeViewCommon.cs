@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Text;
-using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Data;
+using FAMIS.DTO;
+using FAMIS.DAL;
 namespace FAMIS.ViewCommon
 {
     public class TreeViewCommon
@@ -39,11 +41,11 @@ namespace FAMIS.ViewCommon
 
         public string GetAssetType(String role)
         {
-            StreamWriter sw = new StreamWriter("D:\\type.txt");
+            
            
             
             DataTable dt = createATDT();
-            string txt="";
+            string txt = "";
             for (int ii = 0; ii < dt.Rows.Count; ii++)
             {//对行循环
                
@@ -53,19 +55,39 @@ namespace FAMIS.ViewCommon
                     txt += dt.Rows[ii][iii].ToString();//某单元格的值
 
                 }
-                if (txt != null)
-                {
-                    sw.WriteLine(txt);
-                    txt = "";
-                }
+                
             }
-            sw.Close();
+             
            // orderID,name_Asset_Type,father_MenuID_Type,url,RoleID
             string json = GetTreeJsonByTable(dt, "orderID", "name_Asset_Type", "url", "father_MenuID_Type", "0");
             return json;
         }
 
+        public string GetDepartment(String role)
+        {
+          
+            
+           
+            
 
+            DataTable dt = createDPDT();
+            string txt = "";
+            for (int ii = 0; ii < dt.Rows.Count; ii++)
+            {//对行循环
+
+                for (int iii = 0; iii < dt.Columns.Count; iii++)
+                {//对例循环
+
+                    txt += dt.Rows[ii][iii].ToString();//某单元格的值
+
+                }
+                
+            }
+            
+            // orderID,name_Asset_Type,father_MenuID_Type,url,RoleID
+            string json = GetTreeJsonByTable(dt, "Department_ID", "name_Department", "url", "ID_Father_Department", "0");
+            return json;
+        }
         public String getTreeJson(DataTable dt,string id,string name,string url ,string fatherid, string order)
         {
             result.Clear();
@@ -183,8 +205,8 @@ namespace FAMIS.ViewCommon
             dt.Rows.Add("2", "低值易耗", "0", "", "1");
             dt.Rows.Add("2_1", "家具", "2", "", "1");
             dt.Rows.Add("2_2", "办公用品", "2", "", "1");
-            dt.Rows.Add("2_3", "性用品", "2", "", "1");*/ 
-            SqlConnection con = new SqlConnection("Server=(local)\\FAMIS;database=famis;uid=famis;pwd=famis");
+            dt.Rows.Add("2_3", "性用品", "2", "", "1");*/
+            SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
             SqlDataAdapter sda = new SqlDataAdapter("select orderID,name_Asset_Type,father_MenuID_Type,url,RoleID from tb_AssetType where RoleID=1 order by orderID", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
@@ -220,6 +242,56 @@ namespace FAMIS.ViewCommon
             return dt;
 
            
+        }
+        protected static DataTable createDPDT()
+        {
+
+
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("Department_ID");
+            dt.Columns.Add("name_Department");
+            dt.Columns.Add("ID_Father_Department");
+            dt.Columns.Add("url");
+            dt.Columns.Add("ID");
+
+        
+            SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
+            SqlDataAdapter sda = new SqlDataAdapter("select Department_ID,name_Department,ID_Father_Department,url,ID from tb_department order by ID_Department", con);
+            DataTable dtt = new DataTable();
+            sda.Fill(dtt);
+            con.Close();
+            string txt = "";
+            for (int ii = 0; ii < dtt.Rows.Count; ii++)
+            {//对行循环
+
+                for (int iii = 0; iii < dtt.Columns.Count; iii++)
+                {//对例循环
+                    if (iii != dtt.Columns.Count - 1)
+                    {
+                        if (dtt.Rows[ii][iii].ToString() != null)
+                            txt += dtt.Rows[ii][iii].ToString() + ",";//某单元格的值
+                    }
+                    else
+                        txt += dtt.Rows[ii][iii].ToString();
+                }
+                if (txt != null)
+                {
+
+                    String[] temp = txt.Split(',');
+                    string ID_Department = temp[0];
+                    string name_Department = temp[1];
+                    string fid = temp[2];
+                    string url = temp[3];
+                    string rid = temp[4];
+
+                    dt.Rows.Add(ID_Department, name_Department, fid, "", rid);
+                    txt = "";
+                }
+            }
+            return dt;
+
+
         }
         protected static DataTable createDT()
         {

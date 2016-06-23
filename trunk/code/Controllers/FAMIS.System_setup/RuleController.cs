@@ -149,50 +149,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         [HttpPost]
         public String GetRoleID()
         {
-         /*   String json = "";
-            var q = from c in mydb.tb_role
-                    select new
-                    {
-                        c.ID,
-                        c.name
-                    };
-            IEnumerable<tb_role> role= from o in mydb.tb_role
-                                          
-                                          select o;
-            if (role.Count() > 0)
-            {
-                int temp = 0;
-                foreach (tb_role o in role)
-                {
-
-                    if (temp != role.Count() - 1)
-
-                        json += o.ID + ","+o.name+"o";
-                    else
-                        json += o.ID+","+o.name;
-                    temp++;
-
-                }
-            }
-            
-            GetRule model = new GetRule();
-            model.QL_serial = json;
-            return json;
-            List<tb_role> list = mydb.tb_role.ToList();
-            var json = new
-            {
-                
-                total = list.Count(),
-                rows = (from r in list
-                        select new tb_role()
-                        {
-
-                           ID= r.ID,
-                           name=r.name
-
-                        }).ToArray()
-            };
-            return Json(json, JsonRequestBehavior.AllowGet);*/
+       
             List<tb_role> list = mydb.tb_role.OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             var result = (from r in list
@@ -221,13 +178,14 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                   /* var q = from p in mydb.tb_Menu
                     where p.Role_ID == Roleid
                     select p;*/
-            IEnumerable<tb_Menu> mymenu = from o in mydb.tb_Menu
-                                          where o.Role_ID == Roleid
+            IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
+                                          where o.role_ID == Roleid
+                                          && o.Menue_ID != null
                                           select o;
-                  if (mymenu.Count() > 0)
+              if (role_au.Count() > 0)
                  {
-                     foreach (tb_Menu o in mymenu)
-                         mydb.tb_Menu.Remove(o);
+                     foreach (tb_role_authorization o in role_au)
+                         mydb.tb_role_authorization.Remove(o);
                         
                   }
                   mydb.SaveChanges();
@@ -240,14 +198,14 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                           string name = name_id[0];
                           string id = name_id[1];
 
-                          var menue_tb = new tb_Menu
+                          var menue_tb = new tb_role_authorization
                           {
-                              Role_ID = Roleid,
-                              name_Menu = name,
-                              ID__Menu = id
+                              role_ID = Roleid,
+                              
+                             Menue_ID = id
 
                           };
-                          mydb.tb_Menu.Add(menue_tb);
+                          mydb.tb_role_authorization.Add(menue_tb);
                       }
                       mydb.SaveChanges();
                   }
@@ -271,13 +229,14 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             /* var q = from p in mydb.tb_Menu
               where p.Role_ID == Roleid
               select p;*/
-            IEnumerable<tb_AssetType> mymenu = from o in mydb.tb_AssetType
-                                          where o.RoleID == Roleid
+            IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
+                                          where o.role_ID == Roleid
+                                           && o.AssetType_ID != null
                                           select o;
-            if (mymenu.Count() > 0)
+            if (role_au.Count() > 0)
             {
-                foreach (tb_AssetType o in mymenu)
-                    mydb.tb_AssetType.Remove(o);
+                foreach (tb_role_authorization o in role_au)
+                    mydb.tb_role_authorization.Remove(o);
 
             }
             mydb.SaveChanges();
@@ -290,14 +249,65 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     string name = name_id[0];
                     string id = name_id[1];
 
-                    var menue_tb = new tb_AssetType
+                    var role_au_tb = new tb_role_authorization
                     {
-                        RoleID = Roleid,
-                        name_Asset_Type = name,
-                        orderID= id
+                        role_ID = Roleid,
+                       
+                       AssetType_ID = id
 
                     };
-                    mydb.tb_AssetType.Add(menue_tb);
+                    mydb.tb_role_authorization.Add(role_au_tb);
+                }
+                mydb.SaveChanges();
+            }
+
+
+
+            //return View();
+            return this.Json(model);
+        }
+
+        [HttpPost]
+        public ActionResult Add_DPRight(string JSON)
+        {
+            GetRule model = new GetRule();
+
+            string[] Rightdetail = JSON.Split('o');
+
+            int Roleid = int.Parse(Rightdetail[0]);
+
+
+            /* var q = from p in mydb.tb_Menu
+              where p.Role_ID == Roleid
+              select p;*/
+            IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
+                                                         where o.role_ID == Roleid
+                                                          && o.Department_ID != null
+                                                         select o;
+            if (role_au.Count() > 0)
+            {
+                foreach (tb_role_authorization o in role_au)
+                    mydb.tb_role_authorization.Remove(o);
+
+            }
+            mydb.SaveChanges();
+            if (JSON.Contains('o'))
+            {
+
+                for (int i = 1; i < Rightdetail.Count(); i++)
+                {
+                    string[] name_id = Rightdetail[i].Split(',');
+                    string name = name_id[0];
+                    string id = name_id[1];
+
+                    var role_au_tb = new tb_role_authorization
+                    {
+                        role_ID = Roleid,
+
+                        Department_ID = id
+
+                    };
+                    mydb.tb_role_authorization.Add(role_au_tb);
                 }
                 mydb.SaveChanges();
             }
@@ -515,50 +525,88 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         { 
             String json="";
             int rid = int.Parse(JSON);
-             IEnumerable<tb_Menu> mymenu = from o in mydb.tb_Menu
-                                          where o.Role_ID == rid
+             IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
+                                          where o.role_ID == rid
+                                          && o.Menue_ID != null
                                           select o;
-             if (mymenu.Count()>0)
+             if (role_au.Count() > 0)
                  {
-                     int temp=0; 
-                     foreach (tb_Menu o in mymenu)
+                     int temp=0;
+                     foreach (tb_role_authorization o in role_au)
                      {
-                        if(temp!=mymenu.Count()-1)
-                        json+=o.ID__Menu+","; 
+                         
+                         if (temp != role_au.Count() - 1)
+                            
+                        json+=o.Menue_ID+","; 
                          else
-                            json+=o.ID__Menu;
+                            json+=o.Menue_ID;
                          temp++;
 
                      }
                   }
-             GetRule model = new GetRule();
-             model.QL_serial = json;
+           
              return json;
         
         }
         [HttpPost]
         public String Get_ATSelected_Url(string JSON)
         {
+           // StreamWriter sw = new StreamWriter("D:\\jjjj.txt", true);
+            
             String json = "";
             int rid = int.Parse(JSON);
-            IEnumerable<tb_AssetType> mymenu = from o in mydb.tb_AssetType
-                                          where o.RoleID== rid
+            IEnumerable<tb_role_authorization> role_au= from o in mydb.tb_role_authorization
+                                          where o.role_ID== rid 
+                                         && o.AssetType_ID!=null
                                           select o;
-            if (mymenu.Count() > 0)
+            if (role_au.Count() > 0)
             {
                 int temp = 0;
-                foreach (tb_AssetType o in mymenu)
+                foreach (tb_role_authorization o in role_au)
                 {
-                    if (temp != mymenu.Count() - 1)
-                        json += o.orderID + ",";
+                   
+                    if (temp != role_au.Count() - 1)
+                        json += o.AssetType_ID + ",";
                     else
-                        json += o.orderID;
+                        json += o.AssetType_ID;
+                    temp++;
+
+                }
+            }
+           GetRule model = new GetRule();
+            model.QL_serial = json;
+           
+            return json;
+
+        }
+        [HttpPost]
+        public String Get_DPSelected_Url(string JSON)
+        {
+            // StreamWriter sw = new StreamWriter("D:\\jjjj.txt", true);
+
+            String json = "";
+            int rid = int.Parse(JSON);
+            IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
+                                                         where o.role_ID == rid
+                                                        && o.Department_ID != null
+                                                         select o;
+            if (role_au.Count() > 0)
+            {
+                int temp = 0;
+                foreach (tb_role_authorization o in role_au)
+                {
+
+                    if (temp != role_au.Count() - 1)
+                        json += o.Department_ID + ",";
+                    else
+                        json += o.Department_ID;
                     temp++;
 
                 }
             }
             GetRule model = new GetRule();
             model.QL_serial = json;
+
             return json;
 
         }
