@@ -1,6 +1,67 @@
 ﻿@{
-    ViewBag.Title = "About";
+    Layout = null;
 }
-<h2><span style="font-size:50px">资产类型</span></h2>
 
+<!DOCTYPE html>
 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>资产类别管理</title>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/Views/Dict/Asset_Type.js"></script>
+
+</head>
+<body>
+    <div id="p" class="easyui-panel" title="资产类别" fit="true">
+        <!--  <div class="easyui-panel" style="padding: 5px;">
+            <a id="btn-refresh" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true">刷新</a>
+            <a id="btn-addBro" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增同级</a>
+            <a id="btn-addChid" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增下级</a>
+            <a id="btn-edit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
+            <a id="btn-delete" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
+        </div>-->
+        <div class="easyui-panel" style="padding: 5px;" fit="true">
+            <table id="treegrid" style="min-height: 100%"></table>
+        </div>
+
+    </div>
+    <div class="container">
+        <div id="access_menu" class="easyui-menu" style="width: 100px;">
+            <div id="access_menu_edit" onclick="addBroNode()">新增同级</div>
+            <div id="access_menu_del" onclick="addchild()">新增下级</div>
+            <div id="access_menu_refresh">修改</div>
+            <div id="access_menu_new">删除</div>
+        </div>
+        <!--  <table id="access_tg" title="权限分配" class="easyui-treegrid" style="height:500px"
+            url="/Admin/Access/treegrid"  toolbar="#access_toolbar"
+            rownumbers="true"  idField="id" treeField="description">
+        <thead>
+        <tr>
+            <th field="id" width="40">ID</th>
+            <th field="description" width="200" editor="text">描述</th>
+            <th field="name" width="50">名称</th>
+            <th field="action" width="200" editor="text">动作</th>
+            <th field="role" width="200" editor="text">角色</th>
+            <th field="state" width="200" editor="text">状态</th>
+            <th field="parentid" width="200" editor="text">父层</th>
+        </tr>
+        </thead>
+    </table>
+    <div style="height:5px"></div>
+    <div id="access_toolbar" >
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="access_lb_new">
+    </div>-->
+        <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
+     <button id="pp"></button>
+    </div>
+    
+</body>
+</html>
