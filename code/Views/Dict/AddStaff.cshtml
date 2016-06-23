@@ -1,0 +1,268 @@
+﻿@{
+    Layout = null;
+   
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加职员</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+
+    <script type="text/javascript">
+        var op;
+        var depart;
+        var creatTime;
+        var ivatime;
+        var myDate = new Date()
+        var date = myDate.toLocaleDateString();
+        var per;
+        //==================================global data==========================================//
+
+        $(document).ready(function () {
+            //多选框
+
+            //为登录按钮注册单击事件
+            $('#Add_Role_btn').click(function () {
+                $.ajax({
+
+                    type: "post",
+                    url: "/Sttaff/AddRole",
+                    data: { name: $("#name").val(), description: $("#des").val() },
+                    datatype: "json",//数据类型
+
+                    success: function (result) {
+
+
+                        alert("添加成功！");
+                        window.close();
+
+                    }, error: function (msg) {
+                        alert("Error");
+                    }
+                });
+
+            });
+        });
+
+        $(document).ready(function () {
+            //多选框
+
+          
+           
+
+            //为登录按钮注册单击事件
+            $('#Submit_btn').click(function () {
+                //load_Permission();
+                
+                //alert($("#Staff_Pemission").val());
+               //alert( $("#Staff_Pemission").find("option:selected").text());
+                //var obj = document.getElementById("Staff_Pemission");
+                //var txt = obj.options[obj.selectedIndex].text;
+                //alert(txt+"123456");
+                 
+             
+              if ($('#Staff_Pemission').combobox('getValue') == '是')
+                    var permission = true;
+                else
+                  if ($('#Staff_Pemission').combobox('getValue') == '否')
+                        var permission = false;
+                    else
+                        alert("请选择是否该职员被允许登录！")
+               
+                    $.ajax({
+
+                        type: "post",
+                        url: "/Dict/AddStaff",
+                        data: {
+                            ID_Staff: $("#Staff_ID").val(), code_Departmen: depart, sex: $("#Staff_Sex").val(),
+                            entry_Time: date, phoneNumber: $("#Staff_Phone").val(), email: $("#Staff_Email").val(),
+                            effective_Flag: permission, create_TIME: date, invalid_TIME: date, _operator: op, name: $("#Staff_name").val()
+                        },
+                        datatype: "json",//数据类型
+
+                        success: function (result) {
+
+
+                            alert("添加成功！");
+                            window.close();
+
+                        },error: function(XMLHttpRequest, textStatus, errorThrown) {
+                            alert(XMLHttpRequest.status);
+                            alert(XMLHttpRequest.readyState);
+                            alert(textStatus);
+                       // error: function (msg) {
+                         //   alert("Error");
+                            
+                            
+                        }
+                    });
+                 
+                
+            });
+        });
+
+
+    $(function () {
+
+        loadInitDate();
+
+       
+
+      
+        //alert(111);
+    });
+
+    function loadInitDate() {
+        load_Operator();
+        
+        load_Depart();
+       
+    }
+
+
+
+ 
+
+
+  
+
+
+  
+
+
+    function load_Operator() {
+        $("#operator").combobox({
+            valueField: 'ID',
+            method: 'get',
+            textField: 'name',
+
+            url: '/Sttaff/load_Operator',
+            onSelect: function (rec) {
+                
+                $('#operator').combobox('setValue', rec.ID);
+                $('#operator').combobox('setText', rec.name);
+                op = rec.name;
+                 
+            }
+        });
+    }
+
+    function load_Depart() {
+        $("#depart").combobox({
+            valueField: 'ID',
+            method: 'get',
+            textField: 'ID_Department',
+
+            url: '/Sttaff/load_Depart',
+            onSelect: function (rec) {
+                $('#depart').combobox('setValue', rec.ID);
+
+                $('#depart').combobox('setText', rec.ID_Department);
+                depart = rec.ID_Department;
+            }
+        });
+    }
+    function load_Permission() {
+        var options = $("#Staff_Pemission option:selected");  //获取选中的项
+
+        per = options.text();
+    }
+  
+    //加载规格型号
+   
+
+       
+       
+    </script>
+    <script>
+        function fnChange() {
+            //operator = operator.options[operator.selectedIndex].text;
+           // alert(operator);
+        }
+        </script>
+</head>
+<body>
+    
+    
+   
+        <table align="center">
+            
+            <tr>
+                <td>部门编号：</td>
+                <td><select class="easyui-combobox" id="depart" name="depart" style="width: 150px;"></select><font color="#F00">*</font></td>
+            </tr>
+            <tr>
+                <td>姓名</td>
+                <td><input id="Staff_name" type="text"   /><font color="#F00">*</font></td>
+            </tr>
+
+            <tr>
+                <td>性别：</td>
+                <td><input id="Staff_Sex" type="text"   /><font color="#F00">*</font></td>
+            </tr>
+
+            <tr>
+                <td>职员编号： </td>
+                <td><input id="Staff_ID" type="text" value="03" /><font color="#F00">*</font></td>
+            </tr>
+            <tr>
+                <td>邮箱： </td>
+                <td><input id="Staff_Email" type="email"    /><font color="#F00">*</font></td>
+            </tr>
+
+            <tr>
+                <td>电话： </td>
+                <td><input id="Staff_Phone" type="text"   /><font color="#F00">*</font></td>
+            </tr>
+            <tr>
+                <td>入职时间： </td>
+                <td><input id="Staff_EntryTime" class="easyui-datebox" data-options="sharedCalendar:'#cc'"  /><font color="#F00">*</font></td>
+            </tr>
+
+            <tr>
+                <td>允许登录： </td>
+                <td><select name="Staff_Pemission" class="easyui-combobox" style="width:150px;" id="Staff_Pemission">
+    <option value="是">是</option>
+    <option value="否">否</option>
+
+</select></td>
+            </tr>
+            <tr>
+                <td>操作人： </td>
+                <td><select class="easyui-combobox" id="operator" name="operator" onchange="fnChange()" style="width: 150px;"></select></td>
+               
+            </tr>
+
+           
+<tr>
+    <td>
+        
+                </tr>
+
+            <tr align="left">
+                <td colspan="2">
+                    <input type="Submit" id="Submit_btn" name="Submit_btn" value="提交" />
+                </td>
+</table>
+    <div>
+    
+       
+      
+
+
+
+</div>
+
+    
+</body>
+</html>

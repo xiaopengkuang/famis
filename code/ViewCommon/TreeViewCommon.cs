@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Text;
 using System.Data;
-
+using System.Data.SqlClient;
+using System.IO;
 namespace FAMIS.ViewCommon
 {
     public class TreeViewCommon
@@ -12,12 +13,57 @@ namespace FAMIS.ViewCommon
 
         public string GetModule(String  role)
         {
+            StreamWriter sw = new StreamWriter("D:\\ty111.txt");
+           
             DataTable dt = createDT();
+            string txt = "";
+            for (int ii = 0; ii < dt.Rows.Count; ii++)
+            {//对行循环
+               
+                for (int iii = 0; iii < dt.Columns.Count; iii++)
+                {//对例循环
 
+                    txt += dt.Rows[ii][iii].ToString();//某单元格的值
+
+                }
+                if (txt != null)
+                {
+                    sw.WriteLine(txt);
+                    txt = "";
+                }
+            }
+            sw.Close();
             string json = GetTreeJsonByTable(dt, "module_id", "module_name", "module_url", "module_fatherid", "0");
             return json;
         }
 
+        public string GetAssetType(String role)
+        {
+            StreamWriter sw = new StreamWriter("D:\\type.txt");
+           
+            
+            DataTable dt = createATDT();
+            string txt="";
+            for (int ii = 0; ii < dt.Rows.Count; ii++)
+            {//对行循环
+               
+                for (int iii = 0; iii < dt.Columns.Count; iii++)
+                {//对例循环
+
+                    txt += dt.Rows[ii][iii].ToString();//某单元格的值
+
+                }
+                if (txt != null)
+                {
+                    sw.WriteLine(txt);
+                    txt = "";
+                }
+            }
+            sw.Close();
+           // orderID,name_Asset_Type,father_MenuID_Type,url,RoleID
+            string json = GetTreeJsonByTable(dt, "orderID", "name_Asset_Type", "url", "father_MenuID_Type", "0");
+            return json;
+        }
 
 
         public String getTreeJson(DataTable dt,string id,string name,string url ,string fatherid, string order)
@@ -93,11 +139,14 @@ namespace FAMIS.ViewCommon
                     foreach (DataRow row in rows)
                     {
                         sb.Append("{\"id\":\"" + row[idCol] + "\",\"text\":\"" + row[txtCol] + "\",\"attributes\":\"" + row[url] + "\",\"state\":\"open\"");
+                      
                         if (tabel.Select(string.Format("{0}='{1}'", rela, row[idCol])).Length > 0)
                         {
                             sb.Append(",\"children\":");
                             GetTreeJsonByTable(tabel, idCol, txtCol, url, rela, row[idCol]);
                             result.Append(sb.ToString());
+                             
+                           
                             sb.Clear();
                         }
                         result.Append(sb.ToString());
@@ -114,26 +163,94 @@ namespace FAMIS.ViewCommon
         }
         #endregion 
         #region 创建数据
+
+        protected static DataTable createATDT() {
+
+
+            DataTable dt = new DataTable();
+
+          dt.Columns.Add("orderID");
+            dt.Columns.Add("name_Asset_Type");
+            dt.Columns.Add("father_MenuID_Type");
+            dt.Columns.Add("url");
+            dt.Columns.Add("RoleID");
+
+/*
+            dt.Rows.Add("1", "固定资产", "0", "", "1");
+            dt.Rows.Add("1_1", "房屋及建筑物", "1", "", "1");
+            dt.Rows.Add("1_2", "土地及植物", "1", "", "1");
+            
+            dt.Rows.Add("2", "低值易耗", "0", "", "1");
+            dt.Rows.Add("2_1", "家具", "2", "", "1");
+            dt.Rows.Add("2_2", "办公用品", "2", "", "1");
+            dt.Rows.Add("2_3", "性用品", "2", "", "1");*/ 
+            SqlConnection con = new SqlConnection("Server=(local)\\FAMIS;database=famis;uid=famis;pwd=famis");
+            SqlDataAdapter sda = new SqlDataAdapter("select orderID,name_Asset_Type,father_MenuID_Type,url,RoleID from tb_AssetType where RoleID=1 order by orderID", con);
+            DataTable dtt = new DataTable();
+            sda.Fill(dtt);
+            con.Close();
+            string txt = "";
+            for (int ii = 0; ii < dtt.Rows.Count; ii++)
+            {//对行循环
+
+                for (int iii = 0; iii < dtt.Columns.Count; iii++)
+                {//对例循环
+                    if (iii != dtt.Columns.Count - 1)
+                    {
+                        if (dtt.Rows[ii][iii].ToString()!=null)
+                        txt += dtt.Rows[ii][iii].ToString() + ",";//某单元格的值
+                    }
+                    else
+                        txt += dtt.Rows[ii][iii].ToString();
+                }
+                if (txt != null)
+                {
+                   
+                    String[] temp=txt.Split(',');
+                    string orderid = temp[0];
+                    string name = temp[1];
+                    string fid = temp[2];
+                    string url = temp[3];
+                    string rid = temp[4];
+
+                    dt.Rows.Add(orderid, name, fid, "", rid);
+                    txt = "";
+                }
+            }
+            return dt;
+
+           
+        }
         protected static DataTable createDT()
         {
             DataTable dt = new DataTable();
+            
             dt.Columns.Add("module_id");
             dt.Columns.Add("module_name");
             dt.Columns.Add("module_fatherid");
             dt.Columns.Add("module_url");
             dt.Columns.Add("module_order");
+           
 
-            dt.Rows.Add("ALL", "全部", "0", "", "1");
-            dt.Rows.Add("BM1", "使用部门", "ALL", "", "1");
-            dt.Rows.Add("ZC1", "资产类型", "ALL", "", "1");
-            dt.Rows.Add("DZ1", "存放地址", "ALL", "", "1");
-            dt.Rows.Add("JSFS1", "减少方式", "ALL", "", "1");
-            dt.Rows.Add("GYS1", "供应商", "ALL", "", "1");
-            dt.Rows.Add("ZJFS1", "增加方式", "ALL", "", "1");
-            dt.Rows.Add("SYFS", "实验方式", "ALL", "", "1");
-            dt.Rows.Add("asdsad", "sadsadggfd", "0", "", "1");
-            dt.Rows.Add("ZJFS1", "增加方式", "ALL", "", "1");
-            dt.Rows.Add("SYFS", "实验方式", "ALL", "", "1");
+            dt.Rows.Add("1", "资产管理", "0", "", "1");
+            dt.Rows.Add("1_1", "资产台账", "1", "", "1");
+            dt.Rows.Add("1_2", "资产领用", "1", "", "1");
+            dt.Rows.Add("1_3", "资产调拨", "1", "", "1");
+            dt.Rows.Add("1_4", "资产减少", "1", "", "1");
+
+            dt.Rows.Add("2", "折旧管理", "0", "", "1");
+            dt.Rows.Add("2_1", "折旧管理", "2", "", "1");
+            dt.Rows.Add("2_2", "盘点管理", "2", "", "1");
+            dt.Rows.Add("3", "数据字典", "0", "", "1");
+            dt.Rows.Add("3_1", "数据参数", "3", "", "1");
+            dt.Rows.Add("3_2", "资产类别", "3", "", "1");
+
+            dt.Rows.Add("3_2_1", "供应商", "3_2", "", "1");
+            dt.Rows.Add("3_2_2", "员工", "3_2", "", "1");
+            dt.Rows.Add("4", "系统管理", "0", "", "1");
+            dt.Rows.Add("4_1", "用户管理", "4", "", "1");
+            dt.Rows.Add("4_2", "角色管理", "4", "", "1");
+            dt.Rows.Add("4_3", "系统设置", "4", "/www/www", "1");
             return dt;
         }
         #endregion  

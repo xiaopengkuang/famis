@@ -20,7 +20,7 @@ namespace FAMIS.Controllers
         FAMISDBTBModels DB_Connecting = new FAMISDBTBModels();
         StringBuilder result_tree_department = new StringBuilder();
         StringBuilder sb_tree_department = new StringBuilder();
-
+        FAMISDBTBModels db = new FAMISDBTBModels();
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         StringBuilder result_tree_SearchTree = new StringBuilder();
         
@@ -36,6 +36,7 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+
         public ActionResult Asset_type()
         {
             return View();
@@ -95,7 +96,34 @@ namespace FAMIS.Controllers
         }
 
 
-      
+        [HttpPost]
+        public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
+        {
+            /*StreamWriter sw = new StreamWriter("D:\\123456.txt");
+            sw.Write(staff.ID_Staff + "\r\n");
+            sw.Write(staff.code_Departmen + "\r\n");
+            sw.Write(staff.sex+ "\r\n");
+            sw.Write(staff.entry_Time + "\r\n");
+            sw.Write(staff.phoneNumber + "\r\n");
+            sw.Write(staff.email + "\r\n");
+            sw.Write(staff.effective_Flag+"\r\n");
+            sw.Write(staff.create_TIME + "\r\n");
+            sw.Write(staff.invalid_TIME + "\r\n");
+            sw.Write(staff._operator + "\r\n");
+            sw.Write(staff.name + "\r\n");
+            sw.Close();*/
+
+            if (ModelState.IsValid)
+            {
+                db.tb_staff.Add(staff);
+                db.SaveChanges();
+
+            }
+
+            return View();
+
+
+        }
 
         [HttpGet]
         /**
@@ -125,8 +153,8 @@ namespace FAMIS.Controllers
             var result = (from r in list
                           select new dto_Staff()
                           {
-                              id = r.ID.ToString(),
-                              name = r.ID_Staff.Trim()+"-"+r.name
+                              id = r.ID_Staff,
+                              name = r.name
                           }).ToList(); ;
 
             String json = jss.Serialize(result).ToString().Replace("\\", "");
@@ -190,116 +218,6 @@ namespace FAMIS.Controllers
              return json;
          }
 
-        [HttpPost]
-         public String loadCollarSearchTree(String role, String idStr)
-         {
-             List<dto_TreeNode> tree = new List<dto_TreeNode>();
-
-             List<int> IDs = ConvertStringToIntList(idStr);
-
-
-             tree = getTreeSearchNodes(role, IDs);
-             DataSet ds_tree = ConvertToDataSet(tree);
-             DataTable dt_tree = new DataTable();
-             dt_tree = ds_tree.Tables[0];
-             result_tree_SearchTree.Clear();
-             sb_tree_SearchTree.Clear();
-             string json = GetTreeJsonByTable_TreeSearch(dt_tree, "id", "nameText", "url", "fatherID", "0");
-             return json;
-         }
-
-
-        public List<int> ConvertStringToIntList(String idStr)
-        {
-            List<int> results = new List<int>();
-            String[] ids = idStr.Split('_');
-            foreach(String i in ids)
-            {
-                results.Add(int.Parse(i));
-            }
-
-            return results;
-        }
-
-        public List<dto_TreeNode> getTreeSearchNodes(String role, List<int> IDs)
-        {
-
-            List<tb_dataDict> dic = DB_Connecting.tb_dataDict.Where(a => a.flag_Search == true).ToList();
-            dic = GetPrueList(dic,IDs);
-            List<dto_TreeNode> nodesAll = new List<dto_TreeNode>();
-            for (int i = 0; i < dic.Count; i++)
-            {
-                dto_TreeNode fathernode = new dto_TreeNode();
-                fathernode.id = (dic[i].ID * dic[i].ratio).ToString();
-                fathernode.nameText = dic[i].name_dataDict;
-                fathernode.url = "";
-                fathernode.orderID = dic[i].ID.ToString();
-                fathernode.fatherID = "0";
-
-                if (dic[i].tb_Ref != null && dic[i].tb_Ref != "")
-                {
-
-
-                    List<dto_TreeNode> tmp = new List<dto_TreeNode>();
-                    if (dic[i].tb_Ref == "tb_department")
-                    {
-                        tmp = getSZBMNodes(fathernode);
-                    }
-                    else if (dic[i].tb_Ref == "tb_supplier")
-                    {
-                        tmp = getGYSNodes(fathernode);
-                    }
-                    else if (dic[i].tb_Ref == "tb_AssetType")
-                    {
-                        tmp = getZCLBNodes(fathernode);
-                    }
-                    else if (dic[i].tb_Ref == "tb_staff")
-                    {
-                        tmp = getSYRNodes(fathernode);
-                    }
-                    else
-                    {
-
-                    }
-
-
-                    if (tmp.Count > 0)
-                    {
-                        nodesAll.AddRange(tmp);
-                    }
-                }
-                else
-                {
-                    List<dto_TreeNode> tmp = new List<dto_TreeNode>();
-                    tmp = getDictNodes(dic[i].ID, fathernode);
-                    if (tmp.Count > 0)
-                    {
-                        nodesAll.AddRange(tmp);
-                    }
-                }
-
-            }
-            return nodesAll;
-        }
-
-        public List<tb_dataDict> GetPrueList(List<tb_dataDict> dic, List<int> ids)
-        {
-
-
-            List<tb_dataDict> tmp = new List<tb_dataDict>();
-            if (ids != null)
-            {
-                for (int i = 0; i < dic.Count; i++)
-                {
-                    if (ids.Contains(dic[i].ID))
-                    {
-                        tmp.Add(dic[i]);
-                    }
-                }
-            }
-            return tmp;
-        
-        }
          public List<dto_TreeNode> getTreeSearchNodes(String role)
          {
              List<tb_dataDict> dic = DB_Connecting.tb_dataDict.Where(a => a.flag_Search == true).ToList();
@@ -375,6 +293,7 @@ namespace FAMIS.Controllers
              list.Add(fathernode);
              return list;
          }
+
 
          public List<dto_TreeNode> getSYRNodes(dto_TreeNode fathernode)
          {
@@ -463,8 +382,8 @@ namespace FAMIS.Controllers
          {
              String sql = getSearchTreeSQL("");
              SQLRunner sqlRuner = new SQLRunner();
-             DataTable dt = sqlRuner.runSelectSQL_dto(sql);
-             return dt.Rows.Count;
+             //DataTable dt = sqlRuner.runSelectSQL_dto_AssetSumm(sql);
+             return 5;
          }
          public String getSearchTreeSQL(String roleName)
          {
@@ -771,6 +690,26 @@ namespace FAMIS.Controllers
             return result_tree_Address.ToString();
         }
 
+        protected override void HandleUnknownAction(string actionName)
+        {
 
+            try
+            {
+
+                this.View(actionName).ExecuteResult(this.ControllerContext);
+
+            }
+            catch (InvalidOperationException ieox)
+            {
+
+                ViewData["error"] = "Unknown Action: \"" + Server.HtmlEncode(actionName) + "\"";
+
+                ViewData["exMessage"] = ieox.Message;
+
+                this.View("Error").ExecuteResult(this.ControllerContext);
+
+            }
+
+        }
     }
 }

@@ -69,7 +69,7 @@ namespace FAMIS.Controllers
                     
                     //更新用户登录时间
 
-                    Response.Redirect("/User/Index");
+                    Response.Redirect("/User/Index?" + userList[0].roleID_User + "");
                 }
                 else {
                     ViewBag.LoginUser = "";
