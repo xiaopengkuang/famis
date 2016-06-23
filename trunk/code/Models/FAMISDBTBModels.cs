@@ -10,6 +10,7 @@ namespace FAMIS.Models
         public FAMISDBTBModels()
             : base("name=FAMISDBTBModels")
         {
+
         }
 
         public virtual DbSet<tb_Address_AssetStore> tb_Address_AssetStore { get; set; }

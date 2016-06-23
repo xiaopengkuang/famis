@@ -20,7 +20,9 @@ namespace FAMIS.Controllers
         FAMISDBTBModels DB_Connecting = new FAMISDBTBModels();
         StringBuilder result_tree_department = new StringBuilder();
         StringBuilder sb_tree_department = new StringBuilder();
+
         FAMISDBTBModels db = new FAMISDBTBModels();
+        
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         StringBuilder result_tree_SearchTree = new StringBuilder();
         
@@ -41,6 +43,13 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        public ActionResult Add_AssetType(String info)
+        {
+            ViewBag.info = info;
+
+            return View();
+        }
+
         public ActionResult supplier()
         {
             return View();
@@ -688,6 +697,13 @@ namespace FAMIS.Controllers
                 sb_tree_Address.Clear();
             }
             return result_tree_Address.ToString();
+        }
+
+
+        public String loadTreeGrid_AssetType()
+        {
+                //读取数据
+            return "";
         }
 
         protected override void HandleUnknownAction(string actionName)

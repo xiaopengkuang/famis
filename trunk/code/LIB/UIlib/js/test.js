@@ -170,9 +170,11 @@ function test() {
                 "url": "/Dict/Asset_type",
                 "child": [{
                     "menuid": M321,
-                    "menuname": "供应商",
+                    "menuname": "资产类别",
+                    //"menuname": "供应商",
                     "icon": "icon-nav",
-                    "url": "/Dict/supplier"
+                    //"url": "/Dict/supplier"
+                    "url": "/Dict/Asset_type"
                 },
                 {
                     "menuid": M322,
