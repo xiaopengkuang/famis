@@ -23,6 +23,11 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult Error()
+        {
+            return View();
+        }
+
         public ActionResult Index_3()
         {
             return View();

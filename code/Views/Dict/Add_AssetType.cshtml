@@ -19,6 +19,41 @@
 
 </head>
 <body>
-   @ViewBag.info
+    @ViewBag.info
+    <div fit="true" class="easyui-panel">
+       
+        <table>
+            <tr>
+                <td style="width:100px"><label>类别编号<span Style="color:red">*</span>:</label></td>
+                <td style="width:250px"><input class="easyui-textbox" readonly="readonly"  style="width:100%;height:20px;border:1px solid #E0ECFF;             border-radius:3px;"></td>
+            </tr>
+             <tr>
+                <td style="width:100px"> <label>上级类别:</label></td>
+                <td style="width:250px"><input class="easyui-textbox" style="width:100%;height:20px" readonly="readonly" value="@ViewBag.fatherName"></td>
+            </tr>
+             <tr>
+                <td style="width:100px"> <label>类别名称<span Style="color:red">*</span>:</label></td>
+                <td style="width:250px"><input class="easyui-textbox" style="width:100%;height:20px"></td>
+            </tr>
+             <tr>
+                <td style="width:100px"> <label>计量单位:</label></td>
+                <td style="width:250px"><input class="easyui-combobox" style="width:250px;height:20px"></td>
+            </tr>
+             <tr>
+                <td style="width:100px"> <label> 折旧方式:</label></td>
+                <td style="width:250px"><input class="easyui-combobox" style="width:250px;height:20px"></td>
+            </tr>
+             <tr>
+                <td style="width:100px"> <label>折旧年限(月) :</label></td>
+                <td style="width:250px"><input class="easyui-textbox" style="width:100%;height:20px"></td>
+            </tr>
+             <tr>
+                <td> <label>净残值率(%):</label></td>
+                <td style="width:250px"><input class="easyui-textbox" style="width:100%;height:20px"></td>
+            </tr>
+        </table>
+    </div>
+
+  
 </body>
 </html>

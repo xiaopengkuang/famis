@@ -37,8 +37,8 @@
         <div id="access_menu" class="easyui-menu" style="width: 100px;">
             <div id="access_menu_edit" onclick="addBroNode()">新增同级</div>
             <div id="access_menu_del" onclick="addchild()">新增下级</div>
-            <div id="access_menu_refresh">修改</div>
-            <div id="access_menu_new">删除</div>
+            <div id="access_menu_refresh" onclick="editNode()">修改</div>
+            <div id="access_menu_new" onclick="deletNode()">删除</div>
         </div>
         <!--  <table id="access_tg" title="权限分配" class="easyui-treegrid" style="height:500px"
             url="/Admin/Access/treegrid"  toolbar="#access_toolbar"

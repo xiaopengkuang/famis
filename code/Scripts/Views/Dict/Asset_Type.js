@@ -21,9 +21,10 @@ function loadInitTreeGrid()
         { "id": 23, "name": "Export Document", "persons": 1, "begin": "3/9/2010", "end": "3/10/2010", "progress": 100, "_parentId": 2 },
         { "id": 3, "name": "Coding", "persons": 2, "begin": "3/11/2010", "end": "3/18/2010", "progress": 80 },
         { "id": 4, "name": "Testing", "persons": 1, "begin": "3/19/2010", "end": "3/20/2010", "progress": 20 }
-        ], "footer": [
-            { "name": "Total Persons:", "begin": 7, "iconCls": "icon-sum" }
         ]
+        //, "footer": [
+        //    { "name": "Total Persons:", "begin": 7, "iconCls": "icon-sum" }
+        //]
     };
 
 
@@ -59,7 +60,7 @@ function loadInitTreeGrid()
             iconCls: 'icon-reload',
             handler: function () {
                 $('#btnrefresh').linkbutton('enable');
-                alert('刷新')
+                $("#treegrid").treegrid('reload');
             }
         }, {
             id: 'btnaddBro',
@@ -67,12 +68,8 @@ function loadInitTreeGrid()
             iconCls: 'icon-add',
             handler: function () {
                 $('#btnaddBro').linkbutton('enable');
-                //alert('新增同级')
                 //获取父节点
                 addBroNode();
-
-               
-
             }
         }, '-', {
             id: 'btnaddChi',
@@ -88,7 +85,7 @@ function loadInitTreeGrid()
             iconCls: 'icon-edit',
             handler: function () {
                 $('#btnedit').linkbutton('enable');
-                alert('修改')
+                editNode();
             }
         }, '-', {
             id: 'btnremove',
@@ -96,7 +93,7 @@ function loadInitTreeGrid()
             iconCls: 'icon-remove',
             handler: function () {
                 $('#btnremove').linkbutton('enable');
-                alert('删除')
+                deletNode();
             }
         }]
     });
@@ -109,6 +106,7 @@ function addBroNode()
     var node = $('#treegrid').treegrid('getSelected');
 
     if (node == null) {
+        $.messager.alert('提示', '请选择数据!', 'error');
         return;
     }
 
@@ -118,10 +116,11 @@ function addBroNode()
     if (parentExist) {
         parentID = parentExist.id;
         parentName = parentExist.name;
-        var info="?info="+parentID+"::"+parentName;
-        addAssetType(info);
+        var info = "?pid=" + parentID + "&pname=" + parentName;
+        addAssetType(info,"资产类别-添加同级");
     } else {
         $.messager.alert('提示', '不能添加同级节点!', 'error');
+        return;
     }
 }
 
@@ -132,16 +131,54 @@ function addchild()
     if (node == null) {
         return;
     }
-    var info = "?info=" + node.id + "::" + node.name;
-    addAssetType(info);
+    var info = "?pid=" + node.id + "&pname=" + node.name;
+    addAssetType(info, "资产类别-添加下级");
+}
+
+function editNode()
+{
+    var node = $('#treegrid').treegrid('getSelected');
+    if (node == null) {
+        $.messager.alert('提示', '请选择数据!', 'error');
+        return;
+    }
+
+    
+    var info = "?id=" + node.id + "&name=" + node.name;
+    editAssetType(info);
+}
+
+function editAssetType(info)
+{
+    var titleName = "编辑资产类型";
+    var url = "/Dict/edit_AssetType" + info;
+    openModelWindow(url, titleName);
+}
+function deletNode()
+{
+    var node = $('#treegrid').treegrid('getSelected');
+    if (node == null) {
+        $.messager.alert('提示', '请选择数据!', 'error');
+        return;
+    }
 }
 
 
-function addAssetType(info)
+function addAssetType(info,title)
+{
+    var titleName = title;
+    var url = "/Dict/add_AssetType" + info;
+    //alert(url);
+    openModelWindow(url, titleName);
+    
+}
+
+
+function openModelWindow(url,titleName)
 {
     var $winADD;
     $winADD = $('#modalwindow').window({
-        title: '添加资产类型',
+        title: titleName,
         width: 500,
         height: 350,
         top: (($(window).height() - 500) > 0 ? ($(window).height() - 500) : 200) * 0.5,
@@ -154,21 +191,9 @@ function addAssetType(info)
         maximizable: false,
         collapsible: false,
         onClose: function () {
-            //$('#TableList_0_1').datagrid('reload');
-            //    var resultAlert = "成功插入记录！";
-            //    $.messager.show({
-            //        title: '提示',
-            //        msg: resultAlert,
-            //        showType: 'slide',
-            //        style: {
-            //            right: '',
-            //            top: document.body.scrollTop + document.documentElement.scrollTop,
-            //            bottom: ''
-            //        }
-            //    });
+           
         }
     });
-    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Dict/Add_AssetType" + info + "'></iframe>");
+    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='"+url+"'></iframe>");
     $winADD.window('open');
 }
-
