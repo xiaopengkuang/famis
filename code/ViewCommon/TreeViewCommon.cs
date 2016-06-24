@@ -195,7 +195,7 @@ namespace FAMIS.ViewCommon
             dt.Columns.Add("name_Asset_Type");
             dt.Columns.Add("father_MenuID_Type");
             dt.Columns.Add("url");
-            dt.Columns.Add("RoleID");
+            dt.Columns.Add("ID");
 
 /*
             dt.Rows.Add("1", "固定资产", "0", "", "1");
@@ -207,7 +207,7 @@ namespace FAMIS.ViewCommon
             dt.Rows.Add("2_2", "办公用品", "2", "", "1");
             dt.Rows.Add("2_3", "性用品", "2", "", "1");*/
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
-            SqlDataAdapter sda = new SqlDataAdapter("select orderID,name_Asset_Type,father_MenuID_Type,url,RoleID from tb_AssetType where RoleID=1 order by orderID", con);
+            SqlDataAdapter sda = new SqlDataAdapter("select orderID,name_Asset_Type,father_MenuID_Type,url,ID from tb_AssetType  order by orderID", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
             con.Close();
