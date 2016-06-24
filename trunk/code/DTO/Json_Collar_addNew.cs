@@ -9,7 +9,6 @@ namespace FAMIS.DTO
     {
         public DateTime? date_LY{get;set;}
 
-
         public String reason_LY { get; set; }
         public int? department_LY { get; set; }
         public int? address_LY { get; set; }
