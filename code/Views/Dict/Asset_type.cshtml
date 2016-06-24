@@ -21,13 +21,7 @@
 </head>
 <body>
     <div id="p" class="easyui-panel" title="资产类别" fit="true">
-        <!--  <div class="easyui-panel" style="padding: 5px;">
-            <a id="btn-refresh" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload',plain:true">刷新</a>
-            <a id="btn-addBro" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增同级</a>
-            <a id="btn-addChid" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">新增下级</a>
-            <a id="btn-edit" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
-            <a id="btn-delete" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true">删除</a>
-        </div>-->
+        
         <div class="easyui-panel" style="padding: 5px;" fit="true">
             <table id="treegrid" style="min-height: 100%"></table>
         </div>
@@ -40,25 +34,7 @@
             <div id="access_menu_refresh" onclick="editNode()">修改</div>
             <div id="access_menu_new" onclick="deletNode()">删除</div>
         </div>
-        <!--  <table id="access_tg" title="权限分配" class="easyui-treegrid" style="height:500px"
-            url="/Admin/Access/treegrid"  toolbar="#access_toolbar"
-            rownumbers="true"  idField="id" treeField="description">
-        <thead>
-        <tr>
-            <th field="id" width="40">ID</th>
-            <th field="description" width="200" editor="text">描述</th>
-            <th field="name" width="50">名称</th>
-            <th field="action" width="200" editor="text">动作</th>
-            <th field="role" width="200" editor="text">角色</th>
-            <th field="state" width="200" editor="text">状态</th>
-            <th field="parentid" width="200" editor="text">父层</th>
-        </tr>
-        </thead>
-    </table>
-    <div style="height:5px"></div>
-    <div id="access_toolbar" >
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="access_lb_new">
-    </div>-->
+       
         <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
      <button id="pp"></button>
     </div>

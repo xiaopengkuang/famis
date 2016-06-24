@@ -12,38 +12,38 @@ function loadInitData()
 
 function loadInitTreeGrid()
 {
-    var data = {
-        "total": 7, "rows": [
-        { "id": 1, "name": "All Tasks", "begin": "3/4/2010", "end": "3/20/2010", "progress": 60, "iconCls": "icon-ok" },
-        { "id": 2, "name": "Designing", "begin": "3/4/2010", "end": "3/10/2010", "progress": 100, "_parentId": 1, "state": "closed" },
-        { "id": 21, "name": "Database", "persons": 2, "begin": "3/4/2010", "end": "3/6/2010", "progress": 100, "_parentId": 2 },
-        { "id": 22, "name": "UML", "persons": 1, "begin": "3/7/2010", "end": "3/8/2010", "progress": 100, "_parentId": 2 },
-        { "id": 23, "name": "Export Document", "persons": 1, "begin": "3/9/2010", "end": "3/10/2010", "progress": 100, "_parentId": 2 },
-        { "id": 3, "name": "Coding", "persons": 2, "begin": "3/11/2010", "end": "3/18/2010", "progress": 80 },
-        { "id": 4, "name": "Testing", "persons": 1, "begin": "3/19/2010", "end": "3/20/2010", "progress": 20 }
-        ]
-        //, "footer": [
-        //    { "name": "Total Persons:", "begin": 7, "iconCls": "icon-sum" }
-        //]
-    };
+    //var data = {
+    //    "total": 7, "rows": [
+    //    { "id": 1, "name": "All Tasks", "begin": "3/4/2010", "end": "3/20/2010", "progress": 60, "iconCls": "icon-ok" },
+    //    { "id": 2, "name": "Designing", "begin": "3/4/2010", "end": "3/10/2010", "progress": 100, "_parentId": 1, "state": "closed" },
+    //    { "id": 21, "name": "Database", "persons": 2, "begin": "3/4/2010", "end": "3/6/2010", "progress": 100, "_parentId": 2 },
+    //    { "id": 22, "name": "UML", "persons": 1, "begin": "3/7/2010", "end": "3/8/2010", "progress": 100, "_parentId": 2 },
+    //    { "id": 23, "name": "Export Document", "persons": 1, "begin": "3/9/2010", "end": "3/10/2010", "progress": 100, "_parentId": 2 },
+    //    { "id": 3, "name": "Coding", "persons": 2, "begin": "3/11/2010", "end": "3/18/2010", "progress": 80 },
+    //    { "id": 4, "name": "Testing", "persons": 1, "begin": "3/19/2010", "end": "3/20/2010", "progress": 20 }
+    //    ]
+    //    //, "footer": [
+    //    //    { "name": "Total Persons:", "begin": 7, "iconCls": "icon-sum" }
+    //    //]
+    //};
 
 
 
     $('#treegrid').treegrid({
-        //url: '/Dict/loadTreeGrid_AssetType',
-        data:data,
+        url: '/Dict/loadTreeGrid_AssetType',
+        //data:data,
         idField: 'id',
-        treeField: 'name',
+        treeField: 'lbmc',
         fitColumns: true,
         showFooter: true,
         rownumbers: true,
         columns: [[
-            { title: '名称', field: 'name', width: 180 },
-            { title: '折旧方式', field: 'begin', width: 180, align: 'right' },
-            { title: '折旧年限', field: 'begin2', width: 180 },
-            { title: '资产值率', field: 'end', width: 180 },
-            { title: '最后修改时间', field: 'progress', width: 180 },
-            { title: '计量单位', field: '_parentId', width: 180 }
+            { title: '名称', field: 'lbmc', width: 180 },
+            { title: '折旧方式', field: 'zjfs', width: 180, align: 'right' },
+            { title: '折旧年限', field: 'zjnx', width: 180 },
+            { title: '资产值率', field: 'jczl', width: 180 },
+            { title: '最后修改时间', field: 'lastEditTime', width: 180 },
+            { title: '计量单位', field: 'jldw', width: 180 }
         ]],
         onContextMenu:function(e,row){
             e.preventDefault();  //该方法将通知 Web 浏览器不要执行与事件关联的默认动作（如果存在这样的动作）
@@ -105,18 +105,20 @@ function addBroNode()
    
     var node = $('#treegrid').treegrid('getSelected');
 
+    
     if (node == null) {
         $.messager.alert('提示', '请选择数据!', 'error');
         return;
     }
-
+    var level = $('#treegrid').treegrid('getLevel', node.id);
     var parentExist = $('#treegrid').treegrid('getParent', node.id);
     var parentID;
     var parentName;
     if (parentExist) {
         parentID = parentExist.id;
-        parentName = parentExist.name;
-        var info = "?pid=" + parentID + "&pname=" + parentName;
+        parentName = parentExist.lbmc;
+
+        var info = "?pid=" + parentID + "&pname=" + parentName + "&level=" + level;
         addAssetType(info,"资产类别-添加同级");
     } else {
         $.messager.alert('提示', '不能添加同级节点!', 'error');
@@ -131,7 +133,8 @@ function addchild()
     if (node == null) {
         return;
     }
-    var info = "?pid=" + node.id + "&pname=" + node.name;
+    var level = $('#treegrid').treegrid('getLevel', node.id)+1;
+    var info = "?pid=" + node.id + "&pname=" + node.lbmc + "&level=" + level;
     addAssetType(info, "资产类别-添加下级");
 }
 
@@ -143,8 +146,8 @@ function editNode()
         return;
     }
 
-    
-    var info = "?id=" + node.id + "&name=" + node.name;
+    //var level = $('#treegrid').treegrid('getLevel', node.id);
+    var info = "?id=" + node.id + "&name=" + node.lbmc;
     editAssetType(info);
 }
 

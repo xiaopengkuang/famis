@@ -30,7 +30,11 @@ namespace FAMIS.Models
         [StringLength(100)]
         public string url { get; set; }
 
-        [StringLength(20)]
+        [StringLength(20)] 
         public string orderID { get; set; }
+
+        public bool? flag { get; set; }
+
+        public DateTime? lastEditTime { get; set; } 
     }
 }

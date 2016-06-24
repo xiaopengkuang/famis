@@ -10,6 +10,7 @@ using System.Web.Script.Serialization;
 using FAMIS.Models;
 using System.Runtime.Serialization.Json;
 using FAMIS.DTO;
+using FAMIS.DataConversion;
 
 namespace FAMIS.Controllers
 {
@@ -48,7 +49,7 @@ namespace FAMIS.Controllers
         {
             return View();
         }
-        public ActionResult add_AssetType(int? pid,String pname)
+        public ActionResult add_AssetType(int? pid,String pname,String level)
         {
             if (pname == null || pname == "" || pid == null)
             {
@@ -61,6 +62,17 @@ namespace FAMIS.Controllers
             {
                 ViewBag.fatherID = pid;
                 ViewBag.fatherName = pname;
+                ViewBag.level = level;
+                //获取  获取新的资产编号
+                //TODO: 
+                //DateTime dt = DateTime.Now;
+                String h = DateTime.Now.Hour.ToString().PadLeft(2, '0');      //获取当前时间的小时部分
+                String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
+                String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
+                //23.ToString().PadLeft(6, '0');
+
+                ViewBag.CodeAssetType = h + m + s;
+
                 return View();
             }
             else
@@ -68,9 +80,6 @@ namespace FAMIS.Controllers
                 ViewBag.info = pname+"\tss";
                 return View("Error");
             }
-
-            
-             
             
         }
 
@@ -90,6 +99,12 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+
+
+
+
+        
+
 
         [HttpGet]
         public JsonResult load_GYS_add()
@@ -398,6 +413,32 @@ namespace FAMIS.Controllers
              list.Add(fathernode);
              return list;
          }
+
+        [HttpPost]
+         public int Handler_addNewAssetType(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_AssetType_add json_data = serializer.Deserialize<Json_AssetType_add>(data);
+            if (json_data != null)
+            {
+                try {
+                    JSON_TO_MODEL convertHandler = new JSON_TO_MODEL();
+                    
+                    tb_AssetType at = convertHandler.ConverJsonToTable(json_data);
+                    //设置默认url和orderID
+                    at.url = "javascript:void(0)";
+                    at.orderID = at.assetTypeCode.ToString();
+                    at.flag = true;
+
+                    DB_Connecting.tb_AssetType.Add(at);
+                    DB_Connecting.SaveChanges();
+                    return 1;
+                }catch(Exception e){
+                    return 0;
+                }
+            }
+            return 0;
+        }
 
          public List<dto_TreeNode> getDictNodes(int id_dic, dto_TreeNode fathernode)
          {
@@ -736,10 +777,22 @@ namespace FAMIS.Controllers
         }
 
 
-        public String loadTreeGrid_AssetType()
+        public JsonResult loadTreeGrid_AssetType()
         {
                 //读取数据
-            return "";
+            List<tb_AssetType> list = DB_Connecting.tb_AssetType.Where(a => a.flag == true).ToList();
+            
+            MODEL_TO_JSON co=new MODEL_TO_JSON();
+            List<Json_AssetType_add> data = co.ConverMdoelToJsonList(list);
+            var json_NULL = new
+                {
+                    total = data.Count,
+                    rows = data.ToArray()
+                    //sql = selectSQL
+
+                };
+
+            return Json(json_NULL, JsonRequestBehavior.AllowGet);
         }
 
         protected override void HandleUnknownAction(string actionName)
