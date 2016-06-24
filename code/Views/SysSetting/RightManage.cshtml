@@ -33,9 +33,9 @@
                 ATload();
                 DPload();
               
-               Innitial_Right();
-               InnitialAT_Right();
-               InnitialDP_Right();
+              Innitial_Right();
+            //   InnitialAT_Right();
+            //   InnitialDP_Right();
                 function LoadInitData_Detail() {
 
                     //获取查询条件
@@ -53,7 +53,7 @@
                                 alert(tmp);
                             }
                         }, error: function (msg) {
-                            alert("Error 2");
+                           // alert("Error 2");
                         },
 
 
@@ -127,11 +127,12 @@
 
                     success: function (result) {
 
-
+                        $('#lefttree').show();
                         alert("保存成功！");
+                       
 
                     }, error: function (msg) {
-                        alert("Error 3");
+                       // alert("Error 3");
                     }
                 });
 
@@ -174,11 +175,12 @@
 
                     success: function (result) {
 
-
+                        $('#righttree').show();
                         alert("保存成功！");
 
+
                     }, error: function (msg) {
-                        alert("Error 3");
+                      //  alert("Error 3");
                     }
                 });
 
@@ -221,11 +223,12 @@
 
                     success: function (result) {
 
-
+                        $('#mtree').show();
                         alert("保存成功！");
 
+
                     }, error: function (msg) {
-                        alert("Error 3");
+                       // alert("Error 3");
                     }
                 });
 
@@ -258,7 +261,7 @@
 
 
                     }, error: function (msg) {
-                       // alert("Error 4");
+                      //  alert("Error 4");
                     }
                 });
 
@@ -403,7 +406,7 @@
 
 
                     }, error: function (msg) {
-                      //  alert("Error 4");
+                       // alert("Error 4");
                     }
                 });
 
@@ -413,10 +416,11 @@
 
             }
             function aa() {
+                
                 Innitial_Right();
                 InnitialAT_Right();
                  InnitialDP_Right();
-               //  alert("事件触发！");
+                // alert("事件触发！");
             }
         </script>
 </head>
