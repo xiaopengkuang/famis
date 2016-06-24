@@ -43,9 +43,45 @@ namespace FAMIS.Controllers
         {
             return View();
         }
-        public ActionResult Add_AssetType(String info)
+
+        public ActionResult Error()
         {
-            ViewBag.info = info;
+            return View();
+        }
+        public ActionResult add_AssetType(int? pid,String pname)
+        {
+            if (pname == null || pname == "" || pid == null)
+            {
+                ViewBag.info = pname;
+                return View("Error");
+            }
+            //return View("Error");
+
+            if (pid!=null&&pname!="")
+            {
+                ViewBag.fatherID = pid;
+                ViewBag.fatherName = pname;
+                return View();
+            }
+            else
+            {
+                ViewBag.info = pname+"\tss";
+                return View("Error");
+            }
+
+            
+             
+            
+        }
+
+        public ActionResult edit_AssetType(int? id,String name)
+        {
+            if (name == null || name == ""||id==null)
+            {
+                ViewBag.info = name;
+                return View("Error");
+            }
+            ViewBag.name = name;
 
             return View();
         }

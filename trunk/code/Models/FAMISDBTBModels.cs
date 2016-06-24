@@ -10,7 +10,6 @@ namespace FAMIS.Models
         public FAMISDBTBModels()
             : base("name=FAMISDBTBModels")
         {
-
         }
 
         public virtual DbSet<tb_Address_AssetStore> tb_Address_AssetStore { get; set; }
@@ -223,6 +222,10 @@ namespace FAMIS.Models
                 .Property(e => e.orderNum)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_department>()
+                .Property(e => e.Department_ID)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Menu>()
                 .Property(e => e.ID__Menu)
                 .IsUnicode(false);
@@ -257,6 +260,18 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_role_authorization>()
                 .Property(e => e.type)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_role_authorization>()
+                .Property(e => e.Menue_ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_role_authorization>()
+                .Property(e => e.AssetType_ID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_role_authorization>()
+                .Property(e => e.Department_ID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Rule_Generate>()

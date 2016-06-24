@@ -16,8 +16,14 @@ namespace FAMIS.Models
         public bool? flag { get; set; }
 
         public int? role_ID { get; set; }
+
+        [StringLength(20)]
         public string Menue_ID { get; set; }
-        public string  AssetType_ID { get; set; }
+
+        [StringLength(20)]
+        public string AssetType_ID { get; set; }
+
+        [StringLength(20)]
         public string Department_ID { get; set; }
     }
 }
