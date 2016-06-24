@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FAMIS.RouteConfig" Collapsed="true">
+    <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Start\RouteConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.MvcApplication" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Global.asax.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.ashx.TreeHandler" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAABAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>ashx\TreeHandler.ashx.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="FAMIS.Controllers.AssetController" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>wxWiWAAwCAAECEFIIDApLASbSMWAKAYEAg1AhAiyIAw=</HashCode>
+      <FileName>Controllers\AssetController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.CommonController" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAgAAAAAgAAAAAAIAAAAAQAAAEAAAVAAAAAAAA=</HashCode>
+      <FileName>Controllers\CommonController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.DictController" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AiggUBEwAQoQBQCGBYigIIIIiACBhgAAEEACAAAgAAQ=</HashCode>
+      <FileName>Controllers\DictController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.adsasd" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Controllers\FAMIS.System_setup\Asset_Depart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.HomeController" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEgAAAAAAAAQEACAAAAAAAAAEAAAAAAAEACgAAAIA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.ManageController" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAQEQEAAAAAA=</HashCode>
+      <FileName>Controllers\ManageController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.SysSettingController" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BACgAAAAIQAQAAAAgAAEAAAIIAAAAAAAAARAABAAgAA=</HashCode>
+      <FileName>Controllers\SysSettingController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.UserController" Collapsed="true">
+    <Position X="4" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAEgACAAAAAAAAAAAAABAAABAAFQAAAAAAA=</HashCode>
+      <FileName>Controllers\UserController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.VerifyController" Collapsed="true">
+    <Position X="5.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Controllers\VerifyController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.FAMIS.Inforamtion_Count.ZC_ViewController" Collapsed="true">
+    <Position X="7.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\FAMIS.Inforamtion_Count\ZC_ViewController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.FAMIS.System_setup.ClickCountModel" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\FAMIS.System_setup\ClickCountModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.FAMIS.System_setup.RuleController" Collapsed="true">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEABAAAACAAAGAAAgAAEEIgEEAAAAEAiAAEAAAAAgIA=</HashCode>
+      <FileName>Controllers\FAMIS.System_setup\RuleController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Controllers.FAMIS.System_setup.CommentController" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\FAMIS.System_setup\TestController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.ControllerSQLs.UserActionSQL" Collapsed="true">
+    <Position X="2.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ControllerSQLs\UserActionSQL.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DAL.CommonConnecting" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DAL\CommonConnecting.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DAL.SQLRunner" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAiAgACAAAAAAAAAAACAAAAAAAAAAAACAAAIAAA=</HashCode>
+      <FileName>DAL\SQLRunner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_allocation" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAgAAAAAAAIAAwAAIAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_allocation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_Asset" Collapsed="true">
+    <Position X="14.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAABIAgEAAAgAAAQIAAAAljAhAIgDABAgAAACAAAAA=</HashCode>
+      <FileName>DTO\dto_Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_Asset_CollarDetail" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAIAAAAEAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_Asset_CollarDetail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_Asset_Detail" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAABIAgEAAAgAAAQAAAAAljAhAAgDABAgAAACAAAAA=</HashCode>
+      <FileName>DTO\dto_Asset_Detail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_Asset_Summary" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAQAAAAAgAAABAAAAAgDAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_Asset_Summary.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_Asset_ZCXH" Collapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_Asset_ZCXH.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_AssetType" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAIAAAAEAAACAAAAgA=</HashCode>
+      <FileName>DTO\dto_AssetType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_CFDD_Asset" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAoAAAAEAAAAAAAAgA=</HashCode>
+      <FileName>DTO\dto_CFDD_Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_Collar" Collapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAgAAACAAAIAAwAAIAAAAEAAAAAgAAAAA=</HashCode>
+      <FileName>DTO\dto_Collar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_collar_detail" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgEAAAAACAAAIAAwAAIAAAAkAAAAAgAAAAA=</HashCode>
+      <FileName>DTO\dto_collar_detail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_DataDict_para" Collapsed="true">
+    <Position X="14.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>DTO\dto_DataDict_para.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_department" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAABAAAAAAAAAAIAAAAAAAACAAAAgA=</HashCode>
+      <FileName>DTO\dto_department.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_IDList" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_IDList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_rule_Generate" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAEAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_rule_Generate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_SC_Allocation" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAEAAAAAAAAAAAAQAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>DTO\dto_SC_Allocation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_SC_Asset" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAICAQQAAAAAAUAQAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_SC_Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_Staff" Collapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAEAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>DTO\dto_Staff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_supplier" Collapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAIAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTO\dto_supplier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.dto_TreeNode" Collapsed="true">
+    <Position X="12.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAIAAAAEAAACAAAAgA=</HashCode>
+      <FileName>DTO\dto_TreeNode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.Json_Asset_add" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKRAAAABgAQIAACAAIgAIJAQAABAAAITAAIIAgAAQAA=</HashCode>
+      <FileName>DTO\Json_Asset_add.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.DTO.Json_Collar_addNew" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAQAMAAAAAAAAAAAAIAAAAAAACAAAAAAAAAABABAAAE=</HashCode>
+      <FileName>DTO\Json_Collar_addNew.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Helper_Class.Serial" Collapsed="true">
+    <Position X="14.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACQIIAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Helper_Class\Serial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.MidPages.export" Collapsed="true">
+    <Position X="14.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>MidPages\export.aspx.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.FAMISDBTBModels" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAUBCAAhAAAAAgAAAGAhAAEMEBAAUAAIAAAIQEIAAAA=</HashCode>
+      <FileName>Models\FAMISDBTBModels.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Address_AssetStore" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAgAAAAAAgQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_Address_AssetStore.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAABIAgEAAAgAAAQIAAAAljAhAIgDABAgAAACAAAAA=</HashCode>
+      <FileName>Models\tb_Asset.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_allocation" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAgCAACIAAAAMAAAAEAAAgAAAAAQCAAAA=</HashCode>
+      <FileName>Models\tb_Asset_allocation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_allocation_detail" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAEAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_Asset_allocation_detail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_collar" Collapsed="true">
+    <Position X="11" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAgAAgCAACIAAAAMAAAAEAAAgAAAAAQCAAAA=</HashCode>
+      <FileName>Models\tb_Asset_collar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_collar_detail" Collapsed="true">
+    <Position X="12.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAIAAAAEAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_Asset_collar_detail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_inventory" Collapsed="true">
+    <Position X="14.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAEAAgAAAAABAAAEAAAAEAAAkAAAAAQAAgAE=</HashCode>
+      <FileName>Models\tb_Asset_inventory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_inventory_Details" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAEAAgAAAAABAAAEAACAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_Asset_inventory_Details.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_Reduction" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIEEAAAAAgCAAAIAACggAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Models\tb_Asset_Reduction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Asset_Reduction_detail" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAEAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_Asset_Reduction_detail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_AssetType" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gCAABAAAKAAAgAAAAAAAAACAAAAIABAAEAAAAQAAAAA=</HashCode>
+      <FileName>Models\tb_AssetType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_dataDict" Collapsed="true">
+    <Position X="7.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAEAAgAAAAgAEAAAAAAAAAAAAIAAAAEAAgAQAAAAA=</HashCode>
+      <FileName>Models\tb_dataDict.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_dataDict_para" Collapsed="true">
+    <Position X="9.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAIAIAAAAAAAAAAoAAAAEAAAAAAAABQ=</HashCode>
+      <FileName>Models\tb_dataDict_para.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_department" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IJACAAAAAAAAgAAABAIACAAAAAAMAAAAAAAAAQAAAgA=</HashCode>
+      <FileName>Models\tb_department.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Menu" Collapsed="true">
+    <Position X="12.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAgAAAAAAAAAAAAAAIABAAAAAAAQAAAgQ=</HashCode>
+      <FileName>Models\tb_Menu.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Method_Add" Collapsed="true">
+    <Position X="14.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_Method_Add.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_role" Collapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAIAAAAAAAAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_role.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_role_authorization" Collapsed="true">
+    <Position X="2.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAgAAAAMAACAAAAAABAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Models\tb_role_authorization.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_Rule_Generate" Collapsed="true">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAEAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Models\tb_Rule_Generate.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_staff" Collapsed="true">
+    <Position X="5.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAACAAABAAAAgBAgAAYAAAAAAEAEAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Models\tb_staff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_State_List" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAYAAAAAgA=</HashCode>
+      <FileName>Models\tb_State_List.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_supplier" Collapsed="true">
+    <Position X="9.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAgAAgAAAAAAAAAEIAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\tb_supplier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.Models.tb_user" Collapsed="true">
+    <Position X="11" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAgAAAAAAAAIAAAACAIAAAAAAAAABAAAA=</HashCode>
+      <FileName>Models\tb_user.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.ViewCommon.TreeCommon" Collapsed="true">
+    <Position X="12.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAACBAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewCommon\TreeCommon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FAMIS.ViewCommon.TreeViewCommon" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ICAAAABAgAAAAAACBAAAAAAEAAAAAAAAAABIAAAEAAE=</HashCode>
+      <FileName>ViewCommon\TreeViewCommon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="微软雅黑" Size="9" />
+</ClassDiagram>
