@@ -33,7 +33,7 @@
                 ATload();
                 DPload();
               
-              Innitial_Right();
+              
             //   InnitialAT_Right();
             //   InnitialDP_Right();
                 function LoadInitData_Detail() {
@@ -59,23 +59,7 @@
 
                         onCheck: function (node) {
 
-
-                            /*  $.ajax({
-      
-                                  type: "post",
-                                  url: "/Rule/Jugdement",
-                                  data: { JSON: JSONdata, Name: node.id + "," + node.text },
-                                  datatype: "json",//数据类型
-      
-                                  success: function (result) {
-      
-                                      JSONdata = result.YH_serial;
-                                     // alert(JSONdata);
-      
-                                  }, error: function (msg) {
-                                      alert("Error");
-                                  }
-                              });*/
+ 
 
 
 
@@ -83,7 +67,7 @@
                         },
                         onLoadSuccess: function (node, data) {
                             $('#lefttree').show();
-
+                            Innitial_Right();
                         }
                     });
                 }
@@ -98,14 +82,13 @@
                     //if (s != '') s += ',';
                     if (i != fnodes.length - 1)
                         s += fnodes[i].text + "," + fnodes[i].id
-                        //s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+                   
                     else
                         s += fnodes[i].text + "," + fnodes[i].id + "o";
                 }
                 for (var i = 0; i < nodes.length; i++) {
 
-
-                    //   s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+ 
                     if (i != nodes.length - 1)
 
                         s += nodes[i].text + "," + nodes[i].id + "o";
@@ -127,7 +110,8 @@
 
                     success: function (result) {
 
-                        $('#lefttree').show();
+                        $('#lefttree').tree('reload');
+                       // Innitial_Right();
                         alert("保存成功！");
                        
 
@@ -152,8 +136,7 @@
                 }
                 for (var i = 0; i < nodes.length; i++) {
 
-
-                    //   s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+ 
                     if (i != nodes.length - 1)
 
                         s += nodes[i].text + "," + nodes[i].id + "o";
@@ -175,7 +158,8 @@
 
                     success: function (result) {
 
-                        $('#righttree').show();
+                        $('#righttree').tree('reload');
+                      //  InnitialAT_Right();
                         alert("保存成功！");
 
 
@@ -223,7 +207,8 @@
 
                     success: function (result) {
 
-                        $('#mtree').show();
+                        $('#mtree').tree('reload');
+                       // InnitialDP_Right();
                         alert("保存成功！");
 
 
@@ -338,7 +323,7 @@
                     },
                     onLoadSuccess: function (node, data) {
                         $('#righttree').show();
-
+                        InnitialAT_Right();
                     }
                 });
 
@@ -363,17 +348,10 @@
                     },
 
 
-                    onCheck: function (node) {
-
-
-
-
-
-
-                    },
+                    
                     onLoadSuccess: function (node, data) {
                         $('#mtree').show();
-
+                        InnitialDP_Right();
                     }
                 });
 
@@ -422,6 +400,11 @@
                  InnitialDP_Right();
                 // alert("事件触发！");
             }
+
+            $('#lefttree').load(function () {
+
+
+            });
         </script>
 </head>
 <body style="text-align:center">
@@ -437,9 +420,9 @@
                 <div data-options="region:'center',title:'权限更改',iconCls:'icon-tip'">
                    
                         
-                    <div class="easyui-tabs" data-options="fit:true,border:false,plain:true" onclick="aa()">
+                    <div class="easyui-tabs" data-options="fit:true,border:false,plain:true" onclick="">
 
-                        <div title="菜单权限" style="padding:10px" onclick="">
+                        <div title="菜单权限" data-options="javascript: Innitial_Right()" style="padding:10px">
 
                             <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
                             <div style="text-align: center; padding: 5px;">
