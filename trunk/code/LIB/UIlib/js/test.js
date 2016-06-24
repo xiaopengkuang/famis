@@ -300,7 +300,8 @@ function InitLeftMenu() {
             });
 
             if (i == 0)
-                selectedPanelname = n.menuname;
+           selectedPanelname = n.menuname;
+
         }//here
 
     });
