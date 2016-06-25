@@ -83,7 +83,25 @@ function loadInitTreeGrid()
                 $('#btnrefresh').linkbutton('enable');
                 $("#treegrid").treegrid('reload');
             }
-        }, {
+        }, '-', {
+            id: 'expendALL',
+            text: '展开',
+            iconCls: 'icon-add',
+            handler: function () {
+                $('#btnaddBro').linkbutton('enable');
+                //获取父节点
+                $("#treegrid").treegrid('expandAll');
+            }
+        }, '-',{
+            id: 'closeALL',
+            text: '收缩',
+            iconCls: 'icon-remove',
+            handler: function () {
+                $('#btnaddBro').linkbutton('enable');
+                //获取父节点
+                $("#treegrid").treegrid('collapseAll');
+            }
+        }, '-',{
             id: 'btnaddBro',
             text: '新增同级',
             iconCls: 'icon-add',
@@ -118,6 +136,7 @@ function loadInitTreeGrid()
             }
         }]
     });
+    //$("#treegrid").treegrid("expandAll");
 }
 
 

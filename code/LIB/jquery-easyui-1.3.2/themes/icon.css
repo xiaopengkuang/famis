@@ -16,6 +16,12 @@
 .icon-cut{
 	background:url('icons/cut.png') no-repeat center center;
 }
+.icon-numbered-list{
+	background:url('icons/numbered-list.png') no-repeat center center;
+}
+.icon-open-file{
+	background:url('icons/open-file.png.png') no-repeat center center;
+}
 .icon-ok{
 	background:url('icons/ok.png') no-repeat center center;
 }
