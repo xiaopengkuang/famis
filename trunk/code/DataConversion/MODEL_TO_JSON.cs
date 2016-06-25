@@ -21,6 +21,7 @@ namespace FAMIS.DataConversion
             data.lbmc=tb.name_Asset_Type;
             data.jczl = tb.Net_residual_rate;
             data.zjnx= tb.period_Depreciation;
+            data.lastEditTime = tb.lastEditTime;
             //data.level = tb.treeLevel;
             return data;
         }
