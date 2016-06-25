@@ -18,7 +18,7 @@ namespace FAMIS.Controllers
     {
 
 
-        FAMISDBTBModels DB_Connecting = new FAMISDBTBModels();
+        FAMISDBTBModels DB_C = new FAMISDBTBModels();
         StringBuilder result_tree_department = new StringBuilder();
         StringBuilder sb_tree_department = new StringBuilder();
 
@@ -85,13 +85,13 @@ namespace FAMIS.Controllers
 
         public ActionResult edit_AssetType(int? id,String name)
         {
-            if (name == null || name == ""||id==null)
+            if (id==null)
             {
                 ViewBag.info = name;
                 return View("Error");
             }
             ViewBag.name = name;
-
+            ViewBag.id = id;
             return View();
         }
 
@@ -110,7 +110,7 @@ namespace FAMIS.Controllers
         public JsonResult load_GYS_add()
         {
 
-            List<tb_supplier> list = DB_Connecting.tb_supplier.OrderBy(a => a.ID).ToList();
+            List<tb_supplier> list = DB_C.tb_supplier.OrderBy(a => a.ID).ToList();
             var json = new
             {
                 total = list.Count(),
@@ -137,10 +137,10 @@ namespace FAMIS.Controllers
              List<tb_Asset> list;
              if (assetType != "" && assetType != "all")
              {
-                 list = DB_Connecting.tb_Asset.Where(a => a.type_Asset == assetType).Distinct().ToList() ;
+                 list = DB_C.tb_Asset.Where(a => a.type_Asset == assetType).Distinct().ToList() ;
              }
              else {
-                 list =  DB_Connecting.tb_Asset.Distinct().ToList() ;
+                 list =  DB_C.tb_Asset.Distinct().ToList() ;
              }
 
             JavaScriptSerializer jss = new JavaScriptSerializer();
@@ -192,7 +192,7 @@ namespace FAMIS.Controllers
         public String load_FS_add(int? TypeID)
         {
 
-            List<tb_dataDict_para> list = DB_Connecting.tb_dataDict_para.Where(a => a.ID_dataDict == TypeID).OrderBy(a => a.ID).ToList();
+            List<tb_dataDict_para> list = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == TypeID).OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             var result = (from r in list
                           select new dto_DataDict_para()
@@ -208,7 +208,7 @@ namespace FAMIS.Controllers
         [HttpGet]
         public String load_SYR_add(String SZBM_ID)
         {
-            List<tb_staff> list = DB_Connecting.tb_staff.Where(a => a.code_Departmen == SZBM_ID).OrderBy(a => a.ID).ToList();
+            List<tb_staff> list = DB_C.tb_staff.Where(a => a.code_Departmen == SZBM_ID).OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             var result = (from r in list
                           select new dto_Staff()
@@ -240,7 +240,7 @@ namespace FAMIS.Controllers
 
          public String GenerateTree_AssetType()
          {
-             List<tb_AssetType> list_de_AT = DB_Connecting.tb_AssetType.ToList();
+             List<tb_AssetType> list_de_AT = DB_C.tb_AssetType.ToList();
              result_tree_department.Clear();
              sb_tree_department.Clear();
              List<dto_AssetType> list_dto_AT = new List<dto_AssetType>();
@@ -280,7 +280,7 @@ namespace FAMIS.Controllers
 
          public List<dto_TreeNode> getTreeSearchNodes(String role)
          {
-             List<tb_dataDict> dic = DB_Connecting.tb_dataDict.Where(a => a.flag_Search == true).ToList();
+             List<tb_dataDict> dic = DB_C.tb_dataDict.Where(a => a.flag_Search == true).ToList();
              List<dto_TreeNode> nodesAll = new List<dto_TreeNode>();
              for (int i = 0; i < dic.Count; i++)
              {
@@ -337,7 +337,7 @@ namespace FAMIS.Controllers
          }
          public List<dto_TreeNode> getZCLBNodes(dto_TreeNode fathernode)
          {
-             List<tb_AssetType> list_ORG = DB_Connecting.tb_AssetType.ToList();
+             List<tb_AssetType> list_ORG = DB_C.tb_AssetType.ToList();
              List<dto_TreeNode> list = new List<dto_TreeNode>();
              for (int i = 0; i < list_ORG.Count; i++)
              {
@@ -357,7 +357,7 @@ namespace FAMIS.Controllers
 
          public List<dto_TreeNode> getSYRNodes(dto_TreeNode fathernode)
          {
-             List<tb_staff> list_ORG = DB_Connecting.tb_staff.ToList();
+             List<tb_staff> list_ORG = DB_C.tb_staff.ToList();
              List<dto_TreeNode> list = new List<dto_TreeNode>();
              for (int i = 0; i < list_ORG.Count; i++)
              {
@@ -375,7 +375,7 @@ namespace FAMIS.Controllers
          }
          public List<dto_TreeNode> getSZBMNodes(dto_TreeNode fathernode)
          {
-             List<tb_department> list_ORG = DB_Connecting.tb_department.ToList();
+             List<tb_department> list_ORG = DB_C.tb_department.ToList();
              List<dto_TreeNode> list = new List<dto_TreeNode>();
              for (int i = 0; i < list_ORG.Count; i++)
              {
@@ -397,7 +397,7 @@ namespace FAMIS.Controllers
 
          public List<dto_TreeNode> getGYSNodes(dto_TreeNode fathernode)
          {
-             List<tb_supplier> list_ORG = DB_Connecting.tb_supplier.ToList();
+             List<tb_supplier> list_ORG = DB_C.tb_supplier.ToList();
              List<dto_TreeNode> list = new List<dto_TreeNode>();
              for (int i = 0; i < list_ORG.Count; i++)
              {
@@ -429,9 +429,10 @@ namespace FAMIS.Controllers
                     at.url = "javascript:void(0)";
                     at.orderID = at.assetTypeCode.ToString();
                     at.flag = true;
+                    at.lastEditTime = DateTime.Now;
 
-                    DB_Connecting.tb_AssetType.Add(at);
-                    DB_Connecting.SaveChanges();
+                    DB_C.tb_AssetType.Add(at);
+                    DB_C.SaveChanges();
                     return 1;
                 }catch(Exception e){
                     return 0;
@@ -440,9 +441,99 @@ namespace FAMIS.Controllers
             return 0;
         }
 
-         public List<dto_TreeNode> getDictNodes(int id_dic, dto_TreeNode fathernode)
+
+        [HttpPost]
+        public int Handler_updateAssetType(String data,int id)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_AssetType_add json_data = serializer.Deserialize<Json_AssetType_add>(data);
+            
+
+            var q = from p in DB_C.tb_AssetType
+                    where p.ID ==id
+                    select p;
+            if (q.Count() != 1)
+            {
+                return 0;
+            }
+            try { 
+                 foreach (var p in q)
+                {
+                    p.name_Asset_Type = json_data.lbmc;
+                    p.measurement = json_data.jldw;
+                    p.period_Depreciation = json_data.zjnx;
+                    p.method_Depreciation = json_data.zjfs;
+                    p.Net_residual_rate = json_data.jczl;
+                    p.lastEditTime = DateTime.Now;
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }catch(Exception e){
+                return 0;
+            }
+           
+        }
+
+
+        [HttpPost]
+        public JsonResult Handler_GetAssetType(int? id)
+        {
+            if(id==null)
+            {
+                return null;
+            }
+            //
+            var data = from a in DB_C.tb_AssetType
+                       join b in DB_C.tb_AssetType on a.father_MenuID_Type equals b.ID
+                       //join c in DB_C.tb_dataDict_para on a.measurement equals c.ID
+                       //join d in DB_C.tb_dataDict_para on a.method_Depreciation equals d.ID
+                       where a.ID==id
+                       select new {
+                           id=a.ID,
+                           lbbh=a.assetTypeCode,
+                           lbmc=a.name_Asset_Type,
+                           sjlb=b.name_Asset_Type,
+                           zjfs = a.method_Depreciation,
+                           jldw = a.measurement,
+                           zjnx=a.period_Depreciation,
+                           jczl=a.Net_residual_rate
+                       };
+            
+            if (data.ToList().Count<1)
+            {
+               var data2 = from a in DB_C.tb_AssetType
+                       //join c in DB_C.tb_dataDict_para on a.measurement equals c.ID
+                           //join d in DB_C.tb_dataDict_para on a.method_Depreciation equals d.ID
+                       where a.ID == id
+                       select new
+                       {
+                           id = a.ID,
+                           lbbh = a.assetTypeCode,
+                           lbmc = a.name_Asset_Type,
+                           sjlb = a.father_MenuID_Type,
+                           zjfs = a.method_Depreciation,
+                           jldw = a.measurement,
+                           zjnx = a.period_Depreciation,
+                           jczl = a.Net_residual_rate
+                       };
+               return Json(data2.ToList().Take(1), JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+                return Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
+            }
+
+
+           
+
+         //return  Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
+
+        }
+
+        public List<dto_TreeNode> getDictNodes(int id_dic, dto_TreeNode fathernode)
          {
-             List<tb_dataDict_para> list_ORG = DB_Connecting.tb_dataDict_para.Where(a => a.ID_dataDict == id_dic).ToList();
+             List<tb_dataDict_para> list_ORG = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == id_dic).ToList();
              List<dto_TreeNode> list = new List<dto_TreeNode>();
              for (int i = 0; i < list_ORG.Count; i++)
              {
@@ -560,7 +651,7 @@ namespace FAMIS.Controllers
          public String load_CFDD_add(int id_di)
          {
 
-             List<tb_dataDict_para> list_ad_AT = DB_Connecting.tb_dataDict_para.Where(a => a.ID_dataDict == id_di).ToList();
+             List<tb_dataDict_para> list_ad_AT = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == id_di).ToList();
              result_tree_department.Clear();
              sb_tree_department.Clear();
              List<dto_CFDD_Asset> list_dto_ad_AT = new List<dto_CFDD_Asset>();
@@ -591,7 +682,7 @@ namespace FAMIS.Controllers
        
          public String GenerateTree_Department()
          {
-             List<tb_department> list_de = DB_Connecting.tb_department.ToList();
+             List<tb_department> list_de = DB_C.tb_department.ToList();
              result_tree_department.Clear();
              sb_tree_department.Clear();
              List<dto_department> list_dto=new List<dto_department>();
@@ -780,7 +871,7 @@ namespace FAMIS.Controllers
         public JsonResult loadTreeGrid_AssetType()
         {
                 //读取数据
-            List<tb_AssetType> list = DB_Connecting.tb_AssetType.Where(a => a.flag == true).ToList();
+            List<tb_AssetType> list = DB_C.tb_AssetType.Where(a => a.flag == true).ToList();
             
             MODEL_TO_JSON co=new MODEL_TO_JSON();
             List<Json_AssetType_add> data = co.ConverMdoelToJsonList(list);
