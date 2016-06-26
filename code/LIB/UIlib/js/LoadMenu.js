@@ -131,7 +131,7 @@ function test() {
                 "menuid": M14,
                 "menuname": "资产减少",
                 "icon": "icon-nav",
-                "url": "/Asset/reduction"
+                "url": "/Asset/reduction/"
             }]
         },
         {
@@ -149,7 +149,8 @@ function test() {
                 "menuname": "盘点管理",
                 "icon": "icon-nav",
                 "url": "/Verify/Inventory"
-            }]
+            }
+            ]
         },
         {
             "menuid": M3,

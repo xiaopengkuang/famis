@@ -10,9 +10,9 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [Column("ID_ Menu")]
+      
         [StringLength(8)]
-        public string ID__Menu { get; set; }
+        public string ID_Menu { get; set; }
 
         [StringLength(10)]
         public string menu_Type { get; set; }

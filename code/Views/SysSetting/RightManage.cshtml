@@ -99,7 +99,7 @@
                     var JS_Data = RoleID;
                 else
                     var JS_Data = RoleID + "o" + s;
-
+                alert(JS_Data);
 
                 $.ajax({
 
@@ -111,7 +111,8 @@
                     success: function (result) {
 
                         $('#lefttree').tree('reload');
-                       // Innitial_Right();
+                        // Innitial_Right();
+                        alert(JS_Data);
                         alert("保存成功！");
                        
 
@@ -159,7 +160,8 @@
                     success: function (result) {
 
                         $('#righttree').tree('reload');
-                      //  InnitialAT_Right();
+                        //  InnitialAT_Right();
+                        alert(JS_Data);
                         alert("保存成功！");
 
 
@@ -174,7 +176,7 @@
                 var nodes = $('#mtree').tree('getChecked');
                 var s = "";
 
-                for (var i = 0; i < fnodes.length; i++) {
+               for (var i = 0; i < fnodes.length; i++) {
                     //if (s != '') s += ',';
                     if (i != fnodes.length - 1)
                         s += fnodes[i].text + "," + fnodes[i].id
@@ -236,8 +238,11 @@
 
                         var arr = str.split(",");
                         for (var i = 0; i <= str.split(",").length; i++) {
-                            if (arr[i] == "1" || arr[i] == "2" || arr[i] == "3" || arr[i] == "4")
+                          
+                            if (arr[i].split("_").length == 1) {
+                                
                                 continue;
+                            }
                             var node = $('#lefttree').tree('find', arr[i]);
                             $('#lefttree').tree('check', node.target);
                         }
@@ -374,7 +379,7 @@
 
                         var arr = str.split(",");
                         for (var i = 0; i <= str.split(",").length; i++) {
-                            if (arr[i].split("_").length == 0)
+                            if (arr[i].split("_").length == 1)
                                 continue;
                             var node = $('#mtree').tree('find', arr[i]);
                             $('#mtree').tree('check', node.target);

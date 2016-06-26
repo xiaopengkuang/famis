@@ -1,101 +1,20 @@
 ﻿
-var M1 = "";
-var M11 = "";
-var M12 = "";
-var M13 = "";
-var M14 = "";
-var M2 = "";
-var M21 = "";
-var M22 = "";
-var M3 = "";
-var M31 = "";
-var M32 = "";
-var M321 = "";
-var M322 = "";
-var M4 = "";
-var M41 = "";
-var M42 = "";
-var M43 = "";
 var _menus;
 var url = document.URL
-
+//var id = '<%=Session["userRole"] %>';
 var RoleID = url.substring(url.lastIndexOf("?") + 1, url.length);
-alert("keyia! " + RoleID);
+alert("可以，可以你妹! " + RoleID);
 
 $.ajax({
 
     type: "post",
-    url: "/Rule/Get_Selected_Url?JSON=" + RoleID + "",
+    url: "/User/Get_Json_Memu?JSON=" + RoleID + "",
     datatype: "string",//数据类型
 
     success: function (result) {
-        var str = String(result);
-
-
-        var arr = str.split(",");
-        for (var i = 0; i < str.split(",").length; i++) {
-
-            switch (arr[i]) {
-                case "1":
-                    M1 = "1";
-
-                    break;
-                case "1_1":
-                    M11 = "1_1";
-                    break;
-                case "1_2":
-                    M12 = "1_2";
-                    break;
-                case "1_3":
-                    M13 = "1_3";
-
-                    break;
-                case "1_4":
-                    M14 = "1_4";
-                    break;
-                case "2":
-                    M2 = "2";
-                    break;
-                case "2_1":
-                    M21 = "2_1";
-
-                    break;
-                case "2_2":
-                    M22 = "2_2";
-
-                    break;
-                case "3":
-                    M3 = "3";
-                    break;
-                case "3_1":
-                    M31 = "3_1";
-                    break;
-                case "3_2":
-                    M32 = "3_2";
-                    break;
-                case "3_2_1":
-                    M321 = "3_2_1";
-                    break;
-                case "3_2_2":
-                    M322 = "3_2_2";
-                    break;
-                case "4":
-                    M4 = "4";
-                    break;
-                case "4_1":
-                    M41 = "4_1";
-                    break;
-                case "4_2":
-                    M42 = "4_2";
-                    break;
-                case "4_3":
-                    M43 = "4_3";
-                    break;
-            }
-
-        }
-
-        test();
+        
+       _menus = eval('(' + result + ')');
+       
         InitLeftMenu();
         tabClose();
         tabCloseEven();
@@ -103,130 +22,6 @@ $.ajax({
         alert("Error");
     }
 });
-
-function test() {
-    _menus = {
-        "menus": [{
-            "menuid": M1,
-            "icon": "icon-sys",
-            "menuname": "资产管理",
-            "menus": [{
-                "menuid": M11,
-                "menuname": "资产台账",
-                "icon": "icon-nav",
-                "url": "/Asset/Accounting"
-
-            },
-            {
-                "menuid": M12,
-                "menuname": "资产领用",
-                "icon": "icon-nav",
-                "url": "/Asset/collar/"
-            },
-            {
-                "menuid": M13,
-                "menuname": "资产调拨",
-                "icon": "icon-nav",
-                "url": "/Asset/allocation"
-            },
-            {
-                "menuid": M14,
-                "menuname": "资产减少",
-                "icon": "icon-nav",
-                "url": "/Asset/reduction"
-            }]
-        },
-        {
-            "menuid": M2,
-            "icon": "icon-sys",
-            "menuname": "折旧管理",
-            "menus": [{
-                "menuid": M21,
-                "menuname": "折旧管理",
-                "icon": "icon-nav",
-                "url": "/Verify/Depreciation"
-            },
-            {
-                "menuid": M22,
-                "menuname": "盘点管理",
-                "icon": "icon-nav",
-                "url": "/Verify/Inventory"
-            }]
-        },
-        {
-            "menuid": M3,
-            "icon": "icon-sys",
-            "menuname": "数据字典",
-            "menus": [{
-                "menuid": M31,
-                "menuname": "数据参数",
-                "icon": "icon-nav",
-                "url": "/Dict/dataDict"
-            },
-            {
-                "menuid": M32,
-                "menuname": "资产类别",
-                "icon": "icon-nav",
-                "url": "/Dict/Asset_type",
-                "child": [{
-                    "menuid": M321,
-                    "menuname": "资产类别",
-                    //"menuname": "供应商",
-                    "icon": "icon-nav",
-                    //"url": "/Dict/supplier"
-                    "url": "/Dict/Asset_type"
-                },
-                {
-                    "menuid": M322,
-                    "menuname": "员工",
-                    "icon": "icon-nav",
-                    "url": "/Dict/staff"
-                }]
-            }]
-        },
-          {
-              "menuid": M4,
-              "icon": "icon-sys",
-              "menuname": "系统管理",
-              "menus": [{
-                  "menuid": M41,
-                  "menuname": "角色管理",
-                  "icon": "icon-nav",
-                  "url": "/SysSetting/RoleManage"
-              },
-              {
-                  "menuid": M42,
-                  "menuname": "用户管理",
-                  "icon": "icon-nav",
-                  "url": "/SysSetting/UserManage"
-
-              }
-              ,
-              {
-                  "menuid": M43,
-                  "menuname": "系统设置",
-                  "icon": "icon-nav",
-                  "url": "/SysSetting/SysConfig"
-              }]
-          }]
-    };
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -261,22 +56,23 @@ $(function () {
 function InitLeftMenu() {
     $("#nav").accordion({ animate: false, fit: true, border: false });
     var selectedPanelname = '';
+     
     $.each(_menus.menus, function (i, n) {
+        
         var menulist = '';
         menulist += '<ul class="navlist">';
-        //alert(n.menuid);
+      
         if (n.menuid != "") {
 
             $.each(n.menus, function (j, o) {
 
                 if (o.menuid != "") {
-                    // alert("这个是父节点J: "+j.menuid)
-                    //alert("这个是父节点！： " + o.menuid);
+                   
                     menulist += '<li><div ><a ref="' + o.menuid + '" href="#" rel="' + o.url + '" ><span class="icon ' + o.icon + '" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div> ';
                 }
-                if (o.child && o.child.length > 0) {
+                /*if (o.child && o.child.length > 0) {
                     //li.find('div').addClass('icon-arrow');
-
+                    alert("哪来的child?");
                     menulist += '<ul class="third_ul">';
                     $.each(o.child, function (k, p) {
                         if (p.menuid != "") {
@@ -286,7 +82,7 @@ function InitLeftMenu() {
 
                     });
                     menulist += '</ul>';
-                }
+                }*/
 
                 menulist += '</li>';
             })
@@ -311,7 +107,7 @@ function InitLeftMenu() {
 
     $('.navlist li a').click(function () {
         var tabTitle = $(this).children('.nav').text();
-
+       
         var url = $(this).attr("rel");
         var menuid = $(this).attr("ref");
         var icon = $(this).find('.icon').attr('class');
