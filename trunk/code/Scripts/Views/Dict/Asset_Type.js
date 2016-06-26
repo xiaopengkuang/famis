@@ -44,7 +44,7 @@ function loadInitTreeGrid()
 
 
     $('#treegrid').treegrid({
-        url: '/Dict/loadTreeGrid_AssetType',
+        url: '/Dict/loadTreeGrid?name=assetType',
         //data:data,
         idField: 'id',
         treeField: 'lbmc',
