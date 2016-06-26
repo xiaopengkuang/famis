@@ -11,6 +11,7 @@ using FAMIS.Models;
 using System.Runtime.Serialization.Json;
 using FAMIS.DTO;
 using FAMIS.DataConversion;
+using System.Threading;
 
 namespace FAMIS.Controllers
 {
@@ -100,7 +101,51 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult add_departmentView(int? pid, String pname, String level)
+        {
+            if (pname == null || pname == "" || pid == null)
+            {
+                ViewBag.info = pname;
+                return View("Error");
+            }
+            //return View("Error");
 
+            if (pid != null && pname != "")
+            {
+                ViewBag.fatherID = pid;
+                ViewBag.fatherName = pname;
+                ViewBag.level = level;
+                //获取  获取新的资产编号
+                //TODO: 
+                //DateTime dt = DateTime.Now;
+                String h = DateTime.Now.Hour.ToString().PadLeft(2, '0');      //获取当前时间的小时部分
+                String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
+                String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
+                //23.ToString().PadLeft(6, '0');
+
+                ViewBag.CodeAssetType = h + m + s;
+
+                return View("add_department");
+            }
+            else
+            {
+                ViewBag.info = pname + "\tss";
+                return View("Error");
+            }
+        }
+
+
+        public ActionResult edit_departmentView(int? id, String name)
+        {
+            if (id == null)
+            {
+                ViewBag.info = name;
+                return View("Error");
+            }
+            ViewBag.name = name;
+            ViewBag.id = id;
+            return View("edit_department");
+        }
 
 
         
@@ -241,6 +286,10 @@ namespace FAMIS.Controllers
          public String GenerateTree_AssetType()
          {
              List<tb_AssetType> list_de_AT = DB_C.tb_AssetType.ToList();
+             if (!result_tree_department.Equals(""))
+             {
+                 Thread.Sleep(1000);
+             }
              result_tree_department.Clear();
              sb_tree_department.Clear();
              List<dto_AssetType> list_dto_AT = new List<dto_AssetType>();
@@ -261,6 +310,8 @@ namespace FAMIS.Controllers
              dt_de = ds_de.Tables[0];
 
              string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
+             result_tree_department.Clear();
+             sb_tree_department.Clear();
              return json;
          }
          [HttpPost]
@@ -276,6 +327,75 @@ namespace FAMIS.Controllers
              sb_tree_SearchTree.Clear();
              string json = GetTreeJsonByTable_TreeSearch(dt_tree, "id", "nameText", "url", "fatherID", "0");
              return json;
+         }
+
+
+         [HttpPost]
+         public String loadTree(String name)
+         {
+
+             if (name == null || name == "")
+             {
+                 return "";
+             }
+
+             String tree="";
+             switch (name)
+             {
+                 case "departmentTree": tree=loadDepartment(); break;
+                 case "1": ; break;
+                 case "2": ; break;
+                 default: tree= "" ; break;
+             }
+             return tree;
+         }
+
+         public String loadDepartment()
+         {
+             List<tb_department> list_ORG = DB_C.tb_department.Where(a=>a.effective_Flag==true).ToList();
+             List<dto_TreeNode> list = new List<dto_TreeNode>();
+             for (int i = 0; i < list_ORG.Count; i++)
+             {
+                 dto_TreeNode node = new dto_TreeNode();
+                 int idYY = Convert.ToInt32(list_ORG[i].ID_Department);
+                 node.id = (idYY).ToString();
+                 node.nameText = list_ORG[i].name_Department;
+                 node.url = "javascript:void(0)";
+                 node.orderID=list_ORG[i].ID.ToString();
+                 node.fatherID = list_ORG[i].ID_Father_Department.ToString();
+                 list.Add(node);
+             }
+             return TreeListToString(list);
+             
+
+         }
+
+
+         public String TreeListToString(List<dto_TreeNode> list)
+         {
+             if (list.Count > 0)
+             {
+                 DataSet ds_tree = ConvertToDataSet(list);
+                 DataTable dt_tree = new DataTable();
+                 dt_tree = ds_tree.Tables[0];
+
+                 if (result_tree_SearchTree.Equals(""))
+                 {
+                     Thread.Sleep(1000);
+                 }
+                 result_tree_SearchTree.Clear();
+                 sb_tree_SearchTree.Clear();
+                 string json = GetTreeJsonByTable_TreeSearch(dt_tree, "id", "nameText", "url", "fatherID", "0");
+                 result_tree_SearchTree.Clear();
+                 sb_tree_SearchTree.Clear();
+                 return json;
+             }
+             else {
+                 return "";
+             }
+
+
+            
          }
 
          public List<dto_TreeNode> getTreeSearchNodes(String role)
@@ -380,11 +500,11 @@ namespace FAMIS.Controllers
              for (int i = 0; i < list_ORG.Count; i++)
              {
                  dto_TreeNode node = new dto_TreeNode();
-                 int idYY = int.Parse(fathernode.id) + (int)list_ORG[i].ID_Department;
+                 int idYY = int.Parse(fathernode.id) + Convert.ToInt32(list_ORG[i].ID_Department);
                  node.id = (idYY).ToString();
                  node.nameText = list_ORG[i].name_Department;
                  node.url = "";
-                 idYY=int.Parse(fathernode.id) + (int)list_ORG[i].ID_Father_Department;
+                 idYY = int.Parse(fathernode.id) + Convert.ToInt32(list_ORG[i].ID_Father_Department);
                  node.orderID = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
                  node.fatherID = (idYY).ToString();
                  list.Add(node);
@@ -441,6 +561,68 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+        [HttpPost]
+        public int Handler_InsertDepartmen(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_department dp = serializer.Deserialize<Json_department>(data);
+            if(dp!=null)
+            {
+                try {
+                    tb_department tb_dp = new tb_department();
+                    JSON_TO_MODEL conver = new JSON_TO_MODEL();
+                    tb_dp = conver.ConverJsonToTable(dp);
+                    //获取用户信息以及插入时间
+                    //获取操作用户
+                    tb_dp._operator = "KXP";
+                    //获取插入时间
+                    tb_dp.create_TIME = DateTime.Now;
+                    tb_dp.effective_Flag = true;
+                    tb_dp.url = "javascript:void(0)";
+                    tb_dp.orderNum = tb_dp.ID_Department.ToString();
+
+                    DB_C.tb_department.Add(tb_dp);
+                    DB_C.SaveChanges();
+                    return 1;
+                }
+                catch(Exception e){
+                }
+            }
+            return 0;
+
+        }
+
+        [HttpPost]
+        public int Handler_UpdateDepartmen(String data, int id)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_department json_data = serializer.Deserialize<Json_department>(data);
+
+            var q=from p in DB_C.tb_department where p.ID_Department == id select p;
+            if (q.Count() != 1)
+            {
+                return 0;
+            }
+
+            try
+            {
+                foreach (var p in q)
+                {
+
+                    //TODO
+                    //p._operator="KXP";
+                    p.name_Department = json_data.bmmc;
+                    p.create_TIME = DateTime.Now;
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+
 
         [HttpPost]
         public int Handler_updateAssetType(String data,int id)
@@ -450,7 +632,7 @@ namespace FAMIS.Controllers
             
 
             var q = from p in DB_C.tb_AssetType
-                    where p.ID ==id
+                    where p.ID == id
                     select p;
             if (q.Count() != 1)
             {
@@ -470,6 +652,43 @@ namespace FAMIS.Controllers
                 return 1;
             }catch(Exception e){
                 return 0;
+            }
+           
+        }
+
+        [HttpPost]
+        public JsonResult Handler_getDepartment(int? bmbh)
+        {
+            if (bmbh == null)
+            {
+                return null;
+            }
+
+            var data = from p in DB_C.tb_department
+                       join q in DB_C.tb_department on p.ID_Father_Department equals q.ID_Department
+                       where p.ID_Department == bmbh
+                       select new { 
+                       bmbh=p.ID_Department,
+                       bmmc=p.name_Department,
+                       sjbm=p.ID_Father_Department,
+                       sjbm_Name=q.name_Department
+                       };
+            if (data.ToList().Count < 1)
+            {
+                var data2 = from p in DB_C.tb_department
+                           where p.ID_Department == bmbh
+                           select new
+                           {
+                               bmbh = p.ID_Department,
+                               bmmc = p.name_Department,
+                               sjbm = p.ID_Father_Department,
+                               sjbm_Name = ""
+                           };
+                return Json(data2.ToList().Take(1), JsonRequestBehavior.AllowGet);
+
+            }
+            else {
+                return Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
             }
            
         }
@@ -523,9 +742,6 @@ namespace FAMIS.Controllers
             {
                 return Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
             }
-
-
-           
 
          //return  Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
 
@@ -652,8 +868,12 @@ namespace FAMIS.Controllers
          {
 
              List<tb_dataDict_para> list_ad_AT = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == id_di).ToList();
-             result_tree_department.Clear();
-             sb_tree_department.Clear();
+             if (!result_tree_Address.Equals(""))
+             {
+                 Thread.Sleep(1000);
+             }
+             result_tree_Address.Clear();
+             sb_tree_Address.Clear();
              List<dto_CFDD_Asset> list_dto_ad_AT = new List<dto_CFDD_Asset>();
              list_ad_AT.ForEach(item =>
              {
@@ -671,6 +891,9 @@ namespace FAMIS.Controllers
              dt_ad = ds_ad.Tables[0];
 
              string json = GetTreeJsonByTable_Address(dt_ad, "id", "nameText", "url", "fatherID", "0");
+
+             result_tree_Address.Clear();
+             sb_tree_Address.Clear();
              return json;
          }
 
@@ -683,6 +906,11 @@ namespace FAMIS.Controllers
          public String GenerateTree_Department()
          {
              List<tb_department> list_de = DB_C.tb_department.ToList();
+             if (!result_tree_department.Equals(""))
+             {
+                 Thread.Sleep(1000);
+             }
+
              result_tree_department.Clear();
              sb_tree_department.Clear();
              List<dto_department> list_dto=new List<dto_department>();
@@ -706,6 +934,8 @@ namespace FAMIS.Controllers
              dt_de = ds_de.Tables[0];
 
              string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
+             result_tree_department.Clear();
+             sb_tree_department.Clear();
              return json;
   
          }
@@ -885,6 +1115,46 @@ namespace FAMIS.Controllers
 
             return Json(json_NULL, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult loadTreeGrid_Department()
+        {
+            var data = from p in DB_C.tb_department where p.effective_Flag == true select new {
+            id=p.ID_Department,
+            _parentId=p.ID_Father_Department,
+            name=p.name_Department,
+            time=p.create_TIME,
+            operatorName=p._operator
+            };
+
+            var json_NULL = new
+            {
+                total = data.ToList().Count,
+                rows = data.ToArray()
+                //sql = selectSQL
+
+            };
+            return Json(json_NULL, JsonRequestBehavior.AllowGet);
+
+
+
+        }
+
+
+        [HttpPost]
+        public JsonResult loadTreeGrid(String name)
+        {
+            if (name == null || name == "")
+            {
+                return null;
+            }
+            JsonResult jsR = new JsonResult();
+            switch(name){
+                case "assetType": jsR = loadTreeGrid_AssetType(); break;
+                case "department": jsR = loadTreeGrid_Department(); break;
+                default: jsR= null; break;
+            }
+            return jsR;
+        }
+
 
         protected override void HandleUnknownAction(string actionName)
         {
