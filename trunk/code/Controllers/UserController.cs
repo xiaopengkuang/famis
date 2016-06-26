@@ -7,7 +7,7 @@ using FAMIS.ControllerSQLs;
 using FAMIS.DAL;
 using FAMIS.DTO;
 using FAMIS.Models;
-
+using System.IO;
 namespace FAMIS.Controllers
 {
     public class UserController : Controller
@@ -69,7 +69,7 @@ namespace FAMIS.Controllers
                     
                     //更新用户登录时间
 
-                    Response.Redirect("/User/Index?" + userList[0].roleID_User + "");
+                    Response.Redirect("/User/Index");
                 }
                 else {
                     ViewBag.LoginUser = "";
@@ -95,7 +95,13 @@ namespace FAMIS.Controllers
             //jump
             Response.Redirect("/User/Login");
         }
-
+       [HttpPost]
+        public string GetRole()
+        {
+            
+            return Session["userRole"].ToString();
+           
+        }
 
         public String signOut()
         {
@@ -151,6 +157,65 @@ namespace FAMIS.Controllers
 
         }
 
+        [HttpPost]
+        public String Get_Json_Memu(string JSON)
+        {
+            StreamWriter sw = new StreamWriter("D:\\meue.txt");
+            string Menu_JSON="";
+            int rid = int.Parse(JSON);
+            int indexof_menu_ID=1;
+            IEnumerable<String> menu_ID = from o in DBConnecting.tb_role_authorization
+                                                         where o.role_ID == rid
+                                                         && o.type=="menu"
+                                                         orderby o.Menue_ID
+                                                         select o.Menue_ID;
+           
+            
+           foreach(String mid in menu_ID)
+           {
+              IEnumerable<tb_Menu> menue_details = from m in DBConnecting.tb_Menu
+                              where m.ID_Menu == mid
+                              select m;
+              foreach (tb_Menu menu in menue_details)
+              {
+                  
+                  if (!mid.Contains("_"))
+                  {
+                      if(indexof_menu_ID==1)
+                      Menu_JSON += "{\r\"menus\":[{\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\",\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
+                      else
+                          Menu_JSON += "]},\r{\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
+
+                  }
+
+                  else
+                  {
+                      if (indexof_menu_ID != menu_ID.Count())
+                      {
+                          if (int.Parse(mid.Split('_')[1]) == 1)
+                              Menu_JSON += "{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
+                          else
+                              Menu_JSON += ",{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
+
+                      }
+                      else
+                      {
+                          if (int.Parse(mid.Split('_')[1]) == 1)
+                              Menu_JSON += "{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
+                          else
+                              Menu_JSON += ",{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
+                      }
+                  }
+              }
+
+              indexof_menu_ID++;
+           }
+           sw.Write(Menu_JSON);
+           sw.Close();
+           return Menu_JSON;
+
+
+    }
         //==========================================================================================================================//
 
 

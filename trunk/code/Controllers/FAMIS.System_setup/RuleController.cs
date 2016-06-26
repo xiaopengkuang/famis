@@ -173,14 +173,14 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             string[] Rightdetail = JSON.Split('o');
             
             int Roleid = int.Parse(Rightdetail[0]);
-
+            int fatherid = 0;
             
                   /* var q = from p in mydb.tb_Menu
                     where p.Role_ID == Roleid
                     select p;*/
             IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
                                           where o.role_ID == Roleid
-                                          && o.Menue_ID != null
+                                          && o.type=="menu"
                                           select o;
               if (role_au.Count() > 0)
                  {
@@ -197,15 +197,33 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                           string[] name_id = Rightdetail[i].Split(',');
                           string name = name_id[0];
                           string id = name_id[1];
-
-                          var menue_tb = new tb_role_authorization
+                          string currentfather;
+                          if (!id.Contains("_"))
+                              continue;
+                          else
+                              currentfather = id.Split('_')[0];
+                          if (fatherid != int.Parse(currentfather))
                           {
-                              role_ID = Roleid,
-                              
-                             Menue_ID = id
+                              var addfather = new tb_role_authorization
+                              {
+                                  role_ID = Roleid,
+                                  type = "menu",
+                                  Menue_ID = currentfather
+                              };
+                              mydb.tb_role_authorization.Add(addfather);
+                              fatherid = int.Parse(currentfather);
+                          }
+                          
+                              var menue_tb = new tb_role_authorization
+                              {
+                                  role_ID = Roleid,
+                                  type = "menu",
+                                  Menue_ID = id
 
-                          };
-                          mydb.tb_role_authorization.Add(menue_tb);
+                              };
+                              mydb.tb_role_authorization.Add(menue_tb);
+                              
+                         
                       }
                       mydb.SaveChanges();
                   }
@@ -231,7 +249,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
               select p;*/
             IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
                                           where o.role_ID == Roleid
-                                           && o.AssetType_ID != null
+                                           && o.type=="AssetType"
                                           select o;
             if (role_au.Count() > 0)
             {
@@ -252,8 +270,8 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     var role_au_tb = new tb_role_authorization
                     {
                         role_ID = Roleid,
-                       
-                       AssetType_ID = id
+                        type="AssetType",
+                        AssetType_ID = id
 
                     };
                     mydb.tb_role_authorization.Add(role_au_tb);
@@ -282,7 +300,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
               select p;*/
             IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
                                                          where o.role_ID == Roleid
-                                                          && o.Department_ID != null
+                                                          && o.type == "Department"
                                                          select o;
             if (role_au.Count() > 0)
             {
@@ -303,7 +321,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     var role_au_tb = new tb_role_authorization
                     {
                         role_ID = Roleid,
-
+                        type="department",
                         Department_ID = id
 
                     };
@@ -527,7 +545,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             int rid = int.Parse(JSON);
              IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
                                           where o.role_ID == rid
-                                          && o.Menue_ID != null
+                                          && o.type=="menu"
                                           select o;
              if (role_au.Count() > 0)
                  {
@@ -557,7 +575,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             int rid = int.Parse(JSON);
             IEnumerable<tb_role_authorization> role_au= from o in mydb.tb_role_authorization
                                           where o.role_ID== rid 
-                                         && o.AssetType_ID!=null
+                                         && o.type=="AssetType"
                                           select o;
             if (role_au.Count() > 0)
             {
@@ -588,7 +606,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             int rid = int.Parse(JSON);
             IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
                                                          where o.role_ID == rid
-                                                        && o.Department_ID != null
+                                                        && o.type=="department"
                                                          select o;
             if (role_au.Count() > 0)
             {

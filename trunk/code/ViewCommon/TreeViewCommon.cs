@@ -197,15 +197,7 @@ namespace FAMIS.ViewCommon
             dt.Columns.Add("url");
             dt.Columns.Add("ID");
 
-/*
-            dt.Rows.Add("1", "固定资产", "0", "", "1");
-            dt.Rows.Add("1_1", "房屋及建筑物", "1", "", "1");
-            dt.Rows.Add("1_2", "土地及植物", "1", "", "1");
-            
-            dt.Rows.Add("2", "低值易耗", "0", "", "1");
-            dt.Rows.Add("2_1", "家具", "2", "", "1");
-            dt.Rows.Add("2_2", "办公用品", "2", "", "1");
-            dt.Rows.Add("2_3", "性用品", "2", "", "1");*/
+
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
             SqlDataAdapter sda = new SqlDataAdapter("select orderID,name_Asset_Type,father_MenuID_Type,url,ID from tb_AssetType  order by orderID", con);
             DataTable dtt = new DataTable();
@@ -302,27 +294,41 @@ namespace FAMIS.ViewCommon
             dt.Columns.Add("module_fatherid");
             dt.Columns.Add("module_url");
             dt.Columns.Add("module_order");
-           
 
-            dt.Rows.Add("1", "资产管理", "0", "", "1");
-            dt.Rows.Add("1_1", "资产台账", "1", "", "1");
-            dt.Rows.Add("1_2", "资产领用", "1", "", "1");
-            dt.Rows.Add("1_3", "资产调拨", "1", "", "1");
-            dt.Rows.Add("1_4", "资产减少", "1", "", "1");
 
-            dt.Rows.Add("2", "折旧管理", "0", "", "1");
-            dt.Rows.Add("2_1", "折旧管理", "2", "", "1");
-            dt.Rows.Add("2_2", "盘点管理", "2", "", "1");
-            dt.Rows.Add("3", "数据字典", "0", "", "1");
-            dt.Rows.Add("3_1", "数据参数", "3", "", "1");
-            dt.Rows.Add("3_2", "资产类别", "3", "", "1");
+            SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
+            SqlDataAdapter sda = new SqlDataAdapter("select ID_Menu,name_Menu,father_Menu_ID,url,ID from tb_Menu order by ID_Menu", con);
+            DataTable dtt = new DataTable();
+            sda.Fill(dtt);
+            con.Close();
+            string txt = "";
+            for (int ii = 0; ii < dtt.Rows.Count; ii++)
+            {//对行循环
 
-            dt.Rows.Add("3_2_1", "供应商", "3_2", "", "1");
-            dt.Rows.Add("3_2_2", "员工", "3_2", "", "1");
-            dt.Rows.Add("4", "系统管理", "0", "", "1");
-            dt.Rows.Add("4_1", "用户管理", "4", "", "1");
-            dt.Rows.Add("4_2", "角色管理", "4", "", "1");
-            dt.Rows.Add("4_3", "系统设置", "4", "/www/www", "1");
+                for (int iii = 0; iii < dtt.Columns.Count; iii++)
+                {//对例循环
+                    if (iii != dtt.Columns.Count - 1)
+                    {
+                        if (dtt.Rows[ii][iii].ToString() != null)
+                            txt += dtt.Rows[ii][iii].ToString() + ",";//某单元格的值
+                    }
+                    else
+                        txt += dtt.Rows[ii][iii].ToString();
+                }
+                if (txt != null)
+                {
+
+                    String[] temp = txt.Split(',');
+                    string ID_Menu = temp[0];
+                    string name_Menu = temp[1];
+                    string fid = temp[2];
+                    string url = temp[3];
+                    string rid = temp[4];
+
+                    dt.Rows.Add(ID_Menu, name_Menu, fid, "", rid);
+                    txt = "";
+                }
+            }
             return dt;
         }
         #endregion  

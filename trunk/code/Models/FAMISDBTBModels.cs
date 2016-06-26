@@ -227,7 +227,7 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Menu>()
-                .Property(e => e.ID__Menu)
+                .Property(e => e.ID_Menu)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Menu>()

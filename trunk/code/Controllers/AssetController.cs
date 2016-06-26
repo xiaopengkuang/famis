@@ -164,13 +164,13 @@ namespace FAMIS.Controllers
                 String SQL_COUNTER = GetSQL_Select_Count_By_SeialNumberCond(cond,16);
                 int counter = runner.runSelectSQL_Counter(SQL_COUNTER, "total");
                 if (counter > 0)
-                {
+                {  
                     return false;
                 }
                 //更新Asset状态 再用:15
                int affect_count=update_Asset_state_By_SerialNumber(cond,15,16);
                if (affect_count!=list.Count)
-               {
+               { 
                    update_Asset_state_By_SerialNumber(cond,16,15);
                }
                return true;

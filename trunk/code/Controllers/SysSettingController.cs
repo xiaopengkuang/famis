@@ -57,19 +57,6 @@ namespace FAMIS.Controllers
         [HttpPost]
         public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
         {
-            /*StreamWriter sw = new StreamWriter("D:\\123456.txt");
-            sw.Write(staff.ID_Staff + "\r\n");
-            sw.Write(staff.code_Departmen + "\r\n");
-            sw.Write(staff.sex+ "\r\n");
-            sw.Write(staff.entry_Time + "\r\n");
-            sw.Write(staff.phoneNumber + "\r\n");
-            sw.Write(staff.email + "\r\n");
-            sw.Write(staff.effective_Flag+"\r\n");
-            sw.Write(staff.create_TIME + "\r\n");
-            sw.Write(staff.invalid_TIME + "\r\n");
-            sw.Write(staff._operator + "\r\n");
-            sw.Write(staff.name + "\r\n");
-            sw.Close();*/
 
             if (ModelState.IsValid)
             {
