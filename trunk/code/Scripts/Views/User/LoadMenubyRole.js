@@ -47,19 +47,7 @@ $(function () {
     tabClose();
     tabCloseEven();
 
-    /* 选择TAB时刷新内容
-        $('#tabs').tabs({
-            onSelect: function (title) {
-                var currTab = $('#tabs').tabs('getTab', title);
-                var iframe = $(currTab.panel('options').content);
-    
-                var src = iframe.attr('src');
-                if(src)
-                    $('#tabs').tabs('update', { tab: currTab, options: { content: createFrame(src)} });
-    
-            }
-        });
-    */
+ 
 })
 
 //初始化左侧
