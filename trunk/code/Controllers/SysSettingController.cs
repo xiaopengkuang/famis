@@ -123,8 +123,8 @@ namespace FAMIS.Controllers
 
 
             TreeViewCommon treeviewCommon = new TreeViewCommon();
-           //String jsonStr = treeviewCommon.GetAssetType(roleName);
-           String jsonStr = treeviewCommon.GetModule(roleName);
+          // String jsonStr = 
+            String jsonStr = treeviewCommon.GetModule(roleName);
             return jsonStr;
         }
        [HttpGet]

@@ -62,5 +62,6 @@ namespace FAMIS.Models
         public bool? flag { get; set; }
 
         public DateTime? Time_add { get; set; }
+        public double? Total_price { get; set; }
     }
 }

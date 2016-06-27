@@ -249,7 +249,7 @@ namespace FAMIS.ViewCommon
 
         
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
-            SqlDataAdapter sda = new SqlDataAdapter("select Department_ID,name_Department,ID_Father_Department,url,ID from tb_department order by ID_Department", con);
+            SqlDataAdapter sda = new SqlDataAdapter("select ID_Department,name_Department,ID_Father_Department,url,ID from tb_department order by ID_Department", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
             con.Close();
