@@ -10,7 +10,6 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-      
         [StringLength(8)]
         public string ID_Menu { get; set; }
 

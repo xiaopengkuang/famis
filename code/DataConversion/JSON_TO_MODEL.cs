@@ -33,5 +33,19 @@ namespace FAMIS.DataConversion
             return tb;
         }
 
+        public tb_customAttribute ConverJsonToTable(Json_customAttr data)
+        {
+            tb_customAttribute tb = new tb_customAttribute();
+            tb.assetTypeID = data.zclb;
+            tb.flag = data.flag;
+            tb.length = data.zdcd;
+            tb.necessary = data.sfbs;
+            tb.SYSID = data.xtid;
+            tb.title = data.sxbt;
+            tb.type = data.sxlx;
+            tb.type_value = data.glzd;
+            return tb;
+        }
+
     }
 }
