@@ -16,12 +16,118 @@
 <html>
 <head>
     <script type="text/javascript" language="javascript">
+       
+       
+      
         function myrefresh() {
+           
             window.location.reload();
+        }
+        function LoadRule()
+        {
+            
+          
+            $.ajax({
+
+                type: "post",
+                url: "/SysSetting/GetFormerRule",
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                    
+                    var rule = "";
+                    var bits = "";
+                    var head="";
+                    var arr_rule = String(result).split('o');
+                    for(var i=0;i<arr_rule.length;i++)
+                    {
+                        head= arr_rule[i].split(',')[0];
+                        rule = arr_rule[i].split(',')[1];
+                        bits = arr_rule[i].split(',')[2];
+                       
+                        switch (head) {
+                            case "ZC":
+                                {
+                                  
+                                    $('#ZC_serial').val(rule);
+                                  
+                                    $("#ZC_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                  
+                                }
+                                break;
+                            case "YH":
+                                {
+                                    $('#YH_serial').val(rule);
+                                    $("#YH_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+                                break;
+                            case "LY":
+                                {
+                                    $('#LY_serial').val(rule);
+                                    $("#LY_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+                                break;
+                            case "DB":
+                                {
+                                    $('#DB_serial').val(rule);
+                                    $("#DB_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+
+                                break;
+                            case "WX":
+                                {
+                                    $('#WX_serial').val(rule);
+                                    $("#WX_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+                                break;
+                            case "JC":
+                                {
+                                    $('#JC_serial').val(rule);
+                                    $("#JC_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+                                break;
+                            case "GH":
+                                {
+                                    $('#GH_serial').val(rule);
+                                    $("#GH_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+
+                                break;
+                            case "JS":
+                                {
+                                    $('#JS_serial').val(rule);
+                                    $("#JS_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+
+                                break;
+                            case "QL":
+                                {
+                                    $('#QL_serial').val(rule);
+                                    $("#QL_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+                                break;
+                            case "PD":
+                                {
+                                    $('#PD_serial').val(rule);
+                                    $("#PD_Bits").find("option:contains('" + bits + "')").attr("selected", true)
+                                }
+                                break;
+                         
+                        }
+                     
+                    }
+
+
+                }, error: function (msg) {
+
+                    alert("未能加载规则库！");
+                }
+            });
         }
         $(document).ready(function () {
             //多选框
-
+            LoadRule();
+        
             //为登录按钮注册单击事件
             $('#Add_Rule_btn').click(function () {
                 var zc = "ZC" + "," + $("#ZC_serial").val() + "," + $("#ZC_Bits").val();
@@ -32,13 +138,14 @@
                 var gh = "GH" + "," + $("#GH_serial").val() + "," + $("#GH_Bits").val();
                 var js = "JS" + "," + $("#JS_serial").val() + "," + $("#JS_Bits").val();
                 var ql = "QL" + "," + $("#QL_serial").val() + "," + $("#QL_Bits").val();
+                var db = "DB" + "," + $("#DB_serial").val() + "," + $("#DB_Bits").val();
                 var pd = "PD" + "," + $("#PD_serial").val() + "," + $("#PD_Bits").val();
                 $.ajax({
 
                     type: "post",
                     url: "/Rule/AddNewRule",
                     // data: {ZC:zc, YH:yh,LY:ly,WX:wx,JC:jc,GH:gh,JS:js,QL:ql,PD:pd},
-                    data: { JSON: zc + "o" + yh + "o" + ly + "o" + wx + "o" + jc + "o" + gh + "o" + js + "o" + ql + "o" + pd },
+                    data: { JSON: zc + "o" + yh + "o" + ly + "o" + wx + "o" + jc + "o" + gh + "o" + js + "o" + ql + "o" + pd+"o"+ db},
                     datatype: "json",//数据类型
 
                     success: function (result) {
@@ -409,7 +516,7 @@
         <div title="资产编号生成规则" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
             <div>
 
-                <label for="ZC_serial">固定资产：<input id="ZC_serial" name="ZC_serial" type="text" value="ZCyyMMDD" /></label>
+                <label for="ZC_serial">固定资产： <input  class="easyui-textbox" id="ZC_serial" name="ZC_serial" type="text"  /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="ZC_Bits" name="ZC_Bits">
@@ -733,7 +840,7 @@
                 </select>
             </label>
             <p></p>
-            <a href="#" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'" id="YH_serial_btn">预览</a>
+            <a href="#" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'" id="yh_yl">预览</a>
 
         </div>
         <div title="单据生成规则" data-options="iconCls:'icon-ok'" style="padding:10px;">
