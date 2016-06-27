@@ -17,7 +17,7 @@ namespace FAMIS.Controllers
 {
     public class CommonController : Controller
     {
-        FAMISDBTBModels DBConnecting = new FAMISDBTBModels();
+        FAMISDBTBModels DB = new FAMISDBTBModels();
         
         
         
@@ -89,7 +89,7 @@ namespace FAMIS.Controllers
         public dto_rule_Generate getRuleByType(String ruleType)
         {
             dto_rule_Generate rule = null;
-            List<tb_Rule_Generate> list= DBConnecting.tb_Rule_Generate.Where(a => a.Name_SeriaType == ruleType).OrderByDescending(a => a.id).Take(1).ToList();
+            List<tb_Rule_Generate> list= DB.tb_Rule_Generate.Where(a => a.Name_SeriaType == ruleType).OrderByDescending(a => a.id).Take(1).ToList();
             if (list.Count() == 1)
             {
                 rule = new dto_rule_Generate();
@@ -112,7 +112,7 @@ namespace FAMIS.Controllers
 
             if (type.Equals("ZC"))
             {
-                List<tb_Asset> list = DBConnecting.tb_Asset.Where(b => b.serial_number.Length == targtLength).OrderByDescending(a => a.serial_number).Take(1).ToList();
+                List<tb_Asset> list = DB.tb_Asset.Where(b => b.serial_number.Length == targtLength).OrderByDescending(a => a.serial_number).Take(1).ToList();
                 if (list.Count() > 0)
                 {
                     list.ForEach(item =>
@@ -127,7 +127,7 @@ namespace FAMIS.Controllers
                 }
             }else if(type.Equals("LY"))
             {
-                List<tb_Asset_collar> list = DBConnecting.tb_Asset_collar.Where(b => b.serial_number.Length == targtLength).OrderByDescending(a => a.serial_number).Take(1).ToList();
+                List<tb_Asset_collar> list = DB.tb_Asset_collar.Where(b => b.serial_number.Length == targtLength).OrderByDescending(a => a.serial_number).Take(1).ToList();
                 if (list.Count() > 0)
                 {
                     list.ForEach(item =>
@@ -214,111 +214,8 @@ namespace FAMIS.Controllers
 
 
         }
+       
 
-
-
-        ///// <summary>
-        //  ///     从 reader 对象中逐行读取记录并将记录转化为 T 类型的集合
-        //  /// </summary>
-        //  /// <typeparam name="T">目标类型参数</typeparam>
-        //  /// <param name="reader">实现 IDataReader 接口的对象。</param>
-        //  /// <returns>指定类型的对象集合。</returns>
-        //  public static List<T> ConvertToObject<T>(IDataReader reader)
-        //      where T : class
-        //  {
-        //      List<T> list = new List<T>();
-        //      T obj = default(T);
-        //      Type t = typeof(T);
-        //      Assembly ass = t.Assembly;
-
-        //      Dictionary<string, PropertyInfo> propertys = CommonController.GetFields<T>(reader);
-        //      PropertyInfo p = null;
-        //      if (reader != null)
-        //      {
-        //          while (reader.Read())
-        //          {
-        //              obj = ass.CreateInstance(t.FullName) as T;
-        //              foreach (string key in propertys.Keys)
-        //              {
-        //                  p = propertys[key];
-        //                  p.SetValue(obj, CommonController.ChangeType(reader[key], p.PropertyType));
-        //             }
-        //             list.Add(obj);
-        //         }
-        //      }
-  
-        //      return list;
-        //  }
-  
-        //  /// <summary>
-        //  ///     从 DataTale 对象中逐行读取记录并将记录转化为 T 类型的集合
-        //  /// </summary>
-        //  /// <typeparam name="T">目标类型参数</typeparam>
-        //  /// <param name="reader">DataTale 对象。</param>
-        //  /// <returns>指定类型的对象集合。</returns>
-        //  public static List<T> ConvertToObject<T>(DataTable table)
-        //      where T : class
-        //  {
-        //      return table == null
-        //          ? new List<T>()
-        //          : CommonController.ConvertToObject<T>(table.CreateDataReader() as IDataReader);
-        //  }
-  
-        //  /// <summary>
-        //  ///     将数据转化为 type 类型
-        //  /// </summary>
-        //  /// <param name="value">要转化的值</param>
-        //  /// <param name="type">目标类型</param>
-        //  /// <returns>转化为目标类型的 Object 对象</returns>
-        //  private static object ChangeType(object value, Type type)
-        //  {
-        //      if (type.FullName == typeof(string).FullName)
-        //      {
-        //          return Convert.ChangeType(Convert.IsDBNull(value) ? null : value, type);
-        //      }
-        //      if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
-        //      {
-        //          NullableConverter convertor = new NullableConverter(type);
-        //          return Convert.IsDBNull(value) ? null : convertor.ConvertFrom(value);
-        //      }
-        //      return value;
-        //  }
-  
-        //  /// <summary>
-        //  ///     获取reader存在并且在 T 类中包含同名可写属性的集合
-        //  /// </summary>
-        //  /// <param name="reader">
-        //  ///     可写域的集合
-        //  /// </param>
-        //  /// <returns>
-        //  ///     以属性名为键，PropertyInfo 为值得字典对象
-        //  /// </returns>
-        //  private static Dictionary<string, PropertyInfo> GetFields<T>(IDataReader reader)
-        //  {
-        //      Dictionary<string, PropertyInfo> result = new Dictionary<string, PropertyInfo>();
-        //      int columnCount = reader.FieldCount;
-        //      Type t = typeof(T);
-  
-        //     PropertyInfo[] properties = t.GetProperties();
-        //     if (properties != null)
-        //     {
-        //         List<string> readerFields = new List<string>();
-        //         for (int i = 0; i < columnCount; i++)
-        //         {
-        //             readerFields.Add(reader.GetName(i));
-        //         }
-        //         IEnumerable<PropertyInfo> resList =
-        //             (from PropertyInfo prop in properties
-        //              where prop.CanWrite && readerFields.Contains(prop.Name)
-        //              select prop);
- 
-        //         foreach (PropertyInfo p in resList)
-        //         {
-        //             result.Add(p.Name, p);
-        //         }
-        //     }
-        //     return result;
-        // }
 
     }
 }

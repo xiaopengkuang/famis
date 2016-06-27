@@ -31,5 +31,11 @@ namespace FAMIS.Models
         public string tb_Ref { get; set; }
 
         public int? ratio { get; set; }
+
+        public bool? active_flag { get; set; }
+
+        public bool? isTree { get; set; }
+
+        
     }
 }

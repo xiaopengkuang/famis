@@ -186,8 +186,9 @@ namespace FAMIS.Controllers
                             address = r.address
                         }).ToArray(),
 
-                        sql=getSearchTreeSQL(""),
-                countre=couterTest() 
+                        sql=getSearchTreeSQL("")
+                //        ,
+                //countre=couterTest() 
             };
             return Json(json, JsonRequestBehavior.AllowGet);
         }
@@ -311,10 +312,10 @@ namespace FAMIS.Controllers
              }
              result_tree_department.Clear();
              sb_tree_department.Clear();
-             List<dto_AssetType> list_dto_AT = new List<dto_AssetType>();
+             List<dto_TreeNode> list_dto_AT = new List<dto_TreeNode>();
              list_de_AT.ForEach(item =>
              {
-                 dto_AssetType tmp_dto_AT = new dto_AssetType();
+                 dto_TreeNode tmp_dto_AT = new dto_TreeNode();
 
                  tmp_dto_AT.id = item.assetTypeCode.ToString();
                  tmp_dto_AT.fatherID = item.father_MenuID_Type.ToString();
@@ -323,29 +324,31 @@ namespace FAMIS.Controllers
                  tmp_dto_AT.orderID = item.orderID;
                  list_dto_AT.Add(tmp_dto_AT);
              });
-             DataSet ds_de = ConvertToDataSet(list_dto_AT);
-             DataTable dt_de = new DataTable();
+             return TreeListToString(list_dto_AT);
+             //DataSet ds_de = ConvertToDataSet(list_dto_AT);
+             //DataTable dt_de = new DataTable();
              
-             dt_de = ds_de.Tables[0];
+             //dt_de = ds_de.Tables[0];
 
-             string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
-             result_tree_department.Clear();
-             sb_tree_department.Clear();
-             return json;
+             //string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
+             //result_tree_department.Clear();
+             //sb_tree_department.Clear();
+             //return json;
          }
          [HttpPost]
          public String loadSearchTreeByRole(String roleName)
          {
              List<dto_TreeNode> tree = new List<dto_TreeNode>();
-            
              tree = getTreeSearchNodes(roleName);
-             DataSet ds_tree = ConvertToDataSet(tree);
-             DataTable dt_tree = new DataTable();
-             dt_tree = ds_tree.Tables[0];
-             result_tree_SearchTree.Clear();
-             sb_tree_SearchTree.Clear();
-             string json = GetTreeJsonByTable_TreeSearch(dt_tree, "id", "nameText", "url", "fatherID", "0");
-             return json;
+
+             return TreeListToString(tree);
+             //DataSet ds_tree = ConvertToDataSet(tree);
+             //DataTable dt_tree = new DataTable();
+             //dt_tree = ds_tree.Tables[0];
+             //result_tree_SearchTree.Clear();
+             //sb_tree_SearchTree.Clear();
+             //string json = GetTreeJsonByTable_TreeSearch(dt_tree, "id", "nameText", "url", "fatherID", "0");
+             //return json;
          }
 
 
@@ -363,11 +366,41 @@ namespace FAMIS.Controllers
              {
                  case "departmentTree": tree=loadDepartment(); break;
                  case "assetType": tree = loadAssetType(); ; break;
-                 case "2": ; break;
+                 case "Dict":tree=loadTree_Dict() ; break;
                  default: tree= "" ; break;
              }
              return tree;
          }
+
+        /// <summary>
+        /// 加载没有外接表的
+         ///  where p.tb_Ref==null
+        /// </summary>
+        /// <returns></returns>
+         public String loadTree_Dict()
+         {
+             var data = from p in DB_C.tb_dataDict 
+                        where p.active_flag==true 
+                        where p.tb_Ref==null
+                        select p;
+             List<dto_TreeNode> list = new List<dto_TreeNode>();
+             foreach (var item in data)
+             {
+                 dto_TreeNode node = new dto_TreeNode();
+                 node.fatherID = item.father_ID.ToString();
+                 node.id = item.ID.ToString();
+                 node.nameText = item.name_dataDict;
+                 node.orderID = item.orderID==null?item.ID.ToString():item.orderID.ToString();
+                 node.url = item.url==null?"javascript:void(0)":item.url;
+                 list.Add(node);
+             }
+             //string result = TreeListToString(list);
+             //int aaa = 0;
+
+             //return result;
+             return TreeListToString(list);
+         }
+
 
          [HttpPost]
          public JsonResult load_attrs_current(int? page, int? rows, int? assetTypeID)
@@ -1377,22 +1410,110 @@ namespace FAMIS.Controllers
 
 
         }
+        public JsonResult loadTreeGrid_dictPara(int id)
+        {
+            //判断其是否是外接表
 
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       where p.ID_dataDict == id
+                       select new { 
+                       id=p.ID,
+                       name=p.name_para,
+                       _parentId=p.fatherid,
+                       description = p.description
+                       };
+
+            var json = new
+            {
+                total = data.Count(),
+                rows = data.ToArray()
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+
+        }
 
         [HttpPost]
-        public JsonResult loadTreeGrid(String name)
+        public JsonResult loadTreeGrid(String name,int? dictID)
         {
             if (name == null || name == "")
             {
                 return null;
             }
+
             JsonResult jsR = new JsonResult();
+            if (dictID == null)
+            {
+                return jsR;
+            }
             switch(name){
                 case "assetType": jsR = loadTreeGrid_AssetType(); break;
                 case "department": jsR = loadTreeGrid_Department(); break;
-                default: jsR= null; break;
+                case "dictPara": jsR = loadTreeGrid_dictPara((int)dictID); break;
+                default: ; break;
             }
             return jsR;
+        }
+
+        [HttpPost]
+        public JsonResult loadDataGrid(int? page, int? rows,String name, int? dictID)
+        {
+            if (name == null || name == "")
+            {
+                return null;
+            }
+
+            JsonResult jsR = new JsonResult();
+            if (dictID == null)
+            {
+                return jsR;
+            }
+            switch (name)
+            {
+                //case "assetType": jsR = loadTreeGrid_AssetType(); break;
+                //case "department": jsR = loadTreeGrid_Department(); break;
+                case "dictPara": jsR = loadDataGrid_dictPara(page,rows,dictID); break;
+                default: ; break;
+            }
+            return jsR;
+        }
+
+
+        public JsonResult loadDataGrid_dictPara(int? page, int? rows,int? dictID)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+
+            if (dictID == null)
+            {
+                return NULL_DATA();
+            }
+
+            var data = (from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       where p.ID_dataDict == dictID
+                       select new { 
+                       id=p.ID,
+                       name=p.name_para,
+                       description = p.description
+                       }).OrderByDescending(a=>a.id);
+
+            int count = data.Count();
+
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
+
+            var json_data = new
+            {
+                total = count,
+                //rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                rows = data.ToList().ToArray()
+
+
+            };
+            return Json(json_data, JsonRequestBehavior.AllowGet);
+
+
         }
 
 
@@ -1418,6 +1539,31 @@ namespace FAMIS.Controllers
 
         }
 
+        [HttpPost]
+        public int isTreeType_DictData(int? id)
+        {
+            if (id == null)
+            {
+                return 0;
+            }
+
+            //从DictTable中读书数据
+            var data = from p in DB_C.tb_dataDict
+                       where p.active_flag == true
+                       where p.ID == id
+                       select p;
+            if (data.Count() != 1)
+            {
+                return 0;
+            }
+
+            foreach (var item in data)
+            {
+                return item.isTree == true ? 1 : 0;
+            }
+            return 0;
+
+        }
 
         /// <summary>
         /// 加载自定义属性的类别
