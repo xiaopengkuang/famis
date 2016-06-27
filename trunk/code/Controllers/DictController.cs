@@ -20,6 +20,9 @@ namespace FAMIS.Controllers
 
 
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
+        JSON_TO_MODEL convertHandler = new JSON_TO_MODEL();
+
+
         StringBuilder result_tree_department = new StringBuilder();
         StringBuilder sb_tree_department = new StringBuilder();
 
@@ -135,6 +138,8 @@ namespace FAMIS.Controllers
         }
 
 
+
+
         public ActionResult edit_departmentView(int? id, String name)
         {
             if (id == null)
@@ -147,6 +152,19 @@ namespace FAMIS.Controllers
             return View("edit_department");
         }
 
+
+
+        public ActionResult add_customAttrView(int? id,String name)
+        {
+            if (name==null||name==""||id == null || id <= 0)
+            {
+                ViewBag.info = "add_customAttrView";
+                return View("Error");
+            }
+            ViewBag.id_assetType=id;
+
+            return View("add_customAttr");
+        }
 
         
 
@@ -343,13 +361,133 @@ namespace FAMIS.Controllers
              switch (name)
              {
                  case "departmentTree": tree=loadDepartment(); break;
-                 case "1": ; break;
+                 case "assetType": tree = loadAssetType(); ; break;
                  case "2": ; break;
                  default: tree= "" ; break;
              }
              return tree;
          }
 
+         [HttpPost]
+         public JsonResult load_attrs_current(int? page, int? rows, int? assetTypeID)
+         {
+             page = page == null ? 1 : page;
+             rows = rows == null ? 15 : rows;
+
+             if (assetTypeID == null)
+             {
+                 return NULL_DATA();
+
+             }
+             //获取当前属性
+
+             var data = (from a in DB_C.tb_customAttribute
+                         where a.assetTypeID == assetTypeID
+                         join b in DB_C.tb_customAttribute_Type on a.type equals b.ID into temp
+                         from tt in temp.DefaultIfEmpty()
+                         join c in DB_C.tb_dataDict on a.type_value equals c.ID into temp2
+                         from tt2 in temp2.DefaultIfEmpty()
+                         select new
+                         {
+                             id = a.ID,
+                             xtID=a.SYSID,
+                             sxbt = a.title,
+                             zdcd=a.length,
+                             sfbx=a.necessary,
+                             sxlx=tt.name==null?"":tt.name,
+                             glzdlx = tt2.name_dataDict == null ? "" : tt2.name_dataDict//这里主要第二个集合有可能为空。需要判断
+                         }).OrderByDescending(a=>a.id);
+
+
+
+             int count = data.Count();
+
+             int skipindex = ((int)page - 1) * (int)rows;
+             int rowsNeed = (int)rows;
+
+              var json_data = new
+             {
+                 total = count,
+                 rows =  data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+
+             };
+              return Json(json_data, JsonRequestBehavior.AllowGet);
+
+
+         }
+
+
+         [HttpPost]
+         public JsonResult load_attrs_inhert(int? page, int? rows, int? assetTypeID)
+         {
+             page = page == null ? 1 : page;
+             rows = rows == null ? 15 : rows;
+
+             if (assetTypeID == null)
+             {
+                 return NULL_DATA();
+             }
+            //迭代获取数据
+             //获取其所有父节点
+             List<int?> ids=new List<int?>();
+             var ids_data = GetParents_AsseType(assetTypeID);
+             foreach (var q in ids_data)
+             {
+                 ids.Add(q.ID);
+             }
+             ids.Remove(assetTypeID);
+
+             //int selectID_base = (int)assetTypeID;
+             //根据父节点获取相应的属性
+             var data = (from a in DB_C.tb_customAttribute
+                         where ids.Contains(a.assetTypeID)
+                         join b in DB_C.tb_customAttribute_Type on a.type equals b.ID into temp
+                         from tt in temp.DefaultIfEmpty()
+                         join c in DB_C.tb_dataDict on a.type_value equals c.ID into temp2
+                         from tt2 in temp2.DefaultIfEmpty()
+                         select new
+                         {
+                             id = a.ID,
+                             xtID = a.SYSID,
+                             sxbt = a.title,
+                             zdcd = a.length,
+                             sfbx = a.necessary,
+                             sxlx = tt.name == null ? "" : tt.name,
+                             glzdlx = tt2.name_dataDict == null ? "" : tt2.name_dataDict//这里主要第二个集合有可能为空。需要判断
+                         }).OrderByDescending(a => a.id);
+
+             int count = data.Count();
+
+             int skipindex = ((int)page - 1) * (int)rows;
+             int rowsNeed = (int)rows;
+
+             var json_data = new
+             {
+                 total = count,
+                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+
+             };
+             return Json(json_data, JsonRequestBehavior.AllowGet);
+
+         }
+
+
+         public IEnumerable<tb_AssetType> GetSonID_AsseType(int? p_id)
+         {
+             var query = from c in DB_C.tb_AssetType
+                         where c.father_MenuID_Type == p_id
+                         select c;
+
+             return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_AsseType(t.ID)));
+         }
+         public IEnumerable<tb_AssetType> GetParents_AsseType(int? id)
+         {
+             var query = from c in DB_C.tb_AssetType
+                         where c.ID == id
+                         select c;
+
+             return query.ToList().Concat(query.ToList().SelectMany(t => GetParents_AsseType(t.father_MenuID_Type)));
+         }  
          public String loadDepartment()
          {
              List<tb_department> list_ORG = DB_C.tb_department.Where(a=>a.effective_Flag==true).ToList();
@@ -369,6 +507,39 @@ namespace FAMIS.Controllers
              
 
          }
+
+         public String loadAssetType()
+         {
+               var q = from p in DB_C.tb_AssetType
+                     where p.flag == true
+                     select new
+                     {
+                         id=p.ID,
+                         nameText=p.name_Asset_Type,
+                         url=p.url,
+                         orderID=p.orderID,
+                         fatherID=p.father_MenuID_Type
+                     };
+               List<dto_TreeNode> list = new List<dto_TreeNode>();
+               foreach (var p in q)
+               {
+                   dto_TreeNode node = new dto_TreeNode();
+                   node.id = p.id.ToString();
+                   node.nameText = p.nameText;
+                   node.orderID = p.orderID;
+                   node.fatherID = p.fatherID.ToString();
+                   node.url = p.url;
+                   list.Add(node);
+               }
+
+               return TreeListToString(list);
+         }
+
+        
+
+
+
+         
 
 
          public String TreeListToString(List<dto_TreeNode> list)
@@ -393,7 +564,6 @@ namespace FAMIS.Controllers
              else {
                  return "";
              }
-
 
             
          }
@@ -455,6 +625,9 @@ namespace FAMIS.Controllers
              }
              return nodesAll;
          }
+
+
+
          public List<dto_TreeNode> getZCLBNodes(dto_TreeNode fathernode)
          {
              List<tb_AssetType> list_ORG = DB_C.tb_AssetType.ToList();
@@ -474,7 +647,7 @@ namespace FAMIS.Controllers
              return list;
          }
 
-
+       
          public List<dto_TreeNode> getSYRNodes(dto_TreeNode fathernode)
          {
              List<tb_staff> list_ORG = DB_C.tb_staff.ToList();
@@ -542,7 +715,6 @@ namespace FAMIS.Controllers
             if (json_data != null)
             {
                 try {
-                    JSON_TO_MODEL convertHandler = new JSON_TO_MODEL();
                     
                     tb_AssetType at = convertHandler.ConverJsonToTable(json_data);
                     //设置默认url和orderID
@@ -570,8 +742,7 @@ namespace FAMIS.Controllers
             {
                 try {
                     tb_department tb_dp = new tb_department();
-                    JSON_TO_MODEL conver = new JSON_TO_MODEL();
-                    tb_dp = conver.ConverJsonToTable(dp);
+                    tb_dp =convertHandler.ConverJsonToTable(dp);
                     //获取用户信息以及插入时间
                     //获取操作用户
                     tb_dp._operator = "KXP";
@@ -586,6 +757,37 @@ namespace FAMIS.Controllers
                     return 1;
                 }
                 catch(Exception e){
+                }
+            }
+            return 0;
+
+        }
+
+
+        [HttpPost]
+        public int Handler_InsertCAttr(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_customAttr json_data = serializer.Deserialize<Json_customAttr>(data);
+            if (json_data != null && json_data.zclb != null)
+            {
+                //TODO：优化 先判断 是否存在该资产类型
+                
+                //
+                try
+                {
+                    tb_customAttribute tb_CAttr = convertHandler.ConverJsonToTable(json_data);
+
+                    //初始化相应的数据
+                    tb_CAttr.time = DateTime.Now;
+                    //TODO:
+                    tb_CAttr.operatorName = "KXP";
+                    DB_C.tb_customAttribute.Add(tb_CAttr);
+                    DB_C.SaveChanges();
+                    return 1;
+                }
+                catch (Exception e)
+                {
                 }
             }
             return 0;
@@ -1176,6 +1378,44 @@ namespace FAMIS.Controllers
 
             }
 
+        }
+
+
+        /// <summary>
+        /// 加载自定义属性的类别
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public String load_CAttrType()
+        {
+
+            var data = from q in DB_C.tb_customAttribute_Type
+                       select new { 
+                           id=q.ID,
+                           text = q.name,
+                           description=q.description
+                       };
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+
+            String json = jss.Serialize(data).ToString().Replace("\\", "");
+            return json;
+        }
+
+
+
+
+
+
+        public JsonResult NULL_DATA()
+        {
+            List<dto_null> list_null = new List<dto_null>();
+            var json_NULL = new
+            {
+                total = 0,
+                rows = list_null.ToArray()
+
+            };
+            return Json(json_NULL, JsonRequestBehavior.AllowGet);
         }
     }
 }

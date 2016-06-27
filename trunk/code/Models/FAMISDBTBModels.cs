@@ -36,6 +36,10 @@ namespace FAMIS.Models
         public virtual DbSet<tb_supplier> tb_supplier { get; set; }
         public virtual DbSet<tb_user> tb_user { get; set; }
 
+        public virtual DbSet<tb_customAttribute> tb_customAttribute { get; set; }
+        public virtual DbSet<tb_customAttribute_Type> tb_customAttribute_Type { get; set; }
+
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<tb_Address_AssetStore>()
