@@ -148,7 +148,7 @@
                     var JS_Data = RoleID;
                 else
                     var JS_Data = RoleID + "o" + s;
-
+                alert(JS_Data);
 
                 $.ajax({
 
@@ -379,8 +379,8 @@
 
                         var arr = str.split(",");
                         for (var i = 0; i <= str.split(",").length; i++) {
-                            if (arr[i].split("_").length == 1)
-                                continue;
+                           // if (arr[i].split("_").length == 1)
+                            //    continue;
                             var node = $('#mtree').tree('find', arr[i]);
                             $('#mtree').tree('check', node.target);
                         }
