@@ -1,0 +1,120 @@
+﻿$(function () {
+
+    loadinitData()
+});
+
+function loadinitData()
+{
+
+    //加载属性类别
+    var name = "SXLX";
+    var url = "/Dict/load_CAttrType";
+    load_combobox(name,url);
+}
+
+
+function load_combobox(name,url)
+{
+    $("#" + name).combobox({
+        valueField: 'id',
+        method: 'POST',
+        textField: 'text',
+        url:url,
+        onSelect: function (rec) {
+            $('#' + name).combobox('setValue', rec.id);
+            $('#' + name).combobox('setText', rec.text);
+
+            //针对该页面定制化数据
+            if (name == "SXLX")
+            {
+                opendicType();
+            }
+           
+            //$("description_sxlx").val(rec.description)
+        },
+        onLoadSuccess: function () {
+            var data = $('#' + name).combobox('getData');
+            if (data.length > 0) {
+                $('#' + name).combobox('select', data[0].id);
+            }
+        }
+    });
+}
+
+function opendicType()
+{
+    //获取选中值
+    var sxlx = $("#SXLX").combobox("getValue");
+    //这里可以优化成读数据看书否需要进行  
+    if (sxlx==3) {
+        $("#dicType").show(100);
+    } else {
+        $("#dicType").hide(100);
+    }
+}
+
+
+function submitForm(id) {
+
+    //获取数据
+    var xtid = $("#XTID").val();
+    var sxbt = $("#SXBT").val();
+    var zdcd = $("#ZDCD").val()
+
+    var sfbs = $("#SFBS").is(':checked');
+    var sxlx = $("#SXLX").combobox("getValue");
+    var glzd = $("#GLZD").combobox("getValue");
+    //alert(sfbs);
+
+
+    var data = {
+        "xtid": xtid,
+        "sxbt": sxbt,
+        "zdcd": zdcd,
+        "sfbs": sfbs,
+        "zclb": id,
+        "glzd": glzd,
+        "sxlx": sxlx,
+        "flag":true
+    };
+    //alert(JSON.stringify(data));
+    $.ajax({
+        url: "/Dict/Handler_InsertCAttr",
+        type: 'POST',
+        data: {
+            "data": JSON.stringify(data),
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            var result
+            if (data > 0) {
+                try {
+                    parent.$("#modalwindow").window("close");
+                    parent.$("#datagrid_current").datagrid('reload');
+                } catch (e) {
+                }
+            } else {
+                result = "系统正忙，请稍后继续！";
+                $.messager.alert('警告', result, 'warning');
+            }
+        }
+    });
+}
+
+function cancelForm() {
+    parent.$("#modalwindow").window("close");
+}
+
+
+
+//采用jquery easyui loading css效果
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
+
