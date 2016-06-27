@@ -55,6 +55,25 @@ namespace FAMIS.Controllers
 
         }
         [HttpPost]
+        public string GetFormerRule() { 
+        string rule_Json="";
+        int temp=0;
+        IEnumerable<tb_Rule_Generate> ruletable = from m in db.tb_Rule_Generate
+                                                  select m;
+
+        foreach (tb_Rule_Generate rule_row in ruletable)
+        {
+            if(temp!=ruletable.Count()-1)
+            rule_Json += rule_row.Name_SeriaType+","+rule_row.Rule_Generate + ","+rule_row.serialNum_length+"o";
+            else
+                rule_Json += rule_row.Name_SeriaType + "," + rule_row.Rule_Generate + "," + rule_row.serialNum_length;
+            temp++;
+
+        }
+        return rule_Json;
+        
+        }
+        [HttpPost]
         public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
         {
 
