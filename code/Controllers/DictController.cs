@@ -21,6 +21,7 @@ namespace FAMIS.Controllers
 
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
         JSON_TO_MODEL convertHandler = new JSON_TO_MODEL();
+        CommonConversion commonConversion = new CommonConversion();
 
 
         StringBuilder result_tree_department = new StringBuilder();
@@ -383,6 +384,7 @@ namespace FAMIS.Controllers
 
              var data = (from a in DB_C.tb_customAttribute
                          where a.assetTypeID == assetTypeID
+                         where a.flag==true
                          join b in DB_C.tb_customAttribute_Type on a.type equals b.ID into temp
                          from tt in temp.DefaultIfEmpty()
                          join c in DB_C.tb_dataDict on a.type_value equals c.ID into temp2
@@ -441,6 +443,7 @@ namespace FAMIS.Controllers
              //根据父节点获取相应的属性
              var data = (from a in DB_C.tb_customAttribute
                          where ids.Contains(a.assetTypeID)
+                         where a.flag == true
                          join b in DB_C.tb_customAttribute_Type on a.type equals b.ID into temp
                          from tt in temp.DefaultIfEmpty()
                          join c in DB_C.tb_dataDict on a.type_value equals c.ID into temp2
@@ -476,6 +479,7 @@ namespace FAMIS.Controllers
          {
              var query = from c in DB_C.tb_AssetType
                          where c.father_MenuID_Type == p_id
+                         where c.flag==true
                          select c;
 
              return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_AsseType(t.ID)));
@@ -484,6 +488,7 @@ namespace FAMIS.Controllers
          {
              var query = from c in DB_C.tb_AssetType
                          where c.ID == id
+                         where c.flag == true
                          select c;
 
              return query.ToList().Concat(query.ToList().SelectMany(t => GetParents_AsseType(t.father_MenuID_Type)));
@@ -790,6 +795,39 @@ namespace FAMIS.Controllers
                 {
                 }
             }
+            return 0;
+
+        }
+
+        [HttpPost]
+        public int Handler_deleteCAttr(String ids)
+        {
+            if(ids==null)
+            {
+                return 0;
+            }
+
+            List<int> id_list = commonConversion.StringToIntList(ids);
+
+            var target = from p in DB_C.tb_customAttribute
+                         where p.flag == true
+                         where id_list.Contains(p.ID) 
+                          select p;
+             if (target.Count()< 1)
+            {
+                return 0;
+            }
+            try{
+
+                foreach(var q in target)
+                {
+                    q.flag = false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }catch(Exception e){
+            }
+
             return 0;
 
         }

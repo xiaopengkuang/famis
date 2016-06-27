@@ -75,7 +75,7 @@ function loadDataGridAttrs(datagrid,url,toolbar)
         pageNumber: 1, //默认显示第几页 
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
-            { field: 'ID', checkbox: true, width: 50, hidden: toolbar },
+            { field: 'id', checkbox: true, width: 50, hidden: toolbar },
             { field: 'xtID', title: '系统ID', width: 50 },
             { field: 'sxbt', title: '属性标题', width: 100 },
             { field: 'zdcd', title: '最大长度', width: 50 },
@@ -84,7 +84,7 @@ function loadDataGridAttrs(datagrid,url,toolbar)
             { field: 'glzdlx', title: '关联字典类型', width: 100 }
            
         ]],
-        singleSelect: true, //允许选择多行
+        singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
@@ -105,18 +105,24 @@ function loadPageTool(datagrid, toolbarDisable)
                 if (toolbarDisable) {
                     return;
                 }
-                //获取选中的树节点
-                var node = $('#tree_assetType').tree('getSelected');
-                if (node != null) {
-                    var titleName = "自定义属性-添加";
-                    var url = "/Dict/add_customAttrView?id=" + node.id + "&name=" + node.text;
-                    openModelWindow(url,titleName)
 
-                } else {
-                    $.messager.alert('提示', '请选择资产类别!', 'error');
-                    return;
+
+                if (datagrid == "datagrid_current")
+                {
+                    //获取选中的树节点
+                    var node = $('#tree_assetType').tree('getSelected');
+                    if (node != null) {
+                        var titleName = "自定义属性-添加";
+                        var url = "/Dict/add_customAttrView?id=" + node.id + "&name=" + node.text;
+                        openModelWindow(url, titleName)
+
+                    } else {
+                        $.messager.alert('提示', '请选择资产类别!', 'error');
+                        return;
+                    }
+                    //alert("选中的是：" + node.id);
                 }
-                //alert("选中的是：" + node.id);
+              
 
             }
         }, {
@@ -128,8 +134,28 @@ function loadPageTool(datagrid, toolbarDisable)
                 if (toolbarDisable) {
                     return;
                 }
-                //获取选中的datagrid节点
 
+                //获取选中的datagrid节点
+                if (datagrid == "datagrid_current") {
+
+                    var rows = $('#' + datagrid).datagrid('getSelections');
+                    var ids ;
+                    //alert(rows.length + "L:E");
+                    if (rows.length < 1)
+                    {
+                        return;
+                    }
+                    for (var i = 0; i < rows.length; i++) {
+                        if (i == 0) {
+                            ids =""+ rows[i].id;
+                        } else {
+                            ids += "_"+rows[i].id;
+                        }
+                    }
+                    deleteCAttr(ids);
+                    $('#' + datagrid).datagrid('clearChecked')
+                    
+                }
                 //if (toolbar) {
                 //    return;
                 //}
@@ -143,6 +169,33 @@ function loadPageTool(datagrid, toolbarDisable)
     });
 
 }
+
+function deleteCAttr(attrID)
+{
+    $.ajax({
+        url: "/Dict/Handler_deleteCAttr",
+        type: 'POST',
+        data: {
+            "ids": attrID
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            var result
+            if (data > 0) {
+                try {
+                    $("#datagrid_current").datagrid('reload');
+                } catch (e) {
+
+                }
+            } else {
+                result = "系统正忙，请稍后继续！";
+                $.messager.alert('警告', result, 'warning');
+            }
+        }
+    });
+}
+
 
 
 
@@ -169,3 +222,14 @@ function openModelWindow(url, titleName) {
     $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
     $winADD.window('open');
 }
+
+//采用jquery easyui loading css效果
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
+

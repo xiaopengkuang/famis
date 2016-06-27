@@ -197,6 +197,8 @@ function editAssetType(info)
     var url = "/Dict/edit_AssetType" + info;
     openModelWindow(url, titleName);
 }
+
+//TODO: 删除节点
 function deletNode()
 {
     var node = $('#treegrid').treegrid('getSelected');
