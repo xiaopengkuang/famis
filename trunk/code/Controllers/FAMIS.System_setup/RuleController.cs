@@ -300,7 +300,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
               select p;*/
             IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
                                                          where o.role_ID == Roleid
-                                                          && o.type == "Department"
+                                                          && o.type == "department"
                                                          select o;
             if (role_au.Count() > 0)
             {
