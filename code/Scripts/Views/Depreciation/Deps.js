@@ -1,5 +1,31 @@
 ﻿var searchCondtiion = "1o使用部门o销售部";
+function depreciation() {
+    $('#p').show();
+    start();
+}
+function start() {
 
+
+
+    var value = $('#p').progressbar('getValue');
+    if (value < 100) {
+        value += Math.floor(Math.random() * 10);
+        $('#p').progressbar('setValue', value);
+        setTimeout(arguments.callee, 200);
+
+        // $('#p').progressbar('virualble')
+    }
+    if (value == 100) {
+
+        alert("折旧完成！");
+
+        $('#p').hide();
+        $('#p').progressbar('setValue', 0);
+        LoadInitData_Detail(searchCondtiion);
+        return null;
+
+    }
+};
 
 $(function () {
     LoadTreeLeft();

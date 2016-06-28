@@ -9,7 +9,7 @@ namespace FAMIS.Models
     public partial class tb_department
     {
         public int ID { get; set; }
-
+         
         public int? ID_Department { get; set; }
 
         public int? ID_Father_Department { get; set; }
