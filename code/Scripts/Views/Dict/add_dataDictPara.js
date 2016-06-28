@@ -1,0 +1,82 @@
+﻿$(function () {
+
+
+});
+
+
+
+function submitForm() {
+
+    //获取数据
+    var csmc = $("#CSMC").val();
+
+    var csms = $("#CSMS").val();
+
+    var cslx = $("#CSLX").combobox("getValue");
+
+    //var sfbs = $("#SFBS").is(':checked');
+
+    var pid = $("#PID").val();
+
+   
+
+    var data = {
+        "csmc": csmc,
+        "cslx": cslx,
+        "pid": pid,
+        "csms": csms
+    };
+    //alert(JSON.stringify(data));
+
+    //return;
+    $.ajax({
+        url: "/Dict/Handler_InsertDictPara",
+        type: 'POST',
+        data: {
+            "data": JSON.stringify(data)
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            var result
+            if (data > 0) {
+                try {
+                    parent.$("#modalwindow").window("close");
+                    //获取选中ID
+
+                    var target = "dataGrid_current";
+                    var target2 = "DictList_current";
+                    var treeid = "tree_Dict";
+
+                    //TODO: 页面传参数 控制更新特定的数据  这样不用都刷新
+
+                    parent.$('#' + target2).treegrid('reload');
+                    parent.$('#' + target).datagrid('reload');
+                    //parent.loadDataGrid(target, 0, false, treeid);
+                } catch (e) {
+                }
+            } else {
+                result = "系统正忙，请稍后继续！";
+                $.messager.alert('警告', result, 'warning');
+            }
+        }
+    });
+}
+
+
+function cancelForm() {
+    parent.$("#modalwindow").window("close");
+}
+
+
+
+//采用jquery easyui loading css效果
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
+
