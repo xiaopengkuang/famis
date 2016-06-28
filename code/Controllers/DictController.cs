@@ -157,7 +157,7 @@ namespace FAMIS.Controllers
 
         public ActionResult add_customAttrView(int? id,String name)
         {
-            if (name==null||name==""||id == null || id <= 0)
+            if (name==null||id == null || id <= 0)
             {
                 ViewBag.info = "add_customAttrView";
                 return View("Error");
@@ -167,6 +167,53 @@ namespace FAMIS.Controllers
             return View("add_customAttr");
         }
 
+        public ActionResult add_dataDictParaView(int? id_Dict, String name_Dict,int? pid)
+        {
+            if (name_Dict == null || id_Dict == null || id_Dict <= 0)
+            {
+                ViewBag.info = "add_dataDictParaView";
+                return View("Error");
+            }
+
+            ViewBag.id_Dict = id_Dict;
+            ViewBag.name_Dict = name_Dict;
+            ViewBag.pid = pid==null?0:pid;
+
+            return View("add_dataDictPara");
+        }
+
+
+
+        //
+        public ActionResult add_dataDictView(int? pid, String pname,String level)
+        {
+            if (pname == null || pid == null || pid <= 0)
+            {
+                ViewBag.info = "add_dataDictView";
+                return View("Error");
+            }
+            ////获取参数类别
+            //var flag = from p in DB_C.tb_dataDict
+            //           where p.active_flag == true
+            //           where p.ID == pid
+            //           select p;
+            ViewBag.id_dataDict = pid;
+            ViewBag.name_dataDict = pname;
+            ViewBag.level=level==null?"2":level;
+            return View("add_dataDict");
+        }
+
+        public ActionResult edit_dataDictView(int? id)
+        {
+            if (id == null || id <= 0)
+            {
+                ViewBag.info = "edit_dataDictView";
+                return View("Error");
+            }
+
+            ViewBag.id_dataDict = id;
+            return View("edit_dataDict");
+        }
         
 
 
@@ -833,6 +880,63 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
+        public int Handler_InsertdataDic(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_dataDict json_data = serializer.Deserialize<Json_dataDict>(data);
+            if (json_data != null && json_data.cslx != null)
+            {
+                try {
+                    tb_dataDict tb_data = convertHandler.ConverJsonToTable(json_data); 
+                   
+                    //其他默认数据填充
+                    tb_data.active_flag = true;
+                    tb_data.flag_Search = false;
+                    tb_data.isSysSet = false;
+                    tb_data.orderID=commonConversion.getUnqiID();
+                    tb_data.url = "javascript:void(0)";
+                    DB_C.tb_dataDict.Add(tb_data);
+                    DB_C.SaveChanges();
+                    return 1;
+                }catch(Exception e){
+
+                }
+            }
+            return 0;
+        }
+
+        [HttpPost]
+        public int Handler_InsertDictPara(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_dataDict_Para json_data = serializer.Deserialize<Json_dataDict_Para>(data);
+            if (json_data != null && json_data.cslx != null)
+            {
+                try
+                {
+                    tb_dataDict_para tb_data = convertHandler.ConverJsonToTable(json_data);
+                    //其他默认数据填充
+                    tb_data.activeFlag = true;
+                    tb_data.create_Time = DateTime.Now;
+                    tb_data.orderID = commonConversion.getUnqiIDString();
+                    tb_data.url = commonConversion.getDefaultUrl();
+
+                    DB_C.tb_dataDict_para.Add(tb_data);
+                    DB_C.SaveChanges();
+                    return 1;
+                }
+                catch (Exception e)
+                {
+                    return 0;
+                }
+            }
+            return 0;
+        }
+
+
+
+
+        [HttpPost]
         public int Handler_deleteCAttr(String ids)
         {
             if(ids==null)
@@ -863,6 +967,110 @@ namespace FAMIS.Controllers
 
             return 0;
 
+        }
+
+
+        [HttpPost]
+        public int Handler_deletedataDict(int? id)
+        {
+            if (id == null)
+            {
+                return 0;
+            }
+
+            var target = from p in DB_C.tb_dataDict
+                         where p.active_flag == true
+                         where p.ID == id
+                         where p.isSysSet==false
+                         select p;
+            if (target.Count() < 1)
+            {
+                return 0;
+            }
+            try {
+
+                foreach (var q in target)
+                {
+                    q.active_flag = false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+
+            }catch(Exception e){
+
+            }
+            return 0;
+
+        }
+
+        [HttpPost]
+        public int Handler_deleteDictPara(String ids)
+        {
+            if (ids == null)
+            {
+                return 0;
+            }
+            List<int> ids_dict = commonConversion.StringToIntList(ids);
+
+            var target = from p in DB_C.tb_dataDict_para
+                         where p.activeFlag==true
+                         where ids_dict.Contains(p.ID)
+                         select p;
+            if (target.Count() < 1)
+            {
+                return 0;
+            }
+            try
+            {
+
+                foreach (var q in target)
+                {
+                    q.activeFlag = false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            return 0;
+        }
+
+
+        /// <summary>
+        /// 默认是系统设置 防止恶意删除
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public int Check_IsSysSet(String table, int? id)
+        {
+            if(table == null || id == null)
+            {
+                return 1;     
+            }
+            int flagRe = 1;
+            switch(table){
+                case "dataDict": flagRe= check_IsSysSet_DataDict(id); break;
+                default: flagRe= 1; break;
+            }
+
+            return flagRe;
+        }
+
+
+
+        public int check_IsSysSet_DataDict(int? id)
+        {
+            var data = from p in DB_C.tb_dataDict
+                       where p.active_flag == true
+                       where p.isSysSet == true
+                       where p.ID==id
+                       select p;
+            return data.Count();
         }
 
         [HttpPost]
@@ -898,7 +1106,7 @@ namespace FAMIS.Controllers
 
 
         [HttpPost]
-        public int Handler_updateAssetType(String data,int id)
+        public int Handler_updateAssetType(String data,int? id)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_AssetType_add json_data = serializer.Deserialize<Json_AssetType_add>(data);
@@ -928,6 +1136,43 @@ namespace FAMIS.Controllers
             }
            
         }
+
+        [HttpPost]
+        public int Handler_UpdatedataDic(String data,int? id)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_dataDict json_data = serializer.Deserialize<Json_dataDict>(data);
+
+            var q = from p in DB_C.tb_dataDict
+                    where p.active_flag == true
+                    where p.ID == id
+                    select p;
+            if (q.Count() != 1)
+            {
+                return 0;
+            }
+
+            try
+            {
+                foreach (var p in q)
+                {
+                    p.isTree = json_data.isTree;
+                    p.name_dataDict = json_data.csmc;
+                    if (json_data.cslx != null)
+                    {
+                        p.father_ID = json_data.cslx;
+                    }
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }
+            catch (Exception e)
+            {
+            }
+            return 0;
+        }
+
+
 
         [HttpPost]
         public JsonResult Handler_getDepartment(int? bmbh)
@@ -968,11 +1213,38 @@ namespace FAMIS.Controllers
 
 
         [HttpPost]
+
+        public JsonResult Handler_getDataDict(int? id)
+        {
+            if (id == null)
+            {
+                return NULL_DATA();
+            }
+
+            var data = from a in DB_C.tb_dataDict
+                       where a.active_flag == true
+                       where a.ID == id
+                       where a.isSysSet == false
+                       join b in DB_C.tb_dataDict on a.father_ID equals b.ID into tmp_b
+                       from jb in tmp_b.DefaultIfEmpty()
+                       select new {
+                           csmc = a.name_dataDict,
+                           cslx = jb.ID,
+                           cslx_name = jb.name_dataDict == null ? "" : jb.name_dataDict,
+                           isTree = a.isTree
+                       };
+            return Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+        [HttpPost]
         public JsonResult Handler_GetAssetType(int? id)
         {
             if(id==null)
             {
-                return null;
+                return NULL_DATA();
             }
             //
             var data = from a in DB_C.tb_AssetType

@@ -29,5 +29,22 @@ namespace FAMIS.DataConversion
 
             return results;
         }
+
+        public int getUnqiID()
+        {
+            string str = DateTime.Now.ToString("ddhhmmss");
+            return int.Parse(str);
+        }
+
+        public String getUnqiIDString() 
+        {
+            return DateTime.Now.ToString("ddhhmmss");
+        }
+
+        public String getDefaultUrl()
+        {
+            return "javascript:void(0)";
+        }
+
     }
 }

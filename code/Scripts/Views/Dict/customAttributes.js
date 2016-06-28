@@ -172,6 +172,9 @@ function loadPageTool(datagrid, toolbarDisable)
 
 function deleteCAttr(attrID)
 {
+    //基础参数无法删除
+    //系统固定
+    
     $.ajax({
         url: "/Dict/Handler_deleteCAttr",
         type: 'POST',

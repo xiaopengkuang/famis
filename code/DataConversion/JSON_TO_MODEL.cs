@@ -47,5 +47,26 @@ namespace FAMIS.DataConversion
             return tb;
         }
 
+        public tb_dataDict ConverJsonToTable(Json_dataDict data)
+        {
+            tb_dataDict tb = new tb_dataDict();
+            tb.name_dataDict = data.csmc;
+            tb.father_ID = data.cslx;
+            tb.isTree = data.isTree;
+            tb.treeLevel = data.level;
+            return tb;
+        }
+
+
+        public tb_dataDict_para ConverJsonToTable(Json_dataDict_Para data)
+        {
+            tb_dataDict_para tb = new tb_dataDict_para();
+            tb.name_para = data.csmc;
+            tb.ID_dataDict = data.cslx;
+            tb.description = data.csms;
+            tb.fatherid = data.pid;
+            return tb;
+        }
+
     }
 }
