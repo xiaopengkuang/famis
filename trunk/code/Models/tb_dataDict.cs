@@ -36,6 +36,9 @@ namespace FAMIS.Models
 
         public bool? isTree { get; set; }
 
+        public bool? isSysSet { get; set; }
+        
+
         
     }
 }

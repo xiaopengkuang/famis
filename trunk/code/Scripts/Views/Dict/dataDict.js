@@ -17,7 +17,7 @@ function loadDictTree()
 
 var datagridID = "dataGrid_current";
 var treegridID = "DictList_current";
-
+var treeDictID = "tree_Dict";
 
 function loadTree(treeid, url)
 {
@@ -29,6 +29,35 @@ function loadTree(treeid, url)
         method: 'POST', //默认是post,不允许对静态文件访问
         //url: '/Dict/loadTree?name=assetType',
         url: url,
+        onContextMenu: function (e, node) {
+            e.preventDefault();  //该方法将通知 Web 浏览器不要执行与事件关联的默认动作（如果存在这样的动作）
+            $('#' + treeid).tree('select', node.target);
+            var tree = $("#" + treeid).tree;
+           
+            //判断其是否支持右键
+            //if (isRootNode(tree, node)) {
+            //    return;
+            //}
+            $.ajax({
+                url: "/Dict/Check_IsSysSet",
+                type: 'POST',
+                data: {
+                    "table": "dataDict",
+                    "id": node.id
+                },
+                beforeSend: ajaxLoading,
+                success: function (data) {
+                    ajaxLoadEnd();
+                    if (data > 0) {
+                    } else {
+                        $("#access_menu_tree").menu("show", {
+                            left: e.pageX,
+                            top: e.pageY
+                        });
+                    }
+                }
+            });
+        },
         onClick: function (node) {
             var tree = $(this).tree;
             //Step 1: 先判断其是否是根节点 如果是根节点则点击无效
@@ -57,81 +86,127 @@ function loadTree(treeid, url)
             });
 
         },
+        
         onLoadSuccess: function (node, data) {
             $('#' + treeid).show();
 
             dataGridShow();
             treeGridHide();
-            loadDataGrid(datagridID, 0, false, treeid);
+            loadDataGrid(datagridID, 0, true, treeid);
             //$('#tree_assetType').tree('collapseAll');
         }
     });
 }
+
+
+
+//Tree operation
+
+function addNode_tree(treeID)
+{
+    //
+    var node = $("#" + treeID).tree('getSelected');
+
+    
+
+    //判断其是否有父节点
+    var tree=$("#"+treeID).tree;
+    var parent = tree('getParent', node.target);
+    var pname=node.text;
+    var pid=node.id;
+    if (parent.id!= null )
+    {
+        pname=parent.text;
+        pid=parent.id;
+    }
+
+    var level=2;
+    //= $('#' + treeID).treegrid('getLevel', node.id);
+
+
+    var url = "/Dict/add_dataDictView?pname=" + pname + "&pid=" + pid+"&level="+level;
+    var titleName = "数据字典-添加";
+    //alert(url);
+    openModelWindow(url,titleName)
+}
+
+
+//编辑左侧
+function editeNode_tree(treeID)
+{
+    var node = $("#" + treeID).tree('getSelected');
+    if (node == null) {
+        return;
+    }
+    var tree = $("#" + treeID).tree;
+    if (isRootNode(tree, node))
+    {
+        $.messager.alert('警告',"系统参数禁止编辑！", 'warning');
+        return;
+    }
+
+    var url = "/Dict/edit_dataDictView?id=" + node.id;
+    var titleName = "数据字典-编辑";
+    //alert(url);
+    openModelWindow(url, titleName)
+}
+
+function deleteNode_tree(treeID)
+{
+    var node = $("#" + treeID).tree('getSelected');
+    deleteID(node.id);
+}
+
+function deleteID(id)
+{
+    $.ajax({
+        url: "/Dict/Handler_deletedataDict",
+        type: 'POST',
+        data: {
+            "id": id
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            var result
+            if (data > 0) {
+                try {
+                    loadInitData();
+                } catch (e) {
+
+                }
+            } else {
+                result = "系统正忙，请稍后继续！";
+                $.messager.alert('警告', result, 'warning');
+            }
+        }
+    });
+
+}
+
 
 function treeGridShow()
 {
 
     var sbtitle = document.getElementById("DIV_DictList_current");
     sbtitle.style.display='block';
-
-    //if(sbtitle){
-    //    if(sbtitle.style.display=='block'){
-    //        sbtitle.style.display='none';
-    //    }else{
-    //        sbtitle.style.display='block';
-    //    }
-
-    //$("#DIV_dataGrid_current").sty
-    //if ($("#DIV_DictList_current").is(":hidden"))
-    //{
-    //    $("#DIV_DictList_current").toggle();
-    //}
 }
 
 function treeGridHide() {
     var sbtitle = document.getElementById("DIV_DictList_current");
     sbtitle.style.display = 'none';
-    ////if ($("#DIV_DictList_current").is(":hidden")) {
-    ////}
-    ////$("#DIV_DictList_current").toggle();
 }
 
 
 function dataGridShow() {
     var sbtitle = document.getElementById("DIV_dataGrid_current");
     sbtitle.style.display = 'block';
-    //if ($("#DIV_dataGrid_current").is(":hidden")) {
-    //    $("#DIV_dataGrid_current").toggle();
-    //}
 }
 
 function dataGridHide() {
     var sbtitle = document.getElementById("DIV_dataGrid_current");
     sbtitle.style.display = 'none';
-    //if ($("#DIV_dataGrid_current").is(":hidden")) {
-    //}
-    //$("#DIV_dataGrid_current").toggle();
 }
-
-
-//function isTreeType_DictData(id)
-//{
-//    $.ajax({
-//        type: "POST",
-//        url: "/Dict/isTreeType_DictData",
-//        data: {
-//            "id":id
-//        },
-//        success: function (data) {
-//            alert(data);
-//            if (data > 0)
-//            {
-//                return 1;
-//            }
-//            return 0;
-//        }
-//    });
-//}
 
 
 function isRootNode(tree,node) {
@@ -144,14 +219,51 @@ function isRootNode(tree,node) {
 }
 
 
+//function isSysSetting(treeID)
+//{
+//    var node = $("#" + treeID).tree('getSelected');
+//    $.ajax({
+//        url: "/Dict/Check_IsSysSet",
+//        type: 'POST',
+//        data: {
+//            "table": "dataDict",
+//            "id": node.id
+//        },
+//        beforeSend: ajaxLoading,
+//        success: function (data) {
+//            ajaxLoadEnd();
+//            if (data > 0) {
+//                return true
+//            } else {
+//                return false;
+//                //deleteID(node.id);
+//            }
+//        }
+//    });
+//}
+
+
+//dataGrid操作
+
+
+
+//treeGrid操作
+
+
+
+
+
+
+
+
+
+
 
 //只显示两列  参数名称  参数描述
 function loadDataGrid(gridID,nodeID,barDisable,treeID)
 {
     //获取选中行
-    //
 
-    alert(gridID);
     $('#' + gridID).datagrid({
         url: "/Dict/loadDataGrid?name=dictPara&dictID=" + nodeID,
         //url: '/Asset/load_attrs_current?assetTypeID=' + selectType,
@@ -177,12 +289,12 @@ function loadDataGrid(gridID,nodeID,barDisable,treeID)
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    //loadPageTool(gridID, barDisable, treeID);
+    loadPageTool(gridID, barDisable, treeID);
 }
 
 
 
-function loadPageTool(datagrid, toolbarDisable) {
+function loadPageTool(datagrid, toolbarDisable,treeID) {
     //alert(toolbar)
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
@@ -195,6 +307,19 @@ function loadPageTool(datagrid, toolbarDisable) {
                 if (toolbarDisable) {
                     return;
                 }
+                if (datagrid == datagridID)
+                {
+                    var node = $('#' + treeID).tree('getSelected');
+                        if (node != null) {
+                            var titleName = "参数-添加";
+                            var url = "/Dict/add_dataDictParaView?id_Dict=" + node.id + "&name_Dict=" + node.text;
+                            openModelWindow(url, titleName)
+                        } else {
+                            $.messager.alert('提示', '请选择数据!', 'error');
+                            return;
+                        }
+                }
+
                 //if (datagrid == "datagrid_current") {
                 //    //获取选中的树节点
                 //    var node = $('#' + treeID).tree('getSelected');
@@ -219,31 +344,22 @@ function loadPageTool(datagrid, toolbarDisable) {
                 if (toolbarDisable) {
                     return;
                 }
-                //获取选中的datagrid节点
-                //if (datagrid == "datagrid_current") {
-
-                //    var rows = $('#' + datagrid).datagrid('getSelections');
-                //    var ids;
-                //    //alert(rows.length + "L:E");
-                //    if (rows.length < 1) {
-                //        return;
-                //    }
-                //    for (var i = 0; i < rows.length; i++) {
-                //        if (i == 0) {
-                //            ids = "" + rows[i].id;
-                //        } else {
-                //            ids += "_" + rows[i].id;
-                //        }
-                //    }
-                //    $('#' + datagrid).datagrid('clearChecked')
-
-                //}
-                //if (toolbar) {
-                //    return;
-                //}
-
-                //alert("2");
+                if (datagrid == datagridID) {
+                   
+                    deleteIds_DataGrid(datagrid);
+                }
             }
+        }, {
+            text: '刷新',
+            iconCls: 'icon-reload',
+            height: 50,
+            disabled: toolbarDisable,
+            handler: function () {
+                if (toolbarDisable) {
+                    return;
+                }
+                $('#' + datagrid).datagrid('reload');
+              }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
@@ -251,6 +367,51 @@ function loadPageTool(datagrid, toolbarDisable) {
     });
 
 }
+
+
+function deleteIds_DataGrid(datagrid)
+{
+    var ids;
+    var rows = $('#' + datagrid).datagrid('getSelections');
+    if (rows.length <= 0) {
+        return;
+    }
+    for (var i = 0; i < rows.length; i++) {
+        if (i == 0) {
+            ids = rows[i].id;
+        } else {
+            ids +="_"+ rows[i].id;
+        }
+
+    }
+
+    $.ajax({
+        url: "/Dict/Handler_deleteDictPara",
+        type: 'POST',
+        data: {
+            "ids": ids
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            var result
+            if (data > 0) {
+                try {
+                    //获取选中ID
+                    var target = "dataGrid_current";
+                    $('#' + target).datagrid('reload');
+                    //parent.loadDataGrid(target, 0, false, treeid);
+                } catch (e) {
+                }
+            } else {
+                result = "系统正忙，请稍后继续！";
+                $.messager.alert('警告', result, 'warning');
+            }
+        }
+    });
+}
+
+
 
 function loadTreeGrid(url,gridID)
 {
@@ -304,21 +465,21 @@ function loadTreeGrid(url,gridID)
             iconCls: 'icon-add',
             handler: function () {
                 //获取父节点
-                addBroNode(gridID);
+                addBroNode(gridID, treeDictID);
             }
         }, '-', {
             id: 'btnaddChi',
             text: '新增下级',
             iconCls: 'icon-add',
             handler: function () {
-                addchild(gridID);
+                addchild(gridID,treeDictID);
             }
         }, '-', {
             id: 'btnedit',
             text: '修改',
             iconCls: 'icon-edit',
             handler: function () {
-                editNode(gridID);
+                editNode(gridID, treeDictID);
             }
         }, '-', {
             id: 'btnremove',
@@ -330,6 +491,57 @@ function loadTreeGrid(url,gridID)
         }]
     });
 }
+
+//TreeGrid操作
+function addBroNode(treeGrid,treeID)
+{
+    
+    //获取选中行
+    var node = $('#' + treeGrid).treegrid('getSelected');
+    var treeNode = $('#' + treeID).tree('getSelected')
+    var pid = 0;
+
+    //判断是否是未选中状态
+    if (node == null) {
+        pid = 0;
+    } else {
+        var parentExist = $('#' + treeGrid).treegrid('getParent', node.id);
+        if (parentExist) {
+            pid = parentExist.id;
+        } else {
+            pid = 0;
+        }
+    }
+    addnode_treeGrid(treeNode.id,treeNode.text,pid)
+}
+
+
+function addchild(treeGrid, treeID)
+{
+    //获取选中行
+    var node = $('#' + treeGrid).treegrid('getSelected');
+
+    //判断是否是未选中状态
+    if (node == null) {
+        $.messager.alert('提示', '请选择数据!', 'error');
+        return;
+    }
+    var treeNode = $('#' + treeID).tree('getSelected')
+    var parentExist = $('#' + treeGrid).treegrid('getParent', node.id);
+    var pid = node.id;
+    addnode_treeGrid(treeNode.id, treeNode.text, pid)
+}
+
+
+function addnode_treeGrid(id_Dict,name_Dict, pid)
+{
+    var titleName = "参数-添加";
+    var url = "/Dict/add_dataDictParaView?id_Dict=" + id_Dict + "&name_Dict=" + name_Dict + "&pid=" + pid;
+    openModelWindow(url, titleName);
+}
+
+
+
 
 
 
@@ -345,3 +557,39 @@ function expandALL(treeName) {
 function closeALL(treeName) {
     $('#' + treeName).tree('collapseAll');
 }
+
+
+
+function openModelWindow(url, titleName,heightPX,widthPX) {
+    var $winADD;
+    $winADD = $('#modalwindow').window({
+        title: titleName,
+        width: 500,
+        height: 300,
+        top: (($(window).height() - 500) > 0 ? ($(window).height() - 500) : 200) * 0.5,
+        left: (($(window).width() - 300) > 0 ? ($(window).width() - 300) : 100) * 0.5,
+        shadow: true,
+        modal: true,
+        iconCls: 'icon-add',
+        closed: true,
+        minimizable: false,
+        maximizable: false,
+        collapsible: false,
+        onClose: function () {
+
+        }
+    });
+    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
+    $winADD.window('open');
+}
+
+//采用jquery easyui loading css效果
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
+

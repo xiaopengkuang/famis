@@ -32,20 +32,25 @@
             <ul id="tree_Dict" class="easyui-tree" data-options="border:false,singleSelect:true,fit:true,fitColumns:true,lines:true"></ul>
         </div>
         <div data-options="region:'center'" title="当前字典" fit="true">
-            <div id="DIV_dataGrid_current" style="height:100%" >
-                <input id="dataGrid_current" class="easyui-datagrid"   fit="true">
+            <div id="DIV_dataGrid_current" style="height: 100%">
+                <input id="dataGrid_current" class="easyui-datagrid" fit="true">
             </div>
-            <div id="DIV_DictList_current" style="height:100%">
-            <input id="DictList_current" class="easyui-treegrid"  fit="true">
+            <div id="DIV_DictList_current" style="height: 100%">
+                <input id="DictList_current" class="easyui-treegrid" fit="true">
             </div>
         </div>
 
         <div class="container">
             <div id="access_menu" class="easyui-menu" style="width: 100px;">
-                <div id="access_menu_edit" onclick="addBroNode()">新增同级</div>
-                <div id="access_menu_del" onclick="addchild()">新增下级</div>
-                <div id="access_menu_refresh" onclick="editNode()">修改</div>
-                <div id="access_menu_new" onclick="deletNode()">删除</div>
+                <div id="access_menu_addBro" onclick="addBroNode('DictList_current',tree_Dict)">新增同级</div>
+                <div id="access_menu_addChi" onclick="addchild('DictList_current','tree_Dict')">新增下级</div>
+                <div id="access_menu_edit" onclick="editNode('DictList_current','tree_Dict')">修改</div>
+                <div id="access_menu_delete" onclick="deletNode('DictList_current')">删除</div>
+            </div>
+            <div id="access_menu_tree" class="easyui-menu" style="width: 100px;">
+                <div id="access_menu_tree_add" onclick="addNode_tree('tree_Dict')">新增</div>
+                <div id="access_menu_tree_edit" onclick="editeNode_tree('tree_Dict')">编辑</div>
+                <div id="access_menu_tree_delete" onclick="deleteNode_tree('tree_Dict')">删除</div>
             </div>
             <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
             <button id="pp"></button>
