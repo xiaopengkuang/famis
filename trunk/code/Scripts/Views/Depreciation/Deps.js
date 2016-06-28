@@ -3,7 +3,7 @@
 
 $(function () {
     LoadTreeLeft();
-    LoadInitData_Detail();
+    LoadInitData_Detail(searchCondtiion);
 
     $(".SC_Date_Accounting").show();
     $(".SC_Content_Accounting").hide();
@@ -67,7 +67,7 @@ function LoadTreeLeft() {
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
          
             searchCondtiion = "1"+"o"+"使用部门"+"o"+node.text;
-            LoadInitData_Detail();
+            LoadInitData_Detail(searchCondtiion);
 
         },
         onLoadSuccess: function (node, data) {
@@ -85,7 +85,8 @@ function LoadTreeLeft() {
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
            // alert(node.text);
             searchCondtiion = "1" + "o" + "资产类别" + "o" + node.text;
-            LoadInitData_Detail();
+          //  alert(searchCondtiion);
+            LoadInitData_Detail(searchCondtiion);
 
         },
         onLoadSuccess: function (node, data) {
@@ -167,7 +168,7 @@ function resetSC() {
 
 
 
-function LoadInitData_Detail() {
+function LoadInitData_Detail(searchCondtiion) {
   //  alert("查询条件是：---" + searchCondtiion);
     $('#TableList_0_1').datagrid({
         url: '/Depreciation/Load_Asset?JSdata='+searchCondtiion+'', //+ , 
@@ -193,12 +194,12 @@ function LoadInitData_Detail() {
             { field: 'name_Asset', title: '资产名称', width: 50 },
            
             { field: 'specification', title: '型号规范', width: 50 },
-            { field: 'unit_price', title: '单价', width: 50 },
-            { field: 'amount', title: '数量', width: 50 },
+            { field: 'unit_price', title: '单价', width: 40 },
+            { field: 'amount', title: '数量', width: 40 },
              { field: 'Total_price', title: '资产总价', width: 50 },
             { field: 'Method_depreciation', title: '折旧方式', width: 50 },
             { field: 'YearService_month', title: '使用年限（月）', width: 50 },
-            { field: 'Net_residual_rate', title: '净残值率', width: 50 },
+            { field: 'Net_residual_rate', title: '净残值率', width: 30 },
             { field: 'depreciation_Month', title: '月提折旧', width: 50 },
              { field: 'depreciation_tatol', title: '累计折旧', width: 50},
              { field: 'Net_value', title: '净值', width: 50 },
