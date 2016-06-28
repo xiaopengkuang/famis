@@ -1,5 +1,24 @@
 ﻿var searchCondtiion = "1o使用部门o销售部";
 function depreciation() {
+
+    $.ajax({
+
+        type: "post",
+        url: "/Depreciation/Depreciation",
+       
+        datatype: "json",//数据类型
+
+        success: function (result) {
+
+            alert("折旧开始执行！");
+
+
+        }, error: function (msg) {
+            alert("折旧失败!");
+        }
+    }); 
+
+    
     $('#p').show();
     start();
 }
@@ -17,8 +36,8 @@ function start() {
     }
     if (value == 100) {
 
+         
         alert("折旧完成！");
-
         $('#p').hide();
         $('#p').progressbar('setValue', 0);
         LoadInitData_Detail(searchCondtiion);
