@@ -267,17 +267,10 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_role_authorization>()
-                .Property(e => e.Menue_ID)
+                .Property(e => e.Right_ID)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_role_authorization>()
-                .Property(e => e.AssetType_ID)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_role_authorization>()
-                .Property(e => e.Department_ID)
-                .IsUnicode(false);
-
+          
             modelBuilder.Entity<tb_Rule_Generate>()
                 .Property(e => e.Name_SeriaType)
                 .IsUnicode(false);
