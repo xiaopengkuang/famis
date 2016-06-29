@@ -239,23 +239,90 @@ function LoadInitData_Detail(searchCondtiion) {
             { field: 'name_Asset', title: '资产名称', width: 50 },
            
             { field: 'specification', title: '型号规范', width: 50 },
-            { field: 'unit_price', title: '单价', width: 40 },
+            {
+                field: 'unit_price', title: '单价', width: 40,
+                formatter: function (money) {
+
+                    if (String(money).split(".").length < 2)
+                        return money + "¥";
+                    else {
+                        var arr = String(money).split(".");
+                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
+                    }
+
+                }
+            },
             { field: 'amount', title: '数量', width: 40 },
-             { field: 'Total_price', title: '资产总价', width: 50 },
+             {
+                 field: 'Total_price', title: '资产总价', width: 50,
+                 formatter: function (money) {
+
+                     if (String(money).split(".").length < 2)
+                         return money + "¥";
+                     else {
+                         var arr = String(money).split(".");
+                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
+                     }
+
+                 }
+             },
             { field: 'Method_depreciation', title: '折旧方式', width: 50 },
             { field: 'YearService_month', title: '使用年限（月）', width: 50 },
-            { field: 'Net_residual_rate', title: '净残值率', width: 30 },
-            { field: 'depreciation_Month', title: '月提折旧', width: 50 },
-             { field: 'depreciation_tatol', title: '累计折旧', width: 50},
-             { field: 'Net_value', title: '净值', width: 50 },
+            {
+                field: 'Net_residual_rate', title: '净残值率', width: 30,
+                formatter: function (rate) {
+                    return rate + "%";
+                     
+
+                }
+            },
+            {
+                field: 'depreciation_Month', title: '月提折旧', width: 50,
+                formatter: function (money) {
+
+                    if (String(money).split(".").length < 2)
+                        return money + "¥";
+                    else {
+                        var arr = String(money).split(".");
+                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
+                    }
+                     
+                }
+            },
+             {
+                 field: 'depreciation_tatol', title: '累计折旧', width: 50,
+                 formatter: function (money) {
+
+                     if (String(money).split(".").length < 2)
+                         return money + "¥";
+                     else {
+                         var arr = String(money).split(".");
+                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
+                     }
+
+                 }
+             },
+             {
+                 field: 'Net_value', title: '净值', width: 50,
+                 formatter: function (money) {
+
+                     if (String(money).split(".").length < 2)
+                         return money + "¥";
+                     else {
+                         var arr = String(money).split(".");
+                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
+                     }
+
+                 }
+             },
               {
                   field: 'Time_Purchase', title: '购置日期', width: 80 ,
                    
                   formatter: function (date) {
-        var pa = /.*\((.*)\)/;
-        var unixtime = date.match(pa)[1].substring(0, 10);
-        return getTime(unixtime);
-    }
+                    var pa = /.*\((.*)\)/;
+                     var unixtime = date.match(pa)[1].substring(0, 10);
+                      return getTime(unixtime);
+          }
               },
 
 
@@ -353,6 +420,10 @@ function getTime(/** timestamp=0 **/) {
     // 可根据需要在这里定义时间格式  
     return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (i < 10 ? '0' + i : i) + ':' + (s < 10 ? '0' + s : s);
 }
+
+    
+   
+
 function myparser(s) {
     if (!s) return new Date();
     var ss = (s.split('-'));

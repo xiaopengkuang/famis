@@ -125,6 +125,8 @@ namespace FAMIS.Controllers
             sw.Close();
             return list;
         }
+        //保留小数点后两位
+    
         //折旧计算
         public string Caculate_Depreciation_AverageYear(string unit, string amount, string year, string rate, string timepurchase, string Total_Depreciation_Amount)
         {
@@ -136,9 +138,7 @@ namespace FAMIS.Controllers
             int purchasetime= int.Parse(timepurchase.Split('/')[1]);
 
             int month_passed=thismonth-purchasetime;
-            StreamWriter sw = new StreamWriter("D:\\thismonth.txt", true);
-           sw.WriteLine(thismonth+" : "+purchasetime+" : "+ month_passed);
-           sw.Close();
+           
             string para = "";
             float Year_Depreciation_Rate = ((float)100 - float.Parse(rate)) / float.Parse(year);//年折旧率
             float Month_Depreciation_Rate = Year_Depreciation_Rate / (float)12;
@@ -150,7 +150,8 @@ namespace FAMIS.Controllers
             {
                 Total_Depreciation_Amount = (float.Parse(Total_Depreciation_Amount) + month_passed * Month_Depreciation_Amount).ToString();
                 float net_value = totalprice - float.Parse(Total_Depreciation_Amount);
-                para = totalprice + "," + Month_Depreciation_Amount + "," + Total_Depreciation_Amount + "," + net_value;
+                para = totalprice.ToString()+ "," + Month_Depreciation_Amount.ToString() + "," + Total_Depreciation_Amount.ToString()
+                    + "," + net_value.ToString();
             }
 
            
@@ -190,6 +191,7 @@ namespace FAMIS.Controllers
                 {
                     total = list.Count(),
                     rows = (from r in db.tb_Asset
+                            join t in db.tb_AssetType on r.type_Asset equals t.assetTypeCode.ToString()
                             join D in db.tb_department on r.department_Using equals D.ID_Department.ToString()
                             join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
                             where D.name_Department == searchmethod
@@ -198,7 +200,7 @@ namespace FAMIS.Controllers
                                 ID = r.ID,
                                 department_Using = D.name_Department,
                                 serial_number = r.serial_number,
-                                name_Asset = r.name_Asset,
+                                name_Asset = t.name_Asset_Type,
                                 specification = r.specification,
                                 unit_price = r.unit_price,
                                 amount = r.amount,
