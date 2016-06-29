@@ -486,7 +486,7 @@ function loadTreeGrid(url,gridID)
             text: '删除',
             iconCls: 'icon-remove',
             handler: function () {
-                deletNode(gridID);
+                deletNode(gridID,treeDictID);
             }
         }]
     });
@@ -515,6 +515,63 @@ function addBroNode(treeGrid,treeID)
     addnode_treeGrid(treeNode.id,treeNode.text,pid)
 }
 
+function editNode(treeGrid, treeID)
+{
+    //获取选中行
+    var node = $('#' + treeGrid).treegrid('getSelected');
+    var treeNode = $('#' + treeID).tree('getSelected')
+    if (node == null)
+    {
+        $.messager.alert('提示', '请选择数据!', 'error');
+        return;
+    }
+    var id = node.id
+    editnode_treeGrid(treeNode.id,treeNode.text,id);
+}
+
+
+function deletNode(treeGrid, treeID)
+{
+    var node = $('#' + treeGrid).treegrid('getSelected');
+    var treeNode = $('#' + treeID).tree('getSelected')
+    if (node == null) {
+        $.messager.alert('提示', '请选择数据!', 'error');
+        return;
+    }
+
+    //获取选中treegrid节点
+    var id = node.id;
+
+    $.ajax({
+        url: "/Dict/Handler_deleteDictPara",
+        type: 'POST',
+        data: {
+            "ids": id,
+            "isTree":true
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data > 0) {
+                try {
+                    //获取选中ID
+                    var target = "DictList_current";
+                    $('#' + target).treegrid('reload');
+                    //parent.loadDataGrid(target, 0, false, treeid);
+                } catch (e) {
+                }
+            } else {
+                result = "系统正忙，请稍后继续！";
+                $.messager.alert('警告', result, 'warning');
+            }
+        }
+    });
+
+}
+
+
+
+
 
 function addchild(treeGrid, treeID)
 {
@@ -540,7 +597,12 @@ function addnode_treeGrid(id_Dict,name_Dict, pid)
     openModelWindow(url, titleName);
 }
 
-
+function editnode_treeGrid(id_Dict, name_Dict,id)
+{
+    var titleName = "参数-编辑";
+    var url = "/Dict/edit_dataDictParaView?id_Dict=" + id_Dict + "&name_Dict=" + name_Dict + "&id=" + id;
+    openModelWindow(url, titleName);
+}
 
 
 
