@@ -63,6 +63,5 @@ namespace FAMIS.Models
 
         public DateTime? Time_add { get; set; }
         public double? Total_price { get; set; }
-      
     }
 }

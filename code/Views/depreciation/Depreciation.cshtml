@@ -16,38 +16,21 @@
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
     <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
     <![endif]-->
-   
-
-
-
-   
 
 </head>
 <body>
-    
-   
-    
     <div class="easyui-panel" style="width:auto;height:30px;">
         <table>
             <tr>
                 <td class="SC_Date_Accounting">折旧日期：</td>
                 <td class="SC_Date_Accounting">
                     <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
-                    
                 </td>
                
                <td>
-                   <a href="#" onclick="depreciation()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-tip'">计提折旧</a>
-                   
+                   <a href="#" onclick="myrefresh()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-tip'">计提折旧</a>
                    </td>
-               
-                <td id="p" class="easyui-progressbar" style="width:400px;">
-                    <script>
-                        
-                        $('#p').hide();
-                    </script>
-
-                </td>
+                
 
             </tr>
         </table>

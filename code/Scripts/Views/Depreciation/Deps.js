@@ -1,54 +1,10 @@
 ﻿var searchCondtiion = "1o使用部门o销售部";
-function depreciation() {
-
-    $.ajax({
-
-        type: "post",
-        url: "/Depreciation/Depreciation",
-       
-        datatype: "json",//数据类型
-
-        success: function (result) {
-
-            alert("折旧开始执行！");
-
-
-        }, error: function (msg) {
-            alert("折旧失败!");
-        }
-    }); 
-
-    
-    $('#p').show();
-    start();
-}
-function start() {
-
-
-
-    var value = $('#p').progressbar('getValue');
-    if (value < 100) {
-        value += Math.floor(Math.random() * 10);
-        $('#p').progressbar('setValue', value);
-        setTimeout(arguments.callee, 200);
-
-        // $('#p').progressbar('virualble')
-    }
-    if (value == 100) {
-
-         
-        alert("折旧完成！");
-        $('#p').hide();
-        $('#p').progressbar('setValue', 0);
-        LoadInitData_Detail(searchCondtiion);
-        return null;
-
-    }
-};
-
+ 
 $(function () {
+
+
     LoadTreeLeft();
-    LoadInitData_Detail(searchCondtiion);
+    LoadInitData_Detail();
 
     $(".SC_Date_Accounting").show();
     $(".SC_Content_Accounting").hide();
@@ -112,7 +68,7 @@ function LoadTreeLeft() {
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
          
             searchCondtiion = "1"+"o"+"使用部门"+"o"+node.text;
-            LoadInitData_Detail(searchCondtiion);
+            LoadInitData_Detail();
 
         },
         onLoadSuccess: function (node, data) {
@@ -130,8 +86,7 @@ function LoadTreeLeft() {
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
            // alert(node.text);
             searchCondtiion = "1" + "o" + "资产类别" + "o" + node.text;
-          //  alert(searchCondtiion);
-            LoadInitData_Detail(searchCondtiion);
+            LoadInitData_Detail();
 
         },
         onLoadSuccess: function (node, data) {
@@ -213,7 +168,7 @@ function resetSC() {
 
 
 
-function LoadInitData_Detail(searchCondtiion) {
+function LoadInitData_Detail() {
   //  alert("查询条件是：---" + searchCondtiion);
     $('#TableList_0_1').datagrid({
         url: '/Depreciation/Load_Asset?JSdata='+searchCondtiion+'', //+ , 
@@ -221,11 +176,10 @@ function LoadInitData_Detail(searchCondtiion) {
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
-        fitColumn:true,
        // fit:true ,
         iconCls: 'icon-save',
         dataType: "json",
-        
+        fitColumns: true,
         pagePosition: 'top',
         rownumbers: true, //是否加行号 
         pagination: true, //是否显式分页 
@@ -239,108 +193,36 @@ function LoadInitData_Detail(searchCondtiion) {
             { field: 'name_Asset', title: '资产名称', width: 50 },
            
             { field: 'specification', title: '型号规范', width: 50 },
-            {
-                field: 'unit_price', title: '单价', width: 40,
-                formatter: function (money) {
-
-                    if (String(money).split(".").length < 2)
-                        return money + "¥";
-                    else {
-                        var arr = String(money).split(".");
-                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                    }
-
-                }
-            },
-            { field: 'amount', title: '数量', width: 40 },
-             {
-                 field: 'Total_price', title: '资产总价', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
+            { field: 'unit_price', title: '单价', width: 50 },
+            { field: 'amount', title: '数量', width: 50 },
+             { field: 'Total_price', title: '资产总价', width: 50 },
             { field: 'Method_depreciation', title: '折旧方式', width: 50 },
             { field: 'YearService_month', title: '使用年限（月）', width: 50 },
-            {
-                field: 'Net_residual_rate', title: '净残值率', width: 30,
-                formatter: function (rate) {
-                    return rate + "%";
-                     
-
-                }
-            },
-            {
-                field: 'depreciation_Month', title: '月提折旧', width: 50,
-                formatter: function (money) {
-
-                    if (String(money).split(".").length < 2)
-                        return money + "¥";
-                    else {
-                        var arr = String(money).split(".");
-                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                    }
-                     
-                }
-            },
-             {
-                 field: 'depreciation_tatol', title: '累计折旧', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
-             {
-                 field: 'Net_value', title: '净值', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
+            { field: 'Net_residual_rate', title: '净残值率', width: 50 },
+            { field: 'depreciation_Month', title: '月提折旧', width: 50 },
+             { field: 'depreciation_tatol', title: '累计折旧', width: 50 },
+             { field: 'Net_value', title: '净值', width: 50 },
               {
-                  field: 'Time_Purchase', title: '购置日期', width: 80 ,
+                  field: 'Time_Purchase', title: '购置日期', width: 50,
                    
                   formatter: function (date) {
-                    var pa = /.*\((.*)\)/;
-                     var unixtime = date.match(pa)[1].substring(0, 10);
-                      return getTime(unixtime);
-          }
+                      getNowFormatDate_FileName(date)
+              }
               },
 
 
              {
-                 field: 'Time_add', title: '登记日期', width: 80,
+                 field: 'Time_add', title: '登记日期', width: 50,
+                 
                  formatter: function (date) {
-        var pa = /.*\((.*)\)/;
-        var unixtime = date.match(pa)[1].substring(0, 10);
-        return getTime(unixtime);
-    }
-               
+                     getNowFormatDate_FileName(date)
+    } 
              }
           
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
-        checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
-        fitColumns: true
+        checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
     loadPageTool_Detail();
 }
@@ -400,30 +282,12 @@ function getTime(/** timestamp=0 **/) {
 
 
 
-
 function myformatter(date) {
     var y = date.getFullYear();
     var m = date.getMonth() + 1;
     var d = date.getDate();
     return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
 }
-function getTime(/** timestamp=0 **/) {
-    var ts = arguments[0] || 0;
-    var t, y, m, d, h, i, s;
-    t = ts ? new Date(ts * 1000) : new Date();
-    y = t.getFullYear();
-    m = t.getMonth() + 1;
-    d = t.getDate();
-    h = t.getHours();
-    i = t.getMinutes();
-    s = t.getSeconds();
-    // 可根据需要在这里定义时间格式  
-    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (i < 10 ? '0' + i : i) + ':' + (s < 10 ? '0' + s : s);
-}
-
-    
-   
-
 function myparser(s) {
     if (!s) return new Date();
     var ss = (s.split('-'));
