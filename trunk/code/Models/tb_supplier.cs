@@ -27,5 +27,12 @@ namespace FAMIS.Models
 
         [StringLength(30)]
         public string fax { get; set; }
+
+        [StringLength(20)]
+        public string operatorname { get; set; }
+
+        public DateTime? editTime { get; set; }
+
+        public bool? flag{get;set;}
     }
 }

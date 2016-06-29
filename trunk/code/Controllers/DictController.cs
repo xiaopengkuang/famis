@@ -105,6 +105,56 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        [HttpPost]
+        public JsonResult load_supplier(int? page, int? rows)
+        {
+
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+
+
+            var data = (from p in DB_C.tb_supplier
+                        where p.flag == true
+                        select new
+                        {
+                            id = p.ID,
+                            name = p.name_supplier,
+                            addree = p.address,
+                            lineMan = p.linkman,
+                            editTime=p.editTime
+
+                        }).OrderByDescending(a=>a.editTime);
+
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
+
+            var json_data = new
+            {
+                total = data.Count(),
+                rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+            };
+            return Json(json_data, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult add_supplierView()
+        {
+            return View("add_supplier");
+        }
+
+        public ActionResult edit_supplierView(int? id)
+        {
+            if (id == null)
+            {
+                ViewBag.info = "edit_supplierView";
+                return View("Error");
+            }
+
+            ViewBag.id = id;
+            return View("edit_supplier");
+        }
+
+
         public ActionResult add_departmentView(int? pid, String pname, String level)
         {
             if (pname == null || pname == "" || pid == null)
@@ -962,7 +1012,29 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+        [HttpPost]
+        public int Handler_InsertSupplier(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_supplier json_data = serializer.Deserialize<Json_supplier>(data);
+            if (json_data != null && json_data.GYSMC != null && json_data.GYSMC != "")
+            {
+                try {
+                    tb_supplier tb_data = convertHandler.ConverJsonToTable(json_data);
+                    //定义默认参数
+                    tb_data.operatorname = commonConversion.getOperatorName();
+                    tb_data.flag = true;
+                    tb_data.editTime = DateTime.Now;
+                    DB_C.tb_supplier.Add(tb_data);
+                    DB_C.SaveChanges();
+                    return 1;
 
+                }catch(Exception e){
+                    return 0;
+                }
+            }
+            return 0;
+        }
 
 
         [HttpPost]
@@ -1125,12 +1197,32 @@ namespace FAMIS.Controllers
 
                 return 0;
             }
-
-           
-
- 
         }
 
+        [HttpPost]
+        public int Handler_deleteGYS(String ids)
+        {
+            if (ids == null)
+            {
+                return 0;
+            }
+            List<int> id_list = commonConversion.StringToIntList(ids);
+            var data = from p in DB_C.tb_supplier
+                       where p.flag == true
+                       where id_list.Contains(p.ID)
+                       select p;
+
+            try { 
+                foreach(var item in data)
+                {
+                    item.flag = false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }catch(Exception e){
+                return 0;
+            }
+        }
 
 
 
@@ -1301,6 +1393,43 @@ namespace FAMIS.Controllers
 
         }
 
+        [HttpPost]
+        public int Handler_UpdateSupplier(String data,int? id)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_supplier json_data = serializer.Deserialize<Json_supplier>(data);
+            if (json_data == null || id == null)
+            {
+                return 0;
+            }
+            var q = from p in DB_C.tb_supplier
+                    where p.flag == true
+                    where p.ID == id
+                    select p;
+            if (q.Count() != 1)
+            {
+                return 0;
+            }
+            try {
+                foreach (var item in q)
+                {
+                    item.address = json_data.DZ;
+                    item.editTime = DateTime.Now;
+                    item.email = json_data.YX;
+                    item.fax = json_data.CZ;
+                    item.linkman = json_data.LXR;
+                    item.name_supplier = json_data.GYSMC;
+                    item.operatorname = commonConversion.getOperatorName();
+                    item.phoneNumber = json_data.LXDH;
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }catch(Exception e){
+                return 0;
+            }
+            return 0;
+        }
+
 
 
         [HttpPost]
@@ -1383,6 +1512,33 @@ namespace FAMIS.Controllers
                        csmc=a.name_para,
                        csms=a.description,
                        id=a.ID
+                       };
+            if (data.Count() < 1)
+            {
+                return null;
+            }
+            return Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult Handler_getSupplier(int? id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+            var data = from p in DB_C.tb_supplier
+                       where p.flag == true
+                       where p.ID == id
+                       select new {
+                           GYSMC=p.name_supplier,
+                           LXR=p.linkman,
+                           LXDH=p.phoneNumber,
+                           YX=p.email,
+                           CZ=p.fax,
+                           DZ=p.address,
+                           ID=p.ID
+
                        };
             if (data.Count() < 1)
             {

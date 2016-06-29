@@ -16,6 +16,7 @@ namespace FAMIS.DataConversion
                 if (idStr != null && idStr != "")
                 {
                     String[] ids = idStr.Split('_');
+
                     foreach (String i in ids)
                     {
                         results.Add(int.Parse(i));
@@ -44,6 +45,11 @@ namespace FAMIS.DataConversion
         public String getDefaultUrl()
         {
             return "javascript:void(0)";
+        }
+
+        public String getOperatorName()
+        {
+            return "KXP";
         }
 
     }

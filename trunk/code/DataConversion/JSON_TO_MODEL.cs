@@ -68,5 +68,17 @@ namespace FAMIS.DataConversion
             return tb;
         }
 
+        public tb_supplier ConverJsonToTable(Json_supplier data)
+        {
+            tb_supplier tb = new tb_supplier();
+            tb.address = data.DZ;
+            tb.email = data.YX;
+            tb.fax = data.CZ;
+            tb.linkman = data.LXR;
+            tb.name_supplier = data.GYSMC;
+            tb.phoneNumber = data.LXDH;
+            return tb;
+        }
+
     }
 }
