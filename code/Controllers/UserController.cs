@@ -167,8 +167,8 @@ namespace FAMIS.Controllers
             IEnumerable<String> menu_ID = from o in DBConnecting.tb_role_authorization
                                                          where o.role_ID == rid
                                                          && o.type=="menu"
-                                                         orderby o.Menue_ID
-                                                         select o.Menue_ID;
+                                                         orderby o.Right_ID
+                                                         select o.Right_ID;
            
             
            foreach(String mid in menu_ID)
