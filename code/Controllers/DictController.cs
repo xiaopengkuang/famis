@@ -1061,17 +1061,6 @@ namespace FAMIS.Controllers
                         }
                     }
                 }
-                    //foreach (int pid in ids_dict)
-                    //{
-                    //    var fatherIDs = GetSonID_dataDict_Para(pid);
-                    //    foreach (var q in fatherIDs)
-                    //    {
-                    //        if (q.ID != pid)
-                    //        {
-                    //            ids_dict.Add(q.ID);
-                    //        }
-                    //    }
-                    //}
             }
 
             var target = from p in DB_C.tb_dataDict_para
@@ -1099,6 +1088,49 @@ namespace FAMIS.Controllers
             }
             return 0;
         }
+
+
+        [HttpPost]
+        public int Handler_deleteAssetType(int? id)
+        {
+            if (id == null)
+            {
+                return 0;
+            }
+
+            List<int> ids = new List<int>();
+            //获取到父节点
+            var pids = GetSonID_AsseType(id);
+            foreach(var pid in pids)
+            {
+                ids.Add(pid.ID);
+            }
+            if (!ids.Contains((int)id))
+            {
+                ids.Add((int)id);
+            }
+
+            var data = from p in DB_C.tb_AssetType
+                       where p.flag == true
+                       where ids.Contains(p.ID)
+                       select p;
+            try {
+                foreach (var item in data)
+                {
+                    item.flag = false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }catch(Exception e){
+
+                return 0;
+            }
+
+           
+
+ 
+        }
+
 
 
 
@@ -1837,14 +1869,18 @@ namespace FAMIS.Controllers
             }
 
             JsonResult jsR = new JsonResult();
-            if (dictID == null)
-            {
-                return jsR;
-            }
+            
             switch(name){
                 case "assetType": jsR = loadTreeGrid_AssetType(); break;
                 case "department": jsR = loadTreeGrid_Department(); break;
-                case "dictPara": jsR = loadTreeGrid_dictPara((int)dictID); break;
+                case "dictPara": {
+                    if (dictID == null)
+                    {
+                        return jsR;
+                    }
+                    jsR = loadTreeGrid_dictPara((int)dictID);
+                }
+                    ; break;
                 default: ; break;
             }
             return jsR;
