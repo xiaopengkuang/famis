@@ -160,31 +160,32 @@ namespace FAMIS.Controllers
         [HttpPost]
         public String Get_Json_Memu(string JSON)
         {
-            StreamWriter sw = new StreamWriter("D:\\meue.txt");
+            StreamWriter sw = new StreamWriter("D:\\msda.txt");
             string Menu_JSON="";
             int rid = int.Parse(JSON);
             int indexof_menu_ID=1;
-            IEnumerable<String> menu_ID = from o in DBConnecting.tb_role_authorization
+            IEnumerable<int?> menu_ID = from o in DBConnecting.tb_role_authorization
                                                          where o.role_ID == rid
                                                          && o.type=="menu"
-                                                         orderby o.Right_ID
+                                                        
                                                          select o.Right_ID;
            
             
-           foreach(String mid in menu_ID)
+           foreach(int mid in menu_ID)
            {
               IEnumerable<tb_Menu> menue_details = from m in DBConnecting.tb_Menu
-                              where m.ID_Menu == mid
+                              where m.ID == mid
+                              orderby m.ID_Menu
                               select m;
               foreach (tb_Menu menu in menue_details)
               {
-                  
-                  if (!mid.Contains("_"))
+                  string menu_rankID=menu.ID_Menu;
+                  if (!menu_rankID.Contains("_"))
                   {
                       if(indexof_menu_ID==1)
-                      Menu_JSON += "{\r\"menus\":[{\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\",\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
+                          Menu_JSON += "{\r\"menus\":[{\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\",\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
                       else
-                          Menu_JSON += "]},\r{\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
+                          Menu_JSON += "]},\r{\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
 
                   }
 
@@ -192,18 +193,18 @@ namespace FAMIS.Controllers
                   {
                       if (indexof_menu_ID != menu_ID.Count())
                       {
-                          if (int.Parse(mid.Split('_')[1]) == 1)
-                              Menu_JSON += "{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
+                          if (int.Parse(menu_rankID.Split('_')[1]) == 1)
+                              Menu_JSON += "{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
                           else
-                              Menu_JSON += ",{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
+                              Menu_JSON += ",{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
 
                       }
                       else
                       {
-                          if (int.Parse(mid.Split('_')[1]) == 1)
-                              Menu_JSON += "{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
+                          if (int.Parse(menu_rankID.Split('_')[1]) == 1)
+                              Menu_JSON += "{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
                           else
-                              Menu_JSON += ",{\r\"menuid\":\"" + mid + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
+                              Menu_JSON += ",{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
                       }
                   }
               }

@@ -159,6 +159,86 @@ function loadPageTool() {
     var pager = $('#TableList_0_1').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
+            text: '添加',
+            iconCls: 'icon-add',
+            height: 50,
+            handler: function () {
+                var $winADD;
+                $winADD = $('#modalwindow').window({
+                    title: '添加资产',
+                    width: 860,
+                    height: 540,
+                    top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
+                    left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+                    shadow: true,
+                    modal: true,
+                    iconCls: 'icon-add',
+                    closed: true,
+                    minimizable: false,
+                    maximizable: false,
+                    collapsible: false,
+                    onClose: function () {
+                        $('#TableList_0_1').datagrid('reload');
+                        //    var resultAlert = "成功插入记录！";
+                        //    $.messager.show({
+                        //        title: '提示',
+                        //        msg: resultAlert,
+                        //        showType: 'slide',
+                        //        style: {
+                        //            right: '',
+                        //            top: document.body.scrollTop + document.documentElement.scrollTop,
+                        //            bottom: ''
+                        //        }
+                        //    });
+                    }
+                });
+                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/AddAsset'></iframe>");
+                $winADD.window('open');
+            }
+        }, {
+            text: '删除',
+            iconCls: 'icon-remove',
+            height: 50,
+            handler: function () {
+                //获取选择行
+                var rows = $('#TableList_0_1').datagrid('getSelections');
+                var IDS = [];
+                for (var i = 0; i < rows.length; i++) {
+                    IDS[i] = rows[i].ID;
+                }
+                //将数据传入后台
+                $.ajax({
+                    url: '/Asset/deleteAssets',
+                    data: { "selectedIDs": IDS },
+                    //data: _list,  
+                    dataType: "json",
+                    type: "POST",
+                    traditional: true,
+                    success: function () {
+                        $('#TableList_0_1').datagrid('reload');
+                        //var resultAlert = "成功删除记录！";
+                        //$.messager.show({
+                        //    title: '提示',
+                        //    msg: resultAlert,
+                        //    showType: 'slide',
+                        //    style: {
+                        //        right: '',
+                        //        top: document.body.scrollTop + document.documentElement.scrollTop,
+                        //        bottom: ''
+                        //    }
+                        //});
+                    }
+                });
+            }
+        }, {
+            text: '刷新',
+            height: 50,
+            iconCls: 'icon-reload',
+            handler: function () {
+                $('#TableList_0_1').datagrid('reload');
+                //alert('刷新');
+            }
+        }, {
             text: '导出',
             height: 50,
             iconCls: 'icon-save',
