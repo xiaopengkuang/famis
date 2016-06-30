@@ -198,18 +198,41 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                           string name = name_id[0];
                           string id = name_id[1];
                           string currentfather;
-                          
+                          int Stored_ID = 0;
+                          IEnumerable<tb_Menu> menu = from f in mydb.tb_Menu
+                                                                where f.ID_Menu == id
+                                                                select f;
+                          if (menu.Count() > 0)
+                          {
+                              foreach (tb_Menu q in menu)
+                              {
+                                   
+                                  Stored_ID = q.ID;
+                              }
+                          }
                           if (!id.Contains("_"))
                               continue;
                           else
                               currentfather = id.Split('_')[0];
                           if (fatherid != int.Parse(currentfather))
                           {
+                              int myid = 0;
+                              IEnumerable<tb_Menu> fm = from f in mydb.tb_Menu
+                                                        where f.ID_Menu == currentfather
+                                                         select f;
+                              if (fm.Count() > 0)
+                              {
+                                  foreach (tb_Menu q in fm)
+                                  {
+
+                                      myid = q.ID;
+                                  }
+                              }
                               var addfather = new tb_role_authorization
                               {
                                   role_ID = Roleid,
                                   type = "menu",
-                                  Right_ID = currentfather,
+                                  Right_ID = myid,
                                   flag=true
                               };
                               mydb.tb_role_authorization.Add(addfather);
@@ -220,7 +243,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                               {
                                   role_ID = Roleid,
                                   type = "menu",
-                                  Right_ID = id,
+                                  Right_ID = Stored_ID,
                                   flag = true
 
                               };
@@ -269,6 +292,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     string[] name_id = Rightdetail[i].Split(',');
                     string name = name_id[0];
                     string id = name_id[1];
+                    int Stored_ID = 0;
                     bool mflag = false;
                     IEnumerable<tb_AssetType> Assettype = from f in mydb.tb_AssetType
                                                             where f.orderID == id
@@ -276,13 +300,16 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     if (Assettype.Count() > 0)
                     {
                         foreach (tb_AssetType q in Assettype)
+                        {
                             mflag = (bool)q.flag;
+                            Stored_ID = q.ID;
+                        }
                     }
                     var role_au_tb = new tb_role_authorization
                     {
                         role_ID = Roleid,
                         type="AssetType",
-                        Right_ID = id,
+                        Right_ID = Stored_ID,
                         flag=mflag
                     };
                     mydb.tb_role_authorization.Add(role_au_tb);
@@ -325,6 +352,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     string[] name_id = Rightdetail[i].Split(',');
                     string name = name_id[0];
                     string id = name_id[1];
+                    int Stored_ID = 0;
                     bool mflag = false;
                     IEnumerable<tb_department> department= from f in mydb.tb_department
                                    where f.ID_Department.ToString() == id
@@ -332,13 +360,16 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     if (department.Count() > 0)
                     {
                         foreach (tb_department q in department)
+                        {
                             mflag = (bool)q.effective_Flag;
+                            Stored_ID = q.ID;
+                        }
                     }
                     var role_au_tb = new tb_role_authorization
                     {
                         role_ID = Roleid,
                         type="department",
-                        Right_ID= id,
+                        Right_ID = Stored_ID,
                         flag=mflag
                     };
                     mydb.tb_role_authorization.Add(role_au_tb);
@@ -568,13 +599,20 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                      int temp=0;
                      foreach (tb_role_authorization o in role_au)
                      {
+                         IEnumerable<tb_Menu>  me = from a in mydb.tb_Menu
+                                                           where a.ID == o.Right_ID
+                                                           select a;
+                         foreach (tb_Menu tb in me)
+                         {
+                             if (temp != role_au.Count() - 1)
+
+                                 json += tb.ID_Menu+ ",";
+                             else
+                                 json += tb.ID_Menu;
+                             temp++;
                          
-                         if (temp != role_au.Count() - 1)
-                            
-                        json+=o.Right_ID+","; 
-                         else
-                            json+=o.Right_ID;
-                         temp++;
+                         }
+                       
 
                      }
                   }
@@ -598,12 +636,18 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 int temp = 0;
                 foreach (tb_role_authorization o in role_au)
                 {
+                    IEnumerable<tb_AssetType> asset = from a in mydb.tb_AssetType
+                                                      where a.ID == o.Right_ID
+                                                      select a;
+                    foreach (tb_AssetType at in asset)
+                    {
+                        if (temp != role_au.Count() - 1)
+                            json += at.orderID + ",";
+                        else
+                            json += at.orderID;
+                        temp++;
+                    }
                    
-                    if (temp != role_au.Count() - 1)
-                        json += o.Right_ID + ",";
-                    else
-                        json += o.Right_ID;
-                    temp++;
 
                 }
             }
@@ -629,13 +673,18 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 int temp = 0;
                 foreach (tb_role_authorization o in role_au)
                 {
+                    IEnumerable<tb_department> depart = from a in mydb.tb_department
+                                                        where a.ID == o.Right_ID
+                                                      select a;
+                    foreach (tb_department d in depart)
+                    {
 
-                    if (temp != role_au.Count() - 1)
-                        json += o.Right_ID + ",";
-                    else
-                        json += o.Right_ID;
-                    temp++;
-
+                        if (temp != role_au.Count() - 1)
+                            json += d.ID_Department + ",";
+                        else
+                            json += d.ID_Department;
+                        temp++;
+                    }
                 }
             }
             GetRule model = new GetRule();

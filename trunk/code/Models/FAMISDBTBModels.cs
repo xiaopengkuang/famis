@@ -266,9 +266,7 @@ namespace FAMIS.Models
                 .Property(e => e.type)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_role_authorization>()
-                .Property(e => e.Right_ID)
-                .IsUnicode(false);
+          
 
           
             modelBuilder.Entity<tb_Rule_Generate>()
