@@ -28,6 +28,7 @@ namespace FAMIS.Controllers
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
         CommonConversion commonConversion = new CommonConversion();
         MODEL_TO_JSON MTJ = new MODEL_TO_JSON();
+        JSON_TO_MODEL JTM = new JSON_TO_MODEL();
 
         // GET: Asset
 
@@ -365,11 +366,12 @@ namespace FAMIS.Controllers
             return insertNum;
         }
         [HttpPost]
-        public int addNewAsset_hanlder(string Asset_add)
+        public int Handler_addNewAsset(string Asset_add)
         {
             int info = 0;
             //插入对象方式
-            info = addNewAsset_hanlder_ByClass(Asset_add);
+            //info = addNewAsset_hanlder_ByClass(Asset_add);
+            info = Handler_addNewAsset_ByClass(Asset_add);
 
             return info;
         }
@@ -988,7 +990,7 @@ namespace FAMIS.Controllers
 
         }
         [HttpPost]
-        public int addNewAsset_hanlder_ByClass(string Asset_add)
+        public int Handler_addNewAsset_ByClass(string Asset_add)
         {
             int insertNum = 0;
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -996,59 +998,36 @@ namespace FAMIS.Controllers
             //先判断是添加单个函数批量添加
             if (dto_aa.d_Check_PLZJ_add == true)//单数添加
             {
-                //
-
-                //info += dto_aa.d_ZCBH_add;
                 dto_aa.flag = true;
-                dto_aa.OperateTime = new DateTime();
-                DB_C.tb_Asset.Add(convertAssetTbByJson(dto_aa));
-                //DB_Connecting.tb_Asset.Add(dto_aa);
-
+                dto_aa.OperateTime = DateTime.Now;
+                DB_C.tb_Asset.Add(JTM.ConverJsonToTable(dto_aa)); 
             }
             else
             { //批量添加
 
                 String ruleType = "ZC";
-                int num = dto_aa.d_Num_PLTJ_add;
+                int num = (int)dto_aa.d_Num_PLTJ_add;
                 CommonController tmc = new CommonController();
                 ArrayList serailNums = tmc.getNewSerialNumber(ruleType, num);
                 List<tb_Asset> datasToadd = new List<tb_Asset>();
                 for (int i = 0; i < serailNums.Count; i++)
                 {
-
                     dto_aa.d_ZCBH_add = serailNums[i].ToString().Trim();
-                    //info += dto_aa.d_ZCBH_add;
                     dto_aa.flag = true;
-                    dto_aa.OperateTime = new DateTime();
-                    datasToadd.Add(convertAssetTbByJson(dto_aa));
-
+                    dto_aa.OperateTime =DateTime.Now;
+                    datasToadd.Add(JTM.ConverJsonToTable(dto_aa));
                 }
                 DB_C.tb_Asset.AddRange(datasToadd);
-
-
-
             }
 
-            //int a = 0;
             try
             {
                 insertNum = DB_C.SaveChanges();
-                //info = "提交成功";
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                // Make some adjustments.
-                // ...
-                // Try again.
-                //DB_Connecting.SaveChanges();
-                //info += "提交失败" + e.ToString();
             }
-            //// TODO   存入到数据库中
-
-
-
-
             return insertNum;
         }
 
@@ -1190,33 +1169,33 @@ namespace FAMIS.Controllers
             }
             return condStr;
         }
-        public tb_Asset convertAssetTbByJson(Json_Asset_add data)
-        {
-            tb_Asset tb_asset_add = new tb_Asset();
-            tb_asset_add.serial_number = data.d_ZCBH_add;
-            tb_asset_add.name_Asset = data.d_ZCMC_add;
-            tb_asset_add.type_Asset = data.d_ZCLB_add;
-            tb_asset_add.specification = data.d_ZCXH_add;
-            tb_asset_add.measurement = data.d_JLDW_add;
-            tb_asset_add.unit_price = data.d_Other_ZCDJ_add;
-            tb_asset_add.amount = data.d_Other_ZCSL_add;
-            tb_asset_add.value = data.d_Other_ZCJZ_add;
-            tb_asset_add.department_Using = data.d_SZBM_add;
-            tb_asset_add.addressCF = data.d_CFDD_add;
-            tb_asset_add.people_using = data.d_SYR_add;
-            tb_asset_add.flag = data.flag;
-            tb_asset_add.Time_add = data.OperateTime;
-            tb_asset_add.supplierID = data.d_GYS_add;
-            tb_asset_add.Time_Purchase = data.d_GZRQ_add;
-            tb_asset_add.YearService_month = data.d_Other_SYNX_add;
-            tb_asset_add.Method_depreciation = data.d_Other_ZJFS_add;
-            tb_asset_add.Net_residual_rate = data.d_Other_JCZL_add;
-            tb_asset_add.depreciation_Month = data.d_Other_YTZJ_add;
-            tb_asset_add.depreciation_tatol = data.d_Other_LJZJ_add;
-            tb_asset_add.Net_value = data.d_Other_JZ_add;
-            tb_asset_add.Method_add = data.d_ZJFS_add;
-            return tb_asset_add;
-        }
+        //public tb_Asset convertAssetTbByJson(Json_Asset_add data)
+        //{
+        //    tb_Asset tb_asset_add = new tb_Asset();
+        //    tb_asset_add.serial_number = data.d_ZCBH_add;
+        //    tb_asset_add.name_Asset = data.d_ZCMC_add;
+        //    tb_asset_add.type_Asset = data.d_ZCLB_add;
+        //    tb_asset_add.specification = data.d_ZCXH_add;
+        //    tb_asset_add.measurement = data.d_JLDW_add;
+        //    tb_asset_add.unit_price = data.d_Other_ZCDJ_add;
+        //    tb_asset_add.amount = data.d_Other_ZCSL_add;
+        //    tb_asset_add.value = data.d_Other_ZCJZ_add;
+        //    tb_asset_add.department_Using = data.d_SZBM_add;
+        //    tb_asset_add.addressCF = data.d_CFDD_add;
+        //    tb_asset_add.people_using = data.d_SYR_add;
+        //    tb_asset_add.flag = data.flag;
+        //    tb_asset_add.Time_add = data.OperateTime;
+        //    tb_asset_add.supplierID = data.d_GYS_add;
+        //    tb_asset_add.Time_Purchase = data.d_GZRQ_add;
+        //    tb_asset_add.YearService_month = data.d_Other_SYNX_add;
+        //    tb_asset_add.Method_depreciation = data.d_Other_ZJFS_add;
+        //    tb_asset_add.Net_residual_rate = data.d_Other_JCZL_add;
+        //    tb_asset_add.depreciation_Month = data.d_Other_YTZJ_add;
+        //    tb_asset_add.depreciation_tatol = data.d_Other_LJZJ_add;
+        //    tb_asset_add.Net_value = data.d_Other_JZ_add;
+        //    tb_asset_add.Method_add = data.d_ZJFS_add;
+        //    return tb_asset_add;
+        //}
 
 
 
@@ -1570,7 +1549,7 @@ namespace FAMIS.Controllers
                 if (data.d_Num_PLTJ_add > 0)
                 {
                     //获取编号
-                    int num = data.d_Num_PLTJ_add;
+                    int num = (int)data.d_Num_PLTJ_add;
                     String ruleType = "ZC";
                     CommonController tmc = new CommonController();
                     ArrayList serailNums = tmc.getNewSerialNumber(ruleType, num);

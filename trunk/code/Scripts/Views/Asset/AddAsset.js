@@ -98,7 +98,7 @@ function load_SYR_add(SZBM_ID) {
 
     $("#SYR_add").combobox({
         valueField: 'id',
-        method: 'get',
+        method: 'POST',
         textField: 'name',
         url: '/Dict/load_SYR_add?SZBM_ID=' + SZBM_ID,
         onSelect: function (rec) {
@@ -113,9 +113,9 @@ function load_SYR_add(SZBM_ID) {
 function load_JLDW_add() {
     $("#JLDW_add").combobox({
         valueField: 'ID',
-        method: 'get',
+        method: 'POST',
         textField: 'name_para',
-        url: '/Dict/load_FS_add',
+        url: '/Dict/load_FS_add?nameFlag=2_JLDW',
         onSelect: function (rec) {
             $('#JLDW_add').combobox('setValue', rec.ID);
             $('#JLDW_add').combobox('setText', rec.name_para);
@@ -125,35 +125,22 @@ function load_JLDW_add() {
 
 
 function load_SZBM_add() {
-
     $('#SZBM_add').combotree
     ({
         url: '/Dict/load_SZBM',
         valueField: 'id',
         textField: 'nameText',
         required: true,
-        method: 'get',
+        method: 'POST',
         editable: false,
         //选择树节点触发事件  
         onSelect: function (node) {
-            //返回树对象  
-            var tree = $(this).tree;
-            //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-            var isLeaf = tree('isLeaf', node.target);
-            if (!isLeaf) {
-                //清除选中  
-                $('#SZBM_add').combotree('clear');
-            } else {
-                d_SZBM_add = $('#SZBM_add').combotree('getValue');
-                load_SYR_add(node.id);
-
-            }
-            //
-
+            d_SZBM_add = $('#SZBM_add').combotree('getValue');
+            load_SYR_add(node.id);
 
         }, //全部折叠
         onLoadSuccess: function (node, data) {
-            $('#SZBM_add').combotree('tree').tree("collapseAll");
+            //$('#SZBM_add').combotree('tree').tree("collapseAll");
         }
     });
 
@@ -161,27 +148,19 @@ function load_SZBM_add() {
 function load_CFDD_add() {
     $('#CFDD_add').combotree
   ({
-      url: '/Dict/load_CFDD_add?id_di=9',
+      url: '/Dict/load_DictTree?nameFlag=2_CFDD',
       valueField: 'id',
       textField: 'nameText',
       required: true,
-      method: 'get',
+      method: 'POST',
       editable: false,
       //选择树节点触发事件  
       onSelect: function (node) {
           //返回树对象  
           var tree = $(this).tree;
           //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-          var isLeaf = tree('isLeaf', node.target);
-          if (!isLeaf) {
-              //清除选中  
-              $('#CFDD_add').combotree('clear');
-          } else {
-              d_CFDD_add = $('#CFDD_add').combotree('getValue');
-          }
+          d_CFDD_add = $('#CFDD_add').combotree('getValue');
           //
-
-
       }, //全部折叠
       onLoadSuccess: function (node, data) {
           $('#CFDD_add').combotree('tree').tree("collapseAll");
@@ -197,8 +176,9 @@ function load_GYS_add() {
         idField: 'code',
         textField: 'name',
         url: '/Dict/load_GYS_add',
-        method: 'get', //默认是post,不允许对静态文件访问
+        method: 'POST', //默认是post,不允许对静态文件访问
         columns: [[
+        { field: 'ID', checkbox: true, title: 'ID', width: 99, hidden: true },
         { field: 'name_supplier', title: '供应商', width: 99 },
         { field: 'linkman', title: '联系人', width: 99 },
         { field: 'address', title: '地址', width: 99 }
@@ -206,12 +186,10 @@ function load_GYS_add() {
         onClickRow: function (index, row) {
             search = false;
             $('#GYS_add').combogrid('hidePanel');
-            $('#GYS_add').combogrid('setValue', row.name_supplier);
+            $('#GYS_add').combogrid('setValue', row.ID);
             $('#GYS_add').combogrid('setText', row.name_supplier);
             $("#LXR_add").val(row.linkman);
-            //$("#LXR_add").text()(row.linkman);
             $("#GYSDD_add").val(row.address);
-            //$("#GYSDD_add").textbox('setText', row.address);
             setTimeout(function () {
                 search = true;
             }, 1000);
@@ -223,9 +201,9 @@ function load_GYS_add() {
 function load_ZJFS_add() {
     $("#ZJFS_add").combobox({
         valueField: 'ID',
-        method: 'get',
+        method: 'POST',
         textField: 'name_para',
-        url: '/Dict/load_FS_add?TypeID=3',
+        url: '/Dict/load_FS_add?nameFlag=2_ZJFS_JIA',
         onSelect: function (rec) {
             $('#ZJFS_add').combobox('setValue', rec.ID);
             $('#ZJFS_add').combobox('setText', rec.name_para);
@@ -238,7 +216,7 @@ function load_ZJFS_add() {
 function load_ZCXH_add(assetType) {
     $("#ZCXH_add").combobox({
         valueField: 'ZCXH',
-        method: 'get',
+        method: 'POST',
         textField: 'ZCXH',
         url: '/Dict/load_ZCXH_add?assetType=' + assetType,
         onSelect: function (rec) {
@@ -252,9 +230,9 @@ function load_ZCXH_add(assetType) {
 function load_Other_ZJFS_add() {
     $("#Other_ZJFS_add").combobox({
         valueField: 'ID',
-        method: 'get',
+        method: 'POST',
         textField: 'name_para',
-        url: '/Dict/load_FS_add?TypeID=10',
+        url: '/Dict/load_FS_add?nameFlag=2_ZJFS_JIU',
         onSelect: function (rec) {
             $('#Other_ZJFS_add').combobox('setValue', rec.ID);
             $('#Other_ZJFS_add').combobox('setText', rec.name_para);
@@ -267,12 +245,6 @@ function load_Other_ZJFS_add() {
 
 function ReComputeAssetValue() {
     alert(12);
-    //var dj_asset = ($("#Other_ZCSL_add").val());
-    //alert(dj_asset);
-    //var sl_asset = ($("#Other_ZCDJ_add").val());
-    ////var jz_asset = dj_asset * sl_asset;
-    //alert(jz_asset);
-    //$("#Other_ZCJZ_add").val();
 }
 
 
@@ -330,40 +302,18 @@ function submitForm() {
     var d_ZCBH_add = $("#ZCBH_add").val();
     //获取资产性质
     var zcxz = $("#ZCXZ_add").val();
-
-
     var d_ZCXZ_ID_add;
-
-    //var d_ZCXZ_Name_add;
-
-    //if (zcxz != "" && zcxz != null) {
-    //    var zcxz_arr = zcxz.split("-");
-    //    if (zcxz_arr.length == 2) {
-    //        d_ZCXZ_ID_add = parseInt(zcxz_arr[0]);
-    //        d_ZCXZ_Name_add = zcxz_arr[1];
-    //    }
-    //}
-
     if (d_ZCLB_add == "" || d_ZCLB_add == null) {
 
         d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
         if (d_ZCLB_add == "" || d_ZCLB_add == undefined) {
             //$.messager.alert('提示', "调皮的肖金龙", 'info'); return;
         }
-
     }
-
-    //var d_ZCLB_add;
-    //= $("#ZCLB_add").combotree("getValue");
-
-
     var d_ZCMC_add = $("#ZCMC_add").val();
 
     var d_ZCXH_add = $('#ZCXH_add').combobox("getValue");
-    //alert(d_ZCXH_add);
-
     var d_JLDW_add = $("#JLDW_add").combobox("getValue");
-
 
     if (d_SZBM_add == "" || d_SZBM_add == null) {
 
@@ -475,11 +425,10 @@ function submitForm() {
 
     //$.messager.alert('提示', d_Other_SYNX_add + "|" + d_Other_ZCSL_add + "|" + d_Other_ZCDJ_add, 'info');
     $.ajax({
-        url: "/Asset/addNewAsset_hanlder",
+        url: "/Asset/Handler_addNewAsset",
         type: 'POST',
         data: {
             "Asset_add": JSON.stringify(Asset_add)
-            //"Asset_add": JSON.stringify("\"A\":1")
         },
         beforeSend: ajaxLoading,
         success: function (data) {

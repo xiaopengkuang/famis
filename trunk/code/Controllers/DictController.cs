@@ -281,56 +281,43 @@ namespace FAMIS.Controllers
             ViewBag.id_dataDict = id;
             return View("edit_dataDict");
         }
-        
 
 
-        [HttpGet]
+
+        [HttpPost]
         public JsonResult load_GYS_add()
         {
 
-            List<tb_supplier> list = DB_C.tb_supplier.OrderBy(a => a.ID).ToList();
+            var data = from p in DB_C.tb_supplier
+                       where p.flag == true
+                       select new dto_supplier { 
+                            ID=p.ID,
+                            name_supplier=p.name_supplier,
+                            linkman=p.linkman,
+                            address=p.address
+                       };
             var json = new
             {
-                total = list.Count(),
-                rows = (from r in list
-                        select new dto_supplier()
-                        {
-                            name_supplier = r.name_supplier,
-                            linkman = r.linkman,
-                            address = r.address
-                        }).ToArray(),
-
-                        sql=getSearchTreeSQL("")
-                //        ,
-                //countre=couterTest() 
+                total = data.Count(),
+                rows= data.ToList().ToArray()
             };
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
 
-      
 
-        [HttpGet]
+
+        [HttpPost]
         public String load_ZCXH_add(int? assetType)
         {
-             List<tb_Asset> list;
-             if (assetType != null && assetType <1)
-             {
-                 list = DB_C.tb_Asset.Where(a => a.type_Asset == assetType).Distinct().ToList() ;
-             }
-             else {
-                 list =  DB_C.tb_Asset.Distinct().ToList() ;
-             }
-
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true
+                       where p.type_Asset == assetType
+                       select new { 
+                       ZCXH=p.specification
+                       };
             JavaScriptSerializer jss = new JavaScriptSerializer();
-            var result = (from r in list
-                          select new dto_Asset_ZCXH()
-                          {
-                              ZCXH = r.specification
-                             
-                          }).Distinct().ToList(); ;
-
-            String json = jss.Serialize(result).ToString().Replace("\\", "");
+            String json = jss.Serialize(data.ToList()).ToString().Replace("\\", "");
             return json;
         }
 
@@ -338,42 +325,32 @@ namespace FAMIS.Controllers
         [HttpPost]
         public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
         {
-            /*StreamWriter sw = new StreamWriter("D:\\123456.txt");
-            sw.Write(staff.ID_Staff + "\r\n");
-            sw.Write(staff.code_Departmen + "\r\n");
-            sw.Write(staff.sex+ "\r\n");
-            sw.Write(staff.entry_Time + "\r\n");
-            sw.Write(staff.phoneNumber + "\r\n");
-            sw.Write(staff.email + "\r\n");
-            sw.Write(staff.effective_Flag+"\r\n");
-            sw.Write(staff.create_TIME + "\r\n");
-            sw.Write(staff.invalid_TIME + "\r\n");
-            sw.Write(staff._operator + "\r\n");
-            sw.Write(staff.name + "\r\n");
-            sw.Close();*/
-
             if (ModelState.IsValid)
             {
                 DB_C.tb_staff.Add(staff);
                 DB_C.SaveChanges();
 
             }
-
             return View();
 
 
         }
 
-        [HttpGet]
+        [HttpPost]
         /**
          * 加载增加方式
          * */
-        public String load_FS_add()
+        public String load_FS_add(String nameFlag)
         {
+            if (nameFlag == null || nameFlag == "")
+            {
+                return "";
+            }
+
             var data = from p in DB_C.tb_dataDict_para
                        where p.activeFlag == true
                        join type in DB_C.tb_dataDict on p.ID_dataDict equals type.ID
-                       where type.name_flag == SystemConfig.nameFlag_2_ZJFS_JIA
+                       where type.name_flag == nameFlag
                        select new dto_DataDict_para()
                        {
                            ID = p.ID,
@@ -384,10 +361,9 @@ namespace FAMIS.Controllers
             return json;
         }
 
-        [HttpGet]
+        [HttpPost]
         public String load_SYR_add(String SZBM_ID)
         {
-
             var data = from p in DB_C.tb_staff
                        where p.effective_Flag == true
                        select new dto_Staff { 
@@ -402,7 +378,7 @@ namespace FAMIS.Controllers
 
 
 
-         [HttpGet]
+         [HttpPost]
         public String load_SZBM()
         {
             return GenerateTree_Department();
@@ -1812,38 +1788,28 @@ namespace FAMIS.Controllers
         }
         #endregion 
 
-         [HttpGet]
-         public String load_CFDD_add(int id_di)
+         [HttpPost]
+         public String load_DictTree(String nameFlag)
          {
 
-             List<tb_dataDict_para> list_ad_AT = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == id_di).ToList();
-             if (!result_tree_Address.Equals(""))
+             if(nameFlag==null||nameFlag=="")
              {
-                 Thread.Sleep(1000);
+                 return "";
              }
-             result_tree_Address.Clear();
-             sb_tree_Address.Clear();
-             List<dto_CFDD_Asset> list_dto_ad_AT = new List<dto_CFDD_Asset>();
-             list_ad_AT.ForEach(item =>
-             {
-                 dto_CFDD_Asset tmp_dto_AT = new dto_CFDD_Asset();
+             var data = from p in DB_C.tb_dataDict_para
+                        where p.activeFlag == true
+                        join type in DB_C.tb_dataDict on p.ID_dataDict equals type.ID
+                        where type.name_flag == nameFlag
+                        select new dto_TreeNode
+                        {
+                            id=p.ID,
+                            fatherID=(int)p.fatherid,
+                            nameText=p.name_para,
+                            orderID=p.ID,
+                            url=p.url
+                        };
 
-                 tmp_dto_AT.id = item.ID;
-                 tmp_dto_AT.fatherid = (int)item.fatherid;
-                 tmp_dto_AT.url = item.url;
-                 tmp_dto_AT.nameText = item.name_para;
-                 tmp_dto_AT.orderID = item.orderID;
-                 list_dto_ad_AT.Add(tmp_dto_AT);
-             });
-             DataSet ds_ad = ConvertToDataSet(list_dto_ad_AT);
-             DataTable dt_ad = new DataTable();
-             dt_ad = ds_ad.Tables[0];
-
-             string json = GetTreeJsonByTable_Address(dt_ad, "id", "nameText", "url", "fatherID", "0");
-
-             result_tree_Address.Clear();
-             sb_tree_Address.Clear();
-             return json;
+             return TreeListToString(data.ToList());
          }
 
 
@@ -1854,39 +1820,23 @@ namespace FAMIS.Controllers
        
          public String GenerateTree_Department()
          {
-             List<tb_department> list_de = DB_C.tb_department.ToList();
              if (!result_tree_department.Equals(""))
              {
                  Thread.Sleep(1000);
              }
-
              result_tree_department.Clear();
              sb_tree_department.Clear();
-             List<dto_department> list_dto=new List<dto_department>();
-             list_de.ForEach(item =>
-             {
-                 dto_department tmp_dto=new dto_department();
+             var data = from p in DB_C.tb_department
+                        where p.effective_Flag == true
+                        select new dto_TreeNode { 
+                        id=(int)p.ID_Department,
+                        fatherID=(int)p.ID_Father_Department,
+                        nameText=p.name_Department,
+                        orderID = (int)p.ID_Department,
+                        url=p.url
+                        };
 
-                 tmp_dto.id = item.ID_Department.ToString();
-                 tmp_dto.fatherID = item.ID_Father_Department.ToString();
-                 tmp_dto.nameText = item.name_Department;
-                 tmp_dto.url = item.url;
-                 tmp_dto.orderNum = item.orderNum;
-                 list_dto.Add(tmp_dto);
-             });
-
-
-
-
-             DataSet ds_de = ConvertToDataSet(list_dto); 
-             DataTable dt_de = new DataTable();
-             dt_de = ds_de.Tables[0];
-
-             string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
-             result_tree_department.Clear();
-             sb_tree_department.Clear();
-             return json;
-  
+             return TreeListToString(data.ToList());
          }
 
 
