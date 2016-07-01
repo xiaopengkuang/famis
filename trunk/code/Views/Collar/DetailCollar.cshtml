@@ -1,0 +1,136 @@
+﻿@{
+    Layout = null;
+    
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加领用</title>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/Asset/Collar_Detail.js"></script>
+    <script type="text/javascript">
+
+        function loadDetail_collar(id) {
+            LoadInitData_datagrid(id);
+        }
+
+
+
+
+        function LoadInitData_datagrid(id) {
+            $('#collar_DG').datagrid({
+                url: '/Asset/Load_Asset_By_CollarID?flag=1&ID=' + id,
+                method: 'POST', //默认是post,不允许对静态文件访问
+                width: 'auto',
+                height: '300px',
+                iconCls: 'icon-save',
+                dataType: "json",
+                fitColumns: true,
+                pagePosition: 'top',
+                rownumbers: true, //是否加行号 
+                pagination: true, //是否显式分页 
+                pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
+                pageNumber: 1, //默认显示第几页 
+                pageList: [15, 30, 45],//分页中下拉选项的数值 
+                columns: [[
+                    { field: 'ID', checkbox: false, width: 50 },
+                    { field: 'serial_number', title: '资产编号', width: 50 },
+                    { field: 'name_Asset', title: '资产名称', width: 50 },
+                    { field: 'type_Asset', title: '资产类型', width: 50 },
+                    { field: 'specification', title: '型号规范', width: 50 },
+                    { field: 'unit_price', title: '单价', width: 50 },
+                    { field: 'amount', title: '数量', width: 50 },
+                    { field: 'department_Using', title: '使用部门', width: 50 },
+                    { field: 'addressCF', title: '地址', width: 50 },
+                    { field: 'Method_add', title: '添加方式', width: 50 },
+                    { field: 'state_asset', title: '资产状态', width: 50 },
+                    { field: 'supplierID', title: '供应商', width: 50 }
+
+                ]],
+                singleSelect: false, //允许选择多行
+                selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+                checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+            });
+            $('#collar_DG').datagrid('hideColumn', 'ID');
+            loadPageTool_Detail();
+        }
+        function loadPageTool_Detail() {
+            var pager = $('#collar_DG').datagrid('getPager');	// get the pager of datagrid
+            pager.pagination({
+                buttons: [{
+                    text: '刷新',
+                    height: 50,
+                    iconCls: 'icon-reload',
+                    handler: function () {
+                        $('#collar_DG').datagrid('reload');
+                        //alert('刷新');
+                    }
+                }],
+                beforePageText: '第',//页数文本框前显示的汉字  
+                afterPageText: '页    共 {pages} 页',
+                displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+            });
+        }
+
+    </script>
+</head>
+<body onload="loadDetail_collar(@ViewBag.selectID)">
+
+    <div class="easyui-panel" style="height: 600px;" fit="true">
+        <table style="width: 100%">
+            <tr>
+                <td style="width: 100px"><span style="width: 100px">单据号:</span></td>
+                <td>
+                    <input class="easyui-textbox" id="DJH_add" name="DJH_add" value="@ViewBag.serialNumber" readonly="readonly" style="width: 200px;" />
+                </td>
+                <td style="width: 100px"><span style="width: 100px">领用日期:</span></td>
+                <td>
+                    <input class="easyui-textbox" name="date_add" id="date_add" value="@ViewBag.data_collar" readonly="readonly" style="width: 200px;">
+                </td>
+                <td style="width: 100px"><span style="width: 100px">领用原因:</span></td>
+                <td>
+                    <input class="easyui-textbox" id="LYYY_add" value="@ViewBag.reason" name="LYYY_add" readonly="readonly" style="width: 200px;" />
+                </td>
+            </tr>
+            <tr>
+                <td>领用部门:</td>
+                <td>
+                    <input class="easyui-textbox" value="@ViewBag.department" readonly="readonly" id="LYBM_add" name="LYBM_add" style="width: 200px;" />
+
+                </td>
+                <td>领用使用人:</td>
+                <td>
+                    <input class="easyui-textbox" id="SYR_add" readonly="readonly" value="@ViewBag.staff" name="SYR_add" style="width: 200px;" />
+
+                </td>
+                <td>存放地点:</td>
+                <td>
+                    <input class="easyui-textbox" id="CFDD_add" readonly="readonly" aria-readonly="true" value="@ViewBag.address" name="CFDD_add" style="width: 200px;" />
+                </td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td style="width: 100px">备注：</td>
+                <td>
+                    <input class="easyui-textbox" id="PS_add" readonly="readonly" name="PS_add" value="@ViewBag.ps" style="width: 500px;" /></td>
+            </tr>
+        </table>
+
+
+
+        <table id="collar_DG" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
+        </table>
+    </div>
+
+
+</body>
+</html>
