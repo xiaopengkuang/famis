@@ -88,10 +88,8 @@ function loadPageTool(datagrid) {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
-
-                alert("aaa");
                 var title = "添加领用单";
-                var url = "/Collar/AddCollarView";
+                var url = "/Collar/add_collarView";
                 if (parent.$('#tabs').tabs('exists', title)) {
                     parent.$('#tabs').tabs('select', title);
                 } else {
@@ -103,35 +101,33 @@ function loadPageTool(datagrid) {
                         closable: true
                     });
                 }
-               
             }
         }, {
-            text: '删除',
+            text: '修改',
             height: 50,
-            iconCls: 'icon-cancel',
+            iconCls: 'icon-edit',
             handler: function () {
-
-                //获取选择行
+                ////获取选择行
                 var rows = $('#' + datagrid).datagrid('getSelections');
-                var IDS = [];
-                for (var i = 0; i < rows.length; i++) {
-                    IDS[i] = rows[i].ID;
-                }
-                if (rows.length > 0)
+                if (rows.length != 1)
                 {
-                    //将数据传入后台
-                    $.ajax({
-                        url: '/Collar/deleteCollars',
-                        data: { "selectedIDs": IDS },
-                        //data: _list,  
-                        dataType: "json",
-                        type: "POST",
-                        traditional: true,
-                        success: function () {
-                            $('#' + datagrid).datagrid('reload');
-                        }
+                    return;
+                }
+                var id = rows[0].ID;
+                var title = "领用-编辑";
+                var url = "/Collar/edit_collarView?id=" + id;
+                if (parent.$('#tabs').tabs('exists', title)) {
+                    parent.$('#tabs').tabs('select', title);
+                } else {
+                    var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+                    parent.$('#tabs').tabs('add', {
+                        title: title,
+                        content: content,
+                        icon: 'icon-add',
+                        closable: true
                     });
                 }
+                
             }
         }, {
             text: '刷新',
@@ -467,3 +463,34 @@ function myparser(s) {
 
 
 
+function openModelWindow(url, titleName) {
+    var $winADD;
+    $winADD = $('#modalwindow').window({
+        title: titleName,
+        width: 500,
+        height: 350,
+        top: (($(window).height() - 500) > 0 ? ($(window).height() - 500) : 200) * 0.5,
+        left: (($(window).width() - 350) > 0 ? ($(window).width() - 350) : 100) * 0.5,
+        shadow: true,
+        modal: true,
+        iconCls: 'icon-add',
+        closed: true,
+        minimizable: false,
+        maximizable: false,
+        collapsible: false,
+        onClose: function () {
+
+        }
+    });
+    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
+    $winADD.window('open');
+}
+//采用jquery easyui loading css效果
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}

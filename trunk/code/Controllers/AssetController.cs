@@ -538,7 +538,10 @@ namespace FAMIS.Controllers
             {
                 dto_aa.flag = true;
                 dto_aa.OperateTime = DateTime.Now;
-                DB_C.tb_Asset.Add(JTM.ConverJsonToTable(dto_aa)); 
+                tb_Asset newItem = JTM.ConverJsonToTable(dto_aa);
+                newItem.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_free);
+
+                DB_C.tb_Asset.Add(newItem); 
             }
             else
             { //批量添加
@@ -553,7 +556,10 @@ namespace FAMIS.Controllers
                     dto_aa.d_ZCBH_add = serailNums[i].ToString().Trim();
                     dto_aa.flag = true;
                     dto_aa.OperateTime =DateTime.Now;
-                    datasToadd.Add(JTM.ConverJsonToTable(dto_aa));
+
+                    tb_Asset newItem = JTM.ConverJsonToTable(dto_aa);
+                    newItem.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_free);
+                    DB_C.tb_Asset.Add(newItem); 
                 }
                 DB_C.tb_Asset.AddRange(datasToadd);
             }

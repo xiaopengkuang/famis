@@ -393,7 +393,7 @@ namespace FAMIS.Controllers
              return TreeListToString(data.ToList());
          }
          [HttpPost]
-         public String loadSearchTreeByRole()
+         public String loadSearchTreeByRole(String treeType)
          {
              //获取用户权限
              int? roleID = commonConversion.getRole();
@@ -402,9 +402,11 @@ namespace FAMIS.Controllers
                  return "{}";
              }
              List<dto_TreeNode> tree = new List<dto_TreeNode>();
-             tree = getTreeSearchNodes(roleID);
+             tree = getTreeSearchNodes(roleID,treeType);
              return TreeListToString(tree);
          }
+
+
 
 
          [HttpPost]
@@ -676,7 +678,7 @@ namespace FAMIS.Controllers
             
          }
 
-         public List<dto_TreeNode> getTreeSearchNodes(int? roleID)
+         public List<dto_TreeNode> getTreeSearchNodes(int? roleID,String treeType)
          {
              var idList = from p in DB_C.tb_dataDict
                         where p.active_flag == true
@@ -688,21 +690,38 @@ namespace FAMIS.Controllers
 
              foreach (var item in idList)
              {
+                 if (treeType == SystemConfig.treeType_Accounting)
+                 {
+                     if (SystemConfig.treeType_Accounting_Menu.Contains(item.name_flag)){}
+                     else { continue; }
+
+                 }else if (treeType == SystemConfig.treeType_collarSearch){
+                     if (SystemConfig.treeType_collarSearch_Menu.Contains(item.name_flag)){}
+                     else {continue;}
+                 }else{
+                     continue;
+                 }
                  dto_TreeNode fathernode = new dto_TreeNode();
-                 
                  fathernode.id = (int)(item.ID * SystemConfig.ratio_dictPara);
                  fathernode.nameText = item.name_dataDict;
                  fathernode.url ="javascript:void(0)";
                  fathernode.orderID = item.ID;
                  fathernode.fatherID =0;
-
+                
                  if (item.tb_Ref != null && item.tb_Ref != "")
                  {
                      List<dto_TreeNode> tmp = new List<dto_TreeNode>();
                      switch(item.tb_Ref){
-                         case SystemConfig.treeTB_deparment: tmp = getSZBMNodes(fathernode,roleID); break;
-                         case SystemConfig.treeTB_AssetType: tmp = getZCLBNodes(fathernode, roleID); break;
-                         case SystemConfig.treeTB_supplier: tmp = getGYSNodes(fathernode); break;
+                         case SystemConfig.treeTB_deparment: {
+                             tmp = getSZBMNodes(fathernode, roleID);
+                         }; break;
+                         case SystemConfig.treeTB_AssetType:
+                         {
+                                 tmp = getZCLBNodes(fathernode, roleID);
+                         }; break;
+                         case SystemConfig.treeTB_supplier:{ 
+                             tmp = getGYSNodes(fathernode);
+                         }; break;
                          default: ; break;
                      }
                      if (tmp.Count > 0){

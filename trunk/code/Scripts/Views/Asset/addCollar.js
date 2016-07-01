@@ -31,6 +31,8 @@ function myparser(s) {
 $(function () {
     
     loadInitData();
+
+
 });
 
 function loadInitData()
@@ -41,82 +43,46 @@ function loadInitData()
 }
 
 function load_Department() {
-
     $('#LYBM_add').combotree
-    ({
-        url: '/Dict/load_SZBM',
+     ({
+         url: '/Dict/load_SZBM',
+         valueField: 'id',
+         textField: 'nameText',
+         required: true,
+         method: 'POST',
+         editable: false,
+         //选择树节点触发事件  
+         onSelect: function (node) {
+         }, //全部折叠
+         onLoadSuccess: function (node, data) {
+             //$('#SZBM_add').combotree('tree').tree("collapseAll");
+         }
+     });
+
+}
+
+
+
+function load_CFDD_add() {
+      $('#CFDD_add').combotree({
+        url: '/Dict/load_DictTree?nameFlag=2_CFDD',
         valueField: 'id',
         textField: 'nameText',
         required: true,
-        method: 'get',
+        method: 'POST',
         editable: false,
         //选择树节点触发事件  
         onSelect: function (node) {
             //返回树对象  
             var tree = $(this).tree;
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-            var isLeaf = tree('isLeaf', node.target);
-            if (!isLeaf) {
-                //清除选中  
-                $('#LYBM_add').combotree('clear');
-            } else {
-                load_staff_Department(node.id);
-            }
+            d_CFDD_add = $('#CFDD_add').combotree('getValue');
             //
-
         }, //全部折叠
         onLoadSuccess: function (node, data) {
-            $('#LYBM_add').combotree('tree').tree("collapseAll");
+            $('#CFDD_add').combotree('tree').tree("collapseAll");
         }
     });
-
-}
-
-function load_staff_Department(SZBM_ID) {
-
-    $("#SYR_add").combobox({
-        valueField: 'id',
-        method: 'get',
-        textField: 'name',
-        url: '/Dict/load_SYR_add?SZBM_ID=' + SZBM_ID,
-        onSelect: function (rec) {
-            $('#SYR_add').combobox('setValue', rec.id);
-            $('#SYR_add').combobox('setText', rec.name);
-        }
-    });
-
-}
-
-
-function load_CFDD_add() {
-    $('#CFDD_add').combotree
-  ({
-      url: '/Dict/load_CFDD_add?id_di=9',
-      valueField: 'id',
-      textField: 'nameText',
-      required: true,
-      method: 'get',
-      editable: false,
-      //选择树节点触发事件  
-      onSelect: function (node) {
-          //返回树对象  
-          var tree = $(this).tree;
-          //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-          var isLeaf = tree('isLeaf', node.target);
-          if (!isLeaf) {
-              //清除选中  
-              $('#CFDD_add').combotree('clear');
-          } else {
-              d_CFDD_add = $('#CFDD_add').combotree('getValue');
-          }
-          //
-
-
-      }, //全部折叠
-      onLoadSuccess: function (node, data) {
-          $('#CFDD_add').combotree('tree').tree("collapseAll");
-      }
-  });
 }
 
 
@@ -133,7 +99,7 @@ function LoadInitData_datagrid() {
     }
     
     $('#collar_DG_add').datagrid({
-        url: '/Asset/Load_SelectedAsset?role=1&state=16&flag=1&selectedIDs=' + _list,
+        url: '/Collar/Load_SelectedAsset?selectedIDs=' + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -159,14 +125,6 @@ function LoadInitData_datagrid() {
             { field: 'Method_add', title: '添加方式', width: 50 },
             { field: 'state_asset', title: '资产状态', width: 50 },
             { field: 'supplierID', title: '供应商', width: 50 }
-            //{
-            //    field: 'time_LastLogined', title: '上次登录时间', width: 100,
-            //    formatter: function (date) {
-            //        var pa = /.*\((.*)\)/;
-            //        var unixtime = date.match(pa)[1].substring(0, 10);
-            //        return getTime(unixtime);
-            //    }
-            //}
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
@@ -183,26 +141,10 @@ function loadPageTool_Detail() {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
-                var $winADD;
-                $winADD = $('#modalwindow').window({
-                    title: '选择资产',
-                    width: 860,
-                    height: 540,
-                    top: (($(window).height() - 800) > 0 ? ($(window).height() - 860) : 200) * 0.5,
-                    left: (($(window).width() - 500) > 0 ? ($(window).width() - 540) : 100) * 0.5,
-                    shadow: true,
-                    modal: true,
-                    iconCls: 'icon-add',
-                    closed: true,
-                    minimizable: false,
-                    maximizable: false,
-                    collapsible: false,
-                    onClose: function () {
-                        LoadInitData_datagrid();
-                    }
-                });
-                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/Collar_SelectAsset'></iframe>");
-                $winADD.window('open');
+
+                var url = "/Collar/collar_selectAsset";
+                var titleName = "选择资产";
+                openModelWindow(url, titleName);
             }
         }, {
             text: '删除明细',
@@ -250,49 +192,23 @@ function updateCurrentList(addList)
         fi++;
     }
     CurrentList = tmp;
+    alert(tmp.toString())
+    LoadInitData_datagrid();
 }
 
 
 //==================================================================================//
 
 
-
-//function showAsset() {
-//    var $winADD;
-//    $winADD = $('#modalwindow').window({
-//        title: '选择资产',
-//        width: 860,
-//        height: 540,
-//        top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
-//        left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
-//        shadow: true,
-//        modal: true,
-//        iconCls: 'icon-add',
-//        closed: true,
-//        minimizable: false,
-//        maximizable: false,
-//        collapsible: false,
-//        onClose: function () {
-//            LoadInitData_datagrid();
-            
-//        }
-//    });
-//    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/Collar_SelectAsset'></iframe>");
-//    $winADD.window('open');
-//}
-
-
 //==============================================================获取表单数据===========================================================================//
 function saveData(info) {
 
     var state_List;
-    if (info == "保存") {
+    if (info == "1") {
         state_List = 1;
-        //alert(state_List);
         
-    } else if (info == "提交") {
+    } else if (info == "2") {
         state_List = 2;
-        //alert(state_List);
     } else {
        
     }
@@ -309,7 +225,6 @@ function saveData(info) {
 
     var d_PS = $("#PS_add").val();
 
-    //alert(d_Date_LY + ":" + d_LYYY + ":" + d_LYBM + ":" + d_CFDD + ":" + d_SYR + ":" + d_PS);
     //封装成json格式创给后台
     var listA = getListAseet_();
     var collar_add = {
@@ -324,10 +239,9 @@ function saveData(info) {
        "assetList": listA
     };
 
-    //$.messager.alert('提示', d_Other_SYNX_add + "|" + d_Other_ZCSL_add + "|" + d_Other_ZCDJ_add, 'info');
   
     $.ajax({
-        url: "/Asset/InsertNewCollor",
+        url: "/Collar/InsertNewCollor",
         type: 'POST',
         data: {
             "collar_add": JSON.stringify(collar_add)
@@ -368,8 +282,28 @@ function cancelData() {
 
 }
 
+function openModelWindow(url, titleName) {
+    var $winADD;
+    $winADD = $('#modalwindow').window({
+        title: titleName,
+        width: 850,
+        height: 650,
+        top: (($(window).height() - 850) > 0 ? ($(window).height() - 850) : 200) * 0.5,
+        left: (($(window).width() - 650) > 0 ? ($(window).width() - 650) : 100) * 0.5,
+        shadow: true,
+        modal: true,
+        iconCls: 'icon-add',
+        closed: true,
+        minimizable: false,
+        maximizable: false,
+        collapsible: false,
+        onClose: function () {
 
-
+        }
+    });
+    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
+    $winADD.window('open');
+}
 //采用jquery easyui loading css效果
 function ajaxLoading() {
     $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
@@ -379,6 +313,5 @@ function ajaxLoadEnd() {
     $(".datagrid-mask").remove();
     $(".datagrid-mask-msg").remove();
 }
-
 
 //==============================================================获取表单数据===========================================================================//

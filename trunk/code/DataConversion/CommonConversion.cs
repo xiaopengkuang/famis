@@ -19,6 +19,10 @@ namespace FAMIS.DataConversion
         public List<int> StringToIntList(String idStr)
         {
             List<int> results = new List<int>();
+            if (idStr == null || idStr == "")
+            {
+                return results;
+            }
             try
             {
                 if (idStr != null && idStr != "")
@@ -162,6 +166,31 @@ namespace FAMIS.DataConversion
         public bool isALL(String info)
         {
             return info.ToLower() == "all" ? true : false;
+        }
+
+
+        public int getStateIDByName(String name)
+        {
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       where p.name_para == name
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID into tmp_DIC
+                       from DIC in tmp_DIC.DefaultIfEmpty()
+                       where DIC.name_flag==SystemConfig.nameFlag_2_ZCZT
+                       select new { 
+                       ID=p.ID
+                       };
+            if (data.Count() == 1)
+            {
+                foreach(var item in data)
+                {
+                    return item.ID;
+                }
+                return -1;
+            }
+            else { 
+                return -1;
+            }
         }
 
     }

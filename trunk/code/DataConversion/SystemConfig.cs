@@ -56,6 +56,18 @@ namespace FAMIS.DataConversion
         public const String Flag_NodeID = "_";
 
 
+        public static String[] treeType_Accounting_Menu =new String[] { nameFlag_2_JLDW, nameFlag_2_ZJFS_JIA, nameFlag_2_JSFS, nameFlag_2_ZCZT, nameFlag_2_CFDD, nameFlag_2_ZJFS_JIU, nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_GYS };
+        public static String[] treeType_collarSearch_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD };
+
+        public const String treeType_Accounting = "Accounting";
+        public const String treeType_collarSearch = "collarSearch";
+
+
+        public static String state_asset_free = "闲置";
+        public static String state_asset_using = "在用";
+        public static String state_asset_bad = "报废";
+
+
 
     }
 }

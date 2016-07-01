@@ -62,7 +62,7 @@ function LoadTreeLeft() {
         animate: true,
         checkbox: false,
         method: 'POST', //默认是post,不允许对静态文件访问
-        url: '/Dict/loadSearchTreeByRole',
+        url: '/Dict/loadSearchTreeByRole?treeType=Accounting',
         onClick: function (node) {
             var tree = $(this).tree;
             if (isRootNode(tree, node)) {
