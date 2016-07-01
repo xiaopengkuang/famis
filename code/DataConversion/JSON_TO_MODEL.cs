@@ -80,5 +80,35 @@ namespace FAMIS.DataConversion
             return tb;
         }
 
+
+
+        public tb_Asset ConverJsonToTable(Json_Asset_add data)
+        {
+            tb_Asset tb_asset_add = new tb_Asset();
+            tb_asset_add.serial_number = data.d_ZCBH_add;
+            tb_asset_add.name_Asset = data.d_ZCMC_add;
+            tb_asset_add.type_Asset = data.d_ZCLB_add;
+            tb_asset_add.specification = data.d_ZCXH_add;
+            tb_asset_add.measurement = data.d_JLDW_add;
+            tb_asset_add.unit_price = data.d_Other_ZCDJ_add;
+            tb_asset_add.amount = data.d_Other_ZCSL_add;
+            tb_asset_add.value = data.d_Other_ZCJZ_add;
+            tb_asset_add.department_Using = data.d_SZBM_add;
+            tb_asset_add.addressCF = data.d_CFDD_add;
+            tb_asset_add.people_using = data.d_SYR_add;
+            tb_asset_add.flag = data.flag;
+            tb_asset_add.Time_add = data.OperateTime;
+            tb_asset_add.supplierID = data.d_GYS_add;
+            tb_asset_add.Time_Purchase = data.d_GZRQ_add;
+            tb_asset_add.YearService_month = data.d_Other_SYNX_add;
+            tb_asset_add.Method_depreciation = data.d_Other_ZJFS_add;
+            tb_asset_add.Net_residual_rate = data.d_Other_JCZL_add;
+            tb_asset_add.depreciation_Month = data.d_Other_YTZJ_add;
+            tb_asset_add.depreciation_tatol = data.d_Other_LJZJ_add;
+            tb_asset_add.Net_value = data.d_Other_JZ_add;
+            tb_asset_add.Method_add = data.d_ZJFS_add;
+            return tb_asset_add;
+        }
+
     }
 }
