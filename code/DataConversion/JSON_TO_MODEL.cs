@@ -95,7 +95,7 @@ namespace FAMIS.DataConversion
             tb_asset_add.value = data.d_Other_ZCJZ_add;
             tb_asset_add.department_Using = data.d_SZBM_add;
             tb_asset_add.addressCF = data.d_CFDD_add;
-            tb_asset_add.people_using = data.d_SYR_add;
+            //tb_asset_add.people_using = data.d_SYR_add;
             tb_asset_add.flag = data.flag;
             tb_asset_add.Time_add = data.OperateTime;
             tb_asset_add.supplierID = data.d_GYS_add;

@@ -93,7 +93,7 @@ namespace FAMIS.DataConversion
                            name_Asset = p.name_Asset,
                            Net_residual_rate = p.Net_residual_rate,
                            Net_value = p.Net_value,
-                           people_using = p.people_using,
+                           //people_using = p.people_using,
                            serial_number = p.serial_number,
                            specification = p.specification,
                            state_asset = ST.name_para,

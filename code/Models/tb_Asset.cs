@@ -33,9 +33,6 @@ namespace FAMIS.Models
 
         public int? addressCF { get; set; }
 
-        [StringLength(20)]
-        public string people_using { get; set; }
-
         public int? state_asset { get; set; }
 
         public int? supplierID { get; set; }
