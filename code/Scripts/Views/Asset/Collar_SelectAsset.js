@@ -21,63 +21,38 @@ $(function () {
                 $(".SC_Date_Accounting").hide();
                 $(".SC_Content_Accounting").show();
             }
-
         }
 
     });
-
-
     loadInitData();
 });
 
 function loadInitData()
 {
     load_SC_Tree();
+    
     LoadInitData_Detail();
 }
 
 
 
 
-function myformatter(date) {
-    var y = date.getFullYear();
-    var m = date.getMonth() + 1;
-    var d = date.getDate();
-    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
-}
-function myparser(s) {
-    if (!s) return new Date();
-    var ss = (s.split('-'));
-    var y = parseInt(ss[0], 10);
-    var m = parseInt(ss[1], 10);
-    var d = parseInt(ss[2], 10);
-    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
-        return new Date(y, m - 1, d);
-    } else {
-        return new Date();
-    }
-}
 
 function load_SC_Tree() {
 
-    var IDsList = "11_12_9";  //当前添加的数据
     //获取查询条件
     $('#lefttree').tree({
         animate: true,
         checkbox: false,
         method: 'POST', //默认是post,不允许对静态文件访问
-        url: '/Dict/loadCollarSearchTree?role=1&idStr=' + IDsList,
+        url: '/Dict/loadSearchTreeByRole?treeType=collarSearch',
         onClick: function (node) {
             var tree = $(this).tree;
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-            var isLeaf = tree('isLeaf', node.target);
-            if (isLeaf) {
-                SearchByCondition_LeftTree(node.id, node.text);
-            }
+            //SearchByCondition_LeftTree(node.id, node.text);
         },
         onLoadSuccess: function (node, data) {
             $('#lefttree').show();
-            $('#lefttree').tree('collapseAll');
         }
     });
 }
@@ -86,16 +61,20 @@ function load_SC_Tree() {
 function LoadInitData_Detail() {
 
     var _list = "";
-    for (var i = 0; i < parent.CurrentList.length; i++) {
-        if (i == 0) {
-            _list = parent.CurrentList[i]+"";
-        } else {
-            _list =_list+ "_"+parent.CurrentList[i];
+    try{
+    
+        for (var i = 0; i < parent.CurrentList.length; i++) {
+            if (i == 0) {
+                _list = parent.CurrentList[i]+"";
+            } else {
+                _list =_list+ "_"+parent.CurrentList[i];
+            }
         }
+    }catch(e){
     }
 
     $('#tableList_collar').datagrid({
-        url: '/Asset/Load_Asset_Collor?role=1&state=16&flag=1&searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
+        url: '/Collar/LoadAsset_Collor?searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -121,14 +100,6 @@ function LoadInitData_Detail() {
             { field: 'Method_add', title: '添加方式', width: 50 },
             { field: 'state_asset', title: '资产状态', width: 50 },
             { field: 'supplierID', title: '供应商', width: 50 }
-            //{
-            //    field: 'time_LastLogined', title: '上次登录时间', width: 100,
-            //    formatter: function (date) {
-            //        var pa = /.*\((.*)\)/;
-            //        var unixtime = date.match(pa)[1].substring(0, 10);
-            //        return getTime(unixtime);
-            //    }
-            //}
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
@@ -160,8 +131,13 @@ function loadPageTool_Detail() {
                 for (var i = 0; i < rows.length; i++) {
                     IDS[i] = rows[i].ID;
                 }
-                parent.updateCurrentList(IDS);
-                parent.$("#modalwindow").window("close");
+                //alert(IDS.toString());
+                try{
+                    parent.updateCurrentList(IDS);
+                    parent.$("#modalwindow").window("close");
+                }catch(e){
+                }
+               
             }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
@@ -233,6 +209,24 @@ function SearchByCondition_right() {
     reloadTable_Condition();
 }
 
+function myformatter(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+}
+function myparser(s) {
+    if (!s) return new Date();
+    var ss = (s.split('-'));
+    var y = parseInt(ss[0], 10);
+    var m = parseInt(ss[1], 10);
+    var d = parseInt(ss[2], 10);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        return new Date(y, m - 1, d);
+    } else {
+        return new Date();
+    }
+}
 
 //表数据重载
 function reloadTable_Condition() {
