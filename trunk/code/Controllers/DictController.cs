@@ -322,19 +322,7 @@ namespace FAMIS.Controllers
         }
 
 
-        [HttpPost]
-        public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
-        {
-            if (ModelState.IsValid)
-            {
-                DB_C.tb_staff.Add(staff);
-                DB_C.SaveChanges();
-
-            }
-            return View();
-
-
-        }
+       
 
         [HttpPost]
         /**
@@ -361,19 +349,7 @@ namespace FAMIS.Controllers
             return json;
         }
 
-        [HttpPost]
-        public String load_SYR_add(String SZBM_ID)
-        {
-            var data = from p in DB_C.tb_staff
-                       where p.effective_Flag == true
-                       select new dto_Staff { 
-                       id=p.ID_Staff,
-                       name=p.name
-                       };
-            JavaScriptSerializer jss = new JavaScriptSerializer();
-            String json = jss.Serialize(data.ToList()).ToString().Replace("\\", "");
-            return json;
-        }
+        
 
 
 
@@ -840,24 +816,24 @@ namespace FAMIS.Controllers
          }
 
        
-         public List<dto_TreeNode> getSYRNodes(dto_TreeNode fathernode)
-         {
-             List<tb_staff> list_ORG = DB_C.tb_staff.ToList();
-             List<dto_TreeNode> list = new List<dto_TreeNode>();
-             for (int i = 0; i < list_ORG.Count; i++)
-             {
-                 dto_TreeNode node = new dto_TreeNode();
-                 node.id = fathernode.id + list_ORG[i].ID ;
-                 node.nameText = list_ORG[i].name;
-                 node.url = "";
-                 node.orderID = fathernode.id + list_ORG[i].ID;
-                 node.fatherID = fathernode.id;
-                 list.Add(node);
-             }
+         //public List<dto_TreeNode> getSYRNodes(dto_TreeNode fathernode)
+         //{
+         //    List<tb_staff> list_ORG = DB_C.tb_staff.ToList();
+         //    List<dto_TreeNode> list = new List<dto_TreeNode>();
+         //    for (int i = 0; i < list_ORG.Count; i++)
+         //    {
+         //        dto_TreeNode node = new dto_TreeNode();
+         //        node.id = fathernode.id + list_ORG[i].ID ;
+         //        node.nameText = list_ORG[i].name;
+         //        node.url = "";
+         //        node.orderID = fathernode.id + list_ORG[i].ID;
+         //        node.fatherID = fathernode.id;
+         //        list.Add(node);
+         //    }
 
-             list.Add(fathernode);
-             return list;
-         }
+         //    list.Add(fathernode);
+         //    return list;
+         //}
 
 
         /// <summary>
@@ -874,7 +850,7 @@ namespace FAMIS.Controllers
 
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
-                        where ids.Contains(p.ID)
+                        where ids.Contains(p.ID_Department)
                         select new dto_TreeNode {
                             id =(int)(fathernode.id+p.ID_Department),
                             nameText=p.name_Department,

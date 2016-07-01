@@ -15,8 +15,6 @@ namespace FAMIS.Models
 
         public DateTime? date { get; set; }
 
-        public int? person { get; set; }
-
         public int? addree_Storage { get; set; }
 
         public bool? flag { get; set; }

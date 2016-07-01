@@ -11,13 +11,14 @@ $(function () {
 
 
 function loadInitData() {
-    LoadInitDatagrid();
+    //加载所有
+    LoadInitDatagrid("datagrid_collor");
 }
 
-function LoadInitDatagrid() {
+function LoadInitDatagrid(datagrid) {
 
-    $('#allocationDG').datagrid({
-        url: '/Asset/LoadCollars?role=1&flag=1&searchCondtiion=' + searchCondtiion,
+    $('#' + datagrid).datagrid({
+        url: '/Collar/LoadCollars?searchCondtiion=' + searchCondtiion,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -32,32 +33,31 @@ function LoadInitDatagrid() {
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
             { field: 'ID', checkbox: true, width: 50 },
-            { field: 'serialNumber', title: '领用编号', width: 50 },
+            { field: 'serialNumber', title: '单据号', width: 50 },
             { field: 'operatorUser', title: '操作人', width: 50 },
-            { field: 'staff', title: '领用人', width: 50 },
             { field: 'state', title: '状态', width: 50 ,
-            formatter: function (data)
-            {
-                if (data=="草稿") {
-                    return '<font color="#696969">' + data + '</font>';
-                }
-                else if (data == "待审核") {
-                    return '<font color="#FFD700">' + data + '</font>';
-                } else if (data == "已审核")
+                formatter: function (data)
                 {
-                    return '<font color="#228B22">' + data + '</font>';
-                } else if (data == "退回") {
-                    return '<font color="red">' + data + '</font>';
-                } else {
-                    return data;
+                    if (data=="草稿") {
+                        return '<font color="#696969">' + data + '</font>';
+                    }
+                    else if (data == "待审核") {
+                        return '<font color="#FFD700">' + data + '</font>';
+                    } else if (data == "已审核")
+                    {
+                        return '<font color="#228B22">' + data + '</font>';
+                    } else if (data == "退回") {
+                        return '<font color="red">' + data + '</font>';
+                    } else {
+                        return data;
+                    }
                 }
-            }
             },
             { field: 'address', title: '地址', width: 50 },
             { field: 'department', title: '领用部门', width: 50 }
             ,
             {
-                field: 'data_collar', title: '领用时间', width: 100,
+                field: 'date_collar', title: '领用时间', width: 100,
                 formatter: function (date) {
                     var pa = /.*\((.*)\)/;
                     var unixtime = date.match(pa)[1].substring(0, 10);
@@ -77,11 +77,11 @@ function LoadInitDatagrid() {
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool();
+    loadPageTool(datagrid);
 }
 
-function loadPageTool() {
-    var pager = $('#allocationDG').datagrid('getPager');	// get the pager of datagrid
+function loadPageTool(datagrid) {
+    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '添加',
@@ -89,8 +89,9 @@ function loadPageTool() {
             height: 50,
             handler: function () {
 
+                alert("aaa");
                 var title = "添加领用单";
-                var url = "/Asset/AddCollar";
+                var url = "/Collar/AddCollarView";
                 if (parent.$('#tabs').tabs('exists', title)) {
                     parent.$('#tabs').tabs('select', title);
                 } else {
@@ -111,7 +112,7 @@ function loadPageTool() {
             handler: function () {
 
                 //获取选择行
-                var rows = $('#allocationDG').datagrid('getSelections');
+                var rows = $('#' + datagrid).datagrid('getSelections');
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
                     IDS[i] = rows[i].ID;
@@ -120,14 +121,14 @@ function loadPageTool() {
                 {
                     //将数据传入后台
                     $.ajax({
-                        url: '/Asset/deleteCollars',
+                        url: '/Collar/deleteCollars',
                         data: { "selectedIDs": IDS },
                         //data: _list,  
                         dataType: "json",
                         type: "POST",
                         traditional: true,
                         success: function () {
-                            $('#allocationDG').datagrid('reload');
+                            $('#' + datagrid).datagrid('reload');
                         }
                     });
                 }
@@ -137,7 +138,7 @@ function loadPageTool() {
             height: 50,
             iconCls: 'icon-reload',
             handler: function () {
-                $('#allocationDG').datagrid('reload');
+                $('#' + datagrid).datagrid('reload');
                
             }
         },
@@ -146,7 +147,7 @@ function loadPageTool() {
             height: 50,
             iconCls: 'icon-tip',
             handler: function () {
-                var rows = $('#allocationDG').datagrid('getSelections');
+                var rows = $('#' + datagrid).datagrid('getSelections');
                 var id_;
                 if (rows == null)
                 {
@@ -209,7 +210,7 @@ function loadPageTool() {
               height: 50,
               iconCls: 'icon-redo',
               handler: function () {
-                  var rows = $('#allocationDG').datagrid('getSelections');
+                  var rows = $('#' + datagrid).datagrid('getSelections');
                   var id_;
                   if (rows == null) {
                       var resultAlert = "请选择领用单！";
@@ -250,7 +251,7 @@ function loadPageTool() {
                       }
                   }
                   updateRecordState(2, id_);
-                  $('#allocationDG').datagrid('reload');
+                  $('#' + datagrid).datagrid('reload');
                   //alert('刷新');
               }
           },
@@ -259,7 +260,7 @@ function loadPageTool() {
                height: 50,
                iconCls: 'icon-ok',
                handler: function () {
-                   var rows = $('#allocationDG').datagrid('getSelections');
+                   var rows = $('#' + datagrid).datagrid('getSelections');
                    var id_;
                    if (rows == null) {
                        var resultAlert = "请选择领用单！";
@@ -301,7 +302,7 @@ function loadPageTool() {
                        }
                    }
                    updateRecordState(3, id_);
-                   $('#allocationDG').datagrid('reload');
+                   $('#' + datagrid).datagrid('reload');
                    //alert('刷新');
                }
            }, {
@@ -309,7 +310,7 @@ function loadPageTool() {
                height: 50,
                iconCls: 'icon-undo',
                handler: function () {
-                   var rows = $('#allocationDG').datagrid('getSelections');
+                   var rows = $('#' + datagrid).datagrid('getSelections');
                    var id_;
                    if (rows == null) {
                        var resultAlert = "请选择领用单！";
@@ -352,8 +353,8 @@ function loadPageTool() {
                        //    }
                        //}
                    }
-                   updateRecordState(4, id_);
-                   $('#allocationDG').datagrid('reload');
+                   updateRecordState(datagrid,4, id_);
+                   $('#' + datagrid).datagrid('reload');
                    //alert('刷新');
                }
            },{
@@ -362,7 +363,7 @@ function loadPageTool() {
                iconCls: 'icon-save',
                handler: function () {
                    var filename = getNowFormatDate_FileName();
-                   Export(filename, $('#allocationDG'));
+                   Export(filename, $('#' + datagrid));
                }
            }],
         beforePageText: '第',//页数文本框前显示的汉字  
@@ -374,18 +375,18 @@ function loadPageTool() {
 
 
 //根据单据ID更新单据状态
-function updateRecordState(state,idStr)
+function updateRecordState(datagrid,state, idStr)
 {
     //将数据传入后台
     $.ajax({
-        url: '/Asset/updateCollarStateByID',
+        url: '/Collar/updateCollarStateByID',
         data: { "state": state,"idStr":idStr },
         //data: _list,  
         dataType: "json",
         type: "POST",
         traditional: true,
         success: function () {
-            $('#allocationDG').datagrid('reload');
+            $('#' + datagrid).datagrid('reload');
         }
     });
 

@@ -11,7 +11,7 @@ namespace FAMIS.DTO
         public String department { get; set; }
         public String staff { get; set; }
         public String address { get; set; }
-        public DateTime? data_collar { get; set; }
+        public DateTime? date_collar { get; set; } 
         public String operatorUser { get; set; }
         public String state { get; set; }
         public DateTime? date_Operated { get; set; }

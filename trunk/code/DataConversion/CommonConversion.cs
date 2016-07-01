@@ -117,6 +117,13 @@ namespace FAMIS.DataConversion
         /// <returns></returns>
         public List<int?> getids_departmentByRole(int? roleID)
         {
+            //List<int?> ids = getRightID_ByRole(roleID, SystemConfig.role_department);
+
+            //var data =from p in DB_C.tb_department
+            //          where p.effective_Flag==true
+            //          where ids.Contains(p.ID)
+            //          select p
+
             return getRightID_ByRole(roleID, SystemConfig.role_department);
         }
 
@@ -131,10 +138,23 @@ namespace FAMIS.DataConversion
                        where p.role_ID == roleID
                        where p.type == typeName
                        select p;
-
             foreach (var item in data)
             {
                 ids.Add(item.Right_ID);
+            }
+
+
+            if(typeName==SystemConfig.role_department){
+                var data_DP = from p in DB_C.tb_department
+                           where p.effective_Flag == true
+                           where ids.Contains(p.ID)
+                           select p;
+                List<int?> ids_DP = new List<int?>();
+                foreach (var it in data_DP)
+                {
+                    ids_DP.Add(it.ID_Department);                   
+                }
+                return ids_DP;
             }
             return ids;
         }

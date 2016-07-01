@@ -37,8 +37,7 @@ namespace FAMIS.DTO
 
         public String addressCF { get; set; }
 
-        [StringLength(20)]
-        public string people_using { get; set; }
+
 
         [StringLength(10)]
         public string state_asset { get; set; }
@@ -47,6 +46,8 @@ namespace FAMIS.DTO
         public string supplierID { get; set; }
 
         public DateTime? Time_Purchase { get; set; }
+
+        public DateTime? Time_Operated { get; set; }
 
         public int? YearService_month { get; set; }
 

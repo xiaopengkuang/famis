@@ -79,7 +79,7 @@ namespace FAMIS.Controllers
 
             if (ModelState.IsValid)
             {
-                db.tb_staff.Add(staff);
+                //db.tb_staff.Add(staff);
                 db.SaveChanges();
 
             }

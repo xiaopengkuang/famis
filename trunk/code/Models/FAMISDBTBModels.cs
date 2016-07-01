@@ -15,7 +15,6 @@ namespace FAMIS.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<tb_customAttribute> tb_customAttribute { get; set; }
         public virtual DbSet<tb_customAttribute_Type> tb_customAttribute_Type { get; set; }
-        public virtual DbSet<tb_Address_AssetStore> tb_Address_AssetStore { get; set; }
         public virtual DbSet<tb_Asset> tb_Asset { get; set; }
         public virtual DbSet<tb_Asset_allocation> tb_Asset_allocation { get; set; }
         public virtual DbSet<tb_Asset_allocation_detail> tb_Asset_allocation_detail { get; set; }
@@ -34,7 +33,6 @@ namespace FAMIS.Models
         public virtual DbSet<tb_role> tb_role { get; set; }
         public virtual DbSet<tb_role_authorization> tb_role_authorization { get; set; }
         public virtual DbSet<tb_Rule_Generate> tb_Rule_Generate { get; set; }
-        public virtual DbSet<tb_staff> tb_staff { get; set; }
         public virtual DbSet<tb_State_List> tb_State_List { get; set; }
         public virtual DbSet<tb_supplier> tb_supplier { get; set; }
         public virtual DbSet<tb_user> tb_user { get; set; }
@@ -61,14 +59,6 @@ namespace FAMIS.Models
                 .Property(e => e.description)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Address_AssetStore>()
-                .Property(e => e.Name_Address)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Address_AssetStore>()
-                .Property(e => e.Detail_Address)
-                .IsUnicode(false);
-
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
@@ -79,10 +69,6 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.specification)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.people_using)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_allocation>()
@@ -283,34 +269,6 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Rule_Generate>()
                 .Property(e => e.Rule_Generate)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_staff>()
-                .Property(e => e.ID_Staff)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_staff>()
-                .Property(e => e.code_Departmen)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_staff>()
-                .Property(e => e.sex)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_staff>()
-                .Property(e => e.phoneNumber)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_staff>()
-                .Property(e => e.email)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_staff>()
-                .Property(e => e._operator)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_staff>()
-                .Property(e => e.name)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_State_List>()
