@@ -14,7 +14,6 @@ namespace FAMIS.Models
         public string name { get; set; }
 
         [StringLength(200)]
-        public string description { get; set; } 
-
+        public string description { get; set; }
     }
 }

@@ -30,8 +30,7 @@ namespace FAMIS.Models
 
         public int? assetTypeID { get; set; }
 
-        [StringLength(200)]
+        [StringLength(20)]
         public string operatorName { get; set; }
-        
     }
 }

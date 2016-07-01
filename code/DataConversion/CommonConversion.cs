@@ -60,15 +60,16 @@ namespace FAMIS.DataConversion
             return "KXP";
         }
 
-        public String getDefaultFatherID()
+        public int getDefaultFatherID()
         {
-            return "0";
+            return 0;
         }
 
 
         public int? getRole()
         {
 
+            return 1;
               HttpSessionState session = HttpContext.Current.Session;
             int? roleID=null;
             //先读取Session  判断Session是否存在
@@ -96,33 +97,33 @@ namespace FAMIS.DataConversion
         /// </summary>
         /// <param name="roleID"></param>
         /// <returns></returns>
-        public List<int> getMenuByRole(int? roleID)
+        public List<int?> getids_Menu_ByRole(int? roleID)
         {
-            return getRightByRole(roleID, SystemConfig.role_menu);
+            return getRightID_ByRole(roleID, SystemConfig.role_menu);
         }
         /// <summary>
         /// 根据角色获取资产类型权限
         /// </summary>
         /// <param name="roleID"></param>
         /// <returns></returns>
-        public List<int> getAssetTypeByRole(int? roleID)
+        public List<int?> getids_AssetTypeByRole(int? roleID)
         {
-            return getRightByRole(roleID,SystemConfig.role_assetType);
+            return getRightID_ByRole(roleID,SystemConfig.role_assetType);
         }
         /// <summary>
         /// 根据角色ID获取部门权限
         /// </summary>
         /// <param name="roleID"></param>
         /// <returns></returns>
-        public List<int> getdepartmentByRole(int? roleID)
+        public List<int?> getids_departmentByRole(int? roleID)
         {
-            return getRightByRole(roleID, SystemConfig.role_department);
+            return getRightID_ByRole(roleID, SystemConfig.role_department);
         }
 
 
-        public List<int> getRightByRole(int? roleID,String typeName)
+        public List<int?> getRightID_ByRole(int? roleID,String typeName)
         {
-            List<int> ids = new List<int>();
+            List<int?> ids = new List<int?>();
 
 
             var data = from p in DB_C.tb_role_authorization
@@ -136,6 +137,11 @@ namespace FAMIS.DataConversion
                 ids.Add(item.Right_ID);
             }
             return ids;
+        }
+
+        public bool isALL(String info)
+        {
+            return info.ToLower() == "all" ? true : false;
         }
 
     }

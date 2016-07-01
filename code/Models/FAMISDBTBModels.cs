@@ -12,6 +12,9 @@ namespace FAMIS.Models
         {
         }
 
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<tb_customAttribute> tb_customAttribute { get; set; }
+        public virtual DbSet<tb_customAttribute_Type> tb_customAttribute_Type { get; set; }
         public virtual DbSet<tb_Address_AssetStore> tb_Address_AssetStore { get; set; }
         public virtual DbSet<tb_Asset> tb_Asset { get; set; }
         public virtual DbSet<tb_Asset_allocation> tb_Asset_allocation { get; set; }
@@ -36,12 +39,28 @@ namespace FAMIS.Models
         public virtual DbSet<tb_supplier> tb_supplier { get; set; }
         public virtual DbSet<tb_user> tb_user { get; set; }
 
-        public virtual DbSet<tb_customAttribute> tb_customAttribute { get; set; }
-        public virtual DbSet<tb_customAttribute_Type> tb_customAttribute_Type { get; set; }
-
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<tb_customAttribute>()
+                .Property(e => e.SYSID)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_customAttribute>()
+                .Property(e => e.title)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_customAttribute>()
+                .Property(e => e.operatorName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_customAttribute_Type>()
+                .Property(e => e.name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_customAttribute_Type>()
+                .Property(e => e.description)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Address_AssetStore>()
                 .Property(e => e.Name_Address)
                 .IsUnicode(false);
@@ -59,23 +78,11 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.type_Asset)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.specification)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.department_Using)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.people_using)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset>()
-                .Property(e => e.supplierID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_allocation>()
@@ -179,6 +186,10 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_dataDict>()
+                .Property(e => e.name_flag)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_dataDict>()
                 .Property(e => e.name_dataDict)
                 .IsUnicode(false);
 
@@ -266,9 +277,6 @@ namespace FAMIS.Models
                 .Property(e => e.type)
                 .IsUnicode(false);
 
-          
-
-          
             modelBuilder.Entity<tb_Rule_Generate>()
                 .Property(e => e.Name_SeriaType)
                 .IsUnicode(false);
@@ -335,6 +343,10 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_supplier>()
                 .Property(e => e.fax)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_supplier>()
+                .Property(e => e.operatorname)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_user>()

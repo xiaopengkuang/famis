@@ -14,8 +14,7 @@ namespace FAMIS.DTO
         //public string d_ZCXZ_ID_add { get; set; }
         //public string d_ZCXZ_Name_add { get; set; }
 
-         [StringLength(20)]
-        public string d_ZCLB_add { get; set; }
+        public int d_ZCLB_add { get; set; }
 
         [StringLength(20)]
         public string d_ZCMC_add { get; set; }
@@ -26,8 +25,7 @@ namespace FAMIS.DTO
         
         public int? d_JLDW_add { get; set; }
 
-        [StringLength(20)]
-        public string d_SZBM_add { get; set; }
+        public int d_SZBM_add { get; set; }
 
         [StringLength(20)]
         public string d_SYR_add { get; set; }
@@ -35,8 +33,7 @@ namespace FAMIS.DTO
         
         public int d_ZJFS_add { get; set; }
 
-        [StringLength(20)]
-        public string d_GYS_add { get; set; }
+        public int d_GYS_add { get; set; }
 
         
         //public string d_LXR_add { get; set; }

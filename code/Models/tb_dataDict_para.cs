@@ -29,6 +29,5 @@ namespace FAMIS.Models
         public string orderID { get; set; }
 
         public bool? activeFlag { get; set; }
-
     }
 }

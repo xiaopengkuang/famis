@@ -32,23 +32,15 @@ $(function () {
         editable: false,
         onChange: function (value) {
             $('#Other_SYNX_add').numberspinner('setValue', value);
-            //d_Other_SYNX_add = value;
-            //alert(  $('#Other_SYNX_add').numberspinner('getValue'));
         }
-
     });
-
-
     $("#Other_ZCSL_add").numberspinner({
         min: 0,
         editable: false,
         onChange: function (value) {
             $('#Other_ZCSL_add').numberspinner('setValue', value);
-            //d_Other_ZCSL_add = value;
         }
-
     });
-    //alert(111);
 });
 
 function loadInitDate() {
@@ -70,48 +62,30 @@ function load_ZCLB_add() {
        valueField: 'id',
        textField: 'nameText',
        required: true,
-       method: 'get',
+       method: 'POST',
        editable: false,
        //选择树节点触发事件  
        onSelect: function (node) {
            //返回树对象  
            var tree = $(this).tree;
-           //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-           var isLeaf = tree('isLeaf', node.target);
-           if (!isLeaf) {
-               //清除选中  
-               $('#ZCLB_add').combotree('clear');
-           } else {
-               d_ZCLB_add = $('#ZCLB_add').combotree("getValue")
+           d_ZCLB_add = $('#ZCLB_add').combotree("getValue");
                //资产类别
-               $('#ZCXH_add').combobox('clear');
-               load_ZCXH_add(node.text);
-           }
-
-
+           load_ZCXH_add(node.text);
            //资产性质
            var parent = node;
            var tree = $('#ZCLB_add').combotree('tree');
            var path = new Array();
-
            while (parent) {
                path.unshift(parent.id + "-" + parent.text);
-
                var parent = tree.tree('getParent', parent.target);
            };
-
-
            //获得根节点
            var rootText = "";
-
            if (path.length > 0) {
                rootText = path[0];
            }
-
            //$.messager.alert('提示', rootText, 'warning');
            $('#ZCXZ_add').val(rootText.trim());
-
-
        }, //全部折叠
        onLoadSuccess: function (node, data) {
            $('#ZCLB_add').combotree('tree').tree("collapseAll");
@@ -141,7 +115,7 @@ function load_JLDW_add() {
         valueField: 'ID',
         method: 'get',
         textField: 'name_para',
-        url: '/Dict/load_FS_add?TypeID=2',
+        url: '/Dict/load_FS_add',
         onSelect: function (rec) {
             $('#JLDW_add').combobox('setValue', rec.ID);
             $('#JLDW_add').combobox('setText', rec.name_para);

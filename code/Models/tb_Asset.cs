@@ -16,8 +16,7 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string name_Asset { get; set; }
 
-        [StringLength(8)]
-        public string type_Asset { get; set; }
+        public int? type_Asset { get; set; }
 
         [StringLength(20)]
         public string specification { get; set; }
@@ -30,8 +29,7 @@ namespace FAMIS.Models
 
         public double? value { get; set; }
 
-        [StringLength(20)]
-        public string department_Using { get; set; }
+        public int? department_Using { get; set; }
 
         public int? addressCF { get; set; }
 
@@ -40,14 +38,17 @@ namespace FAMIS.Models
 
         public int? state_asset { get; set; }
 
-        [StringLength(20)]
-        public string supplierID { get; set; }
+        public int? supplierID { get; set; }
 
         public DateTime? Time_Purchase { get; set; }
 
         public int? YearService_month { get; set; }
 
         public int? Method_depreciation { get; set; }
+
+        public int? Method_decrease { get; set; }
+
+        public int? Method_add { get; set; }
 
         public int? Net_residual_rate { get; set; }
 
@@ -57,11 +58,10 @@ namespace FAMIS.Models
 
         public double? Net_value { get; set; }
 
-        public int? Method_add { get; set; }
-
         public bool? flag { get; set; }
 
         public DateTime? Time_add { get; set; }
+
         public double? Total_price { get; set; }
     }
 }
