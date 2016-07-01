@@ -11,6 +11,9 @@ namespace FAMIS.Models
         public int ID { get; set; }
 
         [StringLength(20)]
+        public string name_flag { get; set; }
+
+        [StringLength(20)]
         public string name_dataDict { get; set; }
 
         public int? father_ID { get; set; }
@@ -37,8 +40,5 @@ namespace FAMIS.Models
         public bool? isTree { get; set; }
 
         public bool? isSysSet { get; set; }
-        
-
-        
     }
 }

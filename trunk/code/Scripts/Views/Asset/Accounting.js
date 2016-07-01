@@ -62,19 +62,21 @@ function LoadTreeLeft() {
         animate: true,
         checkbox: false,
         method: 'POST', //默认是post,不允许对静态文件访问
-        url: '/Dict/loadSearchTreeByRole?role=1',
+        url: '/Dict/loadSearchTreeByRole',
         onClick: function (node) {
             var tree = $(this).tree;
-            //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-            var isLeaf = tree('isLeaf', node.target);
-            if (isLeaf) {
+            if (isRootNode(tree, node)) {
+                SearchByCondition_LeftTree(node.id, "all");
+            } else {
                 SearchByCondition_LeftTree(node.id, node.text);
             }
+           
+            //}
 
         },
         onLoadSuccess: function (node, data) {
             $('#lefttree').show();
-            $('#lefttree').tree('collapseAll');
+            //$('#lefttree').tree('collapseAll');
         }
     });
 }
@@ -89,6 +91,16 @@ function SearchByCondition_LeftTree(nodeID, nodetext) {
     searchCondtiion = JSON.stringify(jsonSC);
     reloadTable_Condition();
 }
+
+
+function isRootNode(tree, node) {
+    var parent = tree('getParent', node.target);
+    if (parent.id != null) {
+        return false;
+    }
+    return true;
+}
+
 
 
 //根据输入查询条件查询
@@ -154,7 +166,7 @@ function resetSC() {
 function LoadInitData_Detail() {
 
     $('#TableList_0_1').datagrid({
-        url: '/Asset/LoadAssets?role=1&tableType=1&flag=1&searchCondtiion=' + searchCondtiion,
+        url: '/Asset/LoadAssets?tableType=1&searchCondtiion=' + searchCondtiion,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -180,14 +192,6 @@ function LoadInitData_Detail() {
             { field: 'Method_add', title: '添加方式', width: 50 },
             { field: 'state_asset', title: '资产状态', width: 50 },
             { field: 'supplierID', title: '供应商', width: 50 }
-            //{
-            //    field: 'time_LastLogined', title: '上次登录时间', width: 100,
-            //    formatter: function (date) {
-            //        var pa = /.*\((.*)\)/;
-            //        var unixtime = date.match(pa)[1].substring(0, 10);
-            //        return getTime(unixtime);
-            //    }
-            //}
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
@@ -220,17 +224,6 @@ function loadPageTool_Detail() {
                     collapsible: false,
                     onClose: function () {
                         $('#TableList_0_1').datagrid('reload');
-                    //    var resultAlert = "成功插入记录！";
-                    //    $.messager.show({
-                    //        title: '提示',
-                    //        msg: resultAlert,
-                    //        showType: 'slide',
-                    //        style: {
-                    //            right: '',
-                    //            top: document.body.scrollTop + document.documentElement.scrollTop,
-                    //            bottom: ''
-                    //        }
-                    //    });
                     }
                 });
                 $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/AddAsset'></iframe>");
@@ -257,17 +250,6 @@ function loadPageTool_Detail() {
                     traditional: true,
                     success: function () {
                         $('#TableList_0_1').datagrid('reload');
-                        //var resultAlert = "成功删除记录！";
-                        //$.messager.show({
-                        //    title: '提示',
-                        //    msg: resultAlert,
-                        //    showType: 'slide',
-                        //    style: {
-                        //        right: '',
-                        //        top: document.body.scrollTop + document.documentElement.scrollTop,
-                        //        bottom: ''
-                        //    }
-                        //});
                     }
                 });
             }
@@ -277,7 +259,6 @@ function loadPageTool_Detail() {
             iconCls: 'icon-reload',
             handler: function () {
                 $('#TableList_0_1').datagrid('reload');
-                //alert('刷新');
             }
         }, {
             text: '导出',
@@ -342,7 +323,7 @@ function loadPageTool_Summary() {
 
 function LoadInitData_Summary() {
     $('#TableList_0_1').datagrid({
-        url: '/Asset/LoadAssets?role=1&tableType=0&flag=1&searchCondtiion=' + searchCondtiion,
+        url: '/Asset/LoadAssets?tableType=0&searchCondtiion=' + searchCondtiion,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         iconCls: 'icon-save',
@@ -362,14 +343,6 @@ function LoadInitData_Summary() {
             { field: 'measurement', title: '计量单位', width: 50 },
             { field: 'amount', title: '数量', width: 50 },
             { field: 'value', title: '资产价值', width: 50 }
-            //{
-            //    field: 'time_LastLogined', title: '上次登录时间', width: 100,
-            //    formatter: function (date) {
-            //        var pa = /.*\((.*)\)/;
-            //        var unixtime = date.match(pa)[1].substring(0, 10);
-            //        return getTime(unixtime);
-            //    }
-            //}
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项

@@ -8,19 +8,16 @@ namespace FAMIS.DTO
 {
     public class dto_TreeNode
     {
-        [StringLength(8)]
-        public string id { get; set; }
+        public int id { get; set; }
 
         [StringLength(20)]
         public string nameText { get; set; }
 
-        [StringLength(8)]
-        public string fatherID { get; set; }
+        public int fatherID { get; set; }
 
         [StringLength(100)]
         public string url { get; set; }
 
-        [StringLength(20)]
-        public string orderID { get; set; }
+        public int orderID { get; set; }
     }
 }

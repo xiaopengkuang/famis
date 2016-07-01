@@ -24,10 +24,13 @@ namespace FAMIS.Controllers
         CommonConversion commonConversion = new CommonConversion();
 
 
+
+        //TODO:
+        //多个定义是为了防止异步加载时 发生冲突(有必要吗？)
         StringBuilder result_tree_department = new StringBuilder();
         StringBuilder sb_tree_department = new StringBuilder();
 
-        FAMISDBTBModels db = new FAMISDBTBModels();
+        //FAMISDBTBModels db = new FAMISDBTBModels();
         
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         StringBuilder result_tree_SearchTree = new StringBuilder();
@@ -308,10 +311,10 @@ namespace FAMIS.Controllers
       
 
         [HttpGet]
-        public String load_ZCXH_add(String assetType)
+        public String load_ZCXH_add(int? assetType)
         {
              List<tb_Asset> list;
-             if (assetType != "" && assetType != "all")
+             if (assetType != null && assetType <1)
              {
                  list = DB_C.tb_Asset.Where(a => a.type_Asset == assetType).Distinct().ToList() ;
              }
@@ -351,8 +354,8 @@ namespace FAMIS.Controllers
 
             if (ModelState.IsValid)
             {
-                db.tb_staff.Add(staff);
-                db.SaveChanges();
+                DB_C.tb_staff.Add(staff);
+                DB_C.SaveChanges();
 
             }
 
@@ -365,35 +368,34 @@ namespace FAMIS.Controllers
         /**
          * 加载增加方式
          * */
-        public String load_FS_add(int? TypeID)
+        public String load_FS_add()
         {
-
-            List<tb_dataDict_para> list = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == TypeID).OrderBy(a => a.ID).ToList();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join type in DB_C.tb_dataDict on p.ID_dataDict equals type.ID
+                       where type.name_flag == SystemConfig.nameFlag_2_ZJFS_JIA
+                       select new dto_DataDict_para()
+                       {
+                           ID = p.ID,
+                           name_para = p.name_para
+                       };
             JavaScriptSerializer jss = new JavaScriptSerializer();
-            var result = (from r in list
-                          select new dto_DataDict_para()
-                          {
-                              ID = r.ID,
-                              name_para = r.name_para
-                          }).ToList(); 
-
-            String json = jss.Serialize(result).ToString().Replace("\\", "");
+            String json = jss.Serialize(data).ToString().Replace("\\", "");
             return json;
         }
 
         [HttpGet]
         public String load_SYR_add(String SZBM_ID)
         {
-            List<tb_staff> list = DB_C.tb_staff.Where(a => a.code_Departmen == SZBM_ID).OrderBy(a => a.ID).ToList();
-            JavaScriptSerializer jss = new JavaScriptSerializer();
-            var result = (from r in list
-                          select new dto_Staff()
-                          {
-                              id = r.ID_Staff,
-                              name = r.name
-                          }).ToList(); ;
 
-            String json = jss.Serialize(result).ToString().Replace("\\", "");
+            var data = from p in DB_C.tb_staff
+                       where p.effective_Flag == true
+                       select new dto_Staff { 
+                       id=p.ID_Staff,
+                       name=p.name
+                       };
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            String json = jss.Serialize(data.ToList()).ToString().Replace("\\", "");
             return json;
         }
 
@@ -406,6 +408,7 @@ namespace FAMIS.Controllers
             return GenerateTree_Department();
         }
 
+        [HttpPost]
          public String load_ZCLB()
          {
            return   GenerateTree_AssetType();
@@ -416,50 +419,39 @@ namespace FAMIS.Controllers
 
          public String GenerateTree_AssetType()
          {
-             List<tb_AssetType> list_de_AT = DB_C.tb_AssetType.ToList();
+
              if (!result_tree_department.Equals(""))
              {
                  Thread.Sleep(1000);
              }
              result_tree_department.Clear();
              sb_tree_department.Clear();
-             List<dto_TreeNode> list_dto_AT = new List<dto_TreeNode>();
-             list_de_AT.ForEach(item =>
-             {
-                 dto_TreeNode tmp_dto_AT = new dto_TreeNode();
 
-                 tmp_dto_AT.id = item.assetTypeCode.ToString();
-                 tmp_dto_AT.fatherID = item.father_MenuID_Type.ToString();
-                 tmp_dto_AT.nameText = item.name_Asset_Type.Trim();
-                 tmp_dto_AT.url = item.url.Trim();
-                 tmp_dto_AT.orderID = item.orderID;
-                 list_dto_AT.Add(tmp_dto_AT);
-             });
-             return TreeListToString(list_dto_AT);
-             //DataSet ds_de = ConvertToDataSet(list_dto_AT);
-             //DataTable dt_de = new DataTable();
-             
-             //dt_de = ds_de.Tables[0];
+             var data = from p in DB_C.tb_AssetType
+                        where p.flag == true
+                        select new dto_TreeNode
+                        {
+                            id=p.ID,
+                            fatherID=(int)p.father_MenuID_Type,
+                            nameText=p.name_Asset_Type,
+                            url=p.url,
+                            orderID=p.ID
+                        };
 
-             //string json = GetTreeJsonByTable_Department(dt_de, "id", "nameText", "url", "fatherID", "0");
-             //result_tree_department.Clear();
-             //sb_tree_department.Clear();
-             //return json;
+             return TreeListToString(data.ToList());
          }
          [HttpPost]
-         public String loadSearchTreeByRole(String roleName)
+         public String loadSearchTreeByRole()
          {
+             //获取用户权限
+             int? roleID = commonConversion.getRole();
+             if (roleID == null)
+             {
+                 return "{}";
+             }
              List<dto_TreeNode> tree = new List<dto_TreeNode>();
-             tree = getTreeSearchNodes(roleName);
-
+             tree = getTreeSearchNodes(roleID);
              return TreeListToString(tree);
-             //DataSet ds_tree = ConvertToDataSet(tree);
-             //DataTable dt_tree = new DataTable();
-             //dt_tree = ds_tree.Tables[0];
-             //result_tree_SearchTree.Clear();
-             //sb_tree_SearchTree.Clear();
-             //string json = GetTreeJsonByTable_TreeSearch(dt_tree, "id", "nameText", "url", "fatherID", "0");
-             //return json;
          }
 
 
@@ -498,10 +490,10 @@ namespace FAMIS.Controllers
              foreach (var item in data)
              {
                  dto_TreeNode node = new dto_TreeNode();
-                 node.fatherID = item.father_ID.ToString();
-                 node.id = item.ID.ToString();
+                 node.fatherID = (int)item.father_ID;
+                 node.id = item.ID;
                  node.nameText = item.name_dataDict;
-                 node.orderID = item.orderID==null?item.ID.ToString():item.orderID.ToString();
+                 node.orderID =(int)(item.orderID==null?item.ID:item.orderID);
                  node.url = item.url==null?"javascript:void(0)":item.url;
                  list.Add(node);
              }
@@ -660,11 +652,11 @@ namespace FAMIS.Controllers
              {
                  dto_TreeNode node = new dto_TreeNode();
                  int idYY = Convert.ToInt32(list_ORG[i].ID_Department);
-                 node.id = (idYY).ToString();
+                 node.id = idYY;
                  node.nameText = list_ORG[i].name_Department;
                  node.url = "javascript:void(0)";
-                 node.orderID=list_ORG[i].ID.ToString();
-                 node.fatherID = list_ORG[i].ID_Father_Department.ToString();
+                 node.orderID=list_ORG[i].ID;
+                 node.fatherID = (int)list_ORG[i].ID_Father_Department;
                  list.Add(node);
              }
              return TreeListToString(list);
@@ -688,10 +680,10 @@ namespace FAMIS.Controllers
                foreach (var p in q)
                {
                    dto_TreeNode node = new dto_TreeNode();
-                   node.id = p.id.ToString();
+                   node.id = p.id;
                    node.nameText = p.nameText;
-                   node.orderID = p.orderID;
-                   node.fatherID = p.fatherID.ToString();
+                   node.orderID = p.id;
+                   node.fatherID = (int)p.fatherID;
                    node.url = p.url;
                    list.Add(node);
                }
@@ -732,83 +724,143 @@ namespace FAMIS.Controllers
             
          }
 
-         public List<dto_TreeNode> getTreeSearchNodes(String role)
+         public List<dto_TreeNode> getTreeSearchNodes(int? roleID)
          {
-             List<tb_dataDict> dic = DB_C.tb_dataDict.Where(a => a.flag_Search == true).ToList();
+             var idList = from p in DB_C.tb_dataDict
+                        where p.active_flag == true
+                        where p.isSysSet == true
+                        where p.flag_Search == true
+                        select p;
              List<dto_TreeNode> nodesAll = new List<dto_TreeNode>();
-             for (int i = 0; i < dic.Count; i++)
+
+
+             foreach (var item in idList)
              {
                  dto_TreeNode fathernode = new dto_TreeNode();
-                 fathernode.id = (dic[i].ID*dic[i].ratio).ToString();
-                 fathernode.nameText = dic[i].name_dataDict;
-                 fathernode.url = "";
-                 fathernode.orderID = dic[i].ID.ToString();
-                 fathernode.fatherID = "0";
                  
-                 if (dic[i].tb_Ref != null && dic[i].tb_Ref != "")
+                 fathernode.id = (int)(item.ID * SystemConfig.ratio_dictPara);
+                 fathernode.nameText = item.name_dataDict;
+                 fathernode.url ="javascript:void(0)";
+                 fathernode.orderID = item.ID;
+                 fathernode.fatherID =0;
+
+                 if (item.tb_Ref != null && item.tb_Ref != "")
                  {
+                     List<dto_TreeNode> tmp = new List<dto_TreeNode>();
+                     switch(item.tb_Ref){
+                         case SystemConfig.treeTB_deparment: tmp = getSZBMNodes(fathernode,roleID); break;
+                         case SystemConfig.treeTB_AssetType: tmp = getZCLBNodes(fathernode, roleID); break;
+                         case SystemConfig.treeTB_supplier: tmp = getGYSNodes(fathernode); break;
+                         default: ; break;
+                     }
+                     if (tmp.Count > 0){
+                         nodesAll.AddRange(tmp);
+                     }
+                 }else {
+                     List<dto_TreeNode> tmp = new List<dto_TreeNode>();
+                     tmp = getDictNodes(item.ID, fathernode);
+                     if (tmp.Count > 0){
+                         nodesAll.AddRange(tmp);
+                     }
+                 }
+                
+             }
+
+
+
+             //List<tb_dataDict> dic = DB_C.tb_dataDict.Where(a => a.flag_Search == true).ToList();
+
+             //List<dto_TreeNode> nodesAll = new List<dto_TreeNode>();
+             
+             //for (int i = 0; i < dic.Count; i++)
+             //{
+             //    dto_TreeNode fathernode = new dto_TreeNode();
+             //    fathernode.id = (dic[i].ID*dic[i].ratio).ToString();
+             //    fathernode.nameText = dic[i].name_dataDict;
+             //    fathernode.url = commonConversion.getDefaultUrl() ;
+             //    fathernode.orderID = dic[i].ID.ToString();
+             //    fathernode.fatherID = "0";
+                 
+             //    if (dic[i].tb_Ref != null && dic[i].tb_Ref != "")
+             //    {
 
                     
-                     List<dto_TreeNode> tmp = new List<dto_TreeNode>();
-                     if (dic[i].tb_Ref == "tb_department")
-                     {
-                         tmp = getSZBMNodes(fathernode);
-                     }
-                     else if (dic[i].tb_Ref == "tb_supplier")
-                     {
-                         tmp = getGYSNodes(fathernode);
-                     }
-                     else if (dic[i].tb_Ref == "tb_AssetType")
-                     {
-                         tmp = getZCLBNodes(fathernode);
-                     }
-                     else if (dic[i].tb_Ref == "tb_staff")
-                     {
-                         tmp = getSYRNodes(fathernode);
-                     }
-                     else{
+             //        List<dto_TreeNode> tmp = new List<dto_TreeNode>();
+             //        if (dic[i].tb_Ref == "tb_department")
+             //        {
+             //            tmp = getSZBMNodes(fathernode);
+             //        }
+             //        else if (dic[i].tb_Ref == "tb_supplier")
+             //        {
+             //            tmp = getGYSNodes(fathernode);
+             //        }
+             //        else if (dic[i].tb_Ref == "tb_AssetType")
+             //        {
+             //            tmp = getZCLBNodes(fathernode);
+             //        }
+             //        else if (dic[i].tb_Ref == "tb_staff")
+             //        {
+             //            tmp = getSYRNodes(fathernode);
+             //        }
+             //        else{
 
-                      }
+             //         }
 
                   
-                     if (tmp.Count > 0)
-                     {
-                         nodesAll.AddRange(tmp);
-                     }
-                 }
-                 else
-                 {
-                     List<dto_TreeNode> tmp = new List<dto_TreeNode>();
-                     tmp = getDictNodes(dic[i].ID,fathernode);
-                     if (tmp.Count > 0)
-                     {
-                         nodesAll.AddRange(tmp);
-                     }
-                 }
+             //        if (tmp.Count > 0)
+             //        {
+             //            nodesAll.AddRange(tmp);
+             //        }
+             //    }
+             //    else
+             //    {
+             //        List<dto_TreeNode> tmp = new List<dto_TreeNode>();
+             //        tmp = getDictNodes(dic[i].ID,fathernode);
+             //        if (tmp.Count > 0)
+             //        {
+             //            nodesAll.AddRange(tmp);
+             //        }
+             //    }
                     
-             }
+             //}
              return nodesAll;
          }
 
 
 
-         public List<dto_TreeNode> getZCLBNodes(dto_TreeNode fathernode)
+
+        /// <summary>
+        /// 根据用户角色获取其资产类别
+        /// </summary>
+        /// <param name="fathernode"></param>
+        /// <returns></returns>
+         public List<dto_TreeNode> getZCLBNodes(dto_TreeNode fathernode,int? roleID)
          {
-             List<tb_AssetType> list_ORG = DB_C.tb_AssetType.ToList();
+             //获取获取有权限的ids
+             List<int?> ids=commonConversion.getids_AssetTypeByRole(roleID);
+
+             var data = from p in DB_C.tb_AssetType
+                        where p.flag == true
+                        where ids.Contains(p.ID)
+                        select new dto_TreeNode
+                        {
+                            fatherID =(int) (p.father_MenuID_Type+fathernode.id),
+                            id = fathernode.id+ p.ID,
+                            nameText = p.name_Asset_Type,
+                            url = "javascript:void(0)",
+                            orderID = p.ID
+                        };
              List<dto_TreeNode> list = new List<dto_TreeNode>();
-             for (int i = 0; i < list_ORG.Count; i++)
+
+
+             if (data.Count() > 0)
              {
-                 dto_TreeNode node = new dto_TreeNode();
-                 node.id = (int.Parse(fathernode.id) + list_ORG[i].assetTypeCode).ToString(); ;
-                 node.nameText = list_ORG[i].name_Asset_Type;
-                 node.url = "";
-                 node.orderID = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
-                 node.fatherID = (int.Parse(fathernode.id) + list_ORG[i].father_MenuID_Type).ToString();
-                 list.Add(node);
+                 list = data.ToList();
+                 list.Add(fathernode);
              }
 
-             list.Add(fathernode);
              return list;
+
          }
 
        
@@ -819,10 +871,10 @@ namespace FAMIS.Controllers
              for (int i = 0; i < list_ORG.Count; i++)
              {
                  dto_TreeNode node = new dto_TreeNode();
-                 node.id = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString(); ;
+                 node.id = fathernode.id + list_ORG[i].ID ;
                  node.nameText = list_ORG[i].name;
                  node.url = "";
-                 node.orderID = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
+                 node.orderID = fathernode.id + list_ORG[i].ID;
                  node.fatherID = fathernode.id;
                  list.Add(node);
              }
@@ -830,44 +882,65 @@ namespace FAMIS.Controllers
              list.Add(fathernode);
              return list;
          }
-         public List<dto_TreeNode> getSZBMNodes(dto_TreeNode fathernode)
-         {
-             List<tb_department> list_ORG = DB_C.tb_department.ToList();
-             List<dto_TreeNode> list = new List<dto_TreeNode>();
-             for (int i = 0; i < list_ORG.Count; i++)
-             {
-                 dto_TreeNode node = new dto_TreeNode();
-                 int idYY = int.Parse(fathernode.id) + Convert.ToInt32(list_ORG[i].ID_Department);
-                 node.id = (idYY).ToString();
-                 node.nameText = list_ORG[i].name_Department;
-                 node.url = "";
-                 idYY = int.Parse(fathernode.id) + Convert.ToInt32(list_ORG[i].ID_Father_Department);
-                 node.orderID = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
-                 node.fatherID = (idYY).ToString();
-                 list.Add(node);
-             }
 
-             list.Add(fathernode);
+
+        /// <summary>
+        /// 根据用户权限获取部门节点
+        /// </summary>
+        /// <param name="fathernode"></param>
+        /// <param name="roleID"></param>
+        /// <returns></returns>
+         public List<dto_TreeNode> getSZBMNodes(dto_TreeNode fathernode,int? roleID)
+         {
+
+             //获取部门权限ID_List
+             List<int?> ids = commonConversion.getids_departmentByRole(roleID);
+
+             var data = from p in DB_C.tb_department
+                        where p.effective_Flag == true
+                        where ids.Contains(p.ID)
+                        select new dto_TreeNode {
+                            id =(int)(fathernode.id+p.ID_Department),
+                            nameText=p.name_Department,
+                            url = "javascript:void(0)",
+                            fatherID=(int)(fathernode.id+p.ID_Father_Department),
+                            orderID = (int)(fathernode.id + p.ID_Father_Department)
+                        };
+             List<dto_TreeNode> list = new List<dto_TreeNode>(); 
+             if (data.Count() > 0)
+             {
+                 list = data.ToList();
+                 list.Add(fathernode);
+             }
              return list;
+             
          }
 
-
+        /// <summary>
+        /// 获取供应商
+        /// </summary>
+        /// <param name="fathernode"></param>
+        /// <param name="roleid"></param>
+        /// <returns></returns>
          public List<dto_TreeNode> getGYSNodes(dto_TreeNode fathernode)
          {
-             List<tb_supplier> list_ORG = DB_C.tb_supplier.ToList();
-             List<dto_TreeNode> list = new List<dto_TreeNode>();
-             for (int i = 0; i < list_ORG.Count; i++)
-             {
-                 dto_TreeNode node = new dto_TreeNode();
-                 node.id = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString(); ;
-                 node.nameText = list_ORG[i].name_supplier;
-                 node.url = "";
-                 node.orderID = (int.Parse(fathernode.id)+list_ORG[i].ID).ToString();
-                 node.fatherID =fathernode.id;
-                 list.Add(node);
-             }
 
-             list.Add(fathernode);
+             var data = from p in DB_C.tb_supplier
+                        where p.flag == true
+                        select new dto_TreeNode
+                        {
+                            id = fathernode.id+p.ID,
+                            nameText = p.name_supplier,
+                            url = "javascript:void(0)",
+                            fatherID =fathernode.id,
+                            orderID = fathernode.id + p.ID
+                        };
+             List<dto_TreeNode> list = new List<dto_TreeNode>();
+             if (data.Count() > 0)
+             {
+                 list = data.ToList();
+                 list.Add(fathernode);
+             }
              return list;
          }
 
@@ -1605,24 +1678,44 @@ namespace FAMIS.Controllers
 
         public List<dto_TreeNode> getDictNodes(int id_dic, dto_TreeNode fathernode)
          {
-             List<tb_dataDict_para> list_ORG = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == id_dic).ToList();
+
+             var data = from p in DB_C.tb_dataDict_para
+                        where p.activeFlag == true
+                        where p.ID_dataDict == id_dic
+                        select new dto_TreeNode
+                        {
+                                id = fathernode.id + p.ID,
+                                nameText =p.name_para,
+                                url = "javascript:void(0)",
+                                orderID = fathernode.id + p.ID,
+                                fatherID = (int)(fathernode.id + p.fatherid)
+                        };
+           
+
              List<dto_TreeNode> list = new List<dto_TreeNode>();
-             for (int i = 0; i < list_ORG.Count; i++)
+             if (data.Count() > 0)
              {
-                 dto_TreeNode node = new dto_TreeNode();
-                 node.id = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
-                 node.nameText = list_ORG[i].name_para;
-                 node.url = "";
-                 node.orderID = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
-                 node.fatherID = (int.Parse(fathernode.id) + list_ORG[i].fatherid).ToString();
-                 list.Add(node);
-
+                 list = data.ToList();
+                 list.Add(fathernode);
              }
-
-                
-             //list.Clear();
-             list.Add(fathernode);
              return list;
+
+             //List<tb_dataDict_para> list_ORG = DB_C.tb_dataDict_para.Where(a => a.ID_dataDict == id_dic).ToList();
+             //List<dto_TreeNode> list = new List<dto_TreeNode>();
+             //for (int i = 0; i < list_ORG.Count; i++)
+             //{
+             //    dto_TreeNode node = new dto_TreeNode();
+             //    node.id = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
+             //    node.nameText = list_ORG[i].name_para;
+             //    node.url = "";
+             //    node.orderID = (int.Parse(fathernode.id) + list_ORG[i].ID).ToString();
+             //    node.fatherID = (int.Parse(fathernode.id) + list_ORG[i].fatherid).ToString();
+             //    list.Add(node);
+
+             //}
+             //list.Clear();
+             //list.Add(fathernode);
+             //return list;
          }
             
 
@@ -2188,5 +2281,6 @@ namespace FAMIS.Controllers
             };
             return Json(json_NULL, JsonRequestBehavior.AllowGet);
         }
+
     }
 }

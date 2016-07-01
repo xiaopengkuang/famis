@@ -15,5 +15,7 @@ namespace FAMIS.Models
 
         [StringLength(300)]
         public string description { get; set; }
+
+        public bool? flag { get; set; }
     }
 }

@@ -50,7 +50,7 @@ namespace FAMIS.DTO
 
         public int? YearService_month { get; set; }
 
-        public int? Method_depreciation { get; set; }
+        public String Method_depreciation { get; set; }
 
         public int? Net_residual_rate { get; set; }
 
@@ -61,6 +61,8 @@ namespace FAMIS.DTO
         public double? Net_value { get; set; }
 
         public String Method_add { get; set; }
+
+        public String Method_decrease { get; set; }
 
     }
 }

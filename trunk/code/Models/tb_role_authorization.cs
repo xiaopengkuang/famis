@@ -17,9 +17,6 @@ namespace FAMIS.Models
 
         public int? role_ID { get; set; }
 
-      
         public int? Right_ID { get; set; }
-
-        
     }
 }
