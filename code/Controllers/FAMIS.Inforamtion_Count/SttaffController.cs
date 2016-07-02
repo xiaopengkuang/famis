@@ -97,13 +97,13 @@ namespace FAMIS.Controllers.FAMIS.ASSET_TYPE
         public String load_Operator()
         {
 
-            List<tb_staff> list = db.tb_staff.OrderBy(a => a.ID).ToList();
+            List<tb_user> list = db.tb_user.OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             var result = (from r in list
-                          select new tb_staff()
+                          select new tb_user()
                           {
                               ID = r.ID,
-                              name = r.name
+                              true_Name=r.true_Name
                           }).ToList();
 
             String json = jss.Serialize(result).ToString().Replace("\\", "");
@@ -115,15 +115,13 @@ namespace FAMIS.Controllers.FAMIS.ASSET_TYPE
         public void load_StaffID()
         {
 
-            List<tb_staff> list = db.tb_staff.OrderBy(a => a.ID).ToList();
-            var q = db.tb_staff.Select(e => e.ID_Staff).Max();
+            List<tb_user> list = db.tb_user.OrderBy(a => a.ID).ToList();
+            var q = db.tb_user.Select(e => e.ID).Max();
             JavaScriptSerializer jss = new JavaScriptSerializer();
 
-            StreamWriter sw = new StreamWriter("D:\\888.txt");
-            sw.Write(q);
-            sw.Close();
             
-                Session["id"] = int.Parse(q)+1;
+            
+                Session["id"] = q+1;
              
             
         }

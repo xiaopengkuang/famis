@@ -18,15 +18,17 @@ $(document).ready(function () {
 
         }
     });
+   // Load_Deatails(searchCondtiion);
     LoadInitData(searchCondtiion);
     LoadInitData_Detail(searchCondtiion);
+  //  LoadTreeLeft();
   
 
 });
 function LoadInitData(searchCondtiion) {
     //  alert("查询条件是：---" + searchCondtiion);
     $('#TableList_0_1').datagrid({
-        url: '/Depreciation/Load_Asset?JSdata=' + searchCondtiion + '', //+ , 
+        url: '/Depreciation/Load_Inventory?JSdata=' + searchCondtiion + '', 
         //  url: '/SysSetting/getpageOrder?role=1&tableType=1',
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
@@ -44,107 +46,26 @@ function LoadInitData(searchCondtiion) {
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
             { field: 'ID', title: '序号', width: 50 },
-            { field: 'department_Using', title: '使用部门', width: 50 },
-            { field: 'serial_number', title: '资产编号', width: 80 },
+            { field: 'serial_number', title: '盘点单号', width: 80 },
             { field: 'name_Asset', title: '资产名称', width: 50 },
-
-            { field: 'specification', title: '型号规范', width: 50 },
             {
-                field: 'unit_price', title: '单价', width: 40,
-                formatter: function (money) {
+                field: 'date', title: '盘点日期', width: 80,
 
-                    if (String(money).split(".").length < 2)
-                        return money + "¥";
-                    else {
-                        var arr = String(money).split(".");
-                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                    }
-
+                formatter: function (date) {
+                    var pa = /.*\((.*)\)/;
+                    var unixtime = date.match(pa)[1].substring(0, 10);
+                    return getTime(unixtime);
                 }
             },
-            { field: 'amount', title: '数量', width: 40 },
-             {
-                 field: 'Total_price', title: '资产总价', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
-            { field: 'Method_depreciation', title: '折旧方式', width: 50 },
-            { field: 'YearService_month', title: '使用年限（月）', width: 50 },
-            {
-                field: 'Net_residual_rate', title: '净残值率', width: 30,
-                formatter: function (rate) {
-                    return rate + "%";
-
-
-                }
-            },
-            {
-                field: 'depreciation_Month', title: '月提折旧', width: 50,
-                formatter: function (money) {
-
-                    if (String(money).split(".").length < 2)
-                        return money + "¥";
-                    else {
-                        var arr = String(money).split(".");
-                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                    }
-
-                }
-            },
-             {
-                 field: 'depreciation_tatol', title: '累计折旧', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
-             {
-                 field: 'Net_value', title: '净值', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
-              {
-                  field: 'Time_Purchase', title: '购置日期', width: 80,
-
-                  formatter: function (date) {
-                      var pa = /.*\((.*)\)/;
-                      var unixtime = date.match(pa)[1].substring(0, 10);
-                      return getTime(unixtime);
-                  }
-              },
-
-
-             {
-                 field: 'Time_add', title: '登记日期', width: 80,
-                 formatter: function (date) {
-                     var pa = /.*\((.*)\)/;
-                     var unixtime = date.match(pa)[1].substring(0, 10);
-                     return getTime(unixtime);
-                 }
-
-             }
+            { field: 'amountOfSys', title: '系统数量', width: 50 },
+            { field: 'amountOfInv', title: '盘点数量', width: 50 },
+            { field: 'difference', title: '盘点差异', width: 50 },
+             { field: 'property', title: '资产性质', width: 50 },
+ 
+             { field: 'operator', title: '操作人', width: 50 },
+             { field: 'state', title: '盘点状态', width: 50 },//这里要formatter一下字体颜色。
+              { field: 'date_Create', title: '制单日期', width: 50 },
+            { field: 'ps', title: '备注', width: 50 }
 
         ]],
         singleSelect: false, //允许选择多行
@@ -256,8 +177,8 @@ function loadPageTool() {
 function LoadInitData_Detail(searchCondtiion) {
     //  alert("查询条件是：---" + searchCondtiion);
     $('#TableList_0_2').datagrid({
-        url: '/Depreciation/Load_Asset?JSdata=' + searchCondtiion + '', //+ , 
-        //  url: '/SysSetting/getpageOrder?role=1&tableType=1',
+        url: '/Depreciation/Load_Inventory_details?JSdata=' + "ZC2016050500000006" + '', //+ , 
+        //  url: '/SysSetting/getpageOrder?role=1&tableType=1',yy
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -274,107 +195,26 @@ function LoadInitData_Detail(searchCondtiion) {
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
             { field: 'ID', title: '序号', width: 50 },
-            { field: 'department_Using', title: '使用部门', width: 50 },
-            { field: 'serial_number', title: '资产编号', width: 80 },
+            { field: 'state', title: '状态', width: 50 },//需要formatter字体颜色
+            { field: 'amountOfSys', title: '系统数量', width: 50 },
+            { field: 'amountOfInv', title: '盘点数量', width: 50 },
+            { field: 'difference', title: '盘点差异', width: 50 },
+            { field: 'serial_number_Asset', title: '资产编号', width: 50 },
+            { field: 'type_Asset', title: '资产类别', width: 50 },
             { field: 'name_Asset', title: '资产名称', width: 50 },
-
-            { field: 'specification', title: '型号规范', width: 50 },
-            {
-                field: 'unit_price', title: '单价', width: 40,
-                formatter: function (money) {
-
-                    if (String(money).split(".").length < 2)
-                        return money + "¥";
-                    else {
-                        var arr = String(money).split(".");
-                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                    }
-
-                }
-            },
-            { field: 'amount', title: '数量', width: 40 },
-             {
-                 field: 'Total_price', title: '资产总价', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
-            { field: 'Method_depreciation', title: '折旧方式', width: 50 },
-            { field: 'YearService_month', title: '使用年限（月）', width: 50 },
-            {
-                field: 'Net_residual_rate', title: '净残值率', width: 30,
-                formatter: function (rate) {
-                    return rate + "%";
+            { field: 'specification', title: '规格型号', width: 50 },
+            { field: 'measurement', title: '计量单位', width: 50 },
+            { field: 'unit_price', title: '单价', width: 50 },
+            { field: 'amount', title: '数量', width: 50 },
+            { field: 'Total_price', title: '总价', width: 50 },
+            { field: 'department_using', title: '使用部门', width: 50 },
+            { field: 'address', title: '存放地址', width: 50 },
+            { field: 'owener', title: '使用人', width: 50 },
+            { field: 'state_asset', title: '资产状态', width: 50 },
+            { field: 'supllier', title: '供应商', width: 50 }
+                           
 
 
-                }
-            },
-            {
-                field: 'depreciation_Month', title: '月提折旧', width: 50,
-                formatter: function (money) {
-
-                    if (String(money).split(".").length < 2)
-                        return money + "¥";
-                    else {
-                        var arr = String(money).split(".");
-                        return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                    }
-
-                }
-            },
-             {
-                 field: 'depreciation_tatol', title: '累计折旧', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
-             {
-                 field: 'Net_value', title: '净值', width: 50,
-                 formatter: function (money) {
-
-                     if (String(money).split(".").length < 2)
-                         return money + "¥";
-                     else {
-                         var arr = String(money).split(".");
-                         return arr[0] + "." + arr[1].substring(0, 2) + "¥"
-                     }
-
-                 }
-             },
-              {
-                  field: 'Time_Purchase', title: '购置日期', width: 80,
-
-                  formatter: function (date) {
-                      var pa = /.*\((.*)\)/;
-                      var unixtime = date.match(pa)[1].substring(0, 10);
-                      return getTime(unixtime);
-                  }
-              },
-
-
-             {
-                 field: 'Time_add', title: '登记日期', width: 80,
-                 formatter: function (date) {
-                     var pa = /.*\((.*)\)/;
-                     var unixtime = date.match(pa)[1].substring(0, 10);
-                     return getTime(unixtime);
-                 }
-
-             }
 
         ]],
         singleSelect: false, //允许选择多行
@@ -390,19 +230,49 @@ function loadPageTool_Detail() {
     pager.pagination({
         buttons: [{
             text: '新增明细',
-            height: 50,
             iconCls: 'icon-add',
+            height: 50,
             handler: function () {
-                var filename = getNowFormatDate_FileName();
-
-                Export(filename, $('#TableList_0_1'));
+                var $winADD;
+                $winADD = $('#modalwindow').window({
+                    title: '新增明细',
+                    width: 860,
+                    height: 540,
+                    top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
+                    left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+                    shadow: true,
+                    modal: true,
+                    iconCls: 'icon-add',
+                    closed: true,
+                    minimizable: false,
+                    maximizable: false,
+                    collapsible: false,
+                    onClose: function () {
+                        $('#TableList_0_1').datagrid('reload');
+                        //    var resultAlert = "成功插入记录！";
+                        //    $.messager.show({
+                        //        title: '提示',
+                        //        msg: resultAlert,
+                        //        showType: 'slide',
+                        //        style: {
+                        //            right: '',
+                        //            top: document.body.scrollTop + document.documentElement.scrollTop,
+                        //            bottom: ''
+                        //        }
+                        //    });
+                    }
+                });
+                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Verify/New_Deatails'></iframe>");
+                $winADD.window('open');
             }
+        
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
+
 function myformatter(date) {
     var y = date.getFullYear();
     var m = date.getMonth() + 1;
@@ -424,6 +294,58 @@ function getTime(/** timestamp=0 **/) {
 }
 
 
+function ReadExcel()
+{
+    var tempStr = "";
+    var filePath= document.all.upfile.value;
+    var oXL = new ActiveXObject("Excel.application"); 
+    var oWB = oXL.Workbooks.open(filePath);
+    oWB.worksheets(1).select(); 
+    var oSheet = oWB.ActiveSheet;
+    try{
+        for(var i=2;i<46;i++)
+        {
+            if(oSheet.Cells(i,2).value =="null" || oSheet.Cells(i,3).value =="null" )
+                break;
+            var a = oSheet.Cells(i,2).value.toString()=="undefined"?"":oSheet.Cells(i,2).value;
+            tempStr+=("  "+oSheet.Cells(i,2).value+
+             "  "+oSheet.Cells(i,3).value+
+             "  "+oSheet.Cells(i,4).value+
+             "  "+oSheet.Cells(i,5).value+
+             "  "+oSheet.Cells(i,6).value+"\n");
+        }
+    }catch(e)
+    {
+        document.all.txtArea.value = tempStr;
+    } 
+    document.all.txtArea.value = tempStr;
+    oXL.Quit();
+    CollectGarbage();
+}
+function readThis() {
+    var tempStr = "";
+    var filePath = document.all.upfile.value;
+    var oXL = new ActiveXObject("Excel.application");
+    var oWB = oXL.Workbooks.open(filePath);
+    oWB.worksheets(1).select();
+    var oSheet = oWB.ActiveSheet;
+    try {
+        for (var i = 2; i < 46; i++) {
+            if (oSheet.Cells(i, 2).value == "null" || oSheet.Cells(i, 3).value == "null")
+                break;
+            var a = oSheet.Cells(i, 2).value.toString() == "undefined" ? "" : oSheet.Cells(i, 2).value;
+            tempStr += (" " + oSheet.Cells(i, 2).value + " " + oSheet.Cells(i, 3).value + " " + oSheet.Cells(i, 4).value + " " + oSheet.Cells(i, 5).value + " " + oSheet.Cells(i, 6).value + "\n");
+        }
+    }
+
+    catch (e) {
+        //alert(e); 
+        document.all.txtArea.value = tempStr;
+    }
+
+    document.all.txtArea.value = tempStr; oXL.Quit();
+    CollectGarbage();
+}
 
 
 function myparser(s) {

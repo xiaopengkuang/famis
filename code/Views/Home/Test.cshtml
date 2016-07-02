@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     Layout = null;
 }
 <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
@@ -14,60 +15,31 @@
 <html>
 <head>
     <script type="text/javascript" language="javascript">
-       </script>
-    <title>规则设置</title>
+    </script>
+    <title>盘点管理</title>
 </head>
 
 <body>
-     
-    <div class="easyui-layout" fit="true">
-        
-        <div data-options="region:'center'"  fit="true">
-            <div class="easyui-panel" data-options="region:'north'" title="盘点单管理" style="height:350px;">
-                <table>
-                    <tr>
-                        <td>查询条件：</td>
-                        <td>盘点单号</td>
-                        <td>
-                            <input id="Invention_Code">
+    <h2>Frozen Columns in DataGrid</h2>
+    <p>You can freeze some columns that can't scroll out of view.</p>
+    <div style="margin:20px 0;"></div>
+    <table class="easyui-datagrid" title="Frozen Columns in DataGrid" style="width:700px;height:250px"
+           data-options="rownumbers:true,singleSelect:true,url:'datagrid_data1.json',method:'get'">
+        <thead data-options="frozen:true">
+            <tr>
+                <th data-options="field:'itemid',width:100">Item ID</th>
+                <th data-options="field:'productid',width:120">Product</th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th data-options="field:'listprice',width:90,align:'right'">List Price</th>
+                <th data-options="field:'unitcost',width:90,align:'right'">Unit Cost</th>
+                <th data-options="field:'attr1',width:250">Attribute</th>
+                <th data-options="field:'status',width:60,align:'center'">Status</th>
+            </tr>
+        </thead>
+    </table>
 
-                        </td>
-                        <td>盘点日期</td>
-                        <td>
-                            <input class="easyui-datebox" id="BeginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
-
-                        </td>
-                        <td>至</td>
-                        <td>
-                            <input class="easyui-datebox" id="EndDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
-
-                        </td>
-                        <td>盘点状态</td>
-                        <td>
-                            <select class="easyui-combobox" id="Invention_State" name="Invention_State" style="width: 150px;">
-                                <option value="Univented">未盘点</option>
-                                <option value="Inventing">盘点中</option>
-                                <option value="Inventing">已盘点</option>
-                            </select>
-                        </td>
-                        <td>盘点人</td>
-                        <td> <select class="easyui-combobox" id="operator" name="operator" style="width: 150px;"></select></td>
-
-                        <td> <a href="#" onclick="depreciation()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'">查询</a></td>
-                        <td>
-                            <a href="#" onclick="depreciation()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-back'">重置</a>
-                        </td>
-                    <tr>
-                </table>
-                <table id="TableList_0_1" class="easyui-datagrid" style="width: auto; height: 350px" data-options="border:false,singleSelect:true,fit:true,fitColumns:true"></table>
-            </div>
-            <div class="easyui-panel" data-options="region:'south',split:true" title="盘点明细管理" style="height: 350px;" fit="true">
-
-                <table id="TableList_0_2" class="easyui-datagrid" style="width: auto; height: 350px" data-options="border:false,singleSelect:true,fit:true,fitColumns:true"></table>
-
-            </div>
-        </div>
-        <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
-    </div>
 </body>
 </html>
