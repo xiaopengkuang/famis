@@ -53,7 +53,7 @@ namespace FAMIS.Controllers
 
             if (count == 1)//存在用户
             {
-                List<tb_user> userList = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).ToList();
+                List<tb_user> userList = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(f=>f.flag==true).ToList();
                 if (userList != null && userList.Count == 1)
                 {
 
@@ -62,7 +62,9 @@ namespace FAMIS.Controllers
                     //往Session里面保存用户信息
                     //用户名
                     Session["userName"] = userList[0].name_User;
-                    //用户名
+
+                    Session["userID"] = userList[0].ID;
+                    ////用户名
                     Session["password"] = userList[0].password_User;
                     //用户角色
                     Session["userRole"] = userList[0].roleID_User;
@@ -141,7 +143,7 @@ namespace FAMIS.Controllers
                 String userName = Session["userName"] == null ? "" : Session["userName"].ToString();
                 String password = Session["password"] == null ? "" : Session["password"].ToString();
                 int userRole = int.Parse(Session["userRole"] == null ? "0" : Session["userRole"].ToString());
-                List<tb_user> list = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(c => c.roleID_User == userRole).ToList();
+                List<tb_user> list = DBConnecting.tb_user.Where(f=>f.flag==true).Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(c => c.roleID_User == userRole).ToList();
                 if (list.Count == 1)
                 {
                     return true;

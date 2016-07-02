@@ -59,6 +59,10 @@ function LoadInitDatagrid(datagrid) {
             {
                 field: 'date_collar', title: '领用时间', width: 100,
                 formatter: function (date) {
+                    if (date == null)
+                    {
+                        return "";
+                    }
                     var pa = /.*\((.*)\)/;
                     var unixtime = date.match(pa)[1].substring(0, 10);
                     return getTime(unixtime);
@@ -67,6 +71,9 @@ function LoadInitDatagrid(datagrid) {
             {
                 field: 'date_Operated', title: '登记时间', width: 100,
                 formatter: function (date) {
+                    if (date == null) {
+                        return "";
+                    }
                     var pa = /.*\((.*)\)/;
                     var unixtime = date.match(pa)[1].substring(0, 10);
                     return getTime(unixtime);
@@ -103,7 +110,7 @@ function loadPageTool(datagrid) {
                 }
             }
         }, {
-            text: '修改',
+            text: '编辑',
             height: 50,
             iconCls: 'icon-edit',
             handler: function () {
@@ -127,7 +134,6 @@ function loadPageTool(datagrid) {
                         closable: true
                     });
                 }
-                
             }
         }, {
             text: '刷新',
@@ -147,58 +153,19 @@ function loadPageTool(datagrid) {
                 var id_;
                 if (rows == null)
                 {
-                    var resultAlert = "请选择领用单！";
-                    $.messager.show({
-                        title: '提示',
-                        msg: resultAlert,
-                        showType: 'slide',
-                        style: {
-                            right: '',
-                            top: document.body.scrollTop + document.documentElement.scrollTop,
-                            bottom: ''
-                        }
-                    });
+                    $.messager.alert('提示', '请选择领用单!', 'info');
                     return;
                 }
-
                 if(rows.length==1)
                 {
                     id_=rows[0].ID;
                 } else {
-                    var resultAlert = "一次只能查看一个单据！";
-                    $.messager.show({
-                        title: '提示',
-                        msg: resultAlert,
-                        showType: 'slide',
-                        style: {
-                            right: '',
-                            top: document.body.scrollTop + document.documentElement.scrollTop,
-                            bottom: ''
-                        }
-                    });
+                    $.messager.alert('提示', '一次只能查看一个单据!', 'info');
                     return;
                 }
-                var $winADD;
-                $winADD = $('#modalwindow').window({
-                    title: '领用明细',
-                    width: 900,
-                    height: 600,
-                    top: (($(window).height() - 900) > 0 ? ($(window).height() - 900) : 200) * 0.5,
-                    left: (($(window).width() - 600) > 0 ? ($(window).width() - 600) : 100) * 0.5,
-                    shadow: true,
-                    modal: true,
-                    iconCls: 'icon-add',
-                    closed: true,
-                    minimizable: false,
-                    maximizable: false,
-                    collapsible: false,
-                    onClose: function () {
-                        //$('#allocationDG').datagrid('reload');
-                    }
-                });
-                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/DetailCollar?id=" + id_ + "'></iframe>");
-                $winADD.window('open');
-                //alert('刷新');
+                var titleName = "领用明细";
+                var url = "/Collar/Detail_collar?id=" + id_;
+                openModelWindow(url, titleName);
             }
         },
           {
@@ -222,7 +189,6 @@ function loadPageTool(datagrid) {
                       });
                       return;
                   }
-
                   if (rows.length == 1) {
                       if (rows[0].state != "草稿") {
                           MessShow("只有草稿单据才能提交!")
@@ -334,20 +300,6 @@ function loadPageTool(datagrid) {
                    } else {
                        MessShow("一次只能处理一个单据!")
                        return;
-                       //for (var ii = 0; ii < rows.length; ii++) {
-                       //    if (rows[ii].state != "待审核") {
-                       //        MessShow("只有待审核单据才能提交!")
-                       //        //$('#allocationDG').datagrid('reload');
-                       //        return;
-                       //    }
-
-                       //    if (ii == 0) {
-                       //        id_ = rows[ii].ID;
-
-                       //    } else {
-                       //        id_ = id_ + "_" + rows[ii].ID;
-                       //    }
-                       //}
                    }
                    updateRecordState(datagrid,4, id_);
                    $('#' + datagrid).datagrid('reload');

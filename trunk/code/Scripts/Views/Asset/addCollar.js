@@ -192,7 +192,7 @@ function updateCurrentList(addList)
         fi++;
     }
     CurrentList = tmp;
-    alert(tmp.toString())
+    //alert(tmp.toString())
     LoadInitData_datagrid();
 }
 
@@ -221,7 +221,7 @@ function saveData(info) {
 
     var d_CFDD = $("#CFDD_add").combotree("getValue");
 
-    var d_SYR = $("#SYR_add").combobox("getValue");
+    //var d_SYR = $("#SYR_add").combobox("getValue");
 
     var d_PS = $("#PS_add").val();
 
@@ -232,24 +232,31 @@ function saveData(info) {
         "reason_LY": d_LYYY,
         "department_LY": d_LYBM,
         "address_LY": d_CFDD,
-        "people_LY": d_SYR,
         "ps_LY": d_PS,
-        "flag":1,
         "statelist": state_List,
-       "assetList": listA
+        "assetList": listA
     };
-
   
     $.ajax({
-        url: "/Collar/InsertNewCollor",
+        url: "/Collar/Handler_addCollar",
         type: 'POST',
         data: {
-            "collar_add": JSON.stringify(collar_add)
+            "data": JSON.stringify(collar_add)
         },
         beforeSend: ajaxLoading,
         success: function (data) {
             ajaxLoadEnd();
-            window.parent.$('#tabs').tabs('close', '添加领用单');
+
+            if (data > 0) {
+                try {
+                    window.parent.$('#tabs').tabs('close', '添加领用单');
+
+                } catch (e) {
+                }
+            } else {
+                
+            }
+          
 
         }
     });
@@ -275,7 +282,9 @@ function cancelData() {
 
     $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
         if (r) {
-            window.parent.$('#tabs').tabs('close', '添加领用单');
+            try {
+                window.parent.$('#tabs').tabs('close', '添加领用单');
+            } catch (e) { }
         }
     });
 

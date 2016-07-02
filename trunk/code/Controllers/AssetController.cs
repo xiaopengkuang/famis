@@ -71,7 +71,7 @@ namespace FAMIS.Controllers
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
 
-            int? role=commonConversion.getRole();
+            int? role=commonConversion.getRoleID();
 
             JsonResult result=new JsonResult();
              JavaScriptSerializer serializer = new JavaScriptSerializer();

@@ -110,5 +110,18 @@ namespace FAMIS.DataConversion
             return tb_asset_add;
         }
 
+
+        public tb_Asset_collar ConverJsonToTable(Json_collar_add data)
+        {
+            tb_Asset_collar collar = new tb_Asset_collar();
+            collar.reason = data.reason_LY;
+            collar.department_collar = data.department_LY;
+            collar.date = data.date_LY;
+            collar.addree_Storage = data.address_LY;
+            collar.ps = data.ps_LY;
+            return collar;
+
+        }
+
     }
 }
