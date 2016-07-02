@@ -43,6 +43,20 @@ namespace FAMIS.DataConversion
             return results;
         }
 
+        public String IntListToString(List<int> ids_list)
+        {
+            String result="";
+            for (int i = 0; i < ids_list.Count; i++)
+            {
+                if (i == 0) {
+                    result = ids_list[i]+"";
+                } else {
+                    result += "_" + ids_list[i];
+                }
+            }
+            return result;
+        }
+
         public int getUnqiID()
         {
             string str = DateTime.Now.ToString("ddhhmmss");
@@ -156,31 +170,107 @@ namespace FAMIS.DataConversion
             List<int?> ids = new List<int?>();
 
 
-            var data = from p in DB_C.tb_role_authorization
+            bool SuperUser = isSuperUser(roleID);
+            //先判断其是否是超级管理员
+            if (SuperUser)
+            { 
+                switch(typeName){
+                    case SystemConfig.role_assetType: { ids = getfullRight_assetType(); }; break;
+                    case SystemConfig.role_department: { ids = getfullRight_department(); }; break;
+                    case SystemConfig.role_menu: { ids = getfullRight_menu(); }; break;
+                }
+                return ids;
+            }
+            else {
+                var data = from p in DB_C.tb_role_authorization
+                           where p.flag == true
+                           where p.role_ID == roleID
+                           where p.type == typeName
+                           select p;
+                foreach (var item in data)
+                {
+                    ids.Add(item.Right_ID);
+                }
+
+
+                if (typeName == SystemConfig.role_department)
+                {
+                    var data_DP = from p in DB_C.tb_department
+                                  where p.effective_Flag == true
+                                  where ids.Contains(p.ID)
+                                  select p;
+                    List<int?> ids_DP = new List<int?>();
+                    foreach (var it in data_DP)
+                    {
+                        ids_DP.Add(it.ID_Department);
+                    }
+                    return ids_DP;
+                }
+                return ids;
+            }
+        }
+
+        public List<int?> getfullRight_assetType()
+        {
+            List<int?> ids = new List<int?>();
+            var data = from p in DB_C.tb_AssetType
                        where p.flag == true
-                       where p.role_ID == roleID
-                       where p.type == typeName
                        select p;
+
             foreach (var item in data)
             {
-                ids.Add(item.Right_ID);
+                ids.Add(item.ID);
             }
+            return ids;
 
+        }
+        public List<int?> getfullRight_department()
+        {
+            List<int?> ids = new List<int?>();
+            var data = from p in DB_C.tb_department
+                       where p.effective_Flag == true
+                       select p;
 
-            if(typeName==SystemConfig.role_department){
-                var data_DP = from p in DB_C.tb_department
-                           where p.effective_Flag == true
-                           where ids.Contains(p.ID)
-                           select p;
-                List<int?> ids_DP = new List<int?>();
-                foreach (var it in data_DP)
-                {
-                    ids_DP.Add(it.ID_Department);                   
-                }
-                return ids_DP;
+            foreach (var item in data)
+            {
+                ids.Add(item.ID_Department);
             }
             return ids;
         }
+        public List<int?> getfullRight_menu()
+        {
+            List<int?> ids = new List<int?>();
+            var data = from p in DB_C.tb_Menu
+                       select p;
+
+            foreach (var item in data)
+            {
+                ids.Add(item.ID);
+            }
+            return ids;
+        }
+
+
+        public bool isSuperUser(int? roleID)
+        {
+            bool flag = false;
+            var ro = from p in DB_C.tb_role
+                     where p.ID == roleID
+                     where p.isSuperUser == true
+                     select p;
+
+            if (ro.Count() > 0)
+            {
+                flag = true;
+            }
+            return flag;
+        }
+
+
+
+
+
+
 
         public bool isALL(String info)
         {
