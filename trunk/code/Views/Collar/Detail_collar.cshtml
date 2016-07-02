@@ -16,14 +16,10 @@
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="../../Scripts/Views/Asset/Collar_Detail.js"></script>
-    <script type="text/javascript">
-        loadDetail_collar('@ViewBag.id');
-    </script>
 </head>
-<body>
-
-    <div class="easyui-panel" style="height: 600px;" fit="true">
-        <table style="width: 100%">
+<body onload=" LoadInitData_datagrid('@ViewBag.id', 'datagrid')">
+    <div class="easyui-panel"  fit="true">
+        <table>
             <tr>
                 <td style="width: 100px"><span style="width: 100px">单据号:</span></td>
                 <td>
@@ -57,7 +53,7 @@
                     <input class="easyui-textbox" id="PS_add" readonly="readonly" name="PS_add" value="@ViewBag.ps" style="width: 500px;" /></td>
             </tr>
         </table>
-        <table id="datagrid_collar_detail" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
+        <table id="datagrid" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
         </table>
     </div>
 

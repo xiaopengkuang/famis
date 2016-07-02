@@ -46,16 +46,7 @@ namespace FAMIS.Controllers
         {
             return View();
         }
-        public ActionResult edit_collarView(int? id)
-        {
-            if(id==null)
-            {
-                return View("Error");
-            }
-
-            ViewBag.id = id;
-            return View("edit_collar");
-        }
+       
 
         public ActionResult collar_selectAsset()
         {
@@ -64,6 +55,7 @@ namespace FAMIS.Controllers
 
         public ActionResult Detail_collar(int? id)
         {
+
             Json_collar data = getCollarByID(id);
 
             if (data!=null )
@@ -79,7 +71,15 @@ namespace FAMIS.Controllers
             }
             return View();
         }
-
+        public ActionResult edit_collarView(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View("edit_collar");
+        }
 
 
 
@@ -448,6 +448,7 @@ namespace FAMIS.Controllers
             List<int?> idsRight_department = commonConversion.getids_departmentByRole(roleID);
 
 
+
             var data = from p in DB_C.tb_Asset_collar
                        where p.flag == true
                        where p.department_collar == null || idsRight_department.Contains(p.department_collar)
@@ -636,6 +637,54 @@ namespace FAMIS.Controllers
  
         }
 
+        [HttpPost]
+        public int Handler_updateCollar(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_collar_add Json_data = serializer.Deserialize<Json_collar_add>(data);
+
+            if (Json_data == null||Json_data.id==null)
+            {
+                return 0;
+            }
+            try {
+                var db_data = from p in DB_C.tb_Asset_collar
+                              where p.ID == Json_data.id
+                              select p;
+                foreach (var item in db_data)
+                {
+                    item.addree_Storage = Json_data.address_LY;
+                    item.date = Json_data.date_LY;
+                    item.date_Operated = DateTime.Now;
+                    item.department_collar = Json_data.department_LY;
+                    item.ps = Json_data.ps_LY;
+                    item.reason = Json_data.reason_LY;
+                    item.state_List = commonConversion.getStateListID(Json_data.statelist);
+                }
+              
+
+                var db_de = from p in DB_C.tb_Asset_collar_detail
+                            where p.flag == true
+                            where p.ID_collar == Json_data.id
+                            select p;
+                foreach (var item in db_de)
+                {
+                    item.flag = false;
+                }
+                //获取选中IDs
+                List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+                List<tb_Asset_collar_detail> details = createCollarList(Json_data.id, selectedAssets);
+                DB_C.tb_Asset_collar_detail.AddRange(details);
+                DB_C.SaveChanges();
+                return 1;
+            }catch(Exception e){
+
+                return 0;
+            }
+         
+        }
+
+
 
         public List<tb_Asset_collar_detail> createCollarList(int? id_collar,List<int> ids_asset)
         {
@@ -698,19 +747,17 @@ namespace FAMIS.Controllers
 
         }
         [HttpPost]
-        public JsonResult LoadCollarDetailByID(int? page, int? rows, int? id)
+        public JsonResult LoadCollarDetailByID(int? page, int? rows, String id)
         {
-            if (id == null)
-            {
-                return null;
-            }
+            
+            int? id_collar=int.Parse(id);
             //获取相应的AssetID
-            List<int> ids_asset = getIdsByCollarID(id);
+            List<int> ids_asset = getAssetIdsByCollarID(id_collar);
             return getAssetsByIDs(page,rows,ids_asset);
         }
 
 
-        public List<int> getIdsByCollarID(int? id)
+        public List<int> getAssetIdsByCollarID(int? id)
         {
             var data = from p in DB_C.tb_Asset_collar_detail
                        where p.ID_collar == id
@@ -726,48 +773,74 @@ namespace FAMIS.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult getCollar_edit(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_collar
+                       where p.flag == true
+                       where p.ID == id
+                       select new dto_collar_edit { 
+                            addree_Storage=p.addree_Storage,
+                            date=p.date,
+                            department_collar=p.department_collar,
+                            ID=p.ID,
+                            ps=p.ps,
+                            reason=p.reason,
+                            serial_number=p.serial_number
+                       };
+            dto_collar_edit result = data.First();
+            List<int> ids_select = getAssetIdsByCollarID(id);
 
-        //public int InsertNewCollor(String collar_add)
-        //{
-        //    int insertNum = 0;
-        //    JavaScriptSerializer serializer = new JavaScriptSerializer();
-        //    Json_collar_add Json_collar = serializer.Deserialize<Json_collar_add>(collar_add);
+            result.idsStr = commonConversion.IntListToString(ids_select);
+            result.idsList = ids_select;
 
-        //    CommonController cct = new CommonController();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
-        //    String serialNumber_collar = cct.getLatestOneSerialNumber("LY");
-        //    DateTime dateNow = new DateTime();
+        [HttpPost]
+        public int updateCollarStateByID(int oldState,int newState,String ids)
+        {
+            return 0;
+        }
 
-        //    int operatorID = 1;
-        //    int flag = Json_collar.flag == null ? 1 : (int)Json_collar.flag;
 
-        //    tb_Asset_collar collar_new = ConvertJsonTo_CollorTB(Json_collar, serialNumber_collar, true, dateNow, operatorID);
-        //    List<tb_Asset_collar> collarsList = new List<tb_Asset_collar>();
-        //    collarsList.Add(collar_new);
 
-        //    //添加明细
-        //    List<int> AssetIDs = ConvertStringToIntList(Json_collar.assetList);
-        //    List<tb_Asset_collar_detail> details = convertToList_CollarDetail(serialNumber_collar, getAssetByID(AssetIDs), 1);
-        //    String Insert_Collar_SQL = get_Insert_collar(collarsList);
-        //    String Insert_CollarDetail_SQL = get_Insert_collar_detail(details);
-        //    SQLRunner sqlRunner = new SQLRunner();
-        //    try
-        //    {
-        //        insertNum = sqlRunner.run_Insert_SQL(Insert_Collar_SQL);
-        //        if (insertNum != -1)
-        //        {
-        //            insertNum = sqlRunner.run_Insert_SQL(Insert_CollarDetail_SQL);
-        //        }
+        ////public String updateCollarStateByID(int state, String idStr)
+        ////{
+        ////    String result = "";
+        ////    //要通过的审核的单据 须审核其明细中的资产是否全是闲置
+        ////    if (state == 3)
+        ////    {
+        ////        if (Check_AssetStateByCollarID(state, idStr))
+        ////        {
+        ////            String sql = getSQL_Update_Collar_State(state, idStr);
+        ////            SQLRunner sqlRunner = new SQLRunner();
+        ////            result = sqlRunner.executesql(sql) + "";
+        ////        }
+        ////        else
+        ////        {
+        ////            result = "-1";
+        ////        }
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e.ToString());
-        //    }
+        ////    }
+        ////    else
+        ////    {
+        ////        //将collar设置为相关的状态
+        ////        String sql = getSQL_Update_Collar_State(state, idStr);
+        ////        SQLRunner sqlRunner = new SQLRunner();
+        ////        result = sqlRunner.executesql(sql) + "";
+        ////    }
 
-        //    return insertNum;
-        //}
 
+        ////    //DO more option  
+        ////    //State=3  
+
+        ////    return result;
+        ////}
+
+
+
+     
 
 
 
@@ -778,71 +851,7 @@ namespace FAMIS.Controllers
 
       
 
-        ////public JsonResult Load_Asset_By_CollarID(int? page, int? rows, int flag, int ID)
-        ////{
-        ////    page = page == null ? 1 : page;
-        ////    rows = rows == null ? 15 : rows;
-        ////    List<tb_Asset_collar> collar = DB_C.tb_Asset_collar.Where(a => a.ID == ID).ToList();
-        ////    if (collar.Count != 1)
-        ////    {
-        ////        List<dto_Asset_Detail> list_null = new List<dto_Asset_Detail>();
-        ////        var json_NULL = new
-        ////        {
-        ////            total = 0,
-        ////            rows = list_null.ToArray()
-        ////            //sql = selectSQL
-
-        ////        };
-
-        ////        return Json(json_NULL, JsonRequestBehavior.AllowGet);
-        ////    }
-        ////    String serNum = collar[0].serial_number;
-        ////    List<tb_Asset_collar_detail> acd = DB_C.tb_Asset_collar_detail.Where(b => b.flag == true).Where(a => a.serial_number == serNum).ToList();
-
-        ////    String cond = getSQLCond_SerialNumber(acd);
-
-        ////    String selectSQL = getSelectAssets(flag, cond, rows, page);
-        ////    String selectSQLCounter = getSelectAsset_Counter(flag, cond);
-
-
-        ////    SQLRunner sqlRuner = new SQLRunner();
-        ////    DataTable dt = sqlRuner.runSelectSQL_dto(selectSQL);
-        ////    int resultCount = sqlRuner.runSelectSQL_Counter(selectSQLCounter, "total");
-        ////    List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
-        ////    for (int i = 0; i < dt.Rows.Count; i++)
-        ////    {
-        ////        dto_Asset_Detail tmp = new dto_Asset_Detail();
-
-        ////        tmp.RowNo = int.Parse(dt.Rows[i]["RowNo"].ToString());
-        ////        tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
-        ////        tmp.serial_number = dt.Rows[i]["serial_number"].ToString();
-        ////        tmp.name_Asset = dt.Rows[i]["name_Asset"].ToString();
-        ////        tmp.type_Asset = dt.Rows[i]["type_Asset"].ToString();
-        ////        tmp.specification = dt.Rows[i]["specification"].ToString();
-        ////        tmp.people_using = dt.Rows[i]["specification"].ToString();
-        ////        tmp.department_Using = dt.Rows[i]["department_Using"].ToString();
-        ////        tmp.measurement = dt.Rows[i]["measurement"].ToString();
-        ////        tmp.unit_price = double.Parse(dt.Rows[i]["unit_price"].ToString());
-        ////        tmp.addressCF = dt.Rows[i]["addressCF"].ToString();
-        ////        tmp.amount = int.Parse(dt.Rows[i]["amount"].ToString());
-        ////        tmp.value = double.Parse(dt.Rows[i]["value"].ToString());
-        ////        tmp.state_asset = dt.Rows[i]["state_asset"].ToString();
-        ////        tmp.supplierID = dt.Rows[i]["supplierID"].ToString();
-        ////        tmp.Method_add = dt.Rows[i]["Method_add"].ToString();
-        ////        list.Add(tmp);
-        ////    }
-        ////    var json = new
-        ////    {
-        ////        total = resultCount,
-        ////        rows = list.ToArray()
-        ////        //sql = selectSQL
-
-        ////    };
-
-        ////    return Json(json, JsonRequestBehavior.AllowGet);
-
-        ////}
-
+      
 
 
 
@@ -1088,38 +1097,7 @@ namespace FAMIS.Controllers
         ////    ViewBag.ps = collar_detail.ps;
         ////    return View();
         ////}
-        ////public String updateCollarStateByID(int state, String idStr)
-        ////{
-        ////    String result = "";
-        ////    //要通过的审核的单据 须审核其明细中的资产是否全是闲置
-        ////    if (state == 3)
-        ////    {
-        ////        if (Check_AssetStateByCollarID(state, idStr))
-        ////        {
-        ////            String sql = getSQL_Update_Collar_State(state, idStr);
-        ////            SQLRunner sqlRunner = new SQLRunner();
-        ////            result = sqlRunner.executesql(sql) + "";
-        ////        }
-        ////        else
-        ////        {
-        ////            result = "-1";
-        ////        }
-
-        ////    }
-        ////    else
-        ////    {
-        ////        //将collar设置为相关的状态
-        ////        String sql = getSQL_Update_Collar_State(state, idStr);
-        ////        SQLRunner sqlRunner = new SQLRunner();
-        ////        result = sqlRunner.executesql(sql) + "";
-        ////    }
-
-
-        ////    //DO more option  
-        ////    //State=3  
-
-        ////    return result;
-        ////}
+     
 
 
         /////**

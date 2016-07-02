@@ -12,13 +12,14 @@ using System.Data;
 using System.Text;
 using System.Reflection;
 using System.Threading.Tasks;
+using FAMIS.DataConversion;
 
 namespace FAMIS.Controllers
 {
     public class CommonController : Controller
     {
         FAMISDBTBModels DB = new FAMISDBTBModels();
-        
+        CommonConversion commonConversion = new CommonConversion();
         
         
         // GET: Common
@@ -214,7 +215,17 @@ namespace FAMIS.Controllers
 
 
         }
-       
+
+        [HttpPost]
+        public int rightToCheck()
+        {
+            int? roleID = commonConversion.getRoleID();
+            if (commonConversion.isSuperUser(roleID))
+            {
+                return 1;
+            }
+            return 0;
+        }
 
 
     }
