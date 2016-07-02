@@ -1,14 +1,9 @@
-﻿var datagrid = "datagrid_collar_detail";
+﻿
 
-function loadDetail_collar(id) {
+function LoadInitData_datagrid(id, datagrid) {
 
-    LoadInitData_datagrid(id, datagrid);
-}
-
-
-function LoadInitData_datagrid(id) {
     $('#' + datagrid).datagrid({
-        url: '/Asset/LoadCollarDetailByID?id=' + id,
+        url: '/Collar/LoadCollarDetailByID?id='+id,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -22,7 +17,7 @@ function LoadInitData_datagrid(id) {
         pageNumber: 1, //默认显示第几页 
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
-            { field: 'ID', checkbox: false, width: 50 },
+            { field: 'ID', checkbox: true, width: 50 },
             { field: 'serial_number', title: '资产编号', width: 50 },
             { field: 'name_Asset', title: '资产名称', width: 50 },
             { field: 'type_Asset', title: '资产类型', width: 50 },
@@ -34,7 +29,6 @@ function LoadInitData_datagrid(id) {
             { field: 'Method_add', title: '添加方式', width: 50 },
             { field: 'state_asset', title: '资产状态', width: 50 },
             { field: 'supplierID', title: '供应商', width: 50 }
-
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
@@ -43,6 +37,7 @@ function LoadInitData_datagrid(id) {
     $('#' + datagrid).datagrid('hideColumn', 'ID');
     loadPageTool_Detail();
 }
+
 function loadPageTool_Detail() {
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({

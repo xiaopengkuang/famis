@@ -15,8 +15,35 @@ function loadInitData() {
     LoadInitDatagrid("datagrid_collor");
 }
 
+
+
 function LoadInitDatagrid(datagrid) {
 
+    //判断用户是不是超级管理员
+    //将数据传入后台
+    $.ajax({
+        url: '/Common/rightToCheck',
+        dataType: "json",
+        type: "POST",
+        traditional: true,
+        success: function (data) {
+            var disabledFlag = true;
+            if (data > 0) {
+                disabledFlag = false;
+            } else {
+                disabledFlag = true;
+            }
+            loadDataGrid(datagrid, disabledFlag);
+        }
+    });
+
+  
+}
+
+
+
+function loadDataGrid(datagrid,disabledFlag)
+{
     $('#' + datagrid).datagrid({
         url: '/Collar/LoadCollars?searchCondtiion=' + searchCondtiion,
         method: 'POST', //默认是post,不允许对静态文件访问
@@ -35,16 +62,15 @@ function LoadInitDatagrid(datagrid) {
             { field: 'ID', checkbox: true, width: 50 },
             { field: 'serialNumber', title: '单据号', width: 50 },
             { field: 'operatorUser', title: '操作人', width: 50 },
-            { field: 'state', title: '状态', width: 50 ,
-                formatter: function (data)
-                {
-                    if (data=="草稿") {
+            {
+                field: 'state', title: '状态', width: 50,
+                formatter: function (data) {
+                    if (data == "草稿") {
                         return '<font color="#696969">' + data + '</font>';
                     }
                     else if (data == "待审核") {
                         return '<font color="#FFD700">' + data + '</font>';
-                    } else if (data == "已审核")
-                    {
+                    } else if (data == "已审核") {
                         return '<font color="#228B22">' + data + '</font>';
                     } else if (data == "退回") {
                         return '<font color="red">' + data + '</font>';
@@ -59,8 +85,7 @@ function LoadInitDatagrid(datagrid) {
             {
                 field: 'date_collar', title: '领用时间', width: 100,
                 formatter: function (date) {
-                    if (date == null)
-                    {
+                    if (date == null) {
                         return "";
                     }
                     var pa = /.*\((.*)\)/;
@@ -80,14 +105,14 @@ function LoadInitDatagrid(datagrid) {
                 }
             }
         ]],
-        singleSelect: false, //允许选择多行
+        singleSelect: true, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool(datagrid);
+    loadPageTool(datagrid, disabledFlag);
 }
 
-function loadPageTool(datagrid) {
+function loadPageTool(datagrid, disabledFlag) {
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
@@ -121,7 +146,7 @@ function loadPageTool(datagrid) {
                     return;
                 }
                 var id = rows[0].ID;
-                var title = "领用-编辑";
+                var title = "编辑领用";
                 var url = "/Collar/edit_collarView?id=" + id;
                 if (parent.$('#tabs').tabs('exists', title)) {
                     parent.$('#tabs').tabs('select', title);
@@ -195,25 +220,13 @@ function loadPageTool(datagrid) {
                           return;
                       }
                       id_ = rows[0].ID;
+                      updateRecordState(datagrid,2, id_);
+                      //$('#' + datagrid).datagrid('reload');
                   } else {
-                      for (var ii = 0; ii < rows.length; ii++)
-                      {
-                          if (rows[ii].state != "草稿")
-                          {
-                              MessShow("只有草稿单据才能提交!")
-                              return;
-                          }
-
-                          if (ii == 0) {
-                              id_ = rows[ii].ID;
-                             
-                          } else {
-                              id_=id_+ "_" + rows[ii].ID;
-                          }
-                      }
+                      MessShow("请勿多选!")
+                      return;
                   }
-                  updateRecordState(2, id_);
-                  $('#' + datagrid).datagrid('reload');
+                
                   //alert('刷新');
               }
           },
@@ -221,7 +234,13 @@ function loadPageTool(datagrid) {
                text: '审核',
                height: 50,
                iconCls: 'icon-ok',
+               disabled:disabledFlag,
                handler: function () {
+                   if (disabledFlag) {
+                       return;
+                   }
+
+
                    var rows = $('#' + datagrid).datagrid('getSelections');
                    var id_;
                    if (rows == null) {
@@ -263,15 +282,19 @@ function loadPageTool(datagrid) {
                            }
                        }
                    }
-                   updateRecordState(3, id_);
-                   $('#' + datagrid).datagrid('reload');
+                   updateRecordState(datagrid,3, id_);
+                   //$('#' + datagrid).datagrid('reload');
                    //alert('刷新');
                }
            }, {
                text: '退回',
                height: 50,
+               disabled: disabledFlag,
                iconCls: 'icon-undo',
                handler: function () {
+                   if (disabledFlag) {
+                       return;
+                   }
                    var rows = $('#' + datagrid).datagrid('getSelections');
                    var id_;
                    if (rows == null) {
@@ -323,18 +346,23 @@ function loadPageTool(datagrid) {
 
 
 //根据单据ID更新单据状态
-function updateRecordState(datagrid,state, idStr)
+function updateRecordState(datagrid,newState, idStr)
 {
     //将数据传入后台
     $.ajax({
         url: '/Collar/updateCollarStateByID',
-        data: { "state": state,"idStr":idStr },
+        data: {"newState": newState, "idStr": idStr },
         //data: _list,  
         dataType: "json",
         type: "POST",
         traditional: true,
-        success: function () {
-            $('#' + datagrid).datagrid('reload');
+        success: function (data) {
+            if(data>0)
+            {
+                $('#' + datagrid).datagrid('reload');
+            }else{
+                MessShow("更新失败！");
+            }
         }
     });
 
@@ -368,7 +396,7 @@ function getTime(/** timestamp=0 **/) {
     i = t.getMinutes();
     s = t.getSeconds();
     // 可根据需要在这里定义时间格式  
-    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (i < 10 ? '0' + i : i) + ':' + (s < 10 ? '0' + s : s);
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
 }
 
 function getNowFormatDate_FileName() {
@@ -419,10 +447,10 @@ function openModelWindow(url, titleName) {
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,
-        width: 500,
-        height: 350,
-        top: (($(window).height() - 500) > 0 ? ($(window).height() - 500) : 200) * 0.5,
-        left: (($(window).width() - 350) > 0 ? ($(window).width() - 350) : 100) * 0.5,
+        width: 900,
+        height: 700,
+        top: (($(window).height() - 900) > 0 ? ($(window).height() - 900) : 200) * 0.5,
+        left: (($(window).width() - 700) > 0 ? ($(window).width() - 700) : 100) * 0.5,
         shadow: true,
         modal: true,
         iconCls: 'icon-add',

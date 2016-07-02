@@ -86,7 +86,7 @@ namespace FAMIS.DataConversion
 
         public int? getUSERID()
         {
-            return 1;
+            //return 1;
             //TODO:
 
             HttpSessionState session = HttpContext.Current.Session;
@@ -104,7 +104,7 @@ namespace FAMIS.DataConversion
         public int? getRoleID()
         {
 
-            return 1;
+            //return 1;
             //TODO:
             
             HttpSessionState session = HttpContext.Current.Session;
