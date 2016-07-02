@@ -396,7 +396,7 @@ namespace FAMIS.Controllers
          public String loadSearchTreeByRole(String treeType)
          {
              //获取用户权限
-             int? roleID = commonConversion.getRole();
+             int? roleID = commonConversion.getRoleID();
              if (roleID == null)
              {
                  return "{}";

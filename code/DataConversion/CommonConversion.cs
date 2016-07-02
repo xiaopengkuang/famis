@@ -70,11 +70,30 @@ namespace FAMIS.DataConversion
         }
 
 
-        public int? getRole()
+        public int? getUSERID()
+        {
+            return 1;
+            //TODO:
+
+            HttpSessionState session = HttpContext.Current.Session;
+            int? userID = null;
+            //先读取Session  判断Session是否存在
+            if (session["userID"] != null)
+            {
+                userID = int.Parse(session["userID"].ToString());
+            }
+
+            return userID;
+        }
+
+
+        public int? getRoleID()
         {
 
             return 1;
-              HttpSessionState session = HttpContext.Current.Session;
+            //TODO:
+            
+            HttpSessionState session = HttpContext.Current.Session;
             int? roleID=null;
             //先读取Session  判断Session是否存在
             if(session["userRole"]!=null)
@@ -192,6 +211,85 @@ namespace FAMIS.DataConversion
                 return -1;
             }
         }
+
+        /// <summary>
+        /// 根据前台获取stateListID
+        /// </summary>
+        /// <returns></returns>
+        public int getStateListID(int? jsonID)
+        {
+            //空字段默认是草稿类型
+            jsonID = jsonID == null ? SystemConfig.state_List_CG_jsonID : jsonID;
+
+            String stateName;
+            switch(jsonID){
+                case SystemConfig.state_List_CG_jsonID:{stateName=SystemConfig.state_List_CG;};break;
+                case SystemConfig.state_List_DSH_jsonID:{stateName=SystemConfig.state_List_DSH;};break;
+                case SystemConfig.state_List_YSH_jsonID:{stateName=SystemConfig.state_List_YSH;};break;
+                case SystemConfig.state_List_TH_jsonID:{stateName=SystemConfig.state_List_TH;};break;
+                default:{stateName=SystemConfig.state_List_CG;};break;
+            }
+
+            var data = from p in DB_C.tb_State_List
+                       where p.Name == stateName
+                       select p;
+
+            int id = -1;
+            foreach (var item in data)
+            {
+                id = item.id;
+                break;
+            }
+            return id;
+                     
+
+        }
+
+
+        public List<String> getSerialNumByID_Asset(List<int> ids)
+        {
+            List<String> serials = new List<String>();
+            if (ids == null || ids.Count < 1)
+            {
+                return serials;
+            }
+            var data = from p in DB_C.tb_Asset
+                       where ids.Contains(p.ID)
+                       select new
+                       {
+                           serialNum=p.serial_number
+                       };
+            foreach (var item in data)
+            {
+                serials.Add(item.serialNum);
+            }
+
+            return serials;
+        }
+
+        public int? getIDBySerialNum(String serialNum)
+        {
+            if (serialNum == null)
+            {
+                return null;
+            }
+            var data = from p in DB_C.tb_Asset_collar
+                       where p.serial_number == serialNum
+                       select p;
+            if (data.Count() != 1)
+            {
+                return null;
+            }
+
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+
+            return null;
+        }
+
+
 
     }
 }

@@ -67,6 +67,23 @@ namespace FAMIS.DataConversion
         public static String state_asset_using = "在用";
         public static String state_asset_bad = "报废";
 
+        public const int state_List_CG_jsonID = 1;
+        public const int state_List_DSH_jsonID = 2;
+        public const int state_List_YSH_jsonID = 3;
+        public const int state_List_TH_jsonID = 4;
+
+        public const String state_List_CG = "草稿";  //对应前台LOGO1
+        public const String state_List_DSH = "待审核"; //
+        public const String state_List_YSH = "已审核";
+        public const String state_List_TH = "退回";
+
+
+
+        public const String serialType_LY = "LY";
+
+        public const String serialType_DB = "DB";
+
+        public const String serialType_ZC = "ZC";
 
 
     }

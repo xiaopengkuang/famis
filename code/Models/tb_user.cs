@@ -22,5 +22,7 @@ namespace FAMIS.Models
         public DateTime? time_LastLogined { get; set; }
 
         public int? roleID_User { get; set; }
+
+        public bool? flag { get; set; }
     }
 }
