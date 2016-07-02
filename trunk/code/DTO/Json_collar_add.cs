@@ -7,6 +7,7 @@ namespace FAMIS.DTO
 {
     public class Json_collar_add
     {
+        public int? id { get; set; }
         public DateTime? date_LY{get;set;}
 
         public String reason_LY { get; set; }
