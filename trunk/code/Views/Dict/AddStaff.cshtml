@@ -138,13 +138,13 @@
         $("#operator").combobox({
             valueField: 'ID',
             method: 'get',
-            textField: 'name',
+            textField: 'true_Name',
 
             url: '/Sttaff/load_Operator',
             onSelect: function (rec) {
                 
                 $('#operator').combobox('setValue', rec.ID);
-                $('#operator').combobox('setText', rec.name);
+                $('#operator').combobox('setText', rec.true_Name);
                 op = rec.name;
                  
             }
