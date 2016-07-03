@@ -1481,7 +1481,7 @@ namespace FAMIS.Controllers
         {
             if (bmbh == null)
             {
-                return null;
+                return NULL_DATAList();
             }
 
             var data = from p in DB_C.tb_department
@@ -1544,7 +1544,7 @@ namespace FAMIS.Controllers
         {
             if (id == null)
             {
-                return null;
+                return NULL_DATAList();
             }
             var data = from a in DB_C.tb_dataDict_para
                        join b in DB_C.tb_dataDict on a.ID_dataDict equals b.ID
@@ -1559,7 +1559,7 @@ namespace FAMIS.Controllers
                        };
             if (data.Count() < 1)
             {
-                return null;
+                return NULL_DATAList();
             }
             return Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
         }
@@ -1569,7 +1569,7 @@ namespace FAMIS.Controllers
         {
             if (id == null)
             {
-                return null;
+                return NULL_DATAList();
             }
             var data = from p in DB_C.tb_supplier
                        where p.flag == true
@@ -1586,7 +1586,7 @@ namespace FAMIS.Controllers
                        };
             if (data.Count() < 1)
             {
-                return null;
+                return NULL_DATAList(); ;
             }
             return Json(data.ToList().Take(1), JsonRequestBehavior.AllowGet);
         }
@@ -1837,6 +1837,25 @@ namespace FAMIS.Controllers
 
 
 
+         public JsonResult NULL_dataGrid()
+         {
+             var json = new
+             {
+                 total = 0,
+                 rows = ""
+             };
+             return Json(json, JsonRequestBehavior.AllowGet);
+         }
+
+         public JsonResult NULL_TreeGrid()
+         {
+             var json = new
+             {
+                 total = 0,
+                 rows = ""
+             };
+             return Json(json, JsonRequestBehavior.AllowGet);
+         }
 
          public DataSet ConvertToDataSet<T>(IList<T> list)
          {
@@ -2059,7 +2078,7 @@ namespace FAMIS.Controllers
         {
             if (name == null || name == "")
             {
-                return null;
+                return NULL_TreeGrid();
             }
 
             JsonResult jsR = new JsonResult();
@@ -2085,7 +2104,7 @@ namespace FAMIS.Controllers
         {
             if (name == null || name == "")
             {
-                return null;
+                return NULL_dataGrid();
             }
 
             JsonResult jsR = new JsonResult();
@@ -2225,6 +2244,14 @@ namespace FAMIS.Controllers
 
             };
             return Json(json_NULL, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult NULL_DATAList()
+        {
+
+            JsonResult re = new JsonResult();
+            return re;
         }
 
     }
