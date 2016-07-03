@@ -379,8 +379,13 @@ namespace FAMIS.Controllers
              result_tree_department.Clear();
              sb_tree_department.Clear();
 
+             int? roleID = commonConversion.getRoleID();
+             List<int?> ids_at = commonConversion.getids_AssetTypeByRole(roleID);
+
+
              var data = from p in DB_C.tb_AssetType
                         where p.flag == true
+                        where ids_at.Contains(p.ID)
                         select new dto_TreeNode
                         {
                             id=p.ID,
@@ -809,7 +814,6 @@ namespace FAMIS.Controllers
          {
              //获取获取有权限的ids
              List<int?> ids=commonConversion.getids_AssetTypeByRole(roleID);
-
              var data = from p in DB_C.tb_AssetType
                         where p.flag == true
                         where ids.Contains(p.ID)
@@ -866,6 +870,8 @@ namespace FAMIS.Controllers
 
              //获取部门权限ID_List
              List<int?> ids = commonConversion.getids_departmentByRole(roleID);
+
+
 
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
@@ -1819,10 +1825,15 @@ namespace FAMIS.Controllers
              {
                  Thread.Sleep(1000);
              }
+             //获取用户角色ＩＤ
+             int? roleID = commonConversion.getRoleID();
+             List<int?> ids_de = commonConversion.getids_departmentByRole(roleID);
+
              result_tree_department.Clear();
              sb_tree_department.Clear();
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
+                        where ids_de.Contains(p.ID_Department)
                         select new dto_TreeNode { 
                         id=(int)p.ID_Department,
                         fatherID=(int)p.ID_Father_Department,

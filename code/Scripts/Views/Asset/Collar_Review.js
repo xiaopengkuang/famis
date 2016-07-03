@@ -55,3 +55,72 @@ function loadPageTool_Detail() {
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
+
+
+
+
+function submitForm(id_collar, id_state)
+{
+    //获取审核意见
+    var shyj = $("#SHYJ_collar").val();
+    var data = {
+        "id_collar": id_collar,
+        "id_state": id_state,
+        "shyj": shyj
+    }
+
+
+
+    $.ajax({
+        url: "/Collar/updateCollarStateByID",
+        type: 'POST',
+        data: {
+            "data": JSON.stringify(data)
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            //// TODO  
+            ////alert(data);
+            //$("#printLable").text(data);
+            //$("#printLable").val(data);
+            //$.messager.alert('提示', "调皮的肖金龙3", 'info'); return;
+            var result
+            if (data > 0) {
+                try{
+                    parent.$("#modalwindow").window("close");
+                    parent.loadInitData();
+                } catch (e) {
+                    $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+                }
+
+            } else {
+                $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+            }
+
+
+        }
+    });
+}
+
+
+
+function cancelForm()
+{
+    try {
+        parent.$("#modalwindow").window("close");
+    } catch (e)
+    {
+        $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+    }
+}
+//采用jquery easyui loading css效果
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
+

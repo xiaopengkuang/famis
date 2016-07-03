@@ -339,7 +339,84 @@ namespace FAMIS.DataConversion
                      
 
         }
+        public bool isOkToReview(int? id_stateTarget, int? id_collar)
+        {
+            if (id_collar == null || id_stateTarget == null || !SystemConfig.state_List.Contains((int)id_stateTarget))
+            {
+                return false;
+            }
+            //获取当前状态
+            var data = from p in DB_C.tb_Asset_collar
+                       where p.flag == true
+                       where p.ID == id_collar
+                       join tb_SL in DB_C.tb_State_List on p.state_List equals tb_SL.id
+                       select new dto_state_List
+                       {
+                           id = tb_SL.id,
+                           Name = tb_SL.Name,
+                       };
+            int a;
+            dto_state_List item = data.First();
+            int b;
 
+            if (item != null)
+            {
+                String stateName = item.Name;
+                String stateName_target = getTargetStateName(id_stateTarget);
+                bool fs = false;
+                switch (stateName_target)
+                {
+                    case SystemConfig.state_List_CG:
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_DSH:
+                        {
+                            if (SystemConfig.state_List_DSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_YSH:
+                        {
+                            if (SystemConfig.state_List_YSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_TH:
+                        {
+                            if (SystemConfig.state_List_TH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    default: { fs = false; }; break;
+                }
+                return fs;
+
+            }
+            return false;
+        }
+
+
+
+        public String getTargetStateName(int? id)
+        {
+            String name = null;
+            switch (id)
+            {
+                case SystemConfig.state_List_CG_jsonID: name = SystemConfig.state_List_CG; break;
+                case SystemConfig.state_List_DSH_jsonID: name = SystemConfig.state_List_DSH; break;
+                case SystemConfig.state_List_YSH_jsonID: name = SystemConfig.state_List_YSH; break;
+                case SystemConfig.state_List_TH_jsonID: name = SystemConfig.state_List_TH; break;
+                default: name = null; break;
+            }
+            return name;
+        }
 
         public List<String> getSerialNumByID_Asset(List<int> ids)
         {
