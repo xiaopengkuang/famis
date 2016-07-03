@@ -103,7 +103,7 @@ namespace FAMIS.Controllers
 
             if (dto_condition == null)
             {
-                return null;
+                return NULL_dataGrid();
             }
 
             //获取部门权限
@@ -290,7 +290,7 @@ namespace FAMIS.Controllers
                         return Json(json, JsonRequestBehavior.AllowGet);
                 };break;
                 default:{
-                return null;
+                return NULL_dataGrid();
                 };break;
             }
 
@@ -330,7 +330,7 @@ namespace FAMIS.Controllers
                 nameFlag = item.nameFlag;
             }
             if (nameFlag==null){
-                return null;
+                return NULL_dataGrid();
             }
             //获取原始数据
             var data_ORG = (from p in DB_C.tb_Asset
@@ -500,7 +500,7 @@ namespace FAMIS.Controllers
                         return Json(json, JsonRequestBehavior.AllowGet);
                 };break;
                 default:{
-                return null;
+                return NULL_dataGrid();
                 };break;
             }
         }
@@ -584,56 +584,33 @@ namespace FAMIS.Controllers
 
         //===============================================================Convert  Area===================================================================================//
 
-        ///**
-        // * 完整Asset转换
-        // * */
-        //public List<dto_Asset_Detail> convertToList_asset(DataTable dt)
-        //{
-        //    List<dto_Asset_Detail> list = new List<dto_Asset_Detail>();
-
-        //    for (int i = 0; i < dt.Rows.Count; i++)
-        //    {
-        //        dto_Asset_Detail tmp = new dto_Asset_Detail();
-        //        tmp.ID = int.Parse(dt.Rows[i]["ID"].ToString());
-        //        tmp.serial_number = dt.Rows[i]["serial_number"].ToString();
-        //        tmp.name_Asset = dt.Rows[i]["name_Asset"].ToString();
-        //        tmp.type_Asset = dt.Rows[i]["type_Asset"].ToString();
-        //        tmp.specification = dt.Rows[i]["specification"].ToString();
-        //        tmp.people_using = dt.Rows[i]["specification"].ToString();
-        //        tmp.department_Using = dt.Rows[i]["department_Using"].ToString();
-        //        tmp.measurement = dt.Rows[i]["measurement"].ToString();
-        //        tmp.unit_price = double.Parse(dt.Rows[i]["unit_price"].ToString());
-        //        tmp.addressCF = dt.Rows[i]["addressCF"].ToString();
-        //        tmp.amount = int.Parse(dt.Rows[i]["amount"].ToString());
-        //        tmp.value = double.Parse(dt.Rows[i]["value"].ToString());
-        //        tmp.state_asset = dt.Rows[i]["state_asset"].ToString();
-        //        tmp.supplierID = dt.Rows[i]["supplierID"].ToString();
-        //        tmp.Method_add = dt.Rows[i]["Method_add"].ToString();
-        //        list.Add(tmp);
-        //    }
-
-        //    return list;
-        //}
-        
 
 
 
-       
-
-
-       
-
-
-      
-     
-
-
-      
-     
 
 
 
-    
+
+
+
+
+
+
+
+
+
+
+
+
+        public JsonResult NULL_dataGrid()
+        {
+            var json = new
+            {
+                total = 0,
+                rows = ""
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
 
         protected override void HandleUnknownAction(string actionName)
         {

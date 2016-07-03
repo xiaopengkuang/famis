@@ -201,17 +201,7 @@ function loadPageTool(datagrid, disabledFlag) {
                   var rows = $('#' + datagrid).datagrid('getSelections');
                   var id_;
                   if (rows == null) {
-                      var resultAlert = "请选择领用单！";
-                      $.messager.show({
-                          title: '提示',
-                          msg: resultAlert,
-                          showType: 'slide',
-                          style: {
-                              right: '',
-                              top: document.body.scrollTop + document.documentElement.scrollTop,
-                              bottom: ''
-                          }
-                      });
+                      MessShow("请选择领用单!");
                       return;
                   }
                   if (rows.length == 1) {
@@ -226,8 +216,6 @@ function loadPageTool(datagrid, disabledFlag) {
                       MessShow("请勿多选!")
                       return;
                   }
-                
-                  //alert('刷新');
               }
           },
            {
@@ -239,25 +227,12 @@ function loadPageTool(datagrid, disabledFlag) {
                    if (disabledFlag) {
                        return;
                    }
-
-
                    var rows = $('#' + datagrid).datagrid('getSelections');
                    var id_;
                    if (rows == null) {
-                       var resultAlert = "请选择领用单！";
-                       $.messager.show({
-                           title: '提示',
-                           msg: resultAlert,
-                           showType: 'slide',
-                           style: {
-                               right: '',
-                               top: document.body.scrollTop + document.documentElement.scrollTop,
-                               bottom: ''
-                           }
-                       });
+                       MessShow("请选择领用单！");
                        return;
                    }
-
                    if (rows.length == 1) {
                        id_ = rows[0].ID;
                        if (rows[0].state != "待审核") {
@@ -266,25 +241,12 @@ function loadPageTool(datagrid, disabledFlag) {
                            return;
                        }
 
+                       var titleName = "审核";
+                       var url = "/Collar/review_collar?id=" + id_;
+                       openModelWindow(url, titleName);
                    } else {
-                       for (var ii = 0; ii < rows.length; ii++) {
-                           if (rows[ii].state!="待审核") {
-                               MessShow("只有待审核单据才能提交!")
-                               //$('#allocationDG').datagrid('reload');
-                               return;
-                           }
-
-                           if (ii == 0) {
-                               id_ = rows[ii].ID;
-
-                           } else {
-                               id_ = id_ + "_" + rows[ii].ID;
-                           }
-                       }
                    }
-                   updateRecordState(datagrid,3, id_);
-                   //$('#' + datagrid).datagrid('reload');
-                   //alert('刷新');
+                  
                }
            }, {
                text: '退回',
@@ -298,17 +260,7 @@ function loadPageTool(datagrid, disabledFlag) {
                    var rows = $('#' + datagrid).datagrid('getSelections');
                    var id_;
                    if (rows == null) {
-                       var resultAlert = "请选择领用单！";
-                       $.messager.show({
-                           title: '提示',
-                           msg: resultAlert,
-                           showType: 'slide',
-                           style: {
-                               right: '',
-                               top: document.body.scrollTop + document.documentElement.scrollTop,
-                               bottom: ''
-                           }
-                       });
+                       MessShow("请选择领用单!");
                        return;
                    }
 

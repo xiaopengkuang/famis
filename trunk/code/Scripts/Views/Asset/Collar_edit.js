@@ -190,6 +190,7 @@ function loadPageTool_Detail() {
                     IDS[i] = rows[i].ID;
                 }
                 //将数据传入后台
+                removeSelect(IDS);
 
             }
         }, {
@@ -208,6 +209,29 @@ function loadPageTool_Detail() {
 }
 
 
+
+function removeSelect(removeList) {
+    //alert(removeList);
+    //var tmp = new Array();
+    var fi = 0;
+    for (var i = 0; i < removeList.length; i++) {
+        var index = containAtIndex(CurrentList, removeList[i]);
+        if (index != -1) {
+            CurrentList.splice(index, 1);
+        }
+    }
+    LoadInitData_datagrid();
+
+}
+
+function containAtIndex(list, value) {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i] == value) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 
 function updateCurrentList(addList) {

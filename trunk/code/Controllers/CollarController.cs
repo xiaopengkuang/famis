@@ -71,6 +71,27 @@ namespace FAMIS.Controllers
             }
             return View();
         }
+
+
+        public ActionResult review_collar(int? id) 
+        {
+
+            Json_collar data = getCollarByID(id);
+
+            if (data != null)
+            {
+                ViewBag.id = id;
+                ViewBag.serialNumber = data.serialNumber;
+                ViewBag.address = data.address;
+                ViewBag.data_collar = data.date_collar;
+                ViewBag.department = data.department;
+                ViewBag.operatorUser = data.operatorUser;
+                ViewBag.reason = data.reason;
+                ViewBag.ps = data.ps;
+            }
+            return View();
+        }
+
         public ActionResult edit_collarView(int? id)
         {
             if (id == null)
@@ -155,7 +176,7 @@ namespace FAMIS.Controllers
                            select p;
             if (data_ORG == null)
             {
-                return null;
+                return NULL_dataGrid();
             }
 
             if (cond != null)
@@ -181,7 +202,7 @@ namespace FAMIS.Controllers
 
                 if (nameFlag == null)
                 {
-                    return null;
+                    return NULL_dataGrid();
                 }
 
 
@@ -291,7 +312,7 @@ namespace FAMIS.Controllers
                            select p;
             if (data_ORG == null)
             {
-                return null;
+                return NULL_dataGrid();
             }
             if (cond != null)
             {
@@ -316,7 +337,7 @@ namespace FAMIS.Controllers
 
                 if (nameFlag == null)
                 {
-                    return null;
+                    return NULL_dataGrid();
                 }
 
 
@@ -515,7 +536,7 @@ namespace FAMIS.Controllers
                            select p;
             if (data_ORG.Count() < 1)
             {
-                return null;
+                return NULL_dataGrid();
             }
             var data = from p in data_ORG
                        join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
@@ -1420,6 +1441,17 @@ namespace FAMIS.Controllers
         ////    return cond;
 
         ////}
+
+
+         public JsonResult NULL_dataGrid()
+        {
+            var json = new
+            {
+                total = 0,
+                rows = ""
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

@@ -21,7 +21,10 @@
     <script type="text/javascript">
         //bindData("@ViewBag.id");
     </script>
-
+        <!--[if lte IE 9]>
+    <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
+    <![endif]-->
 </head>
 <body onload="bindData('@ViewBag.id')">
     <div class="easyui-panel" style="height: 500px;" fit="true">

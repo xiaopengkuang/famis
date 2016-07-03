@@ -141,7 +141,6 @@ function loadPageTool_Detail() {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
-
                 var url = "/Collar/collar_selectAsset";
                 var titleName = "选择资产";
                 openModelWindow(url, titleName);
@@ -149,7 +148,7 @@ function loadPageTool_Detail() {
         }, {
             text: '删除明细',
             iconCls: 'icon-remove',
-            height: 50,
+            height:50,
             handler: function () {
                 //获取选择行
                 var rows = $('#collar_DG_add').datagrid('getSelections');
@@ -157,7 +156,8 @@ function loadPageTool_Detail() {
                 for (var i = 0; i < rows.length; i++) {
                     IDS[i] = rows[i].ID;
                 }
-                //将数据传入后台
+                //更新CurrentList
+                removeSelect(IDS);
                
             }
         }, {
@@ -176,6 +176,33 @@ function loadPageTool_Detail() {
 }
 
 
+function removeSelect(removeList)
+{
+    //alert(removeList);
+    //var tmp = new Array();
+    var fi = 0;
+    for (var i = 0; i < removeList.length; i++) {
+        var index=containAtIndex(CurrentList, removeList[i]); 
+        if (index!= -1)
+        {
+            CurrentList.splice(index, 1);
+        }
+    }
+    LoadInitData_datagrid();
+
+}
+
+function containAtIndex(list, value)
+{
+    for (var i = 0; i < list.length;i++)
+    {
+        if (list[i] == value)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 
 
 function updateCurrentList(addList)
