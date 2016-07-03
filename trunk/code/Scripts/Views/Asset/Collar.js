@@ -263,7 +263,6 @@ function loadPageTool(datagrid, disabledFlag) {
                        MessShow("请选择领用单!");
                        return;
                    }
-
                    if (rows.length == 1) {
                        id_ = rows[0].ID;
                        if (rows[0].state != "待审核") {
@@ -271,14 +270,14 @@ function loadPageTool(datagrid, disabledFlag) {
                            //$('#allocationDG').datagrid('reload');
                            return;
                        }
+                       var titleName = "审核";
+                       var url = "/Collar/review_collar?id=" + id_;
+                       openModelWindow(url, titleName);
 
                    } else {
                        MessShow("一次只能处理一个单据!")
                        return;
                    }
-                   updateRecordState(datagrid,4, id_);
-                   $('#' + datagrid).datagrid('reload');
-                   //alert('刷新');
                }
            },{
                text: '导出',
@@ -298,13 +297,17 @@ function loadPageTool(datagrid, disabledFlag) {
 
 
 //根据单据ID更新单据状态
-function updateRecordState(datagrid,newState, idStr)
+function updateRecordState(datagrid,id_target, id)
 {
+
+    var data = {
+        "id_collar": id,
+        "id_state": id_target
+    }
     //将数据传入后台
     $.ajax({
         url: '/Collar/updateCollarStateByID',
-        data: {"newState": newState, "idStr": idStr },
-        //data: _list,  
+        data: { "data": JSON.stringify(data) },
         dataType: "json",
         type: "POST",
         traditional: true,
@@ -313,7 +316,7 @@ function updateRecordState(datagrid,newState, idStr)
             {
                 $('#' + datagrid).datagrid('reload');
             }else{
-                MessShow("更新失败！");
+                $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
             }
         }
     });

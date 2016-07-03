@@ -71,6 +71,13 @@ namespace FAMIS.DataConversion
         public const int state_List_DSH_jsonID = 2;
         public const int state_List_YSH_jsonID = 3;
         public const int state_List_TH_jsonID = 4;
+        public static List<int> state_List = new List<int>(){ 1, 2, 3, 4 };
+
+        public static String[] state_List_CG_right = new String[] { state_List_CG, state_List_TH };
+        public static String[] state_List_DSH_right = new String[] { state_List_CG };
+        public static String[] state_List_YSH_right = new String[] { state_List_DSH };
+        public static String[] state_List_TH_right = new String[] { state_List_DSH };
+
 
         public const String state_List_CG = "草稿";  //对应前台LOGO1
         public const String state_List_DSH = "待审核"; //

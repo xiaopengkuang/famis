@@ -33,5 +33,10 @@ namespace FAMIS.Models
 
         [StringLength(200)]
         public string ps { get; set; }
+
+        [StringLength(200)]
+        public string info_review { get; set; }
+
+        public int? userID_reView { get; set; }
     }
 }

@@ -464,14 +464,17 @@ namespace FAMIS.Controllers
             rows = rows == null ? 15 : rows;
 
             int? roleID = commonConversion.getRoleID();
+            int? userID = commonConversion.getUSERID();
 
             //获取部门ID
             List<int?> idsRight_department = commonConversion.getids_departmentByRole(roleID);
-
+            bool isAllUser = commonConversion.isSuperUser(roleID);
 
 
             var data = from p in DB_C.tb_Asset_collar
                        where p.flag == true
+                       where p._operator!=null
+                       where  p._operator==userID || isAllUser==true
                        where p.department_collar == null || idsRight_department.Contains(p.department_collar)
                        join tb_DP in DB_C.tb_department on p.department_collar equals tb_DP.ID_Department into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
@@ -819,10 +822,56 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
-        public int updateCollarStateByID(int oldState,int newState,String ids)
+        public int updateCollarStateByID(String data)
         {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_collar_review Json_data = serializer.Deserialize<Json_collar_review>(data);
+            if (Json_data != null)
+            {
+                
+               //判断是否有权限
+                if (commonConversion.isOkToReview(Json_data.id_state, Json_data.id_collar))
+                {
+
+                    //获取数据库中的ID
+                    int id_state_target = commonConversion.getStateListID(Json_data.id_state);
+                    try
+                    {
+
+                        //获取用户ID
+                        int? userID = commonConversion.getUSERID();
+
+                        var db_data = from p in DB_C.tb_Asset_collar
+                                      where p.flag == true
+                                      where p.ID == Json_data.id_collar
+                                      select p;
+                        foreach (var item in db_data)
+                        {
+                            item.state_List = id_state_target;
+                            item.userID_reView = userID;
+                            item.info_review = Json_data.shyj;
+                        }
+                        DB_C.SaveChanges();
+                        return 1;
+
+                    }
+                    catch (Exception e)
+                    {
+                        return 0;
+                    }
+
+                }
+                else {
+                    return -1;
+                }
+            }
+
             return 0;
         }
+
+
+     
+
 
 
 
