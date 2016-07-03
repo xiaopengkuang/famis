@@ -22,5 +22,9 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        public ActionResult Deatails_View()
+        {
+            return View();
+        }
     }
 }

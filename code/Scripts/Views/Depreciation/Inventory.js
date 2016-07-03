@@ -91,13 +91,16 @@ function loadPageTool() {
                     height: 540,
                     top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
                     left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+                    
                     shadow: true,
                     modal: true,
                     iconCls: 'icon-add',
                     closed: true,
                     minimizable: false,
                     maximizable: false,
-                    collapsible: false,
+                    collapsible: true,
+                    fit: true,
+                    fitColum:true,
                     onClose: function () {
                         $('#TableList_0_1').datagrid('reload');
                         //    var resultAlert = "成功插入记录！";
@@ -262,7 +265,7 @@ function loadPageTool_Detail() {
                         //    });
                     }
                 });
-                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Verify/New_Deatails'></iframe>");
+                $("#modalwindow").html("<iframe width='100%' height='99%' scrolling='yes' name='ghrzFrame' frameborder='0' src='/Verify/New_Deatails'></iframe>");
                 $winADD.window('open');
             }
         

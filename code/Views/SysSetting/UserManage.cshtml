@@ -82,8 +82,12 @@
                     field: 'roleID_User', title: '角色', width: 100,
                     editor: { type: 'combobox', options: {valueField:'ID',textField:'name',url: '/Rule/GetRoleID',
                         onSelect: function (rec) {
-                            combobox('setValue', rec.ID);
-                            combobox('setText', rec.name);
+                            try{
+                                combobox('setValue', rec.ID);
+                                combobox('setText', rec.name);
+                            }
+                            catch(e)
+                            {}
                  
                         }, required: true } }
                 }
@@ -154,7 +158,7 @@
                                  }
                                  //将选择到的行存入数组并用,分隔转换成字符串，
                                  //本例只是前台操作没有与数据库进行交互所以此处只是弹出要传入后台的id
-                                 alert(ids.join(','));
+                                // alert(ids.join(','));
                              }
                          });
                      }
