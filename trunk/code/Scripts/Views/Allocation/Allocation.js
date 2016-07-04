@@ -31,7 +31,7 @@ $(function () {
 
 function loadInitData() {
     //加载所有
-    LoadInitDatagrid("datagrid_collor");
+    LoadInitDatagrid("datagrid_allocation");
 }
 
 
@@ -64,7 +64,7 @@ function LoadInitDatagrid(datagrid) {
 function loadDataGrid(datagrid,disabledFlag)
 {
     $('#' + datagrid).datagrid({
-        url: '/Collar/LoadCollars?searchCondtiion=' + searchCondtiion,
+        url: '/Allocation/LoadAllocation?searchCondtiion=' + searchCondtiion,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -98,8 +98,8 @@ function loadDataGrid(datagrid,disabledFlag)
                     }
                 }
             },
-            { field: 'address', title: '地址', width: 50 },
-            { field: 'department', title: '领用部门', width: 50 }
+            { field: 'address', title: '调入地址', width: 50 },
+            { field: 'department', title: '调入部门', width: 50 }
             ,
             {
                 field: 'date_collar', title: '领用时间', width: 100,
@@ -140,7 +140,7 @@ function loadPageTool(datagrid, disabledFlag) {
             height: 50,
             handler: function () {
                 var title = "添加领用单";
-                var url = "/Collar/add_collarView";
+                var url = "/Allocation/Allocation_add";
                 if (parent.$('#tabs').tabs('exists', title)) {
                     parent.$('#tabs').tabs('select', title);
                 } else {
@@ -164,12 +164,7 @@ function loadPageTool(datagrid, disabledFlag) {
                 {
                     return;
                 }
-                
-                //alert(rows[0].state);
-                //return;
-
-                if (rows[0].state == "草稿" || rows[0].state == "退回") {
-                } else {
+                if (rows[0].state != "草稿" || rows[0].state != "退回") {
                     MessShow("只有草稿/退回单据才能提交!")
                     return;
                 }
@@ -211,7 +206,6 @@ function loadPageTool(datagrid, disabledFlag) {
             iconCls: 'icon-reload',
             handler: function () {
                 $('#' + datagrid).datagrid('reload');
-               
             }
         },
         {
@@ -233,8 +227,8 @@ function loadPageTool(datagrid, disabledFlag) {
                     $.messager.alert('提示', '一次只能查看一个单据!', 'info');
                     return;
                 }
-                var titleName = "领用明细";
-                var url = "/Collar/Detail_collar?id=" + id_;
+                var titleName = "调拨明细";
+                var url = "/Allocation/Detail_collar?id=" + id_;
                 openModelWindow(url, titleName);
             }
         },
@@ -303,13 +297,11 @@ function loadPageTool(datagrid, disabledFlag) {
                            //$('#allocationDG').datagrid('reload');
                            return;
                        }
-
                        var titleName = "审核";
                        var url = "/Collar/review_collar?id=" + id_;
                        openModelWindow(url, titleName);
                    } else {
                    }
-                  
                }
            }, {
                text: '退回',

@@ -89,6 +89,8 @@ function load_CFDD_add() {
 
 function LoadInitData_datagrid() {
 
+    var dataGrid = "datagrid";
+
     var _list = "";
     for (var i = 0; i < CurrentList.length; i++) {
         if (i == 0) {
@@ -98,7 +100,7 @@ function LoadInitData_datagrid() {
         }
     }
     
-    $('#collar_DG_add').datagrid({
+    $('#'+dataGrid).datagrid({
         url: '/Common/Load_SelectedAsset?selectedIDs=' + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
@@ -130,18 +132,18 @@ function LoadInitData_datagrid() {
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool_Detail();
+    loadPageTool_Detail(datagrid);
 }
 
-function loadPageTool_Detail() {
-    var pager = $('#collar_DG_add').datagrid('getPager');	// get the pager of datagrid
+function loadPageTool_Detail(datagrid) {
+    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '添加明细',
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
-                var url = "/Collar/collar_selectAsset";
+                var url = "/Allocation/Allocation_SelectingAsset";
                 var titleName = "选择资产";
                 openModelWindow(url, titleName);
             }
@@ -151,7 +153,7 @@ function loadPageTool_Detail() {
             height:50,
             handler: function () {
                 //获取选择行
-                var rows = $('#collar_DG_add').datagrid('getSelections');
+                var rows = $('#' + datagrid).datagrid('getSelections');
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
                     IDS[i] = rows[i].ID;
@@ -165,7 +167,7 @@ function loadPageTool_Detail() {
             height: 50,
             iconCls: 'icon-reload',
             handler: function () {
-                $('#collar_DG_add').datagrid('reload');
+                $('#' + datagrid).datagrid('reload');
                 //alert('刷新');
             }
         }],
