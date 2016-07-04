@@ -27,6 +27,43 @@ function myparser(s) {
 }
 //====================================================================//
 
+
+function bindData(id) {
+    $.ajax({
+        url: "/Allocation/Allocation_getWithID",
+        type: 'POST',
+        data: {
+            "id": id
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+                //绑定数据
+                //Binddatagrid(data.idsStr);
+                CurrentList = data.idsList;
+                LoadInitData_datagrid();
+                //绑定其他数据
+                //绑定日期
+                var date = dateString(data.date);
+                $("#date_add").datebox("setValue", date);
+                $("#DJH_add").val(data.serial_number);
+                $("#DBYY_add").val(data.reason);
+                $("#PS_add").val(data.ps);
+                $("#LYBM_add").combotree("setValue", data.department);
+                $("#CFDD_add").combotree("setValue", data.address);
+
+                $("#LYBM_add").combotree('disable');
+                $("#CFDD_add").combotree('disable');
+                $("#date_add").datebox('disable');
+                $('#date_add').datebox({
+                    editable: false
+                });
+            }
+
+        }
+    });
+}
 //=======================初始化加载信息===================================//
 $(function () {
     
@@ -39,7 +76,7 @@ function loadInitData()
 {
     load_Department();
     load_CFDD_add();
-    LoadInitData_datagrid();
+    //LoadInitData_datagrid();
 }
 
 function load_Department() {
@@ -60,7 +97,6 @@ function load_Department() {
      });
 
 }
-
 
 function load_CFDD_add() {
       $('#CFDD_add').combotree({
@@ -228,68 +264,60 @@ function updateCurrentList(addList)
 
 
 //==============================================================获取表单数据===========================================================================//
-function saveData(info) {
 
-    var state_List;
-    if (info == "1") {
-        state_List = 1;
-        
-    } else if (info == "2") {
-        state_List = 2;
-    } else {
-       
+function submitForm(id_allocation, id_state) {
+    //获取审核意见
+    var shyj = $("#SHYJ_allocation").val();
+    var data = {
+        "id_allocation": id_allocation,
+        "id_state": id_state,
+        "shyj": shyj
     }
-    //获取页面数据
-    var date_allocation = $('#date_add').datebox('getValue');
 
-    var reason = $("#DBYY_add").val();
-
-    var department = $("#LYBM_add").combotree("getValue");
-
-    var address = $("#CFDD_add").combotree("getValue");
-
-
-    var ps = $("#PS_add").val();
-
-    //封装成json格式创给后台
-    var listA = getListAseet_();
-    var collar_add = {
-        "date_allocation": date_allocation,
-        "reason": reason,
-        "department": department,
-        "address": address,
-        "ps": ps,
-        "statelist": state_List,
-        "assetList": listA
-    };
-  
     $.ajax({
-        url: "/Allocation/Handler_allocation_add",
+        url: "/Allocation/updateAllocationrStateByID",
         type: 'POST',
         data: {
-            "data": JSON.stringify(collar_add)
+            "data": JSON.stringify(data)
         },
         beforeSend: ajaxLoading,
         success: function (data) {
             ajaxLoadEnd();
-
+            //// TODO  
+            ////alert(data);
+            //$("#printLable").text(data);
+            //$("#printLable").val(data);
+            //$.messager.alert('提示', "调皮的肖金龙3", 'info'); return;
+            var result
             if (data > 0) {
                 try {
-                    window.parent.$('#tabs').tabs('close', '添加调拨单');
+                    parent.$("#modalwindow").window("close");
+                    parent.loadInitData();
                 } catch (e) {
-                    $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
+                    $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
                 }
+
             } else {
-                if (data == -4) {
-                    $.messager.alert('警告', "异常来了,亲休息一下吧！", 'warning');
+                if (data == -2) {
+                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为闲置状态！", 'warning');
                 } else {
                     $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
                 }
             }
-          
+
 
         }
     });
+}
+
+
+
+function cancelForm() {
+    try {
+        parent.$("#modalwindow").window("close");
+    } catch (e) {
+        $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+    }
 }
 
 function getListAseet_()
@@ -319,6 +347,26 @@ function cancelData() {
     });
 
 
+}
+
+function dateString(date) {
+    var pa = /.*\((.*)\)/;
+    var unixtime = date.match(pa)[1].substring(0, 10);
+    return getTime(unixtime);
+}
+
+function getTime(/** timestamp=0 **/) {
+    var ts = arguments[0] || 0;
+    var t, y, m, d, h, i, s;
+    t = ts ? new Date(ts * 1000) : new Date();
+    y = t.getFullYear();
+    m = t.getMonth() + 1;
+    d = t.getDate();
+    h = t.getHours();
+    i = t.getMinutes();
+    s = t.getSeconds();
+    // 可根据需要在这里定义时间格式  
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
 }
 
 function openModelWindow(url, titleName) {

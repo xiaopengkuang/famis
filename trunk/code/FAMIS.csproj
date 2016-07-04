@@ -1869,6 +1869,9 @@
     <Content Include="Scripts\tabs\bootStrap_addTable.js" />
     <Content Include="Scripts\tabs\easyUI_addTabs.js" />
     <Content Include="Scripts\tabs\tabs.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_detail.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_review.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_edit.js" />
     <Content Include="Scripts\Views\Allocation\Allocation_add.js" />
     <Content Include="Scripts\Views\Allocation\Allocation.js" />
     <Content Include="Scripts\Views\Allocation\Allocation_SelectingAsset.js" />
@@ -1935,6 +1938,9 @@
     <Content Include="Views\Allocation\Allocation_SelectingAsset.cshtml" />
     <Content Include="Views\Asset\Error.cshtml" />
     <Content Include="Views\Allocation\Error.cshtml" />
+    <Content Include="Views\Allocation\Allocation_edit.cshtml" />
+    <Content Include="Views\Allocation\Allocation_detail.cshtml" />
+    <Content Include="Views\Allocation\Allocation_review.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -1977,11 +1983,13 @@
     <Compile Include="DTO\dto_Asset_Summary.cs" />
     <Compile Include="DTO\dto_Collar.cs" />
     <Compile Include="DTO\dto_collar_detail.cs" />
+    <Compile Include="DTO\dto_allocation_edit.cs" />
     <Compile Include="DTO\dto_collar_edit.cs" />
     <Compile Include="DTO\dto_null.cs" />
     <Compile Include="DTO\dto_state_List.cs" />
     <Compile Include="DTO\Json_allocation.cs" />
     <Compile Include="DTO\Json_allocation_add.cs" />
+    <Compile Include="DTO\Json_allocation_review.cs" />
     <Compile Include="DTO\Json_collar.cs" />
     <Compile Include="DTO\Json_collar_review.cs" />
     <Compile Include="DTO\Json_customAttr.cs" />

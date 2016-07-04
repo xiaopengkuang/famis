@@ -48,6 +48,38 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult Allocation_edit(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+
+            return View();
+        }
+
+        public ActionResult Allocation_detail(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+
+
+
+        public ActionResult Allocation_review(int? id) 
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
 
         
 
@@ -129,7 +161,9 @@ namespace FAMIS.Controllers
                 return 0;
             }
             //TODO:获取系列编号
-            String seriaNumber = commonController.getLatestOneSerialNumber(SystemConfig.serialType_DB);
+            //String seriaNumber = commonController.getLatestOneSerialNumber(SystemConfig.serialType_DB);
+            String seriaNumber = commonConversion.getUnqiIDString();
+
             int? userID = commonConversion.getUSERID();
             int state_list_ID = commonConversion.getStateListID(json_data.statelist);
 
@@ -198,6 +232,238 @@ namespace FAMIS.Controllers
             return list;
         }
 
+        [HttpPost]
+        public JsonResult Allocation_getWithID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_allocation
+                       where p.flag == true
+                       where p.ID == id
+                       join tb_AD in DB_C.tb_dataDict_para on p.addree_Storage equals tb_AD.ID into temp_AD
+                       from AD in temp_AD.DefaultIfEmpty()
+                       join tb_DP in DB_C.tb_department on p.department_allocation equals tb_DP.ID_Department into temp_DP
+                       from DP in temp_DP.DefaultIfEmpty()
+                       select new dto_allocation_edit
+                       {
+                           address = p.addree_Storage,
+                           address_name=AD.name_para,
+                           date = p.date,
+                           department = p.department_allocation,
+                           department_name=DP.name_Department,
+                           ID = p.ID,
+                           ps = p.ps,
+                           reason = p.reason,
+                           serial_number = p.serial_number
+                       };
+            dto_allocation_edit result = data.First();
+            List<int> ids_select = getAssetIdsByAllocationID(id);
+            result.idsList = ids_select;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [HttpPost]
+        public int Handler_allocation_update(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_allocation_add Json_data = serializer.Deserialize<Json_allocation_add>(data);
+
+            if (Json_data == null || Json_data.id == null)
+            {
+                return 0;
+            }
+            try {
+                if (!RightToSubmit_allocation(Json_data.statelist, Json_data.id))
+                {
+                    return -2;
+                }
+                var db_data = from p in DB_C.tb_Asset_allocation
+                              where p.ID == Json_data.id
+                              select p;
+                foreach (var item in db_data)
+                {
+                    item.addree_Storage = Json_data.address;
+                    item.date = Json_data.date_allocation;
+                    item.date_Operated = DateTime.Now;
+                    item.department_allocation = Json_data.department;
+                    item.ps = Json_data.ps;
+                    item.reason = Json_data.reason;
+                    item.state_List = commonConversion.getStateListID(Json_data.statelist);
+                }
+
+
+                var db_de = from p in DB_C.tb_Asset_allocation_detail
+                            where p.flag == true
+                            where p.ID_allocation == Json_data.id
+                            select p;
+                foreach (var item in db_de)
+                {
+                    item.flag = false;
+                }
+                //获取选中IDs
+                List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+                List<tb_Asset_allocation_detail> details = createAllocationDetailList(Json_data.id, selectedAssets);
+                DB_C.tb_Asset_allocation_detail.AddRange(details);
+                DB_C.SaveChanges();
+                return 1;
+            }catch(Exception e){
+                return 0;
+            }
+
+        }
+
+
+
+        [HttpPost]
+        public int updateAllocationrStateByID(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_allocation_review Json_data = serializer.Deserialize<Json_allocation_review>(data);
+            if (Json_data != null)
+            {
+
+                //判断是否有权限
+                if (isOkToReview_allocation(Json_data.id_state, Json_data.id_allocation))
+                {
+                    if (!RightToSubmit_allocation(Json_data.id_state, Json_data.id_allocation))
+                    {
+                        return -2;
+                    }
+                    //获取数据库中的ID
+                    int id_state_target = commonConversion.getStateListID(Json_data.id_state);
+                    tb_Asset_allocation co = getAllocationTBbyID(Json_data.id_allocation);
+                    if (co == null)
+                    {
+                        return -1;
+                    }
+                    try
+                    {
+
+                        //获取用户ID
+                        int? userID = commonConversion.getUSERID();
+                        var db_data = from p in DB_C.tb_Asset_allocation
+                                      where p.flag == true
+                                      where p.ID == Json_data.id_allocation
+                                      select p;
+
+
+
+                        foreach (var item in db_data)
+                        {
+                            item.state_List = id_state_target;
+                            item.userID_reView = userID;
+                            item.date_Operated = DateTime.Now;
+                            item.info_review = Json_data.shyj;
+                        }
+                        if (commonConversion.is_YSH(Json_data.id_state))
+                        {
+                            List<int> ids_asset = getAssetIdsByAllocationID(Json_data.id_allocation);
+                            var dataAsset = from p in DB_C.tb_Asset
+                                            where p.flag == true
+                                            where ids_asset.Contains(p.ID)
+                                            select p;
+                            if (dataAsset != null && dataAsset.Count() > 0 && dataAsset.Count() != ids_asset.Count)
+                            {
+                                return -3;
+                            }
+                            foreach (var item_as in dataAsset)
+                            {
+                                item_as.addressCF = co.addree_Storage;
+                                item_as.department_Using = co.department_allocation;
+                                //item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_using);
+                            }
+
+                        }
+
+
+                        DB_C.SaveChanges();
+                        return 1;
+                    }
+                    catch (Exception e)
+                    {
+                        return 0;
+                    }
+
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+            return 0;
+
+        }
+
+        /// <summary>
+        /// 获取Allocation TB
+        /// </summary>
+        /// <returns></returns>
+        public tb_Asset_allocation getAllocationTBbyID(int? id_collar)
+        {
+            List<tb_Asset_allocation> data = DB_C.tb_Asset_allocation.Where(a => a.ID == id_collar).ToList(); ;
+            if (data.Count > 0)
+            {
+                return data.First();
+            }
+            return null;
+
+        }
+
+        public List<int> getAssetIdsByAllocationID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_allocation_detail
+                       where p.ID_allocation == id
+                       where p.flag==true || p.flag==null
+                       select p;
+
+            List<int> ids = new List<int>();
+            foreach (var item in data)
+            {
+                ids.Add((int)item.ID_asset);
+            }
+            return ids;
+        }
+
+
+
+        public bool RightToSubmit_allocation(int? id_state_Target, int? id_allocation)
+        {
+            if (id_allocation == null || id_state_Target == null)
+            {
+                return false;
+            }
+
+            String NameTarget = commonConversion.getTargetStateName(id_state_Target);
+            if (NameTarget == SystemConfig.state_List_YSH)
+            {
+                //获取AssetID
+                List<int> ids_asset = getAssetIdsByAllocationID(id_allocation);
+
+                //没有附加明细
+                if (ids_asset.Count == 0)
+                {
+                    return false;
+                }
+
+                //检查里面是否还有不是在用状态状态的资产
+                var checkData = from p in DB_C.tb_Asset
+                                where p.flag == true
+                                where ids_asset.Contains(p.ID)
+                                join tb_AS in DB_C.tb_dataDict_para on p.state_asset equals tb_AS.ID
+                                where tb_AS.name_para == SystemConfig.state_asset_using
+                                select p;
+                if (checkData.Count() == ids_asset.Count)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
 
 
         public int? getIDBySerialNum(String serialNum)
@@ -220,6 +486,113 @@ namespace FAMIS.Controllers
             }
 
             return null;
+        }
+
+
+        public bool isOkToReview_allocation(int? id_stateTarget, int? id_allocation)
+        {
+            if (id_allocation == null || id_stateTarget == null || !SystemConfig.state_List.Contains((int)id_stateTarget))
+            {
+                return false;
+            }
+            //获取当前状态
+            var data = from p in DB_C.tb_Asset_allocation
+                       where p.flag == true
+                       where p.ID == id_allocation
+                       join tb_SL in DB_C.tb_State_List on p.state_List equals tb_SL.id
+                       select new dto_state_List
+                       {
+                           id = tb_SL.id,
+                           Name = tb_SL.Name,
+                       };
+            dto_state_List item = data.First();
+            if (item != null)
+            {
+                String stateName = item.Name;
+                String stateName_target = commonConversion.getTargetStateName(id_stateTarget);
+                bool fs = false;
+                switch (stateName_target)
+                {
+                    case SystemConfig.state_List_CG:
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_DSH:
+                        {
+                            if (SystemConfig.state_List_DSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_YSH:
+                        {
+                            if (SystemConfig.state_List_YSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_TH:
+                        {
+                            if (SystemConfig.state_List_TH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    default: { fs = false; }; break;
+                }
+                return fs;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 判断当前用户是否拥有该单据的编辑权
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public int RightToEdit(int? id)
+        {
+            //获取当前用户
+            int? userID = commonConversion.getUSERID();
+            if (id == null)
+            {
+                return 0;
+            }
+            tb_Asset_allocation data = DB_C.tb_Asset_allocation.Where(a => a.ID == id).First();
+
+            if (data != null)
+            {
+                if (data._operator == userID)
+                {
+                    //单据状态处于状态
+                    var info = from p in DB_C.tb_State_List
+                               where p.id == data.state_List
+                               select p;
+                    if (info.Count() == 1)
+                    {
+                        foreach (var item in info)
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(item.Name))
+                            {
+                                return 1;
+                            }
+                        }
+                        return 0;
+                    }
+
+
+                    return 0;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            return 0;
+
         }
 
     }

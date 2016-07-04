@@ -7,7 +7,7 @@ namespace FAMIS.DTO
 {
     public class Json_allocation_add 
     {
-        public int ID { get; set; }
+        public int id { get; set; }
         public String serialNumber { get; set; }
         public int? department { get; set; }
         public int? address { get; set; }

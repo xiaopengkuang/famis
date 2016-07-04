@@ -27,19 +27,53 @@ function myparser(s) {
 }
 //====================================================================//
 
+
+function bindData(id) {
+    $.ajax({
+        url: "/Allocation/Allocation_getWithID",
+        type: 'POST',
+        data: {
+            "id": id
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+                //绑定数据
+                //Binddatagrid(data.idsStr);
+                CurrentList = data.idsList;
+                LoadInitData_datagrid();
+                //绑定其他数据
+                //绑定日期
+                var date = dateString(data.date);
+                $("#date_add").datebox("setValue", date);
+                $("#DJH_add").val(data.serial_number);
+                $("#DBYY_add").val(data.reason);
+                $("#PS_add").val(data.ps);
+                $("#LYBM_add").combotree("setValue", data.department);
+                $("#CFDD_add").combotree("setValue", data.address);
+
+                $("#LYBM_add").combotree('disable');
+                $("#CFDD_add").combotree('disable');
+                $("#date_add").datebox('disable');
+                $('#date_add').datebox({
+                    editable: false
+                });
+            }
+
+        }
+    });
+}
 //=======================初始化加载信息===================================//
 $(function () {
-    
     loadInitData();
-
-
 });
 
 function loadInitData()
 {
     load_Department();
     load_CFDD_add();
-    LoadInitData_datagrid();
+    //LoadInitData_datagrid();
 }
 
 function load_Department() {
@@ -58,9 +92,7 @@ function load_Department() {
              //$('#SZBM_add').combotree('tree').tree("collapseAll");
          }
      });
-
 }
-
 
 function load_CFDD_add() {
       $('#CFDD_add').combotree({
@@ -114,7 +146,7 @@ function LoadInitData_datagrid() {
         pageNumber: 1, //默认显示第几页 
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
-            { field: 'ID', checkbox: true, width: 50 },
+            { field: 'ID', checkbox: true, width: 50,hidden:true },
             { field: 'serial_number', title: '资产编号', width: 50 },
             { field: 'name_Asset', title: '资产名称', width: 50 },
             { field: 'type_Asset', title: '资产类型', width: 50 },
@@ -127,7 +159,7 @@ function LoadInitData_datagrid() {
             { field: 'state_asset', title: '资产状态', width: 50 },
             { field: 'supplierID', title: '供应商', width: 50 }
         ]],
-        singleSelect: false, //允许选择多行
+        singleSelect: true, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
@@ -138,30 +170,6 @@ function loadPageTool_Detail(datagrid) {
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
-            text: '添加明细',
-            iconCls: 'icon-add',
-            height: 50,
-            handler: function () {
-                var url = "/Allocation/Allocation_SelectingAsset";
-                var titleName = "选择资产";
-                openModelWindow(url, titleName);
-            }
-        }, {
-            text: '删除明细',
-            iconCls: 'icon-remove',
-            height:50,
-            handler: function () {
-                //获取选择行
-                var rows = $('#' + datagrid).datagrid('getSelections');
-                var IDS = [];
-                for (var i = 0; i < rows.length; i++) {
-                    IDS[i] = rows[i].ID;
-                }
-                //更新CurrentList
-                removeSelect(IDS);
-               
-            }
-        }, {
             text: '刷新',
             height: 50,
             iconCls: 'icon-reload',
@@ -228,7 +236,7 @@ function updateCurrentList(addList)
 
 
 //==============================================================获取表单数据===========================================================================//
-function saveData(info) {
+function saveData(info,id) {
 
     var state_List;
     if (info == "1") {
@@ -248,46 +256,45 @@ function saveData(info) {
 
     var address = $("#CFDD_add").combotree("getValue");
 
-
     var ps = $("#PS_add").val();
 
     //封装成json格式创给后台
     var listA = getListAseet_();
-    var collar_add = {
+    var allocation_edit = {
         "date_allocation": date_allocation,
         "reason": reason,
         "department": department,
         "address": address,
         "ps": ps,
         "statelist": state_List,
-        "assetList": listA
+        "assetList": listA,
+        "id":id
     };
   
     $.ajax({
-        url: "/Allocation/Handler_allocation_add",
+        url: "/Allocation/Handler_allocation_update",
         type: 'POST',
         data: {
-            "data": JSON.stringify(collar_add)
+            "data": JSON.stringify(allocation_edit)
         },
         beforeSend: ajaxLoading,
         success: function (data) {
             ajaxLoadEnd();
-
             if (data > 0) {
                 try {
-                    window.parent.$('#tabs').tabs('close', '添加调拨单');
+                    window.parent.$('#tabs').tabs('close', '编辑调拨');
                 } catch (e) {
                     $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
                 }
             } else {
-                if (data == -4) {
-                    $.messager.alert('警告', "异常来了,亲休息一下吧！", 'warning');
+                if (data == -2) {
+                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为在用状态！", 'warning');
+                } else if (data == -3) {
+                    $.messager.alert('警告', "测试", 'warning');
                 } else {
                     $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
                 }
             }
-          
-
         }
     });
 }
@@ -319,6 +326,26 @@ function cancelData() {
     });
 
 
+}
+
+function dateString(date) {
+    var pa = /.*\((.*)\)/;
+    var unixtime = date.match(pa)[1].substring(0, 10);
+    return getTime(unixtime);
+}
+
+function getTime(/** timestamp=0 **/) {
+    var ts = arguments[0] || 0;
+    var t, y, m, d, h, i, s;
+    t = ts ? new Date(ts * 1000) : new Date();
+    y = t.getFullYear();
+    m = t.getMonth() + 1;
+    d = t.getDate();
+    h = t.getHours();
+    i = t.getMinutes();
+    s = t.getSeconds();
+    // 可根据需要在这里定义时间格式  
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
 }
 
 function openModelWindow(url, titleName) {

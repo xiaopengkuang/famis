@@ -164,41 +164,42 @@ function loadPageTool(datagrid, disabledFlag) {
                 {
                     return;
                 }
-                if (rows[0].state != "草稿" || rows[0].state != "退回") {
+                if (rows[0].state == "草稿" || rows[0].state == "退回") {
+                } else {
                     MessShow("只有草稿/退回单据才能提交!")
                     return;
                 }
                 var id = rows[0].ID;
-                //$.ajax({
-                //    url: "/Collar/RightToEdit",
-                //    type: 'POST',
-                //    data: {
-                //        "id": id
-                //    },
-                //    beforeSend: ajaxLoading,
-                //    success: function (data) {
-                //        ajaxLoadEnd();
-                //        if (data > 0) {
-                //            //var id = rows[0].ID;
-                //            var title = "编辑领用";
-                //            var url = "/Collar/edit_collarView?id=" + id;
-                //            if (parent.$('#tabs').tabs('exists', title)) {
-                //                parent.$('#tabs').tabs('select', title);
-                //            } else {
-                //                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
-                //                parent.$('#tabs').tabs('add', {
-                //                    title: title,
-                //                    content: content,
-                //                    icon: 'icon-add',
-                //                    closable: true
-                //                });
-                //            }
-                //        } else {
-                //            $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
-                //            return;
-                //        }
-                //    }
-                //});
+                $.ajax({
+                    url: "/Allocation/RightToEdit",
+                    type: 'POST',
+                    data: {
+                        "id": id
+                    },
+                    beforeSend: ajaxLoading,
+                    success: function (data) {
+                        ajaxLoadEnd();
+                        if (data > 0) {
+                            //var id = rows[0].ID;
+                            var title = "编辑调拨";
+                            var url = "/Allocation/Allocation_edit?id=" + id;
+                            if (parent.$('#tabs').tabs('exists', title)) {
+                                parent.$('#tabs').tabs('select', title);
+                            } else {
+                                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+                                parent.$('#tabs').tabs('add', {
+                                    title: title,
+                                    content: content,
+                                    icon: 'icon-add',
+                                    closable: true
+                                });
+                            }
+                        } else {
+                            $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
+                            return;
+                        }
+                    }
+                });
             }
         }, {
             text: '刷新',
@@ -217,18 +218,18 @@ function loadPageTool(datagrid, disabledFlag) {
                 var id_;
                 if (rows == null)
                 {
-                    $.messager.alert('提示', '请选择领用单!', 'info');
+                    MessShow('请选择调拨单!');
                     return;
                 }
                 if(rows.length==1)
                 {
                     id_=rows[0].ID;
                 } else {
-                    $.messager.alert('提示', '一次只能查看一个单据!', 'info');
+                    MessShow("一次只能查看一个单据!");
                     return;
                 }
                 var titleName = "调拨明细";
-                var url = "/Allocation/Detail_collar?id=" + id_;
+                var url = "/Allocation/Allocation_detail?id=" + id_;
                 openModelWindow(url, titleName);
             }
         },
@@ -298,7 +299,7 @@ function loadPageTool(datagrid, disabledFlag) {
                            return;
                        }
                        var titleName = "审核";
-                       var url = "/Allocation/review_collar?id=" + id_;
+                       var url = "/Allocation/Allocation_review?id=" + id_;
                        openModelWindow(url, titleName);
                    } else {
                    }
@@ -326,7 +327,7 @@ function loadPageTool(datagrid, disabledFlag) {
                            return;
                        }
                        var titleName = "审核";
-                       var url = "/Allocation/review_collar?id=" + id_;
+                       var url = "/Allocation/Allocation_review?id=" + id_;
                        openModelWindow(url, titleName);
 
                    } else {
@@ -357,14 +358,13 @@ function loadPageTool(datagrid, disabledFlag) {
 //根据单据ID更新单据状态
 function updateRecordState(datagrid,id_target, id)
 {
-
     var data = {
-        "id_collar": id,
+        "id_allocation": id,
         "id_state": id_target
     }
     //将数据传入后台
     $.ajax({
-        url: '/Allocation/updateCollarStateByID',
+        url: '/Allocation/updateAllocationrStateByID',
         data: { "data": JSON.stringify(data) },
         dataType: "json",
         type: "POST",

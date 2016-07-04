@@ -818,7 +818,7 @@ namespace FAMIS.Controllers
             dto_collar_edit result = data.First();
             List<int> ids_select = getAssetIdsByCollarID(id);
 
-            result.idsStr = commonConversion.IntListToString(ids_select);
+            //result.idsStr = commonConversion.IntListToString(ids_select);
             result.idsList = ids_select;
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -850,7 +850,7 @@ namespace FAMIS.Controllers
             {
                 
                //判断是否有权限
-                if (commonConversion.isOkToReview(Json_data.id_state, Json_data.id_collar))
+                if (isOkToReview_collar(Json_data.id_state, Json_data.id_collar))
                 {
                     if (!RightToSubmit_collar(Json_data.id_state, Json_data.id_collar))
                     {
@@ -882,7 +882,7 @@ namespace FAMIS.Controllers
                             item.date_Operated = DateTime.Now;
                             item.info_review = Json_data.shyj;
                         }
-                        if (is_YSH(Json_data.id_state))
+                        if (commonConversion.is_YSH(Json_data.id_state))
                         {
                             List<int> ids_asset = getAssetIdsByCollarID(Json_data.id_collar);
                             var dataAsset = from p in DB_C.tb_Asset
@@ -921,7 +921,65 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+        public bool isOkToReview_collar(int? id_stateTarget, int? id_collar)
+        {
+            if (id_collar == null || id_stateTarget == null || !SystemConfig.state_List.Contains((int)id_stateTarget))
+            {
+                return false;
+            }
+            //获取当前状态
+            var data = from p in DB_C.tb_Asset_collar
+                       where p.flag == true
+                       where p.ID == id_collar
+                       join tb_SL in DB_C.tb_State_List on p.state_List equals tb_SL.id
+                       select new dto_state_List
+                       {
+                           id = tb_SL.id,
+                           Name = tb_SL.Name,
+                       };
+            dto_state_List item = data.First();
+            if (item != null)
+            {
+                String stateName = item.Name;
+                String stateName_target = commonConversion.getTargetStateName(id_stateTarget);
+                bool fs = false;
+                switch (stateName_target)
+                {
+                    case SystemConfig.state_List_CG:
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_DSH:
+                        {
+                            if (SystemConfig.state_List_DSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_YSH:
+                        {
+                            if (SystemConfig.state_List_YSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_TH:
+                        {
+                            if (SystemConfig.state_List_TH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    default: { fs = false; }; break;
+                }
+                return fs;
 
+            }
+            return false;
+        }
         /// <summary>
         /// 判断当前用户是否拥有该单据的编辑权
         /// </summary>
@@ -1007,20 +1065,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public bool is_YSH(int? id_state_target)
-        {
-            if (id_state_target == null)
-            {
-                return false;
-            }
-            String nameState = commonConversion.getTargetStateName(id_state_target);
-            if (nameState == SystemConfig.state_List_YSH)
-            {
-                return true;
-            }
-            return false;
-        }
-
+      
          public JsonResult NULL_dataGrid()
         {
             var json = new
