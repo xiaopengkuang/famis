@@ -20,7 +20,11 @@ namespace FAMIS.DataConversion
        
 
 
-
+        /// <summary>
+        /// 将Sting类型ID转换成List类型
+        /// </summary>
+        /// <param name="idStr"></param>
+        /// <returns></returns>
         public List<int> StringToIntList(String idStr)
         {
             List<int> results = new List<int>();
@@ -47,7 +51,11 @@ namespace FAMIS.DataConversion
 
             return results;
         }
-
+        /// <summary>
+        /// 将list类型转换成String类型
+        /// </summary>
+        /// <param name="ids_list"></param>
+        /// <returns></returns>
         public String IntListToString(List<int> ids_list)
         {
             String result="";
@@ -62,6 +70,7 @@ namespace FAMIS.DataConversion
             return result;
         }
 
+
         public int getUnqiID()
         {
             string str = DateTime.Now.ToString("ddhhmmss");
@@ -73,14 +82,29 @@ namespace FAMIS.DataConversion
             return DateTime.Now.ToString("ddhhmmss");
         }
 
+
+        /// <summary>
+        /// 默认url
+        /// </summary>
+        /// <returns></returns>
         public String getDefaultUrl()
         {
             return "javascript:void(0)";
         }
 
+
+
         public String getOperatorName()
         {
-            return "KXP";
+            HttpSessionState session = HttpContext.Current.Session;
+            String userName = null;
+            //先读取Session  判断Session是否存在
+            if (session["userName"] != null)
+            {
+                userName = session["userName"].ToString();
+            }
+
+            return userName;
         }
 
         public int getDefaultFatherID()
@@ -105,7 +129,10 @@ namespace FAMIS.DataConversion
             return userID;
         }
 
-
+        /// <summary>
+        /// 获取用户的角色ID
+        /// </summary>
+        /// <returns></returns>
         public int? getRoleID()
         {
 
@@ -464,6 +491,8 @@ namespace FAMIS.DataConversion
 
             return null;
         }
+
+        
 
 
 
