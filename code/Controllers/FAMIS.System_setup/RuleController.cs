@@ -164,6 +164,24 @@ namespace FAMIS.Controllers.FAMIS.System_setup
 
             return json;
         }
+        [HttpPost]
+        public String GetDepID()
+        {
+
+            List<tb_department> list = mydb.tb_department.OrderBy(a => a.ID).ToList();
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            var result = (from r in list
+                          select new tb_role()
+                          {
+                              ID = r.ID,
+                              name = r.name_Department
+                          }).ToList();
+
+            String json = jss.Serialize(result).ToString().Replace("\\", "");
+
+
+            return json;
+        }
 
         [HttpPost]
         public ActionResult Add_Right(string JSON)
@@ -399,7 +417,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             string pwd = JSdata.Split(',')[2];
             string tname = JSdata.Split(',')[3];
             int rid = int.Parse(JSdata.Split(',')[4]);
-
+            int did = int.Parse(JSdata.Split(',')[5]);
             /* var q = from p in mydb.tb_Menu
               where p.Role_ID == Roleid
               select p;*/
@@ -415,8 +433,8 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     password_User = pwd,
                     true_Name = tname,
                     time_LastLogined = DateTime.Now,
-                    roleID_User=rid
-
+                    roleID_User=rid,
+                    ID_DepartMent=did
                 };
                 mydb.tb_user.Add(rule_tb);
                 mydb.SaveChanges();

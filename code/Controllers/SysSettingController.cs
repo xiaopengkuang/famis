@@ -204,8 +204,8 @@ namespace FAMIS.Controllers
                             name_User = r.name_User,
                             password_User=r.password_User,
                             true_Name=r.true_Name,
-                            roleID_User = r.roleID_User
-
+                            roleID_User = r.roleID_User,
+                            ID_DepartMent=r.ID_DepartMent
                         }).ToArray()
             };
             return Json(json, JsonRequestBehavior.AllowGet);

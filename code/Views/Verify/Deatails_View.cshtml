@@ -1,7 +1,16 @@
 ﻿@{
     Layout = null;
 }
-
+ <!--<link href="Css/default.css" rel="stylesheet" type="text/css" />-->
+    <link href="../../LIB/UIlib/css/default.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/icon.css" />
+    <script type="text/javascript" src="../../LIB/UIlib/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../../LIB/UIlib/js/jquery.easyui.min.js"></script>
+   
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/User/Index.js"></script>
+        
 <!DOCTYPE html>
 
 <html>
@@ -10,8 +19,29 @@
     <title></title>
 </head>
 <body>
-    <div>
-    
-    </div>
+   
+        <div class="easyui-panel" data-options="region:'north'" title="基础属性" style="height:350px;">
+            <label style="padding-right:30px;">
+            </label>
+                <label style="padding-right:300px;">
+                    资产编号<span style="color:red">*</span>：
+                    <input id="searial" class="easyui-textbox" style=" width: 250px; height: 22px;">
+
+                </label>
+                <label style="padding-right:300px;">
+                    资产性质：
+                    <input id="searial" class="easyui-textbox" style=" width: 250px; height: 22px;">
+
+                </label>
+                <label style="padding-right:300px;">
+                    资产类别<span style="color:red">*</span>：
+                    <input id="searial" class="easyui-textbox" style=" width: 250px; height: 22px;">
+
+                </label>
+
+
+
+</div>
+      
 </body>
 </html>

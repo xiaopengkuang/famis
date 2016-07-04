@@ -55,7 +55,7 @@ namespace FAMIS.Controllers
                             join j in db.tb_dataDict_para on a.addressCF equals j.ID
                             join p in db.tb_department on a.department_Using equals p.ID
                             join u in db.tb_user on a.Owener equals u.ID
-                            join e in db.tb_dataDict_para on a.state_asset equals e.ID_dataDict
+                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
                             where p.ID_Department.ToString() == searchmethod
                             select new
@@ -73,7 +73,7 @@ namespace FAMIS.Controllers
                                 department_using = p.name_Department,
                                 address = j.name_para,
                                 owener = u.true_Name,
-                                state_asset = e.name_para,
+                               // state_asset = e.name_para,
                                 supllier = sp.name_supplier
 
                             }).ToArray()
@@ -94,7 +94,7 @@ namespace FAMIS.Controllers
                             join j in db.tb_dataDict_para on a.addressCF equals j.ID
                             join p in db.tb_department on a.department_Using equals p.ID
                             join u in db.tb_user on a.Owener equals u.ID
-                            join e in db.tb_dataDict_para on a.state_asset equals e.ID_dataDict 
+                            join e in db.tb_dataDict_para on a.state_asset equals e.ID 
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
                             where t.orderID == searchmethod
                             select new
@@ -112,7 +112,7 @@ namespace FAMIS.Controllers
                                 department_using = p.name_Department,
                                 address = j.name_para,
                                 owener = u.true_Name,
-                                state_asset = e.name_para,
+                              //  state_asset = e.name_para,
                                 supllier = sp.name_supplier
 
                             }).ToArray()
