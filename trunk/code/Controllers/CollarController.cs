@@ -629,7 +629,6 @@ namespace FAMIS.Controllers
                 DB_C.tb_Asset_collar.Add(newItem);
                 DB_C.SaveChanges();
                 int? id_collar = commonConversion.getIDBySerialNum(newItem.serial_number);
-
                 //获取单据明细
                 //获取选中的Ids
                 List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
@@ -672,6 +671,11 @@ namespace FAMIS.Controllers
                 return 0;
             }
             try {
+
+                if (!RightToSubmit_collar(Json_data.statelist,Json_data.id))
+                {
+                    return -2;
+                }
                 var db_data = from p in DB_C.tb_Asset_collar
                               where p.ID == Json_data.id
                               select p;
@@ -821,6 +825,23 @@ namespace FAMIS.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+
+        /// <summary>
+        /// 获取Collar TB
+        /// </summary>
+        /// <returns></returns>
+        public tb_Asset_collar getCollarTBbyID(int? id_collar)
+        {
+            List<tb_Asset_collar> data = DB_C.tb_Asset_collar.Where(a => a.ID == id_collar).ToList();;
+            if (data.Count > 0)
+            {
+                return data.First();
+            }
+            return null;
+            
+        }
+
+
         [HttpPost]
         public int updateCollarStateByID(String data)
         {
@@ -832,28 +853,60 @@ namespace FAMIS.Controllers
                //判断是否有权限
                 if (commonConversion.isOkToReview(Json_data.id_state, Json_data.id_collar))
                 {
-
+                    if (!RightToSubmit_collar(Json_data.id_state, Json_data.id_collar))
+                    {
+                        return -2;
+                    }
                     //获取数据库中的ID
                     int id_state_target = commonConversion.getStateListID(Json_data.id_state);
+                    tb_Asset_collar co = getCollarTBbyID(Json_data.id_collar);
+                    if (co == null)
+                    {
+                        return -1;
+                    }
                     try
                     {
 
                         //获取用户ID
                         int? userID = commonConversion.getUSERID();
-
                         var db_data = from p in DB_C.tb_Asset_collar
                                       where p.flag == true
                                       where p.ID == Json_data.id_collar
                                       select p;
+
+                      
+                         
                         foreach (var item in db_data)
                         {
                             item.state_List = id_state_target;
                             item.userID_reView = userID;
+                            item.date_Operated = DateTime.Now;
                             item.info_review = Json_data.shyj;
                         }
+                        if (is_YSH(Json_data.id_state))
+                        {
+                            List<int> ids_asset = getAssetIdsByCollarID(Json_data.id_collar);
+                            var dataAsset = from p in DB_C.tb_Asset
+                                            where p.flag == true
+                                            where ids_asset.Contains(p.ID)
+                                            select p;
+                            if (dataAsset!=null&&dataAsset.Count()>0&&dataAsset.Count() != ids_asset.Count)
+                            {
+                                return -3;
+                            }
+
+                            foreach (var item_as in dataAsset)
+                            {
+                                item_as.addressCF = co.addree_Storage;
+                                item_as.department_Using = co.department_collar;
+                                item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_using);
+                            }
+
+                        }
+
+
                         DB_C.SaveChanges();
                         return 1;
-
                     }
                     catch (Exception e)
                     {
@@ -869,6 +922,109 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+
+        /// <summary>
+        /// 判断当前用户是否拥有该单据的编辑权
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public int RightToEdit(int? id)
+        {
+                //获取当前用户
+            int? userID = commonConversion.getUSERID();
+            if (id == null)
+            {
+                return 0;
+            }
+
+            tb_Asset_collar data = DB_C.tb_Asset_collar.Where(a => a.ID == id).First();
+
+            if (data != null)
+            {
+                if (data._operator == userID)
+                {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
+            }
+            return 0;
+
+        }
+
+        [HttpPost]
+        public bool RightToSubmit_collar(int? id_state_Target,int? id_collar)
+        {
+
+            if (id_collar == null || id_state_Target == null)
+            {
+                return false;
+            }
+
+            String NameTarget = commonConversion.getTargetStateName(id_state_Target);
+            if (NameTarget == SystemConfig.state_List_YSH)
+            {
+                //获取AssetID
+                List<int> ids_asset = getAssetIdsByCollarID(id_collar);
+
+                //没有附加明细
+                if (ids_asset.Count == 0)
+                {
+                    return false;
+                }
+
+                //检查里面是否还有不是闲置状态的资产
+                var checkData = from p in DB_C.tb_Asset
+                                where p.flag == true
+                                where ids_asset.Contains(p.ID)
+                                join tb_AS in DB_C.tb_dataDict_para on p.state_asset equals tb_AS.ID
+                                where tb_AS.name_para == SystemConfig.state_asset_free
+                                select p;
+                if (checkData.Count() == ids_asset.Count)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+
+        public bool is_YSH(int? id_state_target)
+        {
+            if (id_state_target == null)
+            {
+                return false;
+            }
+            String nameState = commonConversion.getTargetStateName(id_state_target);
+            if (nameState == SystemConfig.state_List_YSH)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        //public List<int?> getAssetIDByCollarID(int? id_collar)
+        //{
+        //    List<int?> ids = new List<int?>();
+
+        //    var data = from p in DB_C.tb_Asset_collar_detail
+        //               where p.ID_collar == id_collar
+        //               select p;
+
+        //    foreach (var item in data)
+        //    {
+        //        ids.Add(item.ID_asset);
+        //    }
+
+
+        //    return ids;
+        //}
+        
 
      
 

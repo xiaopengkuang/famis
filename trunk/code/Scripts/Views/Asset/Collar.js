@@ -7,6 +7,25 @@ var searchCondtiion = "";
 //===================初始化数据=====================================//
 $(function () {
     loadInitData();
+
+    $(".SC_Date_Accounting").show();
+    $(".SC_Content_Accounting").hide();
+    $("#Accounting_SC").combobox({
+        onChange: function (n, o) {
+            //n 表示new  value
+            //o 表示 old value
+            if (n == "GZRQ" || n == "DJRQ") {
+                $(".SC_Date_Accounting").show();
+                $(".SC_Content_Accounting").hide();
+            } else {
+                $(".SC_Date_Accounting").hide();
+                $(".SC_Content_Accounting").show();
+            }
+
+
+        }
+
+    });
 })
 
 
@@ -146,19 +165,36 @@ function loadPageTool(datagrid, disabledFlag) {
                     return;
                 }
                 var id = rows[0].ID;
-                var title = "编辑领用";
-                var url = "/Collar/edit_collarView?id=" + id;
-                if (parent.$('#tabs').tabs('exists', title)) {
-                    parent.$('#tabs').tabs('select', title);
-                } else {
-                    var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
-                    parent.$('#tabs').tabs('add', {
-                        title: title,
-                        content: content,
-                        icon: 'icon-add',
-                        closable: true
-                    });
-                }
+                $.ajax({
+                    url: "/Collar/RightToEdit",
+                    type: 'POST',
+                    data: {
+                        "id": id
+                    },
+                    beforeSend: ajaxLoading,
+                    success: function (data) {
+                        ajaxLoadEnd();
+                        if (data > 0) {
+                            //var id = rows[0].ID;
+                            var title = "编辑领用";
+                            var url = "/Collar/edit_collarView?id=" + id;
+                            if (parent.$('#tabs').tabs('exists', title)) {
+                                parent.$('#tabs').tabs('select', title);
+                            } else {
+                                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+                                parent.$('#tabs').tabs('add', {
+                                    title: title,
+                                    content: content,
+                                    icon: 'icon-add',
+                                    closable: true
+                                });
+                            }
+                        } else {
+                            $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
+                            return;
+                        }
+                    }
+                });
             }
         }, {
             text: '刷新',
@@ -296,6 +332,9 @@ function loadPageTool(datagrid, disabledFlag) {
 
 
 
+
+
+
 //根据单据ID更新单据状态
 function updateRecordState(datagrid,id_target, id)
 {
@@ -315,8 +354,13 @@ function updateRecordState(datagrid,id_target, id)
             if(data>0)
             {
                 $('#' + datagrid).datagrid('reload');
-            }else{
-                $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+            } else {
+                if (data == -2) {
+                    $.messager.alert('警告', "非闲置状态资产不能进行领取！", 'warning');
+                } else {
+                    $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+                }
+
             }
         }
     });

@@ -154,7 +154,23 @@ function LoadInitData_datagrid() {
             { field: 'department_Using', title: '使用部门', width: 50 },
             { field: 'addressCF', title: '地址', width: 50 },
             { field: 'Method_add', title: '添加方式', width: 50 },
-            { field: 'state_asset', title: '资产状态', width: 50 },
+            {
+                field: 'state_asset', title: '资产状态', width: 50,
+                formatter: function (data) {
+                    if (data == "在用") {
+                        return '<font color="#696969">' + data + '</font>';
+                    }
+                    else if (data == "借出") {
+                        return '<font color="#FFD700">' + data + '</font>';
+                    } else if (data == "闲置") {
+                        return '<font color="#228B22">' + data + '</font>';
+                    } else if (data == "报废") {
+                        return '<font color="red">' + data + '</font>';
+                    } else {
+                        return data;
+                    }
+                }
+            },
             { field: 'supplierID', title: '供应商', width: 50 }
         ]],
         singleSelect: false, //允许选择多行
@@ -301,8 +317,14 @@ function saveData(info,id) {
                     $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
                 }
             } else {
-                $.messager.alert('提示', '提交/保存失败！', 'info');
-
+                if (data == -2) {
+                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为闲置状态！", 'warning');
+                }else if(data==-3)
+                {
+                    $.messager.alert('警告', "测试", 'warning');
+                }else {
+                    $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+                }
             }
 
 

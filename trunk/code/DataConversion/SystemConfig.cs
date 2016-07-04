@@ -66,6 +66,7 @@ namespace FAMIS.DataConversion
         public static String state_asset_free = "闲置";
         public static String state_asset_using = "在用";
         public static String state_asset_bad = "报废";
+        public static String state_asset_loan = "借出";
 
         public const int state_List_CG_jsonID = 1;
         public const int state_List_DSH_jsonID = 2;

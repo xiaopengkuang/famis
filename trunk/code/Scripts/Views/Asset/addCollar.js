@@ -277,11 +277,15 @@ function saveData(info) {
             if (data > 0) {
                 try {
                     window.parent.$('#tabs').tabs('close', '添加领用单');
-
                 } catch (e) {
+                    $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
                 }
             } else {
-                
+                if (data == -2) {
+                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为闲置状态！", 'warning');
+                } else {
+                    $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+                }
             }
           
 
