@@ -27,19 +27,23 @@
         <div>
             <p>
                 单据号
-                        <input class="easyui-textbox" style="margin-left: 10px" id="SC_Content" />
-                <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC">
-                    <option value="DJRQ" selected="selected">登记日期</option>
-                    <option value="GZRQ">购置日期</option>
-                    <option value="ZCBH">资产编号</option>
-                    <option value="ZCMC">资产名称</option>
-                    <option value="ZCXH">资产型号</option>
+                        <input class="easyui-textbox" style="margin-right: 10px" id="DJH" />
+                 单据状态
+                <select class="easyui-combobox" name="state" style="margin-right: 10px;width: 60px;" id="DJZT">
+                    <option value="ALL" selected="selected">全部</option>
+                    <option value="CG" >草稿</option>
+                    <option value="DSH" >待审核</option>
+                    <option value="YSH" >已审核</option>
                 </select>
-
+             &nbsp; &nbsp; 
                 领用日期：
                         <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
                 至
-                        <input class="easyui-datebox" id="endDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                        <input class="easyui-datebox" id="endDate_SC" style="margin-right: 10px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                &nbsp; &nbsp; 
+                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="searchCond()" style="margin-right: 10px;" data-options="iconCls:'icon-search'">查询</a>
+                &nbsp; &nbsp; 
+                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="reasetCond()" data-options="iconCls:'icon-reload'">重置</a>
             </p>
 
         </div>

@@ -403,7 +403,11 @@ namespace FAMIS.DataConversion
         }
 
 
-
+        /// <summary>
+        /// 根据JsonID获取目标Name
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public String getTargetStateName(int? id)
         {
             String name = null;
