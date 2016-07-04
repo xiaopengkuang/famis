@@ -90,7 +90,25 @@
                             {}
                  
                         }, required: true } }
-                }
+                },
+                 {
+                     field: 'ID_DepartMent', title: '部门', width: 100,
+                     editor: {
+                         type: 'combobox', options: {
+                             valueField: 'ID', textField: 'name', url: '/Rule/GetDepID',
+                             onSelect: function (rec) {
+                                 try {
+                                     combobox('setValue', rec.ID);
+                                     combobox('setText', rec.name);
+                                 }
+                                 catch (e)
+                                 { }
+
+                             }, required: true
+                         }
+                     }
+                 }
+
             ]],
             queryParams: { action: 'query' }, //查询参数
             toolbar: [{
@@ -207,28 +225,33 @@
                          var pwd = rowdata.rows[index].password_User;
                          var truename = rowdata.rows[index].true_Name;
                          var rid = rowdata.rows[index].roleID_User;
-                         
-                         data = Id + "," + myname + "," + pwd + "," + truename + "," + rid;
-                         alert(data);
+                         var depid = rowdata.rows[index].ID_DepartMent;
+                         data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + depid;
+
+                         $.ajax({
+
+                             type: "post",
+                             url: "/Rule/AddUser",
+                             data: { JSdata: data },
+                             datatype: "json",//数据类型
+
+                             success: function (result) {
+
+
+                                 alert("添加成功！");
+                                 $('#dd').datagrid('reload');
+
+                             }, error: function (msg) {
+                                 alert("Error");
+                             }
+                         });
+                         //   alert(data);
+                     }
+                     else {
+
+                         alert("请选择要保存信息的用户！")
                      }
 
-                     $.ajax({
-
-                         type: "post",
-                         url: "/Rule/AddUser",
-                         data: {JSdata:data},
-                         datatype: "json",//数据类型
-
-                         success: function (result) {
-
-
-                             alert("添加成功！");
-                             $('#dd').datagrid('reload');
-
-                         }, error: function (msg) {
-                             alert("Error");
-                         }
-                     });
 
                      //...
                  }
