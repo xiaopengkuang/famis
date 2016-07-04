@@ -1,5 +1,5 @@
 ﻿var searchCondtiion = "1o使用部门o销售部";
-//alert("asdaddsd");
+//alert("dsd");
 $(document).ready(function () {
     //多选框
 
@@ -239,8 +239,8 @@ function loadPageTool_Detail() {
                 var $winADD;
                 $winADD = $('#modalwindow').window({
                     title: '新增明细',
-                    width: 860,
-                    height: 540,
+                    width: 1060,
+                    height: 680,
                     top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
                     left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
                     shadow: true,
@@ -268,14 +268,114 @@ function loadPageTool_Detail() {
                 $("#modalwindow").html("<iframe width='100%' height='99%' scrolling='yes' name='ghrzFrame' frameborder='0' src='/Verify/New_Deatails'></iframe>");
                 $winADD.window('open');
             }
-        
+        },
+          {
+              text: '导入盘点数据',
+              iconCls: 'icon-save',
+              height: 50,
+              handler: function () {
+                  var $winADD;
+                  $winADD = $('#filewindow').window({
+                      title: '导入盘点数据',
+                      width: 450,
+                      height: 280,
+                      top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
+                      left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+                      shadow: true,
+                      modal: true,
+                      iconCls: 'icon-add',
+                      closed: true,
+                      minimizable: false,
+                      maximizable: false,
+                      collapsible: false,
+                      onClose: function () {
+                          $('#TableList_0_2').datagrid('reload');
+                          alert('盘点数据提交成功！');
+                          //    $.messager.show({
+                          //        title: '提示',
+                          //        msg: resultAlert,
+                          //        showType: 'slide',
+                          //        style: {
+                          //            right: '',
+                          //            top: document.body.scrollTop + document.documentElement.scrollTop,
+                          //            bottom: ''
+                          //        }
+                          //    });
+                      }
+                  });
+                  $("#filewindow").html("<iframe width='100%' height='99%' scrolling='yes' name='ghrzFrame' frameborder='0' src='/Verify/AddExcel'></iframe>");
+                  $winADD.window('open'); 
+
+              }
+          
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
+function BrowseFolder() {
+    try {
+        var Message = "请选择文件夹"; //选择框提示信息
+        var Shell = new ActiveXObject("Shell.Application");
+        var Folder = Shell.BrowseForFolder(0, Message, 0x0040, 0x11);//起始目录为：我的电脑
+        //var Folder = Shell.BrowseForFolder(0,Message,0); //起始目录为：桌面
+        if (Folder != null) {
+            Folder = Folder.items(); // 返回 FolderItems 对象
+            Folder = Folder.item(); // 返回 Folderitem 对象
+            Folder = Folder.Path; // 返回路径
+            if (Folder.charAt(Folder.length - 1) != "\\") {
+                Folder = Folder + "\\";
+            }
+            document.all.savePath.value = Folder;
+            return Folder;
+        }
+    } catch (e) {
+        alert("Error");
+    }
+}
+function ReadExcel()
+{
+    var isIE = (document.all) ?true : false;
+    var isIE7 = isIE && (navigator.userAgent.indexOf('MSIE 7.0') !=-1);
+    var isIE8 = isIE && (navigator.userAgent.indexOf('MSIE 8.0') !=-1);
+    var isIE6 = isIE && (navigator.userAgent.indexOf('MSIE 6.0') !=-1);
+                  
+    var file = document.getElementById("fileupload1");
+    if (isIE7 || isIE8) {
+         file.select();
+         //获取欲上传的文件路径
+         var path = document.selection.createRange().text;
+         document.selection.empty();
+         }
+    var filepath = document.getElementById("fileupload1").value;
+    if (isIE6) 
+    {
+        path = filepath;
+    }
+        try {
+             netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+            } 
+     catch (e) {
+         alert('请更改浏览器设置');
+       
+        }
+     
+    var fname = document.getElementById("fileupload1").value;
+    var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+    try {
+         // Back slashes for windows
+         file.initWithPath( fname.replace(/\//g, "\\\\") );
+         }
+    catch(e) {
+        if (e.result!=Components.results.NS_ERROR_FILE_UNRECOGNIZED_PATH) throw e;
+          alert('无法加载文件');
+         
+         }
+    
+   alert(file.path); //取得文件路径
 
+}
 function myformatter(date) {
     var y = date.getFullYear();
     var m = date.getMonth() + 1;

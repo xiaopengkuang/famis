@@ -1,47 +1,197 @@
 ﻿@{
     Layout = null;
 }
- <!--<link href="Css/default.css" rel="stylesheet" type="text/css" />-->
-    <link href="../../LIB/UIlib/css/default.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/default/easyui.css" />
-    <link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/icon.css" />
-    <script type="text/javascript" src="../../LIB/UIlib/js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="../../LIB/UIlib/js/jquery.easyui.min.js"></script>
-   
-    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="../../Scripts/Views/User/Index.js"></script>
-        
+
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title></title>
+    <title>添加资产</title>
+
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/Views/Depreciation/LoadAssetDeatails.js"></script>
+
+    <!--[if lte IE 9]>
+    <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
+    <![endif]-->
 </head>
 <body>
-   
-        <div class="easyui-panel" data-options="region:'north'" title="基础属性" style="height:350px;">
-            <label style="padding-right:30px;">
-            </label>
-                <label style="padding-right:300px;">
-                    资产编号<span style="color:red">*</span>：
-                    <input id="searial" class="easyui-textbox" style=" width: 250px; height: 22px;">
 
-                </label>
-                <label style="padding-right:300px;">
-                    资产性质：
-                    <input id="searial" class="easyui-textbox" style=" width: 250px; height: 22px;">
+    <div class="easyui-tabs" style="height: 500px">
+        <div title="基础资料" data-options="iconCls:'icon-edit',closable:false" fit="true" style="height: 500px">
+            <div class="easyui-panel" style="height: 500px;" fit="true">
+                <div id="jcsx_add" class="easyui-panel" title="基础属性" style="height: 200px; width: auto; padding: 2px;"
+                     data-options="collapsible:true">
+                    <table>
+                        <tr>
+                            <td> 资产编号<span style="color:red">*</span>：</td>
+                            <td>
+                                <input class="easyui-textbox" id="ZCBH" readonly="readonly" style="width: 150px;" />
+                               
+                               
+                            </td>
+                            <td>资产性质:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZCXZ"  style="width: 150px;" />
+                            </td>
+                            <td>资产类别<span style="color:red">*</span>:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZCLB" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>资产名称<span style="color:red">*</span>:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZCMC" style="width: 150px;" />
+                            </td>
+                            <td>规格型号:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="GGXH" style="width: 150px;" />
+                            </td>
+                            <td>计量单位:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="JLDW" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>所在部门:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="SZBM" style="width: 150px;" />
+                            </td>
+                            <td>使用人:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="SYR" style="width: 150px;" />
+                            </td>
+                            <td>存放地点:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="CFDD" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>增加方式:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZJFS" style="width: 150px;" />
+                            </td>
+                            <td>供应商:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="GYS" style="width: 150px;" />
+                            </td>
+                            <td>联系人:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="LXR" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>购置日期:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="GZRQ" style="width: 150px;" />
+                            </td>
+                            <td>登记日期:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="DJRQ" style="width: 150px;" />
+                            </td>
+                           <td>资产状态:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZCZT" style="width: 150px;" />
+                            </td>
+                           
+                        </tr>
+                        <tr>
+                            <td>供应商地址:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="GYSDZ" style="width: 350px;" />
+                            </td>
+                            </tr>
+                    </table>
 
-                </label>
-                <label style="padding-right:300px;">
-                    资产类别<span style="color:red">*</span>：
-                    <input id="searial" class="easyui-textbox" style=" width: 250px; height: 22px;">
+                   
+                </div>
+                <div id="qtsx_add" class="easyui-panel" title="其他属性" style="width: auto; height: 150px; padding: 1px;"
+                     data-options="collapsible:true">
 
-                </label>
+                    <table>
+                        <tr>
+                            <td>使用年限(月):</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="SYNX" style="width: 150px;" />
+                            </td>
+                            <td>折旧方式:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZJFS" style="width: 150px;" />
+                            </td>
+                            <td>净残值率:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="JCZL" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>资产单价:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZCDJ" style="width: 150px;" />
+                            </td>
+                            <td>资产数量:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZCSL" style="width: 150px;" />
+                            </td>
+                            <td>资产价值:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="ZCJZ" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>月提折旧:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="YTZJ" style="width: 150px;" />
+                            </td>
+                            <td>累计折旧:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="LJZJ" style="width: 150px;" />
+                            </td>
+                            <td>净值:</td>
+                            <td>
+                                <input class="easyui-textbox" readonly="readonly" id="JZ" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="zdysx_add" class="easyui-panel" title="自定义属性" style="width: auto; height: 80px; padding: 1px;"
+                     data-options="collapsible:true">
+                    <label id="printLable"></label>
+                </div>
+            </div>
 
 
+        </div>
+        <div title="附件设备" data-options="iconCls:'icon-edit',closable:false" style="padding: 10px; height: 500px">
+            暂不支持添加附件设备
+        </div>
+        <div title="附属文件" data-options="iconCls:'icon-edit',closable:false" style="padding: 10px; height: 500px">
+            暂不支持添加附属文件
+        </div>
+        <div title="附属图片" data-options="iconCls:'icon-edit',closable:false" style="padding: 10px; height: 500px">
+            暂不支持添加附属图片
+        </div>
+    </div>
 
-</div>
+    <div style="text-align: center; padding: 5px;">
+        <a href="javascript:window.parent.$('#modalwindow').window('close')" class="easyui-linkbutton">确定</a>
       
+    </div>
+
+
+
+
+
 </body>
 </html>
+
+ 

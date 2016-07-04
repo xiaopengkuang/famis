@@ -276,6 +276,13 @@ namespace FAMIS.Controllers
 
         }
         [HttpPost]
+        public string Set_SearialNum(string Json)
+        {
+            Session["Deatails_Searial"] = Json;
+            return "";
+        }
+      
+        [HttpPost]
         public JsonResult Load_Inventory(string JSdata)
         {
             List<tb_Asset_inventory> list = db.tb_Asset_inventory.ToList();
@@ -363,34 +370,61 @@ namespace FAMIS.Controllers
             foreach (var p in q)
             {
                 p.amountOfInv = int.Parse(inventory_amount);
-                p.difference = p.amountOfSys - int.Parse(inventory_amount);
+                p.difference = int.Parse(inventory_amount) - p.amountOfSys;
             }
 
 
             db.SaveChanges();
 
         }
-       [HttpPost]
-        public string ReadExcel(string JsonData)
+         [HttpPost]
+        public string GetForm(string PD)
         {
-           string path=JsonData.Split('*')[0];
-           string serial=JsonData.Split('*')[1];
-            string json = "";
+            HttpRequest request = System.Web.HttpContext.Current.Request;
+            HttpFileCollection FileCollect = request.Files;
+            if (FileCollect.Count > 0)          //如果集合的数量大于0
+            {
+                foreach (string str in FileCollect)
+                {
+
+                    HttpPostedFile FileSave = FileCollect[str];  //用key获取单个文件对象HttpPostedFile
+                    string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
+                    string imgPath = "/" + imgName + FileSave.FileName;     //通过此对象获取文件名
+                    string AbsolutePath = Server.MapPath(imgPath);
+                    FileSave.SaveAs(AbsolutePath); 
+                    //将上传的东西保存
+                    ReadExcel(PD, AbsolutePath);
+                    
+                }
+            }
+         return "盘点数据提交成功！";
+        }
+        
+        public void ReadExcel(string pd,string path)
+        {
+           
+            
+           
+           
+            string temp = "";
             DataTable dt = excel.ImportExcelFile(path);
              for(int i = 0 ; i < dt.Rows.Count ; i++) 
             {
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-                  Upadate_Inventory_Deatails(serial, dt.Rows[i][j].ToString(), dt.Rows[i][j + 1].ToString());
+                    StreamWriter sw = new StreamWriter("D:\\tet.txt");
+                    sw.Write(dt.Rows.Count+","+dt.Columns.Count);
+                    sw.Close();
+                    if (j != dt.Columns.Count-1)
+                    temp = dt.Rows[i][j].ToString();
+                    else
+                    Upadate_Inventory_Deatails(pd, temp, dt.Rows[i][j].ToString());
 
                 } 
                
             }
-           // StreamWriter sw = new StreamWriter("D:\\tet.txt");
-          //  sw.Write(json);
-          //  sw.Close();
-            return json;
-       
+           
+          
         }
        public JsonResult Null_dataGrid()
        {
