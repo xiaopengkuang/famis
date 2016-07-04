@@ -49,7 +49,7 @@ function load_SC_Tree() {
         onClick: function (node) {
             var tree = $(this).tree;
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-            //SearchByCondition_LeftTree(node.id, node.text);
+            SearchByCondition_LeftTree(node.id, node.text);
         },
         onLoadSuccess: function (node, data) {
             $('#lefttree').show();
@@ -190,10 +190,8 @@ function SearchByCondition_LeftTree(nodeID, nodetext) {
 //根据输入查询条件查询
 function SearchByCondition_right() {
     var jsonSC;
-
     //获取资产类型
     var TypeAsset = "ALL";
-
     //获取查询类型：时间还是其他调价
     var valueSC = $("#Accounting_SC").combobox("getValue");
     if (valueSC == "GZRQ" || valueSC == "DJRQ") {
