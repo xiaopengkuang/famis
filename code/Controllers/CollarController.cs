@@ -205,8 +205,6 @@ namespace FAMIS.Controllers
                     return NULL_dataGrid();
                 }
 
-
-
                 if (commonConversion.isALL(cond.nodeText) || dic_paraID == 0)
                 {
                 }
@@ -316,31 +314,6 @@ namespace FAMIS.Controllers
             }
             if (cond != null)
             {
-                int nodeid = (int)cond.nodeID;
-                int dicID = nodeid / SystemConfig.ratio_dictPara;
-                int dic_paraID = nodeid - (SystemConfig.ratio_dictPara * dicID);
-                //获取DicNameFlag
-                var data_nameFlag = from p in DB_C.tb_dataDict
-                                    where p.active_flag == true
-                                    where p.ID == dicID
-                                    where p.name_flag != null
-                                    select new
-                                    {
-                                        nameFlag = p.name_flag
-                                    };
-
-                String nameFlag = null;
-                foreach (var item in data_nameFlag)
-                {
-                    nameFlag = item.nameFlag;
-                }
-
-                if (nameFlag == null)
-                {
-                    return NULL_dataGrid();
-                }
-
-
                 switch (cond.DataType)
                 {
                     case SystemConfig.searchCondition_Date:
