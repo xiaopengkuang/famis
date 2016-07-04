@@ -17,7 +17,6 @@ namespace FAMIS.Models
 
         public int? department_allocation { get; set; }
 
-        public int? person { get; set; }
 
         public int? addree_Storage { get; set; }
 
@@ -31,6 +30,14 @@ namespace FAMIS.Models
         [StringLength(200)]
         public string ps { get; set; }
 
+        [StringLength(200)]
+        public string reason { get; set; } 
+
         public int? state_List { get; set; }
+
+        [StringLength(200)]
+        public string info_review { get; set; }
+
+        public int? userID_reView { get; set; }
     }
 }

@@ -102,7 +102,7 @@ function loadDataGrid(datagrid,disabledFlag)
             { field: 'department', title: '调入部门', width: 50 }
             ,
             {
-                field: 'date_collar', title: '领用时间', width: 100,
+                field: 'date_allocation', title: '调拨时间', width: 100,
                 formatter: function (date) {
                     if (date == null) {
                         return "";
@@ -139,7 +139,7 @@ function loadPageTool(datagrid, disabledFlag) {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
-                var title = "添加领用单";
+                var title = "添加调拨单";
                 var url = "/Allocation/Allocation_add";
                 if (parent.$('#tabs').tabs('exists', title)) {
                     parent.$('#tabs').tabs('select', title);
@@ -169,36 +169,36 @@ function loadPageTool(datagrid, disabledFlag) {
                     return;
                 }
                 var id = rows[0].ID;
-                $.ajax({
-                    url: "/Collar/RightToEdit",
-                    type: 'POST',
-                    data: {
-                        "id": id
-                    },
-                    beforeSend: ajaxLoading,
-                    success: function (data) {
-                        ajaxLoadEnd();
-                        if (data > 0) {
-                            //var id = rows[0].ID;
-                            var title = "编辑领用";
-                            var url = "/Collar/edit_collarView?id=" + id;
-                            if (parent.$('#tabs').tabs('exists', title)) {
-                                parent.$('#tabs').tabs('select', title);
-                            } else {
-                                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
-                                parent.$('#tabs').tabs('add', {
-                                    title: title,
-                                    content: content,
-                                    icon: 'icon-add',
-                                    closable: true
-                                });
-                            }
-                        } else {
-                            $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
-                            return;
-                        }
-                    }
-                });
+                //$.ajax({
+                //    url: "/Collar/RightToEdit",
+                //    type: 'POST',
+                //    data: {
+                //        "id": id
+                //    },
+                //    beforeSend: ajaxLoading,
+                //    success: function (data) {
+                //        ajaxLoadEnd();
+                //        if (data > 0) {
+                //            //var id = rows[0].ID;
+                //            var title = "编辑领用";
+                //            var url = "/Collar/edit_collarView?id=" + id;
+                //            if (parent.$('#tabs').tabs('exists', title)) {
+                //                parent.$('#tabs').tabs('select', title);
+                //            } else {
+                //                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+                //                parent.$('#tabs').tabs('add', {
+                //                    title: title,
+                //                    content: content,
+                //                    icon: 'icon-add',
+                //                    closable: true
+                //                });
+                //            }
+                //        } else {
+                //            $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
+                //            return;
+                //        }
+                //    }
+                //});
             }
         }, {
             text: '刷新',
@@ -251,7 +251,7 @@ function loadPageTool(datagrid, disabledFlag) {
                       id_ = rows[0].ID;
 
                       $.ajax({
-                          url: "/Collar/RightToEdit",
+                          url: "/Allocation/RightToEdit",
                           type: 'POST',
                           data: {
                               "id": id_
@@ -298,7 +298,7 @@ function loadPageTool(datagrid, disabledFlag) {
                            return;
                        }
                        var titleName = "审核";
-                       var url = "/Collar/review_collar?id=" + id_;
+                       var url = "/Allocation/review_collar?id=" + id_;
                        openModelWindow(url, titleName);
                    } else {
                    }
@@ -326,7 +326,7 @@ function loadPageTool(datagrid, disabledFlag) {
                            return;
                        }
                        var titleName = "审核";
-                       var url = "/Collar/review_collar?id=" + id_;
+                       var url = "/Allocation/review_collar?id=" + id_;
                        openModelWindow(url, titleName);
 
                    } else {
@@ -364,7 +364,7 @@ function updateRecordState(datagrid,id_target, id)
     }
     //将数据传入后台
     $.ajax({
-        url: '/Collar/updateCollarStateByID',
+        url: '/Allocation/updateCollarStateByID',
         data: { "data": JSON.stringify(data) },
         dataType: "json",
         type: "POST",

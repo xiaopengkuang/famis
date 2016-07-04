@@ -120,315 +120,315 @@ namespace FAMIS.Controllers
         }
 
 
-        /// <summary>
-        /// 获取当前资产闲置的
-        /// 同时排除已经被选择的资产
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="rows"></param>
-        /// <param name="searchCondtiion"></param>
-        /// <param name="selectedIDs"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public JsonResult LoadAsset_collor(int? page, int? rows, String searchCondtiion, String selectedIDs)
-        {
-            List<int> ids_Gone = commonConversion.StringToIntList(selectedIDs);
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            dto_SC_Asset dto_condition = dto_condition = serializer.Deserialize<dto_SC_Asset>(searchCondtiion);
-            JsonResult json = new JsonResult();
+        ///// <summary>
+        ///// 获取当前资产闲置的
+        ///// 同时排除已经被选择的资产
+        ///// </summary>
+        ///// <param name="page"></param>
+        ///// <param name="rows"></param>
+        ///// <param name="searchCondtiion"></param>
+        ///// <param name="selectedIDs"></param>
+        ///// <returns></returns>
+        //[HttpPost]
+        //public JsonResult LoadAsset_collor(int? page, int? rows, String searchCondtiion, String selectedIDs)
+        //{
+        //    List<int> ids_Gone = commonConversion.StringToIntList(selectedIDs);
+        //    JavaScriptSerializer serializer = new JavaScriptSerializer();
+        //    dto_SC_Asset dto_condition = dto_condition = serializer.Deserialize<dto_SC_Asset>(searchCondtiion);
+        //    JsonResult json = new JsonResult();
 
-            int? role = commonConversion.getRoleID();
+        //    int? role = commonConversion.getRoleID();
            
-            //获取资产类别权限
-            List<int?> idsRight_assetType = commonConversion.getids_AssetTypeByRole(role);
-            //获取部门权限
-            List<int?> idsRight_deparment = commonConversion.getids_departmentByRole(role);
-            if (dto_condition == null)
-            {
-                json = loadAssetByDataDict_collar(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone);
-            }
-            else {
-                switch (dto_condition.typeFlag)
-                {
-                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict_collar(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone); break;
-                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition_collar(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone); break;
-                    default: ; break;
-                }
-            }
+        //    //获取资产类别权限
+        //    List<int?> idsRight_assetType = commonConversion.getids_AssetTypeByRole(role);
+        //    //获取部门权限
+        //    List<int?> idsRight_deparment = commonConversion.getids_departmentByRole(role);
+        //    if (dto_condition == null)
+        //    {
+        //        json = loadAssetByDataDict_collar(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone);
+        //    }
+        //    else {
+        //        switch (dto_condition.typeFlag)
+        //        {
+        //            case SystemConfig.searchPart_letf: json = loadAssetByDataDict_collar(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone); break;
+        //            case SystemConfig.searchPart_right: json = loadAssetByLikeCondition_collar(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone); break;
+        //            default: ; break;
+        //        }
+        //    }
 
            
-            return json;
-        }
+        //    return json;
+        //}
 
-        public JsonResult loadAssetByDataDict_collar(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int> selectedIDs)
-        {
-            page = page == null ? 1 : page;
-            rows = rows == null ? 15 : rows;
+        //public JsonResult loadAssetByDataDict_collar(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int> selectedIDs)
+        //{
+        //    page = page == null ? 1 : page;
+        //    rows = rows == null ? 15 : rows;
 
-            var data_ORG = from p in DB_C.tb_Asset
-                           where p.flag == true
-                           where p.department_Using == null || idsRight_deparment.Contains(p.department_Using)
-                           where idsRight_assetType.Contains(p.type_Asset)
-                           where !selectedIDs.Contains(p.ID)
-                           join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
-                           from ST in temp_ST.DefaultIfEmpty()
-                           where ST.name_para == SystemConfig.state_asset_free || ST.name_para == "" || ST.name_para == null
-                           select p;
-            if (data_ORG == null)
-            {
-                return NULL_dataGrid();
-            }
+        //    var data_ORG = from p in DB_C.tb_Asset
+        //                   where p.flag == true
+        //                   where p.department_Using == null || idsRight_deparment.Contains(p.department_Using)
+        //                   where idsRight_assetType.Contains(p.type_Asset)
+        //                   where !selectedIDs.Contains(p.ID)
+        //                   join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
+        //                   from ST in temp_ST.DefaultIfEmpty()
+        //                   where ST.name_para == SystemConfig.state_asset_free
+        //                   select p;
+        //    if (data_ORG == null)
+        //    {
+        //        return NULL_dataGrid();
+        //    }
 
-            if (cond != null)
-            {
-                int nodeid = (int)cond.nodeID;
-                int dicID = nodeid / SystemConfig.ratio_dictPara;
-                int dic_paraID = nodeid - (SystemConfig.ratio_dictPara * dicID);
-                //获取DicNameFlag
-                var data_nameFlag = from p in DB_C.tb_dataDict
-                                    where p.active_flag == true
-                                    where p.ID == dicID
-                                    where p.name_flag != null
-                                    select new
-                                    {
-                                        nameFlag = p.name_flag
-                                    };
+        //    if (cond != null)
+        //    {
+        //        int nodeid = (int)cond.nodeID;
+        //        int dicID = nodeid / SystemConfig.ratio_dictPara;
+        //        int dic_paraID = nodeid - (SystemConfig.ratio_dictPara * dicID);
+        //        //获取DicNameFlag
+        //        var data_nameFlag = from p in DB_C.tb_dataDict
+        //                            where p.active_flag == true
+        //                            where p.ID == dicID
+        //                            where p.name_flag != null
+        //                            select new
+        //                            {
+        //                                nameFlag = p.name_flag
+        //                            };
 
-                String nameFlag = null;
-                foreach (var item in data_nameFlag)
-                {
-                    nameFlag = item.nameFlag;
-                }
+        //        String nameFlag = null;
+        //        foreach (var item in data_nameFlag)
+        //        {
+        //            nameFlag = item.nameFlag;
+        //        }
 
-                if (nameFlag == null)
-                {
-                    return NULL_dataGrid();
-                }
+        //        if (nameFlag == null)
+        //        {
+        //            return NULL_dataGrid();
+        //        }
 
-                if (commonConversion.isALL(cond.nodeText) || dic_paraID == 0)
-                {
-                }
-                else
-                {
-                    switch (nameFlag)
-                    {
-                        case SystemConfig.nameFlag_2_CFDD:
-                            {
-                                data_ORG = from p in data_ORG
-                                           where p.addressCF == dic_paraID
-                                           select p;
-                            }; break;
+        //        if (commonConversion.isALL(cond.nodeText) || dic_paraID == 0)
+        //        {
+        //        }
+        //        else
+        //        {
+        //            switch (nameFlag)
+        //            {
+        //                case SystemConfig.nameFlag_2_CFDD:
+        //                    {
+        //                        data_ORG = from p in data_ORG
+        //                                   where p.addressCF == dic_paraID
+        //                                   select p;
+        //                    }; break;
 
-                        case SystemConfig.nameFlag_2_SYBM:
-                            {
-                                data_ORG = from p in data_ORG
-                                           where p.department_Using == dic_paraID
-                                           select p;
-                            }; break;
+        //                case SystemConfig.nameFlag_2_SYBM:
+        //                    {
+        //                        data_ORG = from p in data_ORG
+        //                                   where p.department_Using == dic_paraID
+        //                                   select p;
+        //                    }; break;
 
-                        case SystemConfig.nameFlag_2_ZCLB:
-                            {
-                                data_ORG = from p in data_ORG
-                                           where p.type_Asset == dic_paraID
-                                           select p;
-                            }; break;
-                    }
-                }
-            }
-            var data = from p in data_ORG
-                       join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
-                       from AT in temp_AT.DefaultIfEmpty()
-                       join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
-                       from MM in temp_MM.DefaultIfEmpty()
-                       join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID_Department into temp_DP
-                       from DP in temp_DP.DefaultIfEmpty()
-                       join tb_DZ in DB_C.tb_dataDict_para on p.addressCF equals tb_DZ.ID into temp_DZ
-                       from DZ in temp_DZ.DefaultIfEmpty()
-                       join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
-                       from ST in temp_ST.DefaultIfEmpty()
-                       join tb_SP in DB_C.tb_supplier on p.supplierID equals tb_SP.ID into temp_SP
-                       from SP in temp_SP.DefaultIfEmpty()
-                       join tb_MDP in DB_C.tb_dataDict_para on p.Method_depreciation equals tb_MDP.ID into temp_MDP
-                       from MDP in temp_MDP.DefaultIfEmpty()
-                       join tb_MDC in DB_C.tb_dataDict_para on p.Method_decrease equals tb_MDC.ID into temp_MDC
-                       from MDC in temp_MDC.DefaultIfEmpty()
-                       join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
-                       from MA in temp_MA.DefaultIfEmpty()
-                       select new dto_Asset_Detail
-                       {
-                           addressCF = DZ.name_para,
-                           amount = p.amount,
-                           department_Using = DP.name_Department,
-                           depreciation_tatol = p.depreciation_tatol,
-                           depreciation_Month = p.depreciation_Month,
-                           ID = p.ID,
-                           measurement = MM.name_para,
-                           Method_add = MA.name_para,
-                           Method_depreciation = MDP.name_para,
-                           Method_decrease = MDC.name_para,
-                           name_Asset = p.name_Asset,
-                           Net_residual_rate = p.Net_residual_rate,
-                           Net_value = p.Net_value,
-                           Time_Operated = p.Time_add,
-                           //people_using = p.people_using,
-                           serial_number = p.serial_number,
-                           specification = p.specification,
-                           state_asset = ST.name_para,
-                           supplierID = SP.name_supplier,
-                           Time_Purchase = p.Time_Purchase,
-                           type_Asset = AT.name_Asset_Type,
-                           unit_price = p.unit_price,
-                           value = p.value,
-                           YearService_month = p.YearService_month
-                       };
-            data = data.OrderByDescending(a => a.Time_Operated);
+        //                case SystemConfig.nameFlag_2_ZCLB:
+        //                    {
+        //                        data_ORG = from p in data_ORG
+        //                                   where p.type_Asset == dic_paraID
+        //                                   select p;
+        //                    }; break;
+        //            }
+        //        }
+        //    }
+        //    var data = from p in data_ORG
+        //               join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
+        //               from AT in temp_AT.DefaultIfEmpty()
+        //               join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
+        //               from MM in temp_MM.DefaultIfEmpty()
+        //               join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID_Department into temp_DP
+        //               from DP in temp_DP.DefaultIfEmpty()
+        //               join tb_DZ in DB_C.tb_dataDict_para on p.addressCF equals tb_DZ.ID into temp_DZ
+        //               from DZ in temp_DZ.DefaultIfEmpty()
+        //               join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
+        //               from ST in temp_ST.DefaultIfEmpty()
+        //               join tb_SP in DB_C.tb_supplier on p.supplierID equals tb_SP.ID into temp_SP
+        //               from SP in temp_SP.DefaultIfEmpty()
+        //               join tb_MDP in DB_C.tb_dataDict_para on p.Method_depreciation equals tb_MDP.ID into temp_MDP
+        //               from MDP in temp_MDP.DefaultIfEmpty()
+        //               join tb_MDC in DB_C.tb_dataDict_para on p.Method_decrease equals tb_MDC.ID into temp_MDC
+        //               from MDC in temp_MDC.DefaultIfEmpty()
+        //               join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
+        //               from MA in temp_MA.DefaultIfEmpty()
+        //               select new dto_Asset_Detail
+        //               {
+        //                   addressCF = DZ.name_para,
+        //                   amount = p.amount,
+        //                   department_Using = DP.name_Department,
+        //                   depreciation_tatol = p.depreciation_tatol,
+        //                   depreciation_Month = p.depreciation_Month,
+        //                   ID = p.ID,
+        //                   measurement = MM.name_para,
+        //                   Method_add = MA.name_para,
+        //                   Method_depreciation = MDP.name_para,
+        //                   Method_decrease = MDC.name_para,
+        //                   name_Asset = p.name_Asset,
+        //                   Net_residual_rate = p.Net_residual_rate,
+        //                   Net_value = p.Net_value,
+        //                   Time_Operated = p.Time_add,
+        //                   //people_using = p.people_using,
+        //                   serial_number = p.serial_number,
+        //                   specification = p.specification,
+        //                   state_asset = ST.name_para,
+        //                   supplierID = SP.name_supplier,
+        //                   Time_Purchase = p.Time_Purchase,
+        //                   type_Asset = AT.name_Asset_Type,
+        //                   unit_price = p.unit_price,
+        //                   value = p.value,
+        //                   YearService_month = p.YearService_month
+        //               };
+        //    data = data.OrderByDescending(a => a.Time_Operated);
 
-            int skipindex = ((int)page - 1) * (int)rows;
-            int rowsNeed = (int)rows;
-            var json = new
-            {
-                total = data.ToList().Count,
-                rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
-                //rows = data.ToList().ToArray()
-            };
-            return Json(json, JsonRequestBehavior.AllowGet);
-        }
+        //    int skipindex = ((int)page - 1) * (int)rows;
+        //    int rowsNeed = (int)rows;
+        //    var json = new
+        //    {
+        //        total = data.ToList().Count,
+        //        rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+        //        //rows = data.ToList().ToArray()
+        //    };
+        //    return Json(json, JsonRequestBehavior.AllowGet);
+        //}
 
 
-        public JsonResult loadAssetByLikeCondition_collar(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType,List<int?> idsRight_deparment, List<int> selectedIDs)
-        {
-            page = page == null ? 1 : page;
-            rows = rows == null ? 15 : rows;
-            var data_ORG = from p in DB_C.tb_Asset
-                           where p.flag == true
-                           where p.department_Using == null || idsRight_deparment.Contains(p.department_Using)
-                           where idsRight_assetType.Contains(p.type_Asset)
-                           where !selectedIDs.Contains(p.ID)
-                           join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
-                           from ST in temp_ST.DefaultIfEmpty()
-                           where ST.name_para == SystemConfig.state_asset_free || ST.name_para == "" || ST.name_para == null
-                           select p;
-            if (data_ORG == null)
-            {
-                return NULL_dataGrid();
-            }
-            if (cond != null)
-            {
-                switch (cond.DataType)
-                {
-                    case SystemConfig.searchCondition_Date:
-                        {
-                            DateTime beginTime = Convert.ToDateTime(((DateTime)cond.begin).ToString("yyyy-MM-dd") + " 00:00:00");
-                            DateTime endTime = Convert.ToDateTime(((DateTime)cond.end).ToString("yyyy-MM-dd") + " 23:59:59");
-                            switch (cond.dataName)
-                            {
-                                case SystemConfig.searchCondition_DJRQ:
-                                    {
-                                        data_ORG = from p in data_ORG
-                                                   where p.Time_add > beginTime && p.Time_add < endTime
-                                                   select p;
-                                    }; break;
+        //public JsonResult loadAssetByLikeCondition_collar(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType,List<int?> idsRight_deparment, List<int> selectedIDs)
+        //{
+        //    page = page == null ? 1 : page;
+        //    rows = rows == null ? 15 : rows;
+        //    var data_ORG = from p in DB_C.tb_Asset
+        //                   where p.flag == true
+        //                   where p.department_Using == null || idsRight_deparment.Contains(p.department_Using)
+        //                   where idsRight_assetType.Contains(p.type_Asset)
+        //                   where !selectedIDs.Contains(p.ID)
+        //                   join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
+        //                   from ST in temp_ST.DefaultIfEmpty()
+        //                   where ST.name_para == SystemConfig.state_asset_free
+        //                   select p;
+        //    if (data_ORG == null)
+        //    {
+        //        return NULL_dataGrid();
+        //    }
+        //    if (cond != null)
+        //    {
+        //        switch (cond.DataType)
+        //        {
+        //            case SystemConfig.searchCondition_Date:
+        //                {
+        //                    DateTime beginTime = Convert.ToDateTime(((DateTime)cond.begin).ToString("yyyy-MM-dd") + " 00:00:00");
+        //                    DateTime endTime = Convert.ToDateTime(((DateTime)cond.end).ToString("yyyy-MM-dd") + " 23:59:59");
+        //                    switch (cond.dataName)
+        //                    {
+        //                        case SystemConfig.searchCondition_DJRQ:
+        //                            {
+        //                                data_ORG = from p in data_ORG
+        //                                           where p.Time_add > beginTime && p.Time_add < endTime
+        //                                           select p;
+        //                            }; break;
 
-                                case SystemConfig.searchCondition_GZRQ:
-                                    {
-                                        data_ORG = from p in data_ORG
-                                                   where p.Time_Purchase > beginTime && p.Time_Purchase < endTime
-                                                   select p;
-                                    }; break;
+        //                        case SystemConfig.searchCondition_GZRQ:
+        //                            {
+        //                                data_ORG = from p in data_ORG
+        //                                           where p.Time_Purchase > beginTime && p.Time_Purchase < endTime
+        //                                           select p;
+        //                            }; break;
 
-                                default: ; break;
-                            }
-                        }; break;
-                    case SystemConfig.searchCondition_Content:
-                        {
-                            switch (cond.dataName)
-                            {
-                                case SystemConfig.searchCondition_ZCBH:
-                                    {
-                                        data_ORG = from p in data_ORG
-                                                   where p.serial_number.Contains(cond.contentSC)
-                                                   select p;
-                                    }; break;
+        //                        default: ; break;
+        //                    }
+        //                }; break;
+        //            case SystemConfig.searchCondition_Content:
+        //                {
+        //                    switch (cond.dataName)
+        //                    {
+        //                        case SystemConfig.searchCondition_ZCBH:
+        //                            {
+        //                                data_ORG = from p in data_ORG
+        //                                           where p.serial_number.Contains(cond.contentSC)
+        //                                           select p;
+        //                            }; break;
 
-                                case SystemConfig.searchCondition_ZCMC:
-                                    {
-                                        data_ORG = from p in data_ORG
-                                                   where p.name_Asset.Contains(cond.contentSC)
-                                                   select p;
-                                    }; break;
+        //                        case SystemConfig.searchCondition_ZCMC:
+        //                            {
+        //                                data_ORG = from p in data_ORG
+        //                                           where p.name_Asset.Contains(cond.contentSC)
+        //                                           select p;
+        //                            }; break;
 
-                                case SystemConfig.searchCondition_ZCXH:
-                                    {
-                                        data_ORG = from p in data_ORG
-                                                   where p.specification.Contains(cond.contentSC)
-                                                   select p;
-                                    }; break;
+        //                        case SystemConfig.searchCondition_ZCXH:
+        //                            {
+        //                                data_ORG = from p in data_ORG
+        //                                           where p.specification.Contains(cond.contentSC)
+        //                                           select p;
+        //                            }; break;
 
-                                default: ; break;
-                            }
-                        }; break;
-                    default: ; break;
-                }
-            }
+        //                        default: ; break;
+        //                    }
+        //                }; break;
+        //            default: ; break;
+        //        }
+        //    }
             
-            var data = from p in data_ORG
-                       join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
-                       from AT in temp_AT.DefaultIfEmpty()
-                       join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
-                       from MM in temp_MM.DefaultIfEmpty()
-                       join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID_Department into temp_DP
-                       from DP in temp_DP.DefaultIfEmpty()
-                       join tb_DZ in DB_C.tb_dataDict_para on p.addressCF equals tb_DZ.ID into temp_DZ
-                       from DZ in temp_DZ.DefaultIfEmpty()
-                       join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
-                       from ST in temp_ST.DefaultIfEmpty()
-                       join tb_SP in DB_C.tb_supplier on p.supplierID equals tb_SP.ID into temp_SP
-                       from SP in temp_SP.DefaultIfEmpty()
-                       join tb_MDP in DB_C.tb_dataDict_para on p.Method_depreciation equals tb_MDP.ID into temp_MDP
-                       from MDP in temp_MDP.DefaultIfEmpty()
-                       join tb_MDC in DB_C.tb_dataDict_para on p.Method_decrease equals tb_MDC.ID into temp_MDC
-                       from MDC in temp_MDC.DefaultIfEmpty()
-                       join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
-                       from MA in temp_MA.DefaultIfEmpty()
-                       select new dto_Asset_Detail
-                       {
-                           addressCF = DZ.name_para,
-                           amount = p.amount,
-                           department_Using = DP.name_Department,
-                           depreciation_tatol = p.depreciation_tatol,
-                           depreciation_Month = p.depreciation_Month,
-                           ID = p.ID,
-                           measurement = MM.name_para,
-                           Method_add = MA.name_para,
-                           Method_depreciation = MDP.name_para,
-                           Method_decrease = MDC.name_para,
-                           name_Asset = p.name_Asset,
-                           Net_residual_rate = p.Net_residual_rate,
-                           Net_value = p.Net_value,
-                           Time_Operated = p.Time_add,
-                           //people_using = p.people_using,
-                           serial_number = p.serial_number,
-                           specification = p.specification,
-                           state_asset = ST.name_para,
-                           supplierID = SP.name_supplier,
-                           Time_Purchase = p.Time_Purchase,
-                           type_Asset = AT.name_Asset_Type,
-                           unit_price = p.unit_price,
-                           value = p.value,
-                           YearService_month = p.YearService_month
-                       };
-            data = data.OrderByDescending(a => a.Time_Operated);
+        //    var data = from p in data_ORG
+        //               join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
+        //               from AT in temp_AT.DefaultIfEmpty()
+        //               join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
+        //               from MM in temp_MM.DefaultIfEmpty()
+        //               join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID_Department into temp_DP
+        //               from DP in temp_DP.DefaultIfEmpty()
+        //               join tb_DZ in DB_C.tb_dataDict_para on p.addressCF equals tb_DZ.ID into temp_DZ
+        //               from DZ in temp_DZ.DefaultIfEmpty()
+        //               join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
+        //               from ST in temp_ST.DefaultIfEmpty()
+        //               join tb_SP in DB_C.tb_supplier on p.supplierID equals tb_SP.ID into temp_SP
+        //               from SP in temp_SP.DefaultIfEmpty()
+        //               join tb_MDP in DB_C.tb_dataDict_para on p.Method_depreciation equals tb_MDP.ID into temp_MDP
+        //               from MDP in temp_MDP.DefaultIfEmpty()
+        //               join tb_MDC in DB_C.tb_dataDict_para on p.Method_decrease equals tb_MDC.ID into temp_MDC
+        //               from MDC in temp_MDC.DefaultIfEmpty()
+        //               join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
+        //               from MA in temp_MA.DefaultIfEmpty()
+        //               select new dto_Asset_Detail
+        //               {
+        //                   addressCF = DZ.name_para,
+        //                   amount = p.amount,
+        //                   department_Using = DP.name_Department,
+        //                   depreciation_tatol = p.depreciation_tatol,
+        //                   depreciation_Month = p.depreciation_Month,
+        //                   ID = p.ID,
+        //                   measurement = MM.name_para,
+        //                   Method_add = MA.name_para,
+        //                   Method_depreciation = MDP.name_para,
+        //                   Method_decrease = MDC.name_para,
+        //                   name_Asset = p.name_Asset,
+        //                   Net_residual_rate = p.Net_residual_rate,
+        //                   Net_value = p.Net_value,
+        //                   Time_Operated = p.Time_add,
+        //                   //people_using = p.people_using,
+        //                   serial_number = p.serial_number,
+        //                   specification = p.specification,
+        //                   state_asset = ST.name_para,
+        //                   supplierID = SP.name_supplier,
+        //                   Time_Purchase = p.Time_Purchase,
+        //                   type_Asset = AT.name_Asset_Type,
+        //                   unit_price = p.unit_price,
+        //                   value = p.value,
+        //                   YearService_month = p.YearService_month
+        //               };
+        //    data = data.OrderByDescending(a => a.Time_Operated);
 
-            int skipindex = ((int)page - 1) * (int)rows;
-            int rowsNeed = (int)rows;
-            var json = new
-            {
-                total = data.ToList().Count,
-                rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
-                //rows = data.ToList().ToArray()
-            };
-            return Json(json, JsonRequestBehavior.AllowGet);
-        }
+        //    int skipindex = ((int)page - 1) * (int)rows;
+        //    int rowsNeed = (int)rows;
+        //    var json = new
+        //    {
+        //        total = data.ToList().Count,
+        //        rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+        //        //rows = data.ToList().ToArray()
+        //    };
+        //    return Json(json, JsonRequestBehavior.AllowGet);
+        //}
 
 
         public JsonResult LoadCollarsList(int? page, int? rows, dto_SC_List cond)
@@ -601,11 +601,11 @@ namespace FAMIS.Controllers
 
                 DB_C.tb_Asset_collar.Add(newItem);
                 DB_C.SaveChanges();
-                int? id_collar = commonConversion.getIDBySerialNum(newItem.serial_number);
+                int? id_collar = getIDBySerialNum_collar(newItem.serial_number);
                 //获取单据明细
                 //获取选中的Ids
                 List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
-                List<tb_Asset_collar_detail> details = createCollarList(id_collar, selectedAssets);
+                List<tb_Asset_collar_detail> details = createCollarDetialList(id_collar, selectedAssets);
                 DB_C.tb_Asset_collar_detail.AddRange(details);
                 DB_C.SaveChanges();
 
@@ -613,7 +613,7 @@ namespace FAMIS.Controllers
             }
             catch (Exception e)
             {
-                int? id_collar = commonConversion.getIDBySerialNum(newItem.serial_number);
+                int? id_collar = getIDBySerialNum_collar(newItem.serial_number);
                 if (id_collar!=null)
                 {
                     try
@@ -631,6 +631,32 @@ namespace FAMIS.Controllers
             }
 
  
+        }
+        /// <summary>
+        /// 根据序列号获取ID
+        /// </summary>
+        /// <param name="serialNum"></param>
+        /// <returns></returns>
+        public int? getIDBySerialNum_collar(String serialNum)
+        {
+            if (serialNum == null)
+            {
+                return null;
+            }
+            var data = from p in DB_C.tb_Asset_collar
+                       where p.serial_number == serialNum
+                       select p;
+            if (data.Count() != 1)
+            {
+                return null;
+            }
+
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+
+            return null;
         }
 
         [HttpPost]
@@ -674,7 +700,7 @@ namespace FAMIS.Controllers
                 }
                 //获取选中IDs
                 List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
-                List<tb_Asset_collar_detail> details = createCollarList(Json_data.id, selectedAssets);
+                List<tb_Asset_collar_detail> details = createCollarDetialList(Json_data.id, selectedAssets);
                 DB_C.tb_Asset_collar_detail.AddRange(details);
                 DB_C.SaveChanges();
                 return 1;
@@ -687,7 +713,7 @@ namespace FAMIS.Controllers
 
 
 
-        public List<tb_Asset_collar_detail> createCollarList(int? id_collar,List<int> ids_asset)
+        public List<tb_Asset_collar_detail> createCollarDetialList(int? id_collar,List<int> ids_asset)
         {
             List<tb_Asset_collar_detail> list = new List<tb_Asset_collar_detail>();
             if(id_collar==null||id_collar<1)

@@ -62,7 +62,6 @@ function load_Department() {
 }
 
 
-
 function load_CFDD_add() {
       $('#CFDD_add').combotree({
         url: '/Dict/load_DictTree?nameFlag=2_CFDD',
@@ -132,7 +131,7 @@ function LoadInitData_datagrid() {
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool_Detail(datagrid);
+    loadPageTool_Detail(dataGrid);
 }
 
 function loadPageTool_Detail(datagrid) {
@@ -176,7 +175,6 @@ function loadPageTool_Detail(datagrid) {
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
-
 
 function removeSelect(removeList)
 {
@@ -242,32 +240,31 @@ function saveData(info) {
        
     }
     //获取页面数据
-    var d_Date_LY = $('#date_add').datebox('getValue');
+    var date_allocation = $('#date_add').datebox('getValue');
 
-    var d_LYYY = $("#LYYY_add").val();
+    var reason = $("#DBYY_add").val();
 
-    var d_LYBM = $("#LYBM_add").combotree("getValue");
+    var department = $("#LYBM_add").combotree("getValue");
 
-    var d_CFDD = $("#CFDD_add").combotree("getValue");
+    var address = $("#CFDD_add").combotree("getValue");
 
-    //var d_SYR = $("#SYR_add").combobox("getValue");
 
-    var d_PS = $("#PS_add").val();
+    var ps = $("#PS_add").val();
 
     //封装成json格式创给后台
     var listA = getListAseet_();
     var collar_add = {
-        "date_LY": d_Date_LY,
-        "reason_LY": d_LYYY,
-        "department_LY": d_LYBM,
-        "address_LY": d_CFDD,
-        "ps_LY": d_PS,
+        "date_allocation": date_allocation,
+        "reason": reason,
+        "department": department,
+        "address": address,
+        "ps": ps,
         "statelist": state_List,
         "assetList": listA
     };
   
     $.ajax({
-        url: "/Collar/Handler_addCollar",
+        url: "/Allocation/Handler_allocation_add",
         type: 'POST',
         data: {
             "data": JSON.stringify(collar_add)
@@ -283,8 +280,8 @@ function saveData(info) {
                     $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
                 }
             } else {
-                if (data == -2) {
-                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为闲置状态！", 'warning');
+                if (data == -4) {
+                    $.messager.alert('警告', "异常来了,亲休息一下吧！", 'warning');
                 } else {
                     $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
                 }
@@ -316,7 +313,7 @@ function cancelData() {
     $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
         if (r) {
             try {
-                window.parent.$('#tabs').tabs('close', '添加领用单');
+                window.parent.$('#tabs').tabs('close', '添加调拨单');
             } catch (e) { }
         }
     });
@@ -328,9 +325,9 @@ function openModelWindow(url, titleName) {
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,
-        width: 850,
+        width: 1000,
         height: 650,
-        top: (($(window).height() - 850) > 0 ? ($(window).height() - 850) : 200) * 0.5,
+        top: (($(window).height() - 1000) > 0 ? ($(window).height() - 1000) : 200) * 0.5,
         left: (($(window).width() - 650) > 0 ? ($(window).width() - 650) : 100) * 0.5,
         shadow: true,
         modal: true,

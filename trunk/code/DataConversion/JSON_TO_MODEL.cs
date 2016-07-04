@@ -123,5 +123,17 @@ namespace FAMIS.DataConversion
 
         }
 
+        public tb_Asset_allocation ConverJsonToTable(Json_allocation_add data)
+        {
+            tb_Asset_allocation allocation = new tb_Asset_allocation();
+            allocation.addree_Storage = data.address;
+            allocation.date = data.date_allocation;
+            allocation.department_allocation = data.department;
+            allocation.ps = data.ps;
+            allocation.reason = data.reason;
+            return allocation;
+        }
+
+
     }
 }
