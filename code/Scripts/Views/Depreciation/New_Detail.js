@@ -178,7 +178,7 @@ function LoadTreeLeft() {
             var tree = $(this).tree;
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
             // alert(node.text);
-            searchCondtiion = "1" + "o" + "2_ZCZT" + "o" + node.id;;
+            searchCondtiion = "1" + "o" + "2_ZCZT" + "o" + node.id;
             // alert(searchCondtiion);
              LoadInitData_Detail(String(searchCondtiion));
 
@@ -186,7 +186,25 @@ function LoadTreeLeft() {
 
     });
 }
+function Add_Invention_Deatails()
+{
+    $.ajax({
 
+        type: "post",
+        url: "/AssetDeatails/Add_InventDeatails?Json="+searchCondtiion+"",
+
+        datatype: "json",//数据类型
+
+        success: function (result) {
+          
+            alert("添加明细成功！");
+
+
+        }, error: function (msg) {
+            alert("添加明细失败！");
+        }
+    });
+}
 //Left 左侧事件查询
 function SearchByCondition_LeftTree(nodeID, nodetext) {
     var jsonSC = {
@@ -304,6 +322,22 @@ function LoadInitData_Detail(searchCondtiion) {
            // var row = $('#TableList_0_1').datagrid('getRowIndex', index);
             var rowdata = $('#TableList_0_1').datagrid('getData');
             var searial = rowdata.rows[index].serial_number;
+            $.ajax({
+
+                type: "post",
+                url: "/Depreciation/Set_SearialNum?Json="+searial+"",
+
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                    // excel = eval('(' + result + ')');
+                  
+                   
+
+                }, error: function (msg) {
+                    alert("未能传出资产编号的值!");
+                }
+            });
             Next_Page();
            
         }
@@ -316,11 +350,10 @@ function Next_Page() {
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: '明细预览',
-        width: 860,
-        height: 540,
-        top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
-        left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
-        shadow: true,
+        width: 1760,
+        height: 940,
+        top: 0,
+        left:0,
         modal: true,
         iconCls: 'icon-add',
         closed: true,

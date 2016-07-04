@@ -36,6 +36,186 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+
+        public class GetAsset// 绑定页面规则数据
+        {
+
+            public string ZCBH{ get; set; }
+
+            public string ZCXZ { get; set; }
+            public string ZCLB { get; set; }
+            public string ZCMC { get; set; }
+
+            public string GGXH { get; set; }
+            public string JLSW { get; set; }
+            public string SZBM { get; set; }
+            public string SYR { get; set; }
+            public string CFDD { get; set; }
+            public string ZJFS { get; set; }
+            public string JZCL { get; set; }
+            public string ZCDJ { get; set; }
+
+            public string ZCSL { get; set; }
+            public string ZCJZ { get; set; }
+            public string YTZJ { get; set; }
+
+            public string LJZJ { get; set; }
+
+            public string  JZ { get; set; }
+           //自定义属性不在其中！
+
+
+
+
+
+
+        }
+         [HttpPost]
+        public string Get_Asset_Deatail_BySearial(string Json)
+        {
+            string json="";
+           IEnumerable<String>  q = from a in db.tb_Asset
+                     join t in db.tb_AssetType on a.type_Asset equals t.ID
+                        join d in db.tb_dataDict_para on a.measurement equals d.ID
+                        join j in db.tb_dataDict_para on a.addressCF equals j.ID
+                        join p in db.tb_department on a.department_Using equals p.ID
+                        join u in db.tb_user on a.Owener equals u.ID
+                        join s in db.tb_dataDict_para on a.state_asset equals s.ID
+                        join zj in db.tb_dataDict_para on a.Method_add equals zj.ID
+                        join fs in db.tb_dataDict_para on a.Method_depreciation equals fs.ID
+                        join sp in db.tb_supplier on a.supplierID equals sp.ID
+                        where a.serial_number==Json
+                        select a.serial_number+","+t.name_Asset_Type+","+t.name_Asset_Type+","+a.name_Asset+","+a.specification+
+                        ","+d.name_para+","+p.name_Department+","+u.true_Name+","+ j.name_para+","+zj.name_para+","+sp.name_supplier+
+                         ","+sp.linkman+","+sp.address+","+a.Time_Purchase+","+s.name_para+","+a.Time_add+","+a.YearService_month+","+
+                        fs.name_para+","+a.Net_residual_rate+","+a.unit_price+","+a.amount+","+a.Total_price+","+a.depreciation_Month+","
+                        +a.depreciation_tatol+","+a.Net_value;
+            
+             foreach(String a in q)
+                 json=a;
+             return json.ToString();    
+        }
+         [HttpPost]
+         public string Add_InventDeatails(string Json)
+         {
+             string[] temp = Json.Split('o');
+             int rid = int.Parse(temp[0]);
+             string searchtype = temp[1];
+             string searchmethod = temp[2];
+
+            
+             if (searchtype == SystemConfig.nameFlag_2_SYBM)
+             {
+
+
+                 IEnumerable<tb_Asset> q = from a in db.tb_Asset
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID
+                                           join d in db.tb_dataDict_para on a.measurement equals d.ID
+                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID
+                                           join p in db.tb_department on a.department_Using equals p.ID
+                                           join u in db.tb_user on a.Owener equals u.ID
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID
+                                           join sp in db.tb_supplier on a.supplierID equals sp.ID
+                                           where p.ID_Department.ToString() == searchmethod
+                                           select a;
+                 foreach (tb_Asset asset in q)
+                 {
+                     var rule_tb = new tb_Asset_inventory_Details
+                     {
+                          serial_number="",
+                          state="盘亏",
+                          amountOfSys=asset.amount,
+                          amountOfInv=0,
+                          difference=0-asset.amount,
+                          serial_number_Asset=asset.serial_number
+
+                     };
+                     db.tb_Asset_inventory_Details.Add(rule_tb);
+                    
+                 
+                 }
+                 db.SaveChanges();         
+                            
+            }
+             if (searchtype == SystemConfig.nameFlag_2_ZCLB)
+             {
+
+
+                 IEnumerable<tb_Asset> q = from a in db.tb_Asset
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID
+                                           join d in db.tb_dataDict_para on a.measurement equals d.ID
+                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID
+                                           join p in db.tb_department on a.department_Using equals p.ID
+                                           join u in db.tb_user on a.Owener equals u.ID
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID
+                                           join sp in db.tb_supplier on a.supplierID equals sp.ID
+                                           where t.ID.ToString() == searchmethod
+                                           select a;
+                 foreach (tb_Asset asset in q)
+                 {
+                     var rule_tb = new tb_Asset_inventory_Details
+                     {
+                         serial_number = "",
+                         state = "盘亏",
+                         amountOfSys = asset.amount,
+                         amountOfInv = 0,
+                         difference = 0 - asset.amount,
+                         serial_number_Asset = asset.serial_number
+
+                     };
+                     db.tb_Asset_inventory_Details.Add(rule_tb);
+                     db.SaveChanges();
+
+                 }
+
+
+             }
+             if (searchtype == SystemConfig.nameFlag_2_ZCZT)
+             {
+
+
+                 IEnumerable<tb_Asset> q = from a in db.tb_Asset
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID
+                                           join d in db.tb_dataDict_para on a.measurement equals d.ID
+                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID
+                                           join p in db.tb_department on a.department_Using equals p.ID
+                                           join u in db.tb_user on a.Owener equals u.ID
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID
+                                           join sp in db.tb_supplier on a.supplierID equals sp.ID
+                                           where e.ID.ToString() == searchmethod
+                                           select a;
+                 foreach (tb_Asset asset in q)
+                 {
+                     var rule_tb = new tb_Asset_inventory_Details
+                     {
+                         serial_number = "",
+                         state = "盘亏",
+                         amountOfSys = asset.amount,
+                         amountOfInv = 0,
+                         difference = 0 - asset.amount,
+                         serial_number_Asset = asset.serial_number
+
+                     };
+                     db.tb_Asset_inventory_Details.Add(rule_tb);
+                     db.SaveChanges();
+
+                 }
+
+
+             }
+
+             return "";
+            
+         
+         }
+       [HttpPost]
+        public string Get_Serial_Deatails()
+         {
+             string json = "";
+
+             json = Session["Deatails_Searial"].ToString();
+            return json;
+        }
         [HttpPost]
         public JsonResult Load_Asset(string JSdata)
         {
