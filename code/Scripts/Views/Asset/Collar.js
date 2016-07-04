@@ -164,6 +164,10 @@ function loadPageTool(datagrid, disabledFlag) {
                 {
                     return;
                 }
+                if (rows[0].state != "草稿" || rows[0].state != "退回") {
+                    MessShow("只有草稿/退回单据才能提交!")
+                    return;
+                }
                 var id = rows[0].ID;
                 $.ajax({
                     url: "/Collar/RightToEdit",
@@ -246,7 +250,25 @@ function loadPageTool(datagrid, disabledFlag) {
                           return;
                       }
                       id_ = rows[0].ID;
-                      updateRecordState(datagrid,2, id_);
+
+                      $.ajax({
+                          url: "/Collar/RightToEdit",
+                          type: 'POST',
+                          data: {
+                              "id": id_
+                          },
+                          beforeSend: ajaxLoading,
+                          success: function (data) {
+                              ajaxLoadEnd();
+                              if (data > 0) {
+                                  updateRecordState(datagrid, 2, id_);
+                              } else {
+                                  $.messager.alert('警告', "暂无该单据的提交权限！", 'warning');
+                                  return;
+                              }
+                          }
+                      });
+
                       //$('#' + datagrid).datagrid('reload');
                   } else {
                       MessShow("请勿多选!")

@@ -46,22 +46,7 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\packages\NPOI 2.2.1 binary package\Release\Net40\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NPOI">
-      <HintPath>..\packages\NPOI 2.2.1 binary package\Release\Net40\NPOI.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OOXML">
-      <HintPath>..\packages\NPOI 2.2.1 binary package\Release\Net40\NPOI.OOXML.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OpenXml4Net">
-      <HintPath>..\packages\NPOI 2.2.1 binary package\Release\Net40\NPOI.OpenXml4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="NPOI.OpenXmlFormats">
-      <HintPath>..\packages\NPOI 2.2.1 binary package\Release\Net40\NPOI.OpenXmlFormats.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -368,6 +353,8 @@
     <Content Include="CODE_ASSI\jquery-ui-bootstrap-jquery-ui-bootstrap-57bfc05\third-party\wijmo\jquery.wijmo-open.1.5.0.css" />
     <Content Include="CODE_ASSI\jquery-ui-bootstrap-jquery-ui-bootstrap-57bfc05\third-party\wijmo\jquery.wijmo-open.1.5.0.min.js" />
     <Content Include="CODE_ASSI\SQL_HLEP\InsertAssetMuti.sql" />
+    <Content Include="CODE_ASSI\treegrid-dnd\treegrid-dnd.html" />
+    <Content Include="CODE_ASSI\treegrid-dnd\treegrid-dnd.js" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\font-awesome.min.css" />
@@ -1203,7 +1190,9 @@
     <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\mini_edit.png" />
     <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\mini_refresh.png" />
     <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\no.png" />
+    <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\numbered-list.png" />
     <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\ok.png" />
+    <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\open-file.png" />
     <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\pencil.png" />
     <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\print.png" />
     <Content Include="LIB\jquery-easyui-1.3.2\themes\icons\redo.png" />
@@ -1275,8 +1264,7 @@
     <Content Include="LIB\UIlib\js\easyloader.js" />
     <Content Include="LIB\UIlib\js\jquery-1.7.2.min.js" />
     <Content Include="LIB\UIlib\js\jquery.easyui.min.js" />
-    <Content Include="LIB\UIlib\js\LoadMenu.js" />
-    <Content Include="LIB\UIlib\js\LoadPagejhh.js" />
+    <Content Include="LIB\UIlib\js\LoadPage.js" />
     <Content Include="LIB\UIlib\js\locale\easyui-lang-af.js" />
     <Content Include="LIB\UIlib\js\locale\easyui-lang-bg.js" />
     <Content Include="LIB\UIlib\js\locale\easyui-lang-ca.js" />
@@ -1843,6 +1831,7 @@
     <Content Include="Content\jsonData\tree_data1.json" />
     <Content Include="ashx\TreeHandler.ashx" />
     <Content Include="fonts\lrtk\fontawesome-webfont.woff" />
+    <Content Include="ClassDiagram1.cd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\ExcelJS\export.js" />
     <Content Include="Scripts\html5shiv.min.js" />
@@ -1880,6 +1869,11 @@
     <Content Include="Scripts\tabs\bootStrap_addTable.js" />
     <Content Include="Scripts\tabs\easyUI_addTabs.js" />
     <Content Include="Scripts\tabs\tabs.js" />
+    <Content Include="Scripts\Views\Asset\Collar_Review.js" />
+    <Content Include="Scripts\Views\Asset\Collar_edit.js" />
+    <Content Include="Scripts\Views\common\common.js" />
+    <Content Include="Scripts\Views\Dict\edit_supplier.js" />
+    <Content Include="Views\Dict\edit_supplier.cshtml" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\UI\easyui-lang-zh_CN.js" />
     <Content Include="Scripts\UI\js_Accounting.js" />
@@ -1891,30 +1885,49 @@
     <Content Include="Scripts\Views\Asset\Collar_Detail.js" />
     <Content Include="Scripts\Views\Asset\Collar_SelectAsset.js" />
     <Content Include="Scripts\Views\Commom.js" />
-    <Content Include="Scripts\Views\Depreciation\De.js" />
-    <Content Include="Scripts\Views\Depreciation\Inventory.js" />
-    <Content Include="Scripts\Views\Depreciation\New_Detail.js" />
+    <Content Include="Scripts\Views\Dict\add_AssetType.js" />
+    <Content Include="Scripts\Views\Dict\add_customAttr.js" />
+    <Content Include="Scripts\Views\Dict\add_supplier.js" />
+    <Content Include="Scripts\Views\Dict\edit_dataDictPara.js" />
+    <Content Include="Scripts\Views\Dict\add_dataDictPara.js" />
+    <Content Include="Scripts\Views\Dict\edit_dataDict.js" />
+    <Content Include="Scripts\Views\Dict\add_dataDict.js" />
+    <Content Include="Scripts\Views\Dict\add_department.js" />
+    <Content Include="Scripts\Views\Dict\Asset_Type.js" />
+    <Content Include="Scripts\Views\Dict\customAttributes.js" />
+    <Content Include="Scripts\Views\Dict\dataDict.js" />
+    <Content Include="Scripts\Views\Dict\departmentManager.js" />
+    <Content Include="Scripts\Views\Dict\edit_AssetType.js" />
+    <Content Include="Scripts\Views\Dict\edit_department.js" />
+    <Content Include="Scripts\Views\Dict\supplierManager.js" />
     <Content Include="Scripts\Views\User\Index.js" />
-    <Content Include="Scripts\Views\User\LoadMenubyRoless.js" />
     <Content Include="Scripts\Views\User\Login.js" />
     <Content Include="Views\Shared\Navigation.ascx" />
     <Content Include="Views\Asset\AddAsset.cshtml" />
+    <Content Include="Views\Rule\Index.cshtml" />
     <Content Include="Views\SysSetting\AddRole.cshtml" />
     <Content Include="Views\SysSetting\loadSearchTreeByRole.cshtml" />
     <Content Include="Views\Asset\EditAsset.cshtml" />
-    <Content Include="Views\Asset\AddCollar.cshtml" />
-    <Content Include="Views\Asset\Accounting_RUN_V20160512143839.cshtml" />
-    <Content Include="Views\Asset\AddAsset_RUN_V2016051144051.cshtml" />
-    <Content Include="Views\Asset\collar_RUN_V2016051144051.cshtml" />
-    <Content Include="Views\Asset\Collar_SelectAsset.cshtml" />
-    <Content Include="Views\Asset\DetailCollar.cshtml" />
-    <Content Include="Views\SysSetting\AddRight.cshtml" />
-    <Content Include="Views\SysSetting\RightManage.cshtml" />
-    <Content Include="Views\SysSetting\Rule.cshtml" />
-    <Content Include="Views\Dict\AddStaff.cshtml" />
-    <Content Include="Views\Dict\DispalyStaff.cshtml" />
-    <Content Include="Views\depreciation\Depreciation.cshtml" />
+    <Content Include="Views\Collar\add_collar.cshtml" />
+    <Content Include="Views\Collar\collar_selectAsset.cshtml" />
+    <Content Include="Views\Collar\Detail_collar.cshtml" />
+    <Content Include="Views\Dict\add_AssetType.cshtml" />
+    <Content Include="Views\Dict\edit_AssetType.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Dict\Error.cshtml" />
+    <Content Include="Views\Dict\departmentManager.cshtml" />
+    <Content Include="Views\Dict\add_department.cshtml" />
+    <Content Include="Views\Dict\edit_department.cshtml" />
     <Content Include="Views\Dict\customAttributes.cshtml" />
+    <Content Include="Views\Dict\add_customAttr.cshtml" />
+    <Content Include="Views\Dict\add_dataDictPara.cshtml" />
+    <Content Include="Views\Dict\add_dataDict.cshtml" />
+    <Content Include="Views\Dict\edit_dataDict.cshtml" />
+    <Content Include="Views\Dict\edit_dataDictPara.cshtml" />
+    <Content Include="Views\Dict\add_supplier.cshtml" />
+    <Content Include="Views\Collar\edit_Collar.cshtml" />
+    <Content Include="Views\Collar\Error.cshtml" />
+    <Content Include="Views\Collar\review_collar.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -1927,13 +1940,14 @@
     <Compile Include="ashx\TreeHandler.ashx.cs">
       <DependentUpon>TreeHandler.ashx</DependentUpon>
     </Compile>
+    <Compile Include="ControllerSQLs\DictActionSQL.cs" />
     <Compile Include="ControllerSQLs\UserActionSQL.cs" />
+    <Compile Include="Controllers\AllocationController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
-    <Compile Include="Controllers\AssetDeatailsController.cs" />
+    <Compile Include="Controllers\CollarController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
-    <Compile Include="Controllers\DepreciationController.cs" />
     <Compile Include="Controllers\DictController.cs" />
-    <Compile Include="Controllers\FAMIS.Inforamtion_Count\SttaffController.cs" />
+    <Compile Include="Controllers\FAMIS.Inforamtion_Count\ZC_ViewController.cs" />
     <Compile Include="Controllers\FAMIS.System_setup\Asset_Depart.cs" />
     <Compile Include="Controllers\FAMIS.System_setup\ClickCountModel.cs" />
     <Compile Include="Controllers\FAMIS.System_setup\RuleController.cs" />
@@ -1958,10 +1972,14 @@
     <Compile Include="DTO\dto_collar_detail.cs" />
     <Compile Include="DTO\dto_collar_edit.cs" />
     <Compile Include="DTO\dto_null.cs" />
-    <Compile Include="DTO\dto_SearchCondition.cs" />
     <Compile Include="DTO\dto_state_List.cs" />
-    <Compile Include="DTO\Json_AssetType_add.cs" />
     <Compile Include="DTO\Json_collar.cs" />
+    <Compile Include="DTO\Json_collar_review.cs" />
+    <Compile Include="DTO\Json_customAttr.cs" />
+    <Compile Include="DTO\Json_dataDict.cs" />
+    <Compile Include="DTO\Json_dataDict_Para.cs" />
+    <Compile Include="DTO\Json_department.cs" />
+    <Compile Include="DTO\Json_AssetType_add.cs" />
     <Compile Include="DTO\Json_collar_add.cs" />
     <Compile Include="DTO\dto_IDList.cs" />
     <Compile Include="DTO\dto_SC_Allocation.cs" />
@@ -1977,16 +1995,10 @@
     <Compile Include="DTO\dto_rule_Generate.cs" />
     <Compile Include="DTO\dto_Staff.cs" />
     <Compile Include="DTO\dto_supplier.cs" />
-    <Compile Include="DTO\Json_collar_review.cs" />
-    <Compile Include="DTO\Json_customAttr.cs" />
-    <Compile Include="DTO\Json_dataDict.cs" />
-    <Compile Include="DTO\Json_dataDict_Para.cs" />
-    <Compile Include="DTO\Json_department.cs" />
     <Compile Include="DTO\Json_supplier.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper_Class\Excel_Helper.cs" />
     <Compile Include="Helper_Class\Serial.cs" />
     <Compile Include="MidPages\export.aspx.cs">
       <DependentUpon>export.aspx</DependentUpon>
@@ -1995,7 +2007,6 @@
     <Compile Include="MidPages\export.aspx.designer.cs">
       <DependentUpon>export.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\FAMISDBTBModels.cs" />
     <Compile Include="Models\sysdiagram.cs" />
     <Compile Include="Models\tb_Address_AssetStore.cs" />
@@ -2003,10 +2014,8 @@
     <Compile Include="Models\tb_AssetType.cs" />
     <Compile Include="Models\tb_Asset_allocation.cs" />
     <Compile Include="Models\tb_Asset_allocation_detail.cs" />
-    <Compile Include="Models\tb_Asset_colla.cs" />
     <Compile Include="Models\tb_Asset_collar.cs" />
     <Compile Include="Models\tb_Asset_collar_detail.cs" />
-    <Compile Include="Models\tb_Asset_colla_detail.cs" />
     <Compile Include="Models\tb_Asset_inventory.cs" />
     <Compile Include="Models\tb_Asset_inventory_Details.cs" />
     <Compile Include="Models\tb_Asset_Reduction.cs" />
@@ -2022,32 +2031,35 @@
     <Compile Include="Models\tb_role_authorization.cs" />
     <Compile Include="Models\tb_Rule_Generate.cs" />
     <Compile Include="Models\tb_staff.cs" />
-    <Compile Include="Models\tb_State.cs" />
     <Compile Include="Models\tb_State_List.cs" />
     <Compile Include="Models\tb_supplier.cs" />
     <Compile Include="Models\tb_user.cs" />
-    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewCommon\TreeCommon.cs" />
     <Compile Include="ViewCommon\TreeViewCommon.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\web.config">
-      <SubType>Designer</SubType>
-    </Content>
+    <Content Include="Views\web.config" />
     <Content Include="packages.config" />
     <Content Include="Views\Acount\Login.cshtml" />
     <Content Include="Views\Acount\Index.cshtml" />
+    <Content Include="Views\Assets\Create.cshtml" />
+    <Content Include="Views\Assets\Delete.cshtml" />
+    <Content Include="Views\Assets\Details.cshtml" />
+    <Content Include="Views\Assets\Edit.cshtml" />
+    <Content Include="Views\Assets\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Asset\Accounting.cshtml" />
-    <Content Include="Views\Asset\allocation.cshtml" />
-    <Content Include="Views\Asset\collar.cshtml" />
+    <Content Include="Views\Allocation\Allocation.cshtml" />
+    <Content Include="Views\Collar\collar.cshtml" />
     <Content Include="Views\Asset\reduction.cshtml" />
     <Content Include="Views\Dict\Asset_type.cshtml" />
     <Content Include="Views\Dict\dataDict.cshtml" />
     <Content Include="Views\Dict\staff.cshtml" />
     <Content Include="Views\Dict\supplier.cshtml" />
     <Content Include="Views\Home\Welcome.cshtml" />
+    <Content Include="Views\Manage\SuperAdministrator.cshtml" />
+    <Content Include="Views\Manage\SuperAdministrator_Test.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_Layout_dt.cshtml" />
@@ -2068,8 +2080,6 @@
     <Content Include="Views\Home\Test.cshtml" />
     <Content Include="Views\ZC_View\ZC_View.cshtml" />
     <Content Include="Views\ZC_View\AddRight.cshtml" />
-    <Content Include="Views\Verify\New_Deatails.cshtml" />
-    <Content Include="Views\Verify\Deatails_View.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2082,7 +2092,6 @@
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
     <Folder Include="ViewModel\" />
-    <Folder Include="Views\AssetDeatails\" />
     <Folder Include="Views\Common\" />
     <Folder Include="Views\Customer\" />
   </ItemGroup>
@@ -2113,7 +2122,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" />
+      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
