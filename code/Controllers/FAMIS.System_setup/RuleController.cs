@@ -447,6 +447,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 p.true_Name = tname;
                 p.time_LastLogined = DateTime.Now;
                 p.roleID_User =rid;
+                p.ID_DepartMent = did;
             }
             mydb.SaveChanges();
 
