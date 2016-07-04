@@ -74,7 +74,8 @@ function LoadInitData_Detail() {
     }
 
     $('#tableList_collar').datagrid({
-        url: '/Collar/LoadAsset_Collor?searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
+        url: '/Common/LoadAsset_ByState?stateID=2&searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
+        //url: '/Common/LoadAsset_Collor?searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',

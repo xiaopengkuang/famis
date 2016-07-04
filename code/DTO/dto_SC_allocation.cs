@@ -5,7 +5,7 @@ using System.Web;
 
 namespace FAMIS.DTO
 {
-    public class dto_SC_Allocation
+    public class dto_SC_List
     {
         public String serialNumber{get;set;}
 

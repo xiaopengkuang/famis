@@ -470,28 +470,35 @@ namespace FAMIS.DataConversion
             return serials;
         }
 
-        public int? getIDBySerialNum(String serialNum)
+        /// <summary>
+        /// 根据
+        /// </summary>
+        /// <param name="serialNum"></param>
+        /// <returns></returns>
+      
+
+
+     
+
+
+
+        /// <summary>
+        /// 根据JsonID 获得名称Name
+        /// </summary>
+        /// <param name="id_ast"></param>
+        /// <returns></returns>
+        public String getAssetStateNameByJsonID(int? id_ast)
         {
-            if (serialNum == null)
-            {
-                return null;
+            String result = null;
+            switch (id_ast) {
+                case SystemConfig.state_asset_bad_ID: result = SystemConfig.state_asset_bad; break;
+                case SystemConfig.state_asset_free_ID: result = SystemConfig.state_asset_free; break;
+                case SystemConfig.state_asset_loan_ID: result = SystemConfig.state_asset_loan; break;
+                case SystemConfig.state_asset_using_ID: result = SystemConfig.state_asset_using; break;
+                default: ; break;
             }
-            var data = from p in DB_C.tb_Asset_collar
-                       where p.serial_number == serialNum
-                       select p;
-            if (data.Count() != 1)
-            {
-                return null;
-            }
-
-            foreach (var item in data)
-            {
-                return item.ID;
-            }
-
-            return null;
+            return result;
         }
-
         
 
 
