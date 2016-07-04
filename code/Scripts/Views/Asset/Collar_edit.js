@@ -130,7 +130,7 @@ function LoadInitData_datagrid() {
     }
 
     $('#collar_DG_add').datagrid({
-        url: '/Collar/Load_SelectedAsset?selectedIDs=' + _list,
+        url: '/Common/Load_SelectedAsset?selectedIDs=' + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
