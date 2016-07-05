@@ -34,7 +34,5 @@ namespace FAMIS.Models
 
         [StringLength(20)]
         public string operatorname { get; set; }
-
-
     }
 }

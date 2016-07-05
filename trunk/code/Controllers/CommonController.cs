@@ -357,8 +357,6 @@ namespace FAMIS.Controllers
                     default: ; break;
                 }
             }
-
-
             return json;
         }
 

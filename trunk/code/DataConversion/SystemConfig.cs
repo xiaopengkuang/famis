@@ -60,16 +60,17 @@ namespace FAMIS.DataConversion
         public static String[] treeType_Accounting_Menu =new String[] { nameFlag_2_JLDW, nameFlag_2_ZJFS_JIA, nameFlag_2_JSFS, nameFlag_2_ZCZT, nameFlag_2_CFDD, nameFlag_2_ZJFS_JIU, nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_GYS };
         public static String[] treeType_collarSearch_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD };
         public static String[] treeType_allocation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD,nameFlag_2_SYRY };
-
+        public static String[] treeType_repair_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD, nameFlag_2_SYRY };
         public const String treeType_Accounting = "Accounting";
         public const String treeType_collarSearch = "collarSearch";
-        public const String treeType_allocationSearch = "allocationSearch"; 
-
+        public const String treeType_allocationSearch = "allocationSearch";
+        public const String treeType_repairSearch = "repairSearch";  
 
         public static String state_asset_free = "闲置";
         public static String state_asset_using = "在用";
         public static String state_asset_bad = "报废";
         public static String state_asset_loan = "借出";
+        public static String state_asset_fix = "维修";
 
 
 
@@ -77,6 +78,7 @@ namespace FAMIS.DataConversion
         public const int state_asset_using_ID = 2;
         public const int state_asset_bad_ID = 3;
         public const int state_asset_loan_ID = 4;
+        public const int state_asset_fix_ID = 5;
 
         public const int state_List_CG_jsonID = 1;
         public const int state_List_DSH_jsonID = 2;

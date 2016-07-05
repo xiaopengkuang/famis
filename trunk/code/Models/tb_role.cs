@@ -17,8 +17,7 @@ namespace FAMIS.Models
         public string description { get; set; }
 
         public bool? flag { get; set; }
-        public bool? isSuperUser { get; set; }
 
-        
+        public bool? isSuperUser { get; set; }
     }
 }

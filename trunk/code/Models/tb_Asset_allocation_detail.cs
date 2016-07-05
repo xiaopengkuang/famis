@@ -12,8 +12,8 @@ namespace FAMIS.Models
 
         public int? ID_allocation { get; set; }
 
-        public int? ID_asset  { get; set; }
+        public int? ID_asset { get; set; }
 
-        public bool flag { get; set; }
+        public bool? flag { get; set; }
     }
 }
