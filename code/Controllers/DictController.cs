@@ -698,8 +698,6 @@ namespace FAMIS.Controllers
              else {
                  return "";
              }
-
-            
          }
 
          public List<dto_TreeNode> getTreeSearchNodes(int? roleID,String treeType)
@@ -710,7 +708,6 @@ namespace FAMIS.Controllers
                         where p.flag_Search == true
                         select p;
              List<dto_TreeNode> nodesAll = new List<dto_TreeNode>();
-
 
              foreach (var item in idList)
              {
@@ -726,6 +723,11 @@ namespace FAMIS.Controllers
                  else if (treeType == SystemConfig.treeType_allocationSearch)
                  {
                      if (SystemConfig.treeType_allocation_Search_Menu.Contains(item.name_flag)) { }
+                     else { continue; }
+                 }
+                 else if (treeType == SystemConfig.treeType_repairSearch)
+                 {
+                     if (SystemConfig.treeType_repair_Search_Menu.Contains(item.name_flag)) { }
                      else { continue; }
                  }
                  else

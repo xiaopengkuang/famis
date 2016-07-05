@@ -73,21 +73,21 @@ namespace FAMIS.Controllers
         return rule_Json;
         
         }
-        [HttpPost]
-        public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
-        {
+        //[HttpPost]
+        //public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
+        //{
 
-            if (ModelState.IsValid)
-            {
-                //db.tb_staff.Add(staff);
-                db.SaveChanges();
+        //    if (ModelState.IsValid)
+        //    {
+        //        //db.tb_staff.Add(staff);
+        //        db.SaveChanges();
 
-            }
+        //    }
 
-            return View();
+        //    return View();
 
 
-        }
+        //}
 
        
         public ActionResult AddStaff()//([Bind(Include = "ID,name,description")] tb_role role)

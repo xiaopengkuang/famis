@@ -46,7 +46,7 @@ namespace FAMIS.Models
         public int? Method_decrease { get; set; }
 
         public int? Method_add { get; set; }
-        public int? Owener{ get; set; }
+
         public int? Net_residual_rate { get; set; }
 
         public double? depreciation_Month { get; set; }
@@ -60,5 +60,7 @@ namespace FAMIS.Models
         public DateTime? Time_add { get; set; }
 
         public double? Total_price { get; set; }
+
+        public int? Owener { get; set; }
     }
 }

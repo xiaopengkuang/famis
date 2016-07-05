@@ -115,7 +115,6 @@ namespace FAMIS.DataConversion
 
         public int? getUSERID()
         {
-            //return 1;
             //TODO:
 
             HttpSessionState session = HttpContext.Current.Session;
@@ -136,7 +135,6 @@ namespace FAMIS.DataConversion
         public int? getRoleID()
         {
 
-            //return 1;
             //TODO:
             
             HttpSessionState session = HttpContext.Current.Session;
@@ -446,6 +444,7 @@ namespace FAMIS.DataConversion
                 case SystemConfig.state_asset_free_ID: result = SystemConfig.state_asset_free; break;
                 case SystemConfig.state_asset_loan_ID: result = SystemConfig.state_asset_loan; break;
                 case SystemConfig.state_asset_using_ID: result = SystemConfig.state_asset_using; break;
+                case SystemConfig.state_asset_fix_ID: result = SystemConfig.state_asset_fix; break;
                 default: ; break;
             }
             return result;

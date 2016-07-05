@@ -575,6 +575,77 @@ namespace FAMIS.Controllers
             return insertNum;
         }
 
+        /// <summary>
+        /// 根据单个ID获取详细信息学
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult getAssetByID(int? id)
+        {
+            var data_ORG = from p in DB_C.tb_Asset
+                           where p.flag == true
+                           where p.ID==id
+                           select p;
+            if (data_ORG.Count() < 1)
+            {
+                return null;
+            }
+            var data = from p in data_ORG
+                       join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
+                       from AT in temp_AT.DefaultIfEmpty()
+                       join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
+                       from MM in temp_MM.DefaultIfEmpty()
+                       join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID_Department into temp_DP
+                       from DP in temp_DP.DefaultIfEmpty()
+                       join tb_DZ in DB_C.tb_dataDict_para on p.addressCF equals tb_DZ.ID into temp_DZ
+                       from DZ in temp_DZ.DefaultIfEmpty()
+                       join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
+                       from ST in temp_ST.DefaultIfEmpty()
+                       join tb_SP in DB_C.tb_supplier on p.supplierID equals tb_SP.ID into temp_SP
+                       from SP in temp_SP.DefaultIfEmpty()
+                       join tb_MDP in DB_C.tb_dataDict_para on p.Method_depreciation equals tb_MDP.ID into temp_MDP
+                       from MDP in temp_MDP.DefaultIfEmpty()
+                       join tb_MDC in DB_C.tb_dataDict_para on p.Method_decrease equals tb_MDC.ID into temp_MDC
+                       from MDC in temp_MDC.DefaultIfEmpty()
+                       join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
+                       from MA in temp_MA.DefaultIfEmpty()
+                       orderby p.Time_add descending
+                       select new dto_Asset_Detail
+                       {
+                           addressCF = DZ.name_para,
+                           amount = p.amount,
+                           department_Using = DP.name_Department,
+                           depreciation_tatol = p.depreciation_tatol,
+                           depreciation_Month = p.depreciation_Month,
+                           ID = p.ID,
+                           measurement = MM.name_para,
+                           Method_add = MA.name_para,
+                           Method_depreciation = MDP.name_para,
+                           Method_decrease = MDC.name_para,
+                           name_Asset = p.name_Asset,
+                           Net_residual_rate = p.Net_residual_rate,
+                           Net_value = p.Net_value,
+                           Time_Operated = p.Time_add,
+                           serial_number = p.serial_number,
+                           specification = p.specification,
+                           state_asset = ST.name_para,
+                           supplierID = SP.name_supplier,
+                           Time_Purchase = p.Time_Purchase,
+                           type_Asset = AT.name_Asset_Type,
+                           unit_price = p.unit_price,
+                           value = p.value,
+                           YearService_month = p.YearService_month
+                       };
+            if (data.Count() < 1)
+            {
+                return null;
+            }
+            dto_Asset_Detail result = data.First();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
         //===============================================================Action Function Area===================================================================================//
 
 

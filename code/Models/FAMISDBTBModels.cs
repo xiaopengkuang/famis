@@ -24,6 +24,7 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset_inventory_Details> tb_Asset_inventory_Details { get; set; }
         public virtual DbSet<tb_Asset_Reduction> tb_Asset_Reduction { get; set; }
         public virtual DbSet<tb_Asset_Reduction_detail> tb_Asset_Reduction_detail { get; set; }
+        public virtual DbSet<tb_Asset_Repair> tb_Asset_Repair { get; set; }
         public virtual DbSet<tb_AssetType> tb_AssetType { get; set; }
         public virtual DbSet<tb_dataDict> tb_dataDict { get; set; }
         public virtual DbSet<tb_dataDict_para> tb_dataDict_para { get; set; }
@@ -78,7 +79,15 @@ namespace FAMIS.Models
             modelBuilder.Entity<tb_Asset_allocation>()
                 .Property(e => e.ps)
                 .IsUnicode(false);
-           
+
+            modelBuilder.Entity<tb_Asset_allocation>()
+                .Property(e => e.info_review)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_allocation>()
+                .Property(e => e.reason)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset_collar>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
@@ -89,6 +98,10 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_collar>()
                 .Property(e => e.ps)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_collar>()
+                .Property(e => e.info_review)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_inventory>()
@@ -142,6 +155,20 @@ namespace FAMIS.Models
             modelBuilder.Entity<tb_Asset_Reduction_detail>()
                 .Property(e => e.serial_number_Asset)
                 .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Repair>()
+                .Property(e => e.serialNumber)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Repair>()
+                .Property(e => e.reason_ToRepair)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Repair>()
+                .Property(e => e.note_repair)
+                .IsUnicode(false);
+
+           
 
             modelBuilder.Entity<tb_AssetType>()
                 .Property(e => e.name_Asset_Type)

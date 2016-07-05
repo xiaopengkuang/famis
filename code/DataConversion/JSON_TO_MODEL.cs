@@ -137,5 +137,22 @@ namespace FAMIS.DataConversion
         }
 
 
+
+        public tb_Asset_Repair ConverJsonToTable(Json_repair_add data)
+        {
+            tb_Asset_Repair repair = new tb_Asset_Repair();
+            repair.CostToRepair = data.Cost_Repair;
+            repair.date_ToRepair = data.dateToP;
+            repair.date_ToReturn = data.dateToR;
+            repair.ID_Asset = data.id_asset_repair;
+            repair.Name_equipment = data.name_Equipment;
+            repair.note_repair = data.note_add;
+            repair.reason_ToRepair = data.reason_add;
+            repair.supplierID_Torepair = data.supplier_repair;
+            repair.userID_applying = data.UAP_add;
+            repair.userID_authorize = data.UAT_add;
+            return repair;
+        }
+
     }
 }

@@ -183,15 +183,15 @@ function load_GYS_add() {
         { field: 'address', title: '地址', width: 99 }
         ]],
         onClickRow: function (index, row) {
-            search = false;
+            //search = false;
             $('#GYS_add').combogrid('hidePanel');
             $('#GYS_add').combogrid('setValue', row.ID);
             $('#GYS_add').combogrid('setText', row.name_supplier);
             $("#LXR_add").val(row.linkman);
             $("#GYSDD_add").val(row.address);
-            setTimeout(function () {
-                search = true;
-            }, 1000);
+            //setTimeout(function () {
+            //    search = true;
+            //}, 1000);
 
         }
     });

@@ -1894,6 +1894,9 @@
     <Content Include="Scripts\Views\Collar\Collar_edit.js" />
     <Content Include="Scripts\Views\common\common.js" />
     <Content Include="Scripts\Views\Dict\edit_supplier.js" />
+    <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
+    <Content Include="Scripts\Views\Repair\Repair.js" />
+    <Content Include="Scripts\Views\Repair\Repair_add.js" />
     <Content Include="Views\Dict\edit_supplier.cshtml" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\UI\easyui-lang-zh_CN.js" />
@@ -1956,6 +1959,8 @@
     <Content Include="Views\Allocation\Allocation_edit.cshtml" />
     <Content Include="Views\Allocation\Allocation_detail.cshtml" />
     <Content Include="Views\Allocation\Allocation_review.cshtml" />
+    <Content Include="Views\Repair\Repair.cshtml" />
+    <Content Include="Views\Repair\Repair_SelectingAsset.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -1982,6 +1987,7 @@
     <Compile Include="Controllers\FAMIS.System_setup\TestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RepairController.cs" />
     <Compile Include="Controllers\SysSettingController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VerifyController.cs" />
@@ -2027,6 +2033,7 @@
     <Compile Include="DTO\dto_rule_Generate.cs" />
     <Compile Include="DTO\dto_Staff.cs" />
     <Compile Include="DTO\dto_supplier.cs" />
+    <Compile Include="DTO\Json_repair_add.cs" />
     <Compile Include="DTO\Json_supplier.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -2039,9 +2046,9 @@
     <Compile Include="MidPages\export.aspx.designer.cs">
       <DependentUpon>export.aspx</DependentUpon>
     </Compile>
+    <Compile Include="DTO\Json_repair.cs" />
     <Compile Include="Models\FAMISDBTBModels.cs" />
     <Compile Include="Models\sysdiagram.cs" />
-    <Compile Include="Models\tb_Address_AssetStore.cs" />
     <Compile Include="Models\tb_Asset.cs" />
     <Compile Include="Models\tb_AssetType.cs" />
     <Compile Include="Models\tb_Asset_allocation.cs" />
@@ -2052,6 +2059,7 @@
     <Compile Include="Models\tb_Asset_inventory_Details.cs" />
     <Compile Include="Models\tb_Asset_Reduction.cs" />
     <Compile Include="Models\tb_Asset_Reduction_detail.cs" />
+    <Compile Include="Models\tb_Asset_Repair.cs" />
     <Compile Include="Models\tb_customAttribute.cs" />
     <Compile Include="Models\tb_customAttribute_Type.cs" />
     <Compile Include="Models\tb_dataDict.cs" />
@@ -2062,7 +2070,6 @@
     <Compile Include="Models\tb_role.cs" />
     <Compile Include="Models\tb_role_authorization.cs" />
     <Compile Include="Models\tb_Rule_Generate.cs" />
-    <Compile Include="Models\tb_staff.cs" />
     <Compile Include="Models\tb_State_List.cs" />
     <Compile Include="Models\tb_supplier.cs" />
     <Compile Include="Models\tb_user.cs" />
@@ -2112,6 +2119,7 @@
     <Content Include="Views\Home\Test.cshtml" />
     <Content Include="Views\ZC_View\ZC_View.cshtml" />
     <Content Include="Views\ZC_View\AddRight.cshtml" />
+    <Content Include="Views\Repair\Repair_add.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
