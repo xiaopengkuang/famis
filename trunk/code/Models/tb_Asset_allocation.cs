@@ -39,5 +39,7 @@ namespace FAMIS.Models
         public string info_review { get; set; }
 
         public int? userID_reView { get; set; }
+
+        public int? user_allocation { get; set; }
     }
 }

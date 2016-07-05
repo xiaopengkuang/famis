@@ -15,7 +15,7 @@
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="../../Scripts/Views/Asset/Collar_Detail.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/Collar/Collar_Detail.js"></script>
 </head>
 <body onload=" LoadInitData_datagrid('@ViewBag.id', 'datagrid')">
     <div class="easyui-panel"  fit="true">
@@ -38,7 +38,10 @@
                 <td>领用部门:</td>
                 <td>
                     <input class="easyui-textbox" value="@ViewBag.department" readonly="readonly" id="LYBM_add" name="LYBM_add" style="width: 200px;" />
-
+                </td>
+                <td>领用人:</td>
+                <td>
+                    <input class="easyui-textbox" value="@ViewBag.user_collar" readonly="readonly" id="SYRY_add" name="SYRY_add" style="width: 200px;" />
                 </td>
                 <td>存放地点:</td>
                 <td>

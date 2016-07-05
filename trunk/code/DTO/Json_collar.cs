@@ -16,6 +16,8 @@ namespace FAMIS.DTO
         public String state { get; set; }
         public DateTime? date_Operated { get; set; }
 
+        public String user_collar { get; set; }
+
         public String reason { get; set; }
 
         public String ps { get; set; }

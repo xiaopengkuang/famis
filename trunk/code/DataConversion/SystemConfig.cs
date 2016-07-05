@@ -18,6 +18,7 @@ namespace FAMIS.DataConversion
         public  const String treeTB_deparment = "tb_department";
         public  const String treeTB_supplier = "tb_supplier";
         public  const String treeTB_AssetType = "tb_AssetType";
+        public const String treeTB_user = "tb_user";
 
         public const int tableType_detail = 1;
         public const int tableType_summary = 0;
@@ -58,9 +59,11 @@ namespace FAMIS.DataConversion
 
         public static String[] treeType_Accounting_Menu =new String[] { nameFlag_2_JLDW, nameFlag_2_ZJFS_JIA, nameFlag_2_JSFS, nameFlag_2_ZCZT, nameFlag_2_CFDD, nameFlag_2_ZJFS_JIU, nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_GYS };
         public static String[] treeType_collarSearch_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD };
+        public static String[] treeType_allocation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD,nameFlag_2_SYRY };
 
         public const String treeType_Accounting = "Accounting";
         public const String treeType_collarSearch = "collarSearch";
+        public const String treeType_allocationSearch = "allocationSearch"; 
 
 
         public static String state_asset_free = "闲置";

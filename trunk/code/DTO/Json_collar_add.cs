@@ -15,6 +15,7 @@ namespace FAMIS.DTO
         public int? address_LY { get; set; }
         public String ps_LY { get; set; }
         public int? statelist { get; set; }
+        public int? user_collar { get; set; } 
         public String assetList { get; set; }
 
     }
