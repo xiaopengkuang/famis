@@ -124,6 +124,8 @@ namespace FAMIS.Controllers
                        from AD in temp_AD.DefaultIfEmpty()
                        join tb_US in DB_C.tb_user on p._operator equals tb_US.ID into temp_US
                        from US in temp_US.DefaultIfEmpty()
+                      join tb_USC in DB_C.tb_user on p.user_allocation equals tb_USC.ID into temp_USC
+                      from USC in temp_USC.DefaultIfEmpty()
                        orderby p.date_Operated descending
                        select new Json_allocation
                        {
@@ -133,6 +135,7 @@ namespace FAMIS.Controllers
                           date_allocation = p.date,
                           department = DP.name_Department,
                           operatorUser = US.name_User,
+                          user_allocation=USC.true_Name,
                           serialNumber = p.serial_number,
                           state = ST.Name
                        };
@@ -242,6 +245,8 @@ namespace FAMIS.Controllers
                        from AD in temp_AD.DefaultIfEmpty()
                        join tb_DP in DB_C.tb_department on p.department_allocation equals tb_DP.ID_Department into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
+                       join tb_USA in DB_C.tb_user on p.user_allocation equals tb_USA.ID into temp_USA
+                       from USA in temp_USA.DefaultIfEmpty()
                        select new dto_allocation_edit
                        {
                            address = p.addree_Storage,
@@ -250,6 +255,7 @@ namespace FAMIS.Controllers
                            department = p.department_allocation,
                            department_name=DP.name_Department,
                            ID = p.ID,
+                           user_allocation=USA.ID,
                            ps = p.ps,
                            reason = p.reason,
                            serial_number = p.serial_number
@@ -286,6 +292,7 @@ namespace FAMIS.Controllers
                     item.date_Operated = DateTime.Now;
                     item.department_allocation = Json_data.department;
                     item.ps = Json_data.ps;
+                    item.user_allocation = Json_data.user_allocation;
                     item.reason = Json_data.reason;
                     item.state_List = commonConversion.getStateListID(Json_data.statelist);
                 }

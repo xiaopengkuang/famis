@@ -22,6 +22,8 @@ namespace FAMIS.DTO
         public int? department { get; set; }
         public String department_name { get; set; }
 
+        public int? user_allocation { get; set; }
+
         [StringLength(200)]
         public string reason { get; set; }
 

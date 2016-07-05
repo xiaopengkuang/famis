@@ -16,7 +16,7 @@
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
 
     <script type="text/javascript" src="../../Scripts/Views/Allocation/Allocation_add.js"></script>
-      <!--[if lte IE 9]>
+    <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
     <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
     <![endif]-->
@@ -27,7 +27,7 @@
     <div class="easyui-panel" style="height: 500px;" fit="true">
         <div class="easyui-panel" style="padding: 5px;">
             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'" onclick="saveData('1')">保存</a>
-             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-redo'" onclick="saveData('2')">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-redo'" onclick="saveData('2')">提交</a>
             <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'" onclick="cancelData()">取消</a>
         </div>
 
@@ -53,6 +53,10 @@
                     <td>
                         <select class="easyui-combotree" aria-readonly="true" id="LYBM_add" name="LYBM_add" style="width: 200px;">
                         </select>
+                    </td>
+                    <td>申请人:</td>
+                    <td>
+                        <input class="easyui-combobox"  readonly="readonly" id="SYRY_add" name="SYRY_add" style="width: 200px;" />
                     </td>
                     <td>调入地点:</td>
                     <td>

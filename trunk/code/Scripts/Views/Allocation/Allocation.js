@@ -21,13 +21,14 @@ $(function () {
                 $(".SC_Date_Accounting").hide();
                 $(".SC_Content_Accounting").show();
             }
-
-
         }
-
     });
+    setTimeout('refresh()', 10000);
 })
-
+function refresh() {
+    //是否要判断是否存在新增标签
+    loadInitData();
+}
 
 function loadInitData() {
     //加载所有
@@ -80,6 +81,7 @@ function loadDataGrid(datagrid,disabledFlag)
         columns: [[
             { field: 'ID', checkbox: true, width: 50 },
             { field: 'serialNumber', title: '单据号', width: 50 },
+            { field: 'user_allocation', title: '申请人', width: 50 },
             { field: 'operatorUser', title: '操作人', width: 50 },
             {
                 field: 'state', title: '状态', width: 50,

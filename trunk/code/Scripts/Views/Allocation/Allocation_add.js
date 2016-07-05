@@ -39,7 +39,20 @@ function loadInitData()
 {
     load_Department();
     load_CFDD_add();
+    load_SYRY();
     LoadInitData_datagrid();
+}
+function load_SYRY() {
+    $("#SYRY_add").combobox({
+        valueField: 'id',
+        method: 'POST',
+        textField: 'name',
+        url: '/Dict/load_User_add',
+        onSelect: function (rec) {
+            $('#SYRY_add').combobox('setValue', rec.id);
+            $('#SYRY_add').combobox('setText', rec.name);
+        }
+    });
 }
 
 function load_Department() {
@@ -248,6 +261,7 @@ function saveData(info) {
 
     var address = $("#CFDD_add").combotree("getValue");
 
+    var user_allocation = $("#SYRY_add").combobox("getValue");
 
     var ps = $("#PS_add").val();
 
@@ -259,6 +273,7 @@ function saveData(info) {
         "department": department,
         "address": address,
         "ps": ps,
+        "user_allocation":user_allocation,
         "statelist": state_List,
         "assetList": listA
     };
