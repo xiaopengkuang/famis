@@ -50,6 +50,7 @@ function loadInitDate() {
     load_SZBM_add();
     load_ZCLB_add();
     load_CFDD_add();
+    load_User_add();
     load_Other_ZJFS_add();
 }
 
@@ -85,7 +86,7 @@ function load_ZCLB_add() {
                rootText = path[0];
            }
            //$.messager.alert('提示', rootText, 'warning');
-           $('#ZCXZ_add').val(rootText.trim());
+           $('#ZCXZ_add').val(rootText);
        }, //全部折叠
        onLoadSuccess: function (node, data) {
            $('#ZCLB_add').combotree('tree').tree("collapseAll");
@@ -94,16 +95,15 @@ function load_ZCLB_add() {
 }
 
 
-function load_SYR_add(SZBM_ID) {
-
-    $("#SYR_add").combobox({
+function load_User_add() {
+    $("#SYRY_add").combobox({
         valueField: 'id',
         method: 'POST',
         textField: 'name',
-        url: '/Dict/load_SYR_add?SZBM_ID=' + SZBM_ID,
+        url: '/Dict/load_User_add',
         onSelect: function (rec) {
-            $('#SYR_add').combobox('setValue', rec.id);
-            $('#SYR_add').combobox('setText', rec.name);
+            $('#SYRY_add').combobox('setValue', rec.id);
+            $('#SYRY_add').combobox('setText', rec.name);
         }
     });
 
@@ -136,7 +136,6 @@ function load_SZBM_add() {
         //选择树节点触发事件  
         onSelect: function (node) {
             d_SZBM_add = $('#SZBM_add').combotree('getValue');
-            load_SYR_add(node.id);
 
         }, //全部折叠
         onLoadSuccess: function (node, data) {
@@ -315,6 +314,7 @@ function submitForm() {
     var d_ZCXH_add = $('#ZCXH_add').combobox("getValue");
     var d_JLDW_add = $("#JLDW_add").combobox("getValue");
 
+
     if (d_SZBM_add == "" || d_SZBM_add == null) {
 
         d_SZBM_add = $("#SZBM_add").combotree("getValue");
@@ -326,8 +326,7 @@ function submitForm() {
     //var d_SZBM_add;
     //= $("#SZBM_add").combotree("gettext")
 
-    var d_SYR_add = $("#SYR_add").combobox("getValue");
-
+    var d_SYRY_add = $("#SYRY_add").combobox("getValue");
 
     if (d_CFDD_add == "" || d_CFDD_add == null) {
         d_CFDD_add = $("#CFDD_add").combotree("getValue");
@@ -396,19 +395,15 @@ function submitForm() {
     //封装成json格式创给后台
     var Asset_add = {
         "d_ZCBH_add": d_ZCBH_add,
-        //"d_ZCXZ_ID_add": d_ZCXZ_ID_add,
-        //"d_ZCXZ_Name_add": d_ZCXZ_Name_add,
         "d_ZCLB_add": d_ZCLB_add,
         "d_ZCMC_add": d_ZCMC_add,
         "d_ZCXH_add": d_ZCXH_add,
         "d_JLDW_add": d_JLDW_add,
         "d_SZBM_add": d_SZBM_add,
-        "d_SYR_add": d_SYR_add,
+        "d_SYRY_add": d_SYRY_add,
         "d_ZJFS_add": d_ZJFS_add,
         "d_GYS_add": d_GYS_add,
-        //"d_LXR_add": d_LXR_add,
         "d_GZRQ_add": d_GZRQ_add,
-        //"d_GYSDD_add": d_GYSDD_add,
         "d_Check_PLZJ_add": d_Check_PLZJ_add,
         "d_Num_PLTJ_add": d_Num_PLTJ_add,
         "d_CFDD_add": d_CFDD_add,

@@ -434,6 +434,13 @@ namespace FAMIS.Controllers
                                            where p.type_Asset == dic_paraID
                                            select p;
                             }; break;
+                        case SystemConfig.nameFlag_2_SYRY:
+                            {
+                                data_ORG = from p in data_ORG
+                                           where p.Owener == dic_paraID
+                                           select p;
+                            }; break;
+                        default: ; break;
                     }
                 }
             }

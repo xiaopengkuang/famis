@@ -68,6 +68,7 @@ namespace FAMIS.Controllers
                 ViewBag.operatorUser = data.operatorUser;
                 ViewBag.reason = data.reason;
                 ViewBag.ps = data.ps;
+                ViewBag.user_collar = data.user_collar;
             }
             return View();
         }
@@ -88,6 +89,7 @@ namespace FAMIS.Controllers
                 ViewBag.operatorUser = data.operatorUser;
                 ViewBag.reason = data.reason;
                 ViewBag.ps = data.ps;
+                ViewBag.user_collar = data.user_collar;
             }
             return View();
         }
@@ -457,6 +459,8 @@ namespace FAMIS.Controllers
                        from AD in temp_AD.DefaultIfEmpty()
                        join tb_US in DB_C.tb_user on p._operator equals tb_US.ID into temp_US
                        from US in temp_US.DefaultIfEmpty()
+                       join tb_USC in DB_C.tb_user on p.user_collar equals tb_USC.ID into temp_USC
+                       from USC in temp_USC.DefaultIfEmpty()
                        orderby p.date_Operated descending
                        select new Json_collar { 
                             ID=p.ID,
@@ -466,7 +470,8 @@ namespace FAMIS.Controllers
                             department=DP.name_Department,
                             operatorUser=US.name_User,
                             serialNumber=p.serial_number,
-                            state=ST.Name
+                            state=ST.Name,
+                            user_collar=USC.true_Name
                        };
             
             if (cond != null)
@@ -752,6 +757,8 @@ namespace FAMIS.Controllers
                        from AD in temp_AD.DefaultIfEmpty()
                        join tb_US in DB_C.tb_user on p._operator equals tb_US.ID into temp_US
                        from US in temp_US.DefaultIfEmpty()
+                       join tb_USC in DB_C.tb_user on p.user_collar equals tb_USC.ID into temp_USC
+                       from USC in temp_USC.DefaultIfEmpty()
                        select new Json_collar
                        {
                              ID = p.ID,
@@ -763,6 +770,7 @@ namespace FAMIS.Controllers
                              serialNumber = p.serial_number,
                               ps=p.ps,
                               reason=p.reason,
+                              user_collar=USC.true_Name==null?"":USC.true_Name,
                              state = ST.Name
                        };
            if (data.Count() > 0)

@@ -349,6 +349,25 @@ namespace FAMIS.Controllers
             return json;
         }
 
+        [HttpPost]
+        public JsonResult load_User_add()
+        {
+            var data = from p in DB_C.tb_user
+                       where p.flag == true
+                       select new
+                       { 
+                       id=p.ID,
+                       name=p.true_Name
+                       };
+
+            //JavaScriptSerializer jss = new JavaScriptSerializer();
+            //String json = jss.Serialize(data).ToString().Replace("\\", "");
+            //return json;
+            return Json(data.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+
+
         
 
 
@@ -703,7 +722,14 @@ namespace FAMIS.Controllers
                  }else if (treeType == SystemConfig.treeType_collarSearch){
                      if (SystemConfig.treeType_collarSearch_Menu.Contains(item.name_flag)){}
                      else {continue;}
-                 }else{
+                 }
+                 else if (treeType == SystemConfig.treeType_allocationSearch)
+                 {
+                     if (SystemConfig.treeType_allocation_Search_Menu.Contains(item.name_flag)) { }
+                     else { continue; }
+                 }
+                 else
+                 {
                      continue;
                  }
                  dto_TreeNode fathernode = new dto_TreeNode();
@@ -727,6 +753,10 @@ namespace FAMIS.Controllers
                          case SystemConfig.treeTB_supplier:{ 
                              tmp = getGYSNodes(fathernode);
                          }; break;
+                         case SystemConfig.treeTB_user:
+                             {
+                                 tmp = getUserNodes(fathernode);
+                             }; break;
                          default: ; break;
                      }
                      if (tmp.Count > 0){
@@ -741,64 +771,6 @@ namespace FAMIS.Controllers
                  }
                 
              }
-
-
-
-             //List<tb_dataDict> dic = DB_C.tb_dataDict.Where(a => a.flag_Search == true).ToList();
-
-             //List<dto_TreeNode> nodesAll = new List<dto_TreeNode>();
-             
-             //for (int i = 0; i < dic.Count; i++)
-             //{
-             //    dto_TreeNode fathernode = new dto_TreeNode();
-             //    fathernode.id = (dic[i].ID*dic[i].ratio).ToString();
-             //    fathernode.nameText = dic[i].name_dataDict;
-             //    fathernode.url = commonConversion.getDefaultUrl() ;
-             //    fathernode.orderID = dic[i].ID.ToString();
-             //    fathernode.fatherID = "0";
-                 
-             //    if (dic[i].tb_Ref != null && dic[i].tb_Ref != "")
-             //    {
-
-                    
-             //        List<dto_TreeNode> tmp = new List<dto_TreeNode>();
-             //        if (dic[i].tb_Ref == "tb_department")
-             //        {
-             //            tmp = getSZBMNodes(fathernode);
-             //        }
-             //        else if (dic[i].tb_Ref == "tb_supplier")
-             //        {
-             //            tmp = getGYSNodes(fathernode);
-             //        }
-             //        else if (dic[i].tb_Ref == "tb_AssetType")
-             //        {
-             //            tmp = getZCLBNodes(fathernode);
-             //        }
-             //        else if (dic[i].tb_Ref == "tb_staff")
-             //        {
-             //            tmp = getSYRNodes(fathernode);
-             //        }
-             //        else{
-
-             //         }
-
-                  
-             //        if (tmp.Count > 0)
-             //        {
-             //            nodesAll.AddRange(tmp);
-             //        }
-             //    }
-             //    else
-             //    {
-             //        List<dto_TreeNode> tmp = new List<dto_TreeNode>();
-             //        tmp = getDictNodes(dic[i].ID,fathernode);
-             //        if (tmp.Count > 0)
-             //        {
-             //            nodesAll.AddRange(tmp);
-             //        }
-             //    }
-                    
-             //}
              return nodesAll;
          }
 
@@ -857,6 +829,8 @@ namespace FAMIS.Controllers
          //    list.Add(fathernode);
          //    return list;
          //}
+
+
 
 
         /// <summary>
@@ -920,6 +894,31 @@ namespace FAMIS.Controllers
              }
              return list;
          }
+
+
+         [HttpPost]
+         public List<dto_TreeNode> getUserNodes(dto_TreeNode fathernode)
+         {
+             var data = from p in DB_C.tb_user
+                        where p.flag == true
+                        join tb_RO in DB_C.tb_role on p.roleID_User equals tb_RO.ID
+                        where tb_RO.flag == true
+                        select new dto_TreeNode
+                        {
+                            id=fathernode.id+p.ID,
+                            nameText=p.true_Name,
+                            fatherID=fathernode.id,
+                            orderID=p.ID
+                        };
+             List<dto_TreeNode> list = new List<dto_TreeNode>();
+             if (data.Count() > 0)
+             {
+                 list = data.ToList();
+                 list.Add(fathernode);
+             }
+             return list;
+         }
+
 
         [HttpPost]
          public int Handler_addNewAssetType(String data)

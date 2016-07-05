@@ -95,7 +95,6 @@ namespace FAMIS.DataConversion
             tb_asset_add.value = data.d_Other_ZCJZ_add;
             tb_asset_add.department_Using = data.d_SZBM_add;
             tb_asset_add.addressCF = data.d_CFDD_add;
-            //tb_asset_add.people_using = data.d_SYR_add;
             tb_asset_add.flag = data.flag;
             tb_asset_add.Time_add = data.OperateTime;
             tb_asset_add.supplierID = data.d_GYS_add;
@@ -107,6 +106,7 @@ namespace FAMIS.DataConversion
             tb_asset_add.depreciation_tatol = data.d_Other_LJZJ_add;
             tb_asset_add.Net_value = data.d_Other_JZ_add;
             tb_asset_add.Method_add = data.d_ZJFS_add;
+            tb_asset_add.Owener = data.d_SYRY_add;
             return tb_asset_add;
         }
 
@@ -119,6 +119,7 @@ namespace FAMIS.DataConversion
             collar.date = data.date_LY;
             collar.addree_Storage = data.address_LY;
             collar.ps = data.ps_LY;
+            collar.user_collar = data.user_collar;
             return collar;
 
         }

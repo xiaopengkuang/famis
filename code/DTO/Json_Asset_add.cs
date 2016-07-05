@@ -25,8 +25,7 @@ namespace FAMIS.DTO
 
         public int? d_SZBM_add { get; set; }
 
-        [StringLength(20)]
-        public string d_SYR_add { get; set; }
+        public int? d_SYRY_add { get; set; }
 
         
         public int? d_ZJFS_add { get; set; }
