@@ -132,6 +132,7 @@ namespace FAMIS.DataConversion
             allocation.department_allocation = data.department;
             allocation.ps = data.ps;
             allocation.reason = data.reason;
+            allocation.user_allocation = data.user_allocation;
             return allocation;
         }
 

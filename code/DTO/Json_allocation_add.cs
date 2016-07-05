@@ -16,6 +16,7 @@ namespace FAMIS.DTO
         public int? state { get; set; }
         public DateTime? date_Operated { get; set; }
 
+        public int? user_allocation { get; set; }
         public String reason { get; set; }
         public String ps { get; set; }
 

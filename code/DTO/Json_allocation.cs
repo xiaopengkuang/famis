@@ -15,7 +15,7 @@ namespace FAMIS.DTO
         public String operatorUser { get; set; }
         public String state { get; set; }
         public DateTime? date_Operated { get; set; }
-
+        public String user_allocation { get; set; }
         public String reason { get; set; }
         public String ps { get; set; }
     }

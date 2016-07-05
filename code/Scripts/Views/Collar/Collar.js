@@ -21,13 +21,16 @@ $(function () {
                 $(".SC_Date_Accounting").hide();
                 $(".SC_Content_Accounting").show();
             }
-
-
         }
 
     });
-})
 
+    setTimeout('refresh()', 10000);
+})
+function refresh() {
+    //是否要判断是否存在新增标签
+    loadInitData();
+}
 
 function loadInitData() {
     //加载所有

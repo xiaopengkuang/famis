@@ -52,6 +52,7 @@ function bindData(id) {
                 $("#PS_add").val(data.ps);
                 $("#LYBM_add").combotree("setValue", data.department);
                 $("#CFDD_add").combotree("setValue", data.address);
+                $("#SYRY_add").combobox("setValue", data.user_allocation);
 
                 $("#LYBM_add").combotree('disable');
                 $("#CFDD_add").combotree('disable');
@@ -76,9 +77,21 @@ function loadInitData()
 {
     load_Department();
     load_CFDD_add();
+    load_SYRY();
     //LoadInitData_datagrid();
 }
-
+function load_SYRY() {
+    $("#SYRY_add").combobox({
+        valueField: 'id',
+        method: 'POST',
+        textField: 'name',
+        url: '/Dict/load_User_add',
+        onSelect: function (rec) {
+            $('#SYRY_add').combobox('setValue', rec.id);
+            $('#SYRY_add').combobox('setText', rec.name);
+        }
+    });
+}
 function load_Department() {
     $('#LYBM_add').combotree
      ({
