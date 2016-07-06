@@ -278,12 +278,92 @@ namespace FAMIS.Controllers
         [HttpPost]
         public string Set_SearialNum(string Json)
         {
+
             Session["Deatails_Searial"] = Json;
             return "";
         }
-      
+          [HttpPost]
+        public string SetPDsearialSession(string Json)
+        {
+            Session["Deatails_Searial"] = Json;
+            return "";
+        }
+         [HttpPost]
+          public string SetCurrentRow(string Json)
+        {
+            Session["CurrentRow"] = Json;
+            return "";
+        }
+       
+        
         [HttpPost]
-        public JsonResult Load_Inventory(string JSdata)
+        public ActionResult PDdelete(string ID)
+        {
+
+            var Model = db.tb_role.Find(int.Parse(ID));
+            db.tb_role.Remove(Model);
+            db.SaveChanges();
+
+            return this.Json(Model);
+        }
+
+        [HttpPost]
+        public string AddDP(string JSdata)
+        {
+            int id = 0;
+            try
+            {
+                id = int.Parse(JSdata.Split(',')[0]);
+            }
+            catch (Exception e)
+            {
+                ;
+            }
+            string oper= JSdata.Split(',')[1];
+            string ps = JSdata.Split(',')[2];
+            DateTime pddate = DateTime.Parse(JSdata.Split(',')[3]);
+            string type = JSdata.Split(',')[4];
+
+
+            /* var q = from p in mydb.tb_Menu
+              where p.Role_ID == Roleid
+              select p;*/
+            var q = from o in db.tb_Asset_inventory
+                    where o.ID == id
+                    select o;
+
+            if (q.Count() == 0)
+            {
+                var rule_tb = new tb_Asset_inventory
+                {
+                     _operator = oper,
+                     state="未盘点",
+                     date=pddate,
+                     property=type,
+                     date_Create=DateTime.Now,
+                     ps= ps,
+
+
+                };
+                db.tb_Asset_inventory.Add(rule_tb);
+                db.SaveChanges();
+            }
+            else
+                foreach (var p in q)
+                {
+                    p.date = pddate;
+                    p._operator = oper;
+                    p.ps = ps;
+                    p.property = type;
+                }
+             db.SaveChanges();
+
+
+            return "";
+          
+        }
+        [HttpPost]
+        public JsonResult Load_Inventory()
         {
             List<tb_Asset_inventory> list = db.tb_Asset_inventory.ToList();
             var json = new
@@ -297,6 +377,7 @@ namespace FAMIS.Controllers
                             ID = r.ID,
                             serial_number = r.serial_number,
                             date = r.date,
+                            _operator=r._operator,
                             amountOfSys = r.amountOfSys,
                             amountOfInv = r.amountOfInv,
                             difference = r.difference,
@@ -330,7 +411,7 @@ namespace FAMIS.Controllers
                         join u in db.tb_user on a.Owener equals u.ID
                         join s in db.tb_dataDict_para on a.state_asset equals s.ID
                         join sp in db.tb_supplier on a.supplierID equals sp.ID
-                        where r.serial_number_Asset == JSdata
+                        where r.serial_number == JSdata
                         select new
                         {
                             ID = r.ID,
@@ -371,18 +452,42 @@ namespace FAMIS.Controllers
             {
                 p.amountOfInv = int.Parse(inventory_amount);
                 p.difference = int.Parse(inventory_amount) - p.amountOfSys;
+                if (int.Parse(inventory_amount) - p.amountOfSys < 0)
+                    p.state = "盘亏";
+                if (int.Parse(inventory_amount) - p.amountOfSys > 0)
+                    p.state = "盘盈";
+                else
+                    p.state = "持平";
             }
 
 
             db.SaveChanges();
 
         }
+        [HttpPost]
+        public string ChangeState(string JSdata)
+        {
+            int searial = int.Parse(Session["Deatails_Searial"].ToString());
+            var q = from o in db.tb_Asset_inventory
+                    where searial == o.ID
+                    select o;
+            foreach (var p in q)
+            { 
+                if(JSdata=="2")
+             p.state="盘点中";
+                if (JSdata == "3")
+                    p.state = "已盘点";          
+            }
+            db.SaveChanges();
+            return "";
+        
+        }
          [HttpPost]
-        public string GetForm(string PD)
+        public string GetForm()
         {
             HttpRequest request = System.Web.HttpContext.Current.Request;
             HttpFileCollection FileCollect = request.Files;
-            if (FileCollect.Count > 0)          //如果集合的数量大于0
+            if (FileCollect.Count > 0)           
             {
                 foreach (string str in FileCollect)
                 {
@@ -393,7 +498,7 @@ namespace FAMIS.Controllers
                     string AbsolutePath = Server.MapPath(imgPath);
                     FileSave.SaveAs(AbsolutePath); 
                     //将上传的东西保存
-                    ReadExcel(PD, AbsolutePath);
+                    ReadExcel( Session["Deatails_Searial"].ToString(), AbsolutePath);
                     
                 }
             }

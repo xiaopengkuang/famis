@@ -1,5 +1,6 @@
 ﻿var searchCondtiion = "1o2SYBMoasd";
 
+//alert("asd");
 function depreciation() {
 
     $.ajax({
@@ -188,22 +189,42 @@ function LoadTreeLeft() {
 }
 function Add_Invention_Deatails()
 {
+    
     $.ajax({
 
         type: "post",
-        url: "/AssetDeatails/Add_InventDeatails?Json="+searchCondtiion+"",
+        url: "/AssetDeatails/Get_Serial_Deatails",
 
         datatype: "json",//数据类型
 
         success: function (result) {
-          
-            alert("添加明细成功！");
+           
+            deatails = searchCondtiion + "o" + result;
+           // alert(deatails);
+            $.ajax({
+
+                type: "post",
+                url: "/AssetDeatails/Add_InventDeatails?Json=" + deatails+"",
+
+                datatype: "json",//数据类型
+
+                success: function (result) {
+
+                    alert("添加明细成功！");
+                    window.parent.$('#modalwindow').window('close');
+                    
+
+                }, error: function (msg) {
+                    alert("添加明细失败！");
+                }
+            });
 
 
         }, error: function (msg) {
-            alert("添加明细失败！");
+            alert("获取盘点单号失败！");
         }
     });
+   
 }
 //Left 左侧事件查询
 function SearchByCondition_LeftTree(nodeID, nodetext) {

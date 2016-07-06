@@ -13,7 +13,7 @@
 <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
 <meta name="viewport" content="width=device-width" />
 <script type="text/javascript">
-    var myDate = new Date()
+    var myDate = new Date();
     var date = myDate.toLocaleDateString();
     function tt() {
        
@@ -80,10 +80,10 @@
                },
                 {
                     field: 'roleID_User', title: '角色', width: 100,
-                    editor: { type: 'combobox', options: {valueField:'ID',textField:'name',url: '/Rule/GetRoleID',
+                    editor: { type: 'combobox', options: {valueField:'name',textField:'name',url: '/Rule/GetRoleID',
                         onSelect: function (rec) {
                             try{
-                                combobox('setValue', rec.ID);
+                                combobox('setValue', rec.name);
                                 combobox('setText', rec.name);
                             }
                             catch(e)
@@ -95,10 +95,11 @@
                      field: 'ID_DepartMent', title: '部门', width: 100,
                      editor: {
                          type: 'combobox', options: {
-                             valueField: 'ID', textField: 'name', url: '/Rule/GetDepID',
+                             valueField: 'name', textField: 'name', url: '/Rule/GetDepID',
                              onSelect: function (rec) {
                                  try {
-                                     combobox('setValue', rec.ID);
+                                     combobox('setValue', rec.name);
+
                                      combobox('setText', rec.name);
                                  }
                                  catch (e)
@@ -227,7 +228,7 @@
                          var rid = rowdata.rows[index].roleID_User;
                          var depid = rowdata.rows[index].ID_DepartMent;
                          data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + depid;
-
+                         alert(data);
                          $.ajax({
 
                              type: "post",
