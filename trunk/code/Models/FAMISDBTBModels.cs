@@ -168,7 +168,9 @@ namespace FAMIS.Models
                 .Property(e => e.note_repair)
                 .IsUnicode(false);
 
-           
+            modelBuilder.Entity<tb_Asset_Repair>()
+                .Property(e => e.Name_equipment)
+                .IsUnicode(false);
 
             modelBuilder.Entity<tb_AssetType>()
                 .Property(e => e.name_Asset_Type)

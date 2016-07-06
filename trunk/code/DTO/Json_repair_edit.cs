@@ -1,12 +1,13 @@
-namespace FAMIS.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
+namespace FAMIS.DTO
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    public partial class tb_Asset_Repair
+    public class Json_repair_edit
     {
         public int ID { get; set; }
 
@@ -23,6 +24,10 @@ namespace FAMIS.Models
         public string reason_ToRepair { get; set; }
 
         public int? supplierID_Torepair { get; set; }
+        public String supplierName_Torepair { get; set; }
+
+        public String Address_supplier { get; set; }
+        public String linkMan_supplier { get; set; }
 
         public int? userID_applying { get; set; }
 
@@ -31,17 +36,6 @@ namespace FAMIS.Models
         [StringLength(200)]
         public string note_repair { get; set; }
 
-        public bool? flag { get; set; }
-
-        public int? state_list { get; set; }
-
-        public DateTime? date_review { get; set; }
-
-        public int? userID_create { get; set; }
-
-        public int? userID_review { get; set; }
-
-        public DateTime? date_create { get; set; }
 
         public int? ID_Asset { get; set; }
 
@@ -50,8 +44,8 @@ namespace FAMIS.Models
 
         public double? CostToRepair { get; set; }
 
-        [StringLength(200)]
-        public string content_Review { get; set; }
-        
+        public String Name_asset { get; set; }
+
+        public String serial_asset { get; set; }
     }
 }

@@ -76,7 +76,7 @@ function LoadTreeLeft() {
         },
         onLoadSuccess: function (node, data) {
             $('#lefttree').show();
-            //$('#lefttree').tree('collapseAll');
+            $('#lefttree').tree('collapseAll');
         }
     });
 }

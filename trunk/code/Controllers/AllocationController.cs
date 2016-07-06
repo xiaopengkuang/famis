@@ -325,6 +325,7 @@ namespace FAMIS.Controllers
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_allocation_review Json_data = serializer.Deserialize<Json_allocation_review>(data);
+           
             if (Json_data != null)
             {
 
@@ -376,6 +377,7 @@ namespace FAMIS.Controllers
                             {
                                 item_as.addressCF = co.addree_Storage;
                                 item_as.department_Using = co.department_allocation;
+                                //可有可无
                                 //item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_using);
                             }
 
@@ -431,7 +433,12 @@ namespace FAMIS.Controllers
         }
 
 
-
+        /// <summary>
+        /// 判断详细是否符合标准提交
+        /// </summary>
+        /// <param name="id_state_Target"></param>
+        /// <param name="id_allocation"></param>
+        /// <returns></returns>
         public bool RightToSubmit_allocation(int? id_state_Target, int? id_allocation)
         {
             if (id_allocation == null || id_state_Target == null)

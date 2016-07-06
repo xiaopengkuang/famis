@@ -177,42 +177,45 @@ function loadPageTool(datagrid, disabledFlag) {
                 {
                     return;
                 }
-                if (rows[0].state == "草稿" || rows[0].state == "退回") {
+                if (rows[0].state_list == "草稿" || rows[0].state_list == "退回") {
                 } else {
                     MessShow("只有草稿/退回单据才能提交!")
                     return;
                 }
-                //var id = rows[0].ID;
-                //$.ajax({
-                //    url: "/Repair/RightToEdit",
-                //    type: 'POST',
-                //    data: {
-                //        "id": id
-                //    },
-                //    beforeSend: ajaxLoading,
-                //    success: function (data) {
-                //        ajaxLoadEnd();
-                //        if (data > 0) {
-                //            //var id = rows[0].ID;
-                //            var title = "编辑调拨";
-                //            var url = "/Repair/Repair_edit?id=" + id;
-                //            if (parent.$('#tabs').tabs('exists', title)) {
-                //                parent.$('#tabs').tabs('select', title);
-                //            } else {
-                //                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
-                //                parent.$('#tabs').tabs('add', {
-                //                    title: title,
-                //                    content: content,
-                //                    icon: 'icon-add',
-                //                    closable: true
-                //                });
-                //            }
-                //        } else {
-                //            $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
-                //            return;
-                //        }
-                //    }
-                //});
+                var id = rows[0].ID;
+                $.ajax({
+                    url: "/Repair/RightToEdit",
+                    type: 'POST',
+                    data: {
+                        "id": id
+                    },
+                    beforeSend: ajaxLoading,
+                    success: function (data) {
+                        ajaxLoadEnd();
+                        if (data > 0) {
+                            //var id = rows[0].ID;
+                            var title = "编辑维修单";
+                            var url = "/Repair/Repair_edit?id=" + id;
+                            try {
+                                if (parent.$('#tabs').tabs('exists', title)) {
+                                    parent.$('#tabs').tabs('close', title);
+                                }
+                                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
+                                parent.$('#tabs').tabs('add', {
+                                    title: title,
+                                    content: content,
+                                    icon: 'icon-add',
+                                    closable: true
+                                });
+                            } catch (e)
+                            {
+                            }
+                        } else {
+                            $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
+                            return;
+                        }
+                    }
+                });
             }
         }, {
             text: '刷新',
@@ -231,7 +234,7 @@ function loadPageTool(datagrid, disabledFlag) {
                 var id_;
                 if (rows == null)
                 {
-                    MessShow('请选择调拨单!');
+                    MessShow('请选择维修单!');
                     return;
                 }
                 if(rows.length==1)
@@ -241,7 +244,7 @@ function loadPageTool(datagrid, disabledFlag) {
                     MessShow("一次只能查看一个单据!");
                     return;
                 }
-                var titleName = "调拨明细";
+                var titleName = "维修明细";
                 var url = "/Repair/Repair_detail?id=" + id_;
                 openModelWindow(url, titleName);
             }
@@ -258,7 +261,7 @@ function loadPageTool(datagrid, disabledFlag) {
                       return;
                   }
                   if (rows.length == 1) {
-                      if (rows[0].state != "草稿") {
+                      if (rows[0].state_list != "草稿") {
                           MessShow("只有草稿单据才能提交!")
                           return;
                       }
@@ -306,7 +309,7 @@ function loadPageTool(datagrid, disabledFlag) {
                    }
                    if (rows.length == 1) {
                        id_ = rows[0].ID;
-                       if (rows[0].state != "待审核") {
+                       if (rows[0].state_list != "待审核") {
                            MessShow("只有待审核单据才能提交!")
                            //$('#RepairDG').datagrid('reload');
                            return;
@@ -334,7 +337,7 @@ function loadPageTool(datagrid, disabledFlag) {
                    }
                    if (rows.length == 1) {
                        id_ = rows[0].ID;
-                       if (rows[0].state != "待审核") {
+                       if (rows[0].state_list != "待审核") {
                            MessShow("只有待审核单据才能退回!")
                            //$('#RepairDG').datagrid('reload');
                            return;
@@ -372,12 +375,12 @@ function loadPageTool(datagrid, disabledFlag) {
 function updateRecordState(datagrid,id_target, id)
 {
     var data = {
-        "id_Repair": id,
+        "id_item": id,
         "id_state": id_target
     }
     //将数据传入后台
     $.ajax({
-        url: '/Repair/updateRepairrStateByID',
+        url: '/Repair/updateRepairStateByID',
         data: { "data": JSON.stringify(data) },
         dataType: "json",
         type: "POST",
