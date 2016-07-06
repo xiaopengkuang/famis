@@ -224,43 +224,26 @@ function loadPageTool_Detail() {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
-                var $winADD;
-                $winADD = $('#modalwindow').window({
-                    title: '添加资产',
-                    width: 860,
-                    height: 540,
-                    top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
-                    left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
-                    shadow: true,
-                    modal: true,
-                    iconCls: 'icon-add',
-                    closed: true,
-                    minimizable: false,
-                    maximizable: false,
-                    collapsible: false,
-                    onClose: function () {
-                        $('#TableList_0_1').datagrid('reload');
-                    }
-                });
-                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/AddAsset'></iframe>");
-                $winADD.window('open');
+                $("#modalwindow").window("close");
+              openModelWindow("/Asset/AddAsset", "添加资产");
             }
         }, {
-            text: '删除',
-            iconCls: 'icon-remove',
+            text: '编辑',
+            iconCls: 'icon-edit',
             height: 50,
             handler: function () {
                 //获取选择行
                 var rows = $('#TableList_0_1').datagrid('getSelections');
-                var IDS = [];
-                for (var i = 0; i < rows.length; i++) {
-                    IDS[i] = rows[i].ID;
+                if (rows.length != 1)
+                {
+                    MessShow("请选择1项数据进行编辑！");
+                    return;
                 }
+                var id_asset = rows[0].ID;
                 //将数据传入后台
                 $.ajax({
-                    url: '/Asset/deleteAssets',
-                    data: { "selectedIDs": IDS },
-                    //data: _list,  
+                    url: '/Asset/Asset_edit',
+                    data: { "id": id_asset },
                     dataType: "json",
                     type: "POST",
                     traditional: true,
@@ -269,7 +252,33 @@ function loadPageTool_Detail() {
                     }
                 });
             }
-        }, {
+        }
+        //, {
+        //    text: '删除',
+        //    iconCls: 'icon-remove',
+        //    height: 50,
+        //    handler: function () {
+        //        //获取选择行
+        //        var rows = $('#TableList_0_1').datagrid('getSelections');
+        //        var IDS = [];
+        //        for (var i = 0; i < rows.length; i++) {
+        //            IDS[i] = rows[i].ID;
+        //        }
+        //        //将数据传入后台
+        //        $.ajax({
+        //            url: '/Asset/deleteAssets',
+        //            data: { "selectedIDs": IDS },
+        //            //data: _list,  
+        //            dataType: "json",
+        //            type: "POST",
+        //            traditional: true,
+        //            success: function () {
+        //                $('#TableList_0_1').datagrid('reload');
+        //            }
+        //        });
+        //    }
+        //}
+        , {
             text: '刷新',
             height: 50,
             iconCls: 'icon-reload',
@@ -386,4 +395,43 @@ function myparser(s) {
     } else {
         return new Date();
     }
+}
+
+
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}
+
+
+
+function openModelWindow(url, titleName) {
+    var $winADD;
+    $winADD = $('#modalwindow').window({
+        title: titleName,
+        width: 1028,
+        height: 650,
+        top: (($(window).height() - 1028) > 0 ? ($(window).height() - 1028) : 200) * 0.5,
+        left: (($(window).width() - 650) > 0 ? ($(window).width() - 650) : 100) * 0.5,
+        shadow: true,
+        modal: true,
+        iconCls: 'icon-add',
+        closed: true,
+        minimizable: false,
+        maximizable: false,
+        collapsible: false,
+        onClose: function () {
+        }
+    });
+    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
+    $winADD.window('open');
 }
