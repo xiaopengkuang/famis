@@ -1,5 +1,5 @@
 ﻿var searchCondtiion = "1o1o1";
-alert(searchCondtiion+"88");
+//alert(searchCondtiion+"88");
 function depreciation() {
 
     $.ajax({

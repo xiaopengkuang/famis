@@ -1,35 +1,78 @@
-﻿var searchCondtiion = "1o使用部门o销售部";
+﻿ 
+var searchCondtiion = "1o使用部门o销售部";
+var datagrid; //定义全局变量datagrid
+var editRow = undefined; //定义全局变量：当前编辑的行
+var PDsearial = "";
+var AssetState = "";
+var Address = [{ "value": "1", "text": "固定资产" }, { "value": "3", "text": "低值易耗品" }];
+var CurrentRow = "0";
+var flag = "0";
+//alert(flag);
+//alert("asd");
 //alert("dsd");
 $(document).ready(function () {
     //多选框
-
-
-    $("#operator").combobox({
-        valueField: 'ID',
-        method: 'get',
-        textField: 'name',
-
-        url: '/Sttaff/load_Operator',
-        onSelect: function (rec) {
-
-            $('#operator').combobox('setValue', rec.ID);
-            $('#operator').combobox('setText', rec.name);
-
-
-        }
-    });
-   // Load_Deatails(searchCondtiion);
+    extend();
+    loadOperator();
+   // LoadInitData_Detail(PDsearial)
     LoadInitData(searchCondtiion);
-    LoadInitData_Detail(searchCondtiion);
+  
   //  LoadTreeLeft();
   
 
 });
+function extend()
+{
+    $.extend($.fn.datagrid.defaults.editors, {
+        datetimebox: {// datetimebox就是你要自定义editor的名称
+            init: function (container, options) {
+                var input = $('<input class="easyuidatetimebox">').appendTo(container);
+                return input.datetimebox({
+                    formatter: function (date) {
+                        return new Date(date).format("yyyy-MM-dd hh:mm:ss");
+                    }
+                });
+            },
+            getValue: function (target) {
+                return $(target).parent().find('input.combo-value').val();
+            },
+            setValue: function (target, value) {
+                $(target).datetimebox("setValue", value);
+            },
+            resize: function (target, width) {
+                var input = $(target);
+                if ($.boxModel == true) {
+                    input.width(width - (input.outerWidth() - input.width()));
+                } else {
+                    input.width(width);
+                }
+            }
+        }
+    });
+
+}
+function loadOperator() {
+    
+    $("#operator").combobox({
+        valueField: 'ID',
+        method: 'POST',
+        textField: 'true_Name',
+        url: '/Rule/GetUserID',
+        onSelect: function (rec) {
+            $('#operator').combobox('setValue', rec.ID);
+            $('#operator').combobox('setText', rec.true_Name);
+        }
+    });
+   
+}
 function LoadInitData(searchCondtiion) {
-    //  alert("查询条件是：---" + searchCondtiion);
-    $('#TableList_0_1').datagrid({
-        url: '/Depreciation/Load_Inventory?JSdata=' + searchCondtiion + '', 
-        //  url: '/SysSetting/getpageOrder?role=1&tableType=1',
+    var datagrid; //定义全局变量datagrid
+    var editRow = undefined; //定义全局变量：当前编辑的行
+    datagrid = $("#TableList_0_1").datagrid({
+
+
+        url: '/Depreciation/Load_Inventory',
+      
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -44,148 +87,493 @@ function LoadInitData(searchCondtiion) {
         pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
         pageNumber: 1, //默认显示第几页 
         pageList: [15, 30, 45],//分页中下拉选项的数值 
-        columns: [[
-            { field: 'ID', title: '序号', width: 50 },
-            { field: 'serial_number', title: '盘点单号', width: 80 },
-            { field: 'name_Asset', title: '资产名称', width: 50 },
+       
+        columns: [[//显示的列
+
+               { field: 'ck', checkbox: true, width: 100 },
+            { field: 'ID', title: '序号', width: 150 },
             {
-                field: 'date', title: '盘点日期', width: 80,
+                field: 'serial_number', title: '盘点单号', width: 180,
+                
+            },
+               {
+                   field: 'property', title: '资产性质', width: 150,
+                   editor: { type: 'combobox', options: { data: Address, valueField: "text", textField: "text" } }
+
+
+               },
+
+            {
+                field: 'date', title: '盘点日期', width: 180,
 
                 formatter: function (date) {
-                    var pa = /.*\((.*)\)/;
-                    var unixtime = date.match(pa)[1].substring(0, 10);
-                    return getTime(unixtime);
-                }
-            },
-            { field: 'amountOfSys', title: '系统数量', width: 50 },
-            { field: 'amountOfInv', title: '盘点数量', width: 50 },
-            { field: 'difference', title: '盘点差异', width: 50 },
-             { field: 'property', title: '资产性质', width: 50 },
+                    try{
+                        var pa = /.*\((.*)\)/;
+                        var unixtime = date.match(pa)[1].substring(0, 10);
+                        return getTime(unixtime);
+                    }
+                    catch(e)
+                    {
+                        return "";
+                    }
+                },
+                editor: "datetimebox"
  
-             { field: 'operator', title: '操作人', width: 50 },
-             { field: 'state', title: '盘点状态', width: 50 },//这里要formatter一下字体颜色。
-              { field: 'date_Create', title: '制单日期', width: 50 },
-            { field: 'ps', title: '备注', width: 50 }
+            },
+            {
+                field: 'amountOfSys', title: '系统数量', width: 150
+
+            },
+            {
+                field: 'amountOfInv', title: '盘点数量', width: 150,
+                
+            },
+            {
+                field: 'difference', title: '盘点差异', width: 150,
+                formatter: function (amount) {
+                    try {
+                        if (parseInt(amount) < 0)
+                            return '<span style="color:red">'+amount+'</span>';
+
+                    }
+                    catch (e) {
+                        return "";
+                    }
+                }
+                        
+            },
+           
+             {
+                 field: '_operator', title: '操作人', width: 150,
+                 editor: {
+                     type: 'combobox', options: {
+                         valueField: 'true_Name', textField: 'true_Name', url: '/Rule/GetUserID',
+                         onSelect: function (rec) {
+                             try {
+                                 combobox('setValue', rec.true_Name);
+                                 combobox('setText', rec.true_Name);
+                             }
+                             catch (e)
+                             { }
+
+                         }, required: true
+                     }
+                 }
+             },
+             {
+                 field: 'state', title: '盘点状态', width: 150,
+                 formatter: function (state) {
+                  try {
+                      if (state == "未盘点")
+                          return '<span style="color:red">未盘点</span>';
+                      if(state=="盘点中")
+                          return '<span style="color:green">盘点中</span>';
+                      if(state=="已盘点")
+                          return '<span style="color:grey">已盘点</span>';
+                     }
+                   catch (e) {
+                           return "";
+                        }
+                  }
+
+             },//这里要formatter一下字体颜色。
+              {
+                  field: 'date_Create', title: '制单日期', width: 180,
+
+                  formatter: function (date) {
+                      try {
+                          var pa = /.*\((.*)\)/;
+                          var unixtime = date.match(pa)[1].substring(0, 10);
+                          return getTime(unixtime);
+                      }
+                      catch (e) {
+                          return "";
+                      }
+                  }
+              },
+             {
+                 field: 'ps', title: '备注', width: 300,
+                 editor: { type: 'validatebox', options: { required: true } }
+             }
 
         ]],
-        singleSelect: false, //允许选择多行
-        selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
-        checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
-        fitColumns: true
+        queryParams: { action: 'query' }, //查询参数
+        toolbar: [{
+            text: '添加', iconCls: 'icon-add', handler: function () {//添加列表的操作按钮添加，修改，删除等
+                //添加时先判断是否有开启编辑的行，如果有则把开户编辑的那行结束编辑
+                if (editRow != undefined) {
+                    datagrid.datagrid("endEdit", editRow);
+                }
+                //添加时如果没有正在编辑的行，则在datagrid的第一行插入一行
+
+                // $('#dd').datagrid('check', 0);
+                if (editRow == undefined) {
+                    datagrid.datagrid("insertRow", {
+                        index: 0, // index start with 0
+                        checked: true,
+                        row: {
+
+                        }
+                    });
+                    //将新插入的那一行开户编辑状态
+                    datagrid.datagrid("beginEdit", 0);
+                    $("input[type='checkbox']")[0 + 1].checked = true;
+                    $('#TableList_0_1').datagrid('selectRow', 0);
+                    //给当前编辑的行赋值
+                    editRow = 0;
+                }
+
+            }
+        }, '-',
+         {
+             text: '删除', iconCls: 'icon-remove', handler: function () {
+                 //删除时先获取选择行
+                 var rows = datagrid.datagrid("getSelections");
+                 //选择要删除的行
+                 if (rows.length > 0) {
+                     $.messager.confirm("提示", "你确定要删除吗?", function (r) {
+                         if (r) {
+                             var row = $('#TableList_0_1').datagrid('getSelected');
+                             if (row) {
+                                 var index = $('#TableList_0_1').datagrid('getRowIndex', row);
+                                 var rowdata = $('#TableList_0_1').datagrid('getData');
+
+                                 var DeleteID = rowdata.rows[index].ID
+                                 var del = $('#TableList_0_1').datagrid('deleteRow', index);
+                                 //alert(DeleteID);
+                                 $.ajax({
+
+                                     type: "post",
+                                     url: "/Depreciation/PDDelete",
+                                     data: { ID: DeleteID },
+                                     datatype: "json",//数据类型
+
+                                     success: function (result) {
+                                         alert("Success!");
+
+
+
+                                     }, error: function (msg) {
+                                         alert("Fail");
+                                         $('#List').datagrid('reload');
+                                     }
+
+
+                                 });
+                             }
+                             //将选择到的行存入数组并用,分隔转换成字符串，
+                             //本例只是前台操作没有与数据库进行交互所以此处只是弹出要传入后台的id
+                             
+                         }
+                     });
+                 }
+                 else {
+                     $.messager.alert("提示", "请选择要删除的行", "error");
+                 }
+             }
+         }, '-',
+         {
+             text: '修改', iconCls: 'icon-edit', handler: function () {
+                 if (AssetState == "已盘点")
+                     alert("该盘点单已盘点，不可修改！");
+                else{
+                     //修改时要获取选择到的行
+                     var rows = datagrid.datagrid("getSelections");
+
+                     //如果只选择了一行则可以进行修改，否则不操作
+                     if (rows.length == 1) {
+                         //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
+                         if (editRow != undefined) {
+                             datagrid.datagrid("endEdit", editRow);
+                         }
+                         //当无编辑行时
+                         if (editRow == undefined) {
+                             //获取到当前选择行的下标
+                             var index = datagrid.datagrid("getRowIndex", rows[0]);
+                             //开启编辑
+                             datagrid.datagrid("beginEdit", index);
+                             //把当前开启编辑的行赋值给全局变量editRow
+                             editRow = index;
+                             //当开启了当前选择行的编辑状态之后，
+                             //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
+                             datagrid.datagrid("unselectAll");
+                         }
+                     }
+
+                 }
+             }
+         }, '-',
+         {
+             text: '保存', iconCls: 'icon-save', handler: function () {
+                 //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                 datagrid.datagrid("endEdit", editRow);
+                 var row = $('#TableList_0_1').datagrid('getSelected');
+                 // var row = $("#dd").datagrid('getChanges');
+                 if (row) {
+                     var index = $('#TableList_0_1').datagrid('getRowIndex', row);
+                     var rowdata = $('#TableList_0_1').datagrid('getData');
+                     var ID = rowdata.rows[index].ID;
+                     var operator = rowdata.rows[index]._operator;
+                     var pddate = rowdata.rows[index].date;
+                     var ps = rowdata.rows[index].ps;
+                     var zctype = rowdata.rows[index].property;
+
+                     $.ajax({
+
+                         type: "post",
+                         url: "/Depreciation/AddDP",
+                         data: { JSdata:  ID+","+operator+ "," + ps +","+pddate+","+zctype},
+                         datatype: "json",//数据类型
+
+                         success: function (result) {
+
+
+                             alert("添加成功！");
+                             $('#TableList_0_1').datagrid('reload');
+
+
+                         }, error: function (msg) {
+                             alert("Error");
+                         }
+                     });
+
+                 }
+                 else alert("请选择您要更改的用户数据！")
+
+
+                 //...
+             }
+         }, '-',
+         {
+             text: '取消编辑', iconCls: 'icon-redo', handler: function () {
+                 //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
+                 editRow = undefined;
+                 datagrid.datagrid("rejectChanges");
+                 datagrid.datagrid("unselectAll");
+             }
+         }, '-',
+         {
+             text: '开始盘点', iconCls: 'icon-search', handler: function () {
+                 //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
+                 var rowdata = $('#TableList_0_1').datagrid('getData');
+                 try {
+                     var sysamount = rowdata.row[CurrentRow].sysamount;//因为IE不允许空值，所以catch掉，不过不影响数据。
+                 }
+                 catch (e)
+                 {
+                 }
+                 if (AssetState != "未盘点" && AssetState == "盘点中")
+                 {
+                     alert("当前盘点单已开始盘点！");
+                 }
+                 else if (AssetState != "未盘点" && AssetState == "已盘点") {
+                     alert("该盘点单已盘点完成！");
+                 }
+                 else {
+                     if (sysamount == null)
+                         alert("请先选择您要盘点资产的明细！")
+                     else {
+                         alert("请在盘点明细列表导入盘点数据的Excel");
+                         //  alert(PDsearial);
+                         $.ajax({
+
+                             type: "post",
+                             url: "/Depreciation/ChangeState?JSdata=2",//这里1代表未盘点，2代表盘点中，3代表已盘点
+
+                             datatype: "json",//数据类型
+
+                             success: function (result) {
+
+
+
+                             }, error: function (msg) {
+                                 alert("未能改变当前盘点单的盘点状态！");
+                             }
+                         });
+                         $('#TableList_0_1').datagrid('reload');
+                     }
+                 }
+             }
+
+         }, '-',
+         {
+             text: '结束盘点', iconCls: 'icon-sum', handler: function () {
+                 //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
+
+                 if (AssetState == "未盘点") {
+                     alert("该盘点单尚未开始盘点，请核对。");
+                 }
+                 else if (AssetState == "已盘点")
+                     alert("该盘点单已完成盘点，不能对其修改，您可以新建盘点单，重新盘点。");
+                 else {
+                     alert("盘点数据已保存");
+
+                     $.ajax({
+
+                         type: "post",
+                         url: "/Depreciation/ChangeState?JSdata=3",//这里1代表未盘点，2代表盘点中，3代表已盘点
+
+                         datatype: "json",//数据类型
+
+                         success: function (result) {
+
+
+
+                         }, error: function (msg) {
+                             alert("未能改变当前盘点单的盘点状态！");
+                         }
+                     });
+                     $('#TableList_0_1').datagrid('reload');
+                 }
+             }
+
+         }, '-',
+         {
+             text: '导出数据', iconCls: 'icon-save', handler: function () {
+                 //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
+
+                 var filename = getNowFormatDate_FileName();
+
+                 Export(filename, $('#TableList_0_1'));
+
+             }
+
+         }
+
+        ],
+
+        onSelect: function (index, row) {
+          /*  var data = $('#TableList_0_1').datagrid('getData');
+            alert(index);
+            for (var i = index+1; i < data.rows.length; i++)
+            {
+                alert(i);
+                $("#TableList_0_1")[i].disabled = true;
+            }
+            for (var i = 0; i < index + 1; i++) {
+                alert(i);
+                $("#TableList_0_1")[i].disabled = true;
+            }
+            */
+            var rowdata = $('#TableList_0_1').datagrid('getData');
+            try{
+                var ID = rowdata.rows[index].ID;//暂时先用ID代替编号
+            }
+            catch(e)
+            {
+            }
+            PDsearial = ID;
+            
+            $.ajax({
+
+                type: "post",
+                url: "/Depreciation/SetPDsearialSession",
+                data: { Json: PDsearial},
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                 
+
+                }, error: function (msg) { 
+                    
+                    alert("盘点单号传递失败！");
+                }
+            });
+
+            $.ajax({
+
+                type: "post",
+                url: "/Depreciation/SetCurrentRow",
+                data: { Json: index },
+                datatype: "json",//数据类型
+
+                success: function (result) {
+
+
+                }, error: function (msg) {
+
+                    alert("盘点单索引传递失败！");
+                }
+            });
+            try {
+                AssetState = rowdata.rows[index].state;
+            }
+            catch (e)
+            {
+
+            }
+            LoadInitData_Detail(PDsearial);
+        },
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            //endEdit该方法触发此事件
+            console.info(rowData);
+            editRow = undefined;
+        },
+        onDblClickRow: function (rowIndex, rowData) {
+            //双击开启编辑行
+            if (AssetState == "已盘点") {
+                alert("该盘点单已盘点，不可修改！");
+            }
+            else {
+                if (editRow != undefined) {
+                    datagrid.datagrid("endEdit", editRow);
+                }
+                if (editRow == undefined) {
+                    datagrid.datagrid("beginEdit", rowIndex);
+                    editRow = rowIndex;
+                }
+            }
+        },
+     singleSelect: true, //允许选择多行
+    selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+    checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+    fitColumns: false,
+
+       
     });
-    loadPageTool();
+    $('#TableList_0_1').datagrid({
+        onLoadSuccess: function (data) {
+            if (flag !="0") {
+                $.ajax({
+
+                    type: "post",
+                    url: "/AssetDeatails/Get_Current_Row",
+
+                    datatype: "json",//数据类型
+
+                    success: function (result) {
+                        $('#TableList_0_1').datagrid('selectRow', result);
+
+                    }, error: function (msg) {
+
+                        alert("盘点单索引传递失败！");
+                    }
+                });
+            }
+            flag = "1";
+           
+        }
+    });
+   // loadtool();
 }
 
-function loadPageTool() {
+function loadtool() {
     var pager = $('#TableList_0_1').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
-        buttons: [{
-            text: '添加',
-            iconCls: 'icon-add',
-            height: 50,
-            handler: function () {
-                var $winADD;
-                $winADD = $('#modalwindow').window({
-                    title: '添加资产',
-                    width: 860,
-                    height: 540,
-                    top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
-                    left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
-                    
-                    shadow: true,
-                    modal: true,
-                    iconCls: 'icon-add',
-                    closed: true,
-                    minimizable: false,
-                    maximizable: false,
-                    collapsible: true,
-                    fit: true,
-                    fitColum:true,
-                    onClose: function () {
-                        $('#TableList_0_1').datagrid('reload');
-                        //    var resultAlert = "成功插入记录！";
-                        //    $.messager.show({
-                        //        title: '提示',
-                        //        msg: resultAlert,
-                        //        showType: 'slide',
-                        //        style: {
-                        //            right: '',
-                        //            top: document.body.scrollTop + document.documentElement.scrollTop,
-                        //            bottom: ''
-                        //        }
-                        //    });
-                    }
-                });
-                $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='/Asset/AddAsset'></iframe>");
-                $winADD.window('open');
-            }
-        }, {
-            text: '删除',
-            iconCls: 'icon-remove',
-            height: 50,
-            handler: function () {
-                //获取选择行
-                var rows = $('#TableList_0_1').datagrid('getSelections');
-                var IDS = [];
-                for (var i = 0; i < rows.length; i++) {
-                    IDS[i] = rows[i].ID;
-                }
-                //将数据传入后台
-                $.ajax({
-                    url: '/Asset/deleteAssets',
-                    data: { "selectedIDs": IDS },
-                    //data: _list,  
-                    dataType: "json",
-                    type: "POST",
-                    traditional: true,
-                    success: function () {
-                        $('#TableList_0_1').datagrid('reload');
-                        //var resultAlert = "成功删除记录！";
-                        //$.messager.show({
-                        //    title: '提示',
-                        //    msg: resultAlert,
-                        //    showType: 'slide',
-                        //    style: {
-                        //        right: '',
-                        //        top: document.body.scrollTop + document.documentElement.scrollTop,
-                        //        bottom: ''
-                        //    }
-                        //});
-                    }
-                });
-            }
-        }, {
-            text: '刷新',
-            height: 50,
-            iconCls: 'icon-reload',
-            handler: function () {
-                $('#TableList_0_1').datagrid('reload');
-                //alert('刷新');
-            }
-        }, {
-            text: '导出',
-            height: 50,
-            iconCls: 'icon-save',
-            handler: function () {
-                var filename = getNowFormatDate_FileName();
-
-                Export(filename, $('#TableList_0_1'));
-            }
-        }],
+       
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
-function LoadInitData_Detail(searchCondtiion) {
-    //  alert("查询条件是：---" + searchCondtiion);
+function LoadInitData_Detail(PDsearial) {
     $('#TableList_0_2').datagrid({
-        url: '/Depreciation/Load_Inventory_details?JSdata=' + "ZC2016050500000006" + '', //+ , 
+        url: '/Depreciation/Load_Inventory_details?JSdata=' + PDsearial + '', //+ , 
         //  url: '/SysSetting/getpageOrder?role=1&tableType=1',yy
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
-        fitColumn: true,
+       // fitColumn: true,
         // fit:true ,
         iconCls: 'icon-save',
         dataType: "json",
@@ -197,35 +585,72 @@ function LoadInitData_Detail(searchCondtiion) {
         pageNumber: 1, //默认显示第几页 
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
-            { field: 'ID', title: '序号', width: 50 },
-            { field: 'state', title: '状态', width: 50 },//需要formatter字体颜色
-            { field: 'amountOfSys', title: '系统数量', width: 50 },
-            { field: 'amountOfInv', title: '盘点数量', width: 50 },
-            { field: 'difference', title: '盘点差异', width: 50 },
-            { field: 'serial_number_Asset', title: '资产编号', width: 50 },
-            { field: 'type_Asset', title: '资产类别', width: 50 },
-            { field: 'name_Asset', title: '资产名称', width: 50 },
-            { field: 'specification', title: '规格型号', width: 50 },
-            { field: 'measurement', title: '计量单位', width: 50 },
-            { field: 'unit_price', title: '单价', width: 50 },
-            { field: 'amount', title: '数量', width: 50 },
-            { field: 'Total_price', title: '总价', width: 50 },
-            { field: 'department_using', title: '使用部门', width: 50 },
-            { field: 'address', title: '存放地址', width: 50 },
-            { field: 'owener', title: '使用人', width: 50 },
-            { field: 'state_asset', title: '资产状态', width: 50 },
-            { field: 'supllier', title: '供应商', width: 50 }
+            { field: 'ID', title: '序号', width: 150 },
+            {
+                field: 'state', title: '状态', width: 150,
+                formatter: function (state) {
+                    switch (state) {
+                        case "盘亏":
+                            return '<span style="color:red">' + state + '</span>';
+                            break;
+                        case "持平":
+                            return '<span style="color:black">' + state + '</span>';
+                            break;
+                        case "盘盈":
+                            return '<span style="color:green">' + state + '</span>';
+                            break;
+                    }
+                }
+            },//需要formatter字体颜色
+            { field: 'amountOfSys', title: '系统数量', width: 150 },
+            { field: 'amountOfInv', title: '盘点数量', width: 150 },
+            {
+                field: 'difference', title: '盘点差异', width: 150,
+                 formatter: function (amount) {
+                    
+                        if (parseInt(amount) < 0)
+                            return '<span style="color:red">'+amount+'</span>';
+                        if (parseInt(amount) == 0)
+                            return amount;
+                        if(parseInt(amount) >0)
+                            return '<span style="color:green">' + amount + '</span>';
+                  
+                       
+                   
+                }
+            },
+            { field: 'serial_number_Asset', title: '资产编号', width: 150 },
+            { field: 'type_Asset', title: '资产类别', width:150 },
+            { field: 'name_Asset', title: '资产名称', width: 150 },
+            { field: 'specification', title: '规格型号', width: 150 },
+            { field: 'measurement', title: '计量单位', width: 150 },
+            { field: 'unit_price', title: '单价', width: 150 },
+            { field: 'amount', title: '数量', width: 150 },
+            { field: 'Total_price', title: '总价', width: 150 },
+            { field: 'department_using', title: '使用部门', width: 150 },
+            { field: 'address', title: '存放地址', width: 150 },
+            { field: 'owener', title: '使用人', width: 150 },
+            {
+                field: 'state_asset', title: '资产状态', width: 150,
+                
+            },
+            { field: 'supllier', title: '供应商', width: 150 }
                            
 
 
 
         ]],
+       
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
-        fitColumns: true
+        fitColumns: false
+        
     });
     loadPageTool_Detail();
+
+
+    
 }
 
 function loadPageTool_Detail() {
@@ -236,6 +661,11 @@ function loadPageTool_Detail() {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
+                if (AssetState != "未盘点")
+                {
+                    alert("只能对未盘点的盘点单新增盘点明细！请重新选择盘点单！");
+                    return;
+                }
                 var $winADD;
                 $winADD = $('#modalwindow').window({
                     title: '新增明细',
@@ -251,7 +681,9 @@ function loadPageTool_Detail() {
                     maximizable: false,
                     collapsible: false,
                     onClose: function () {
+                        AssetState = "";
                         $('#TableList_0_1').datagrid('reload');
+                        $('#TableList_0_2').datagrid('reload');
                         //    var resultAlert = "成功插入记录！";
                         //    $.messager.show({
                         //        title: '提示',
@@ -269,44 +701,65 @@ function loadPageTool_Detail() {
                 $winADD.window('open');
             }
         },
-          {
-              text: '导入盘点数据',
-              iconCls: 'icon-save',
-              height: 50,
-              handler: function () {
-                  var $winADD;
-                  $winADD = $('#filewindow').window({
-                      title: '导入盘点数据',
-                      width: 450,
-                      height: 280,
-                      top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
-                      left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
-                      shadow: true,
-                      modal: true,
-                      iconCls: 'icon-add',
-                      closed: true,
-                      minimizable: false,
-                      maximizable: false,
-                      collapsible: false,
-                      onClose: function () {
-                          $('#TableList_0_2').datagrid('reload');
-                          alert('盘点数据提交成功！');
-                          //    $.messager.show({
-                          //        title: '提示',
-                          //        msg: resultAlert,
-                          //        showType: 'slide',
-                          //        style: {
-                          //            right: '',
-                          //            top: document.body.scrollTop + document.documentElement.scrollTop,
-                          //            bottom: ''
-                          //        }
-                          //    });
-                      }
-                  });
-                  $("#filewindow").html("<iframe width='100%' height='99%' scrolling='yes' name='ghrzFrame' frameborder='0' src='/Verify/AddExcel'></iframe>");
-                  $winADD.window('open'); 
+         
+         {
+             text: '导入盘点数据',
+             iconCls: 'icon-save',
+             height: 50,
+             handler: function () {
+                 
+                 if (AssetState == "未盘点")
+                     alert("尚未对该盘点单添加盘点明细或尚未开始盘点！");
+                 if (AssetState == "已盘点")
+                     alert("该盘点单已完成盘点，您可以新增盘点单进行您要的盘点操作！")
+                 if (AssetState == "")
+                     alert("请选择盘点单据！")
+                 if (AssetState == "盘点中") {
+                     var $winADD;
+                 $winADD = $('#filewindow').window({
+                     title: '导入盘点数据',
+                     width: 450,
+                     height: 280,
+                     top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
+                     left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+                     shadow: true,
+                     modal: true,
+                     iconCls: 'icon-add',
+                     closed: true,
+                     minimizable: false,
+                     maximizable: false,
+                     collapsible: false,
+                     onClose: function () {
+                         $('#TableList_0_2').datagrid('reload');
+                         // alert('盘点数据提交成功！');
+                         //    $.messager.show({
+                         //        title: '提示',
+                         //        msg: resultAlert,
+                         //        showType: 'slide',
+                         //        style: {
+                         //            right: '',
+                         //            top: document.body.scrollTop + document.documentElement.scrollTop,
+                         //            bottom: ''
+                         //        }
+                         //    });
+                     }
+                 });
+                 $("#filewindow").html("<iframe width='100%' height='99%' scrolling='yes' name='ghrzFrame' frameborder='0' src='/Verify/AddExcel'></iframe>");
+                 $winADD.window('open'); 
+             }
+             }
+         },
+      {    
+     text: '导出',
+     height: 50,
+     iconCls: 'icon-save',
+     handler: function () {
+        var filename = getNowFormatDate_FileName();
 
-              }
+        Export(filename, $('#TableList_0_2'));
+
+    }
+
           
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
@@ -425,6 +878,69 @@ function ReadExcel()
     oXL.Quit();
     CollectGarbage();
 }
+function getTime(/** timestamp=0 **/) {
+    var ts = arguments[0] || 0;
+    var t, y, m, d, h, i, s;
+    t = ts ? new Date(ts * 1000) : new Date();
+    y = t.getFullYear();
+    m = t.getMonth() + 1;
+    d = t.getDate();
+    h = t.getHours();
+    i = t.getMinutes();
+    s = t.getSeconds();
+    // 可根据需要在这里定义时间格式  
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (i < 10 ? '0' + i : i) + ':' + (s < 10 ? '0' + s : s);
+}
+function getNowFormatDate_FileName() {
+    var date = new Date();
+    var seperator1 = "";
+    var seperator2 = "";
+    var month = date.getMonth() + 1;
+    var strDate = date.getDate();
+    if (month >= 1 && month <= 9) {
+        month = "0" + month;
+    }
+    if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+    }
+    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+            + "" + date.getHours() + seperator2 + date.getMinutes()
+            + seperator2 + date.getSeconds();
+    return currentdate;
+}
+
+
+// 时间格式化
+Date.prototype.format = function (format) {
+    /*
+    * eg:format="yyyy-MM-dd hh:mm:ss";
+    */
+    if (!format) {
+        format = "yyyy-MM-dd hh:mm:ss";
+    }
+
+    var o = {
+        "M+": this.getMonth() + 1, // month
+        "d+": this.getDate(), // day
+        "h+": this.getHours(), // hour
+        "m+": this.getMinutes(), // minute
+        "s+": this.getSeconds(), // second
+        "q+": Math.floor((this.getMonth() + 3) / 3), // quarter
+        "S": this.getMilliseconds()
+        // millisecond
+    };
+
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return format;
+};
 function readThis() {
     var tempStr = "";
     var filePath = document.all.upfile.value;

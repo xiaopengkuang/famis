@@ -102,6 +102,7 @@ namespace FAMIS.Controllers
              int rid = int.Parse(temp[0]);
              string searchtype = temp[1];
              string searchmethod = temp[2];
+             string pdsearial = temp[3];
 
             
              if (searchtype == SystemConfig.nameFlag_2_SYBM)
@@ -122,7 +123,7 @@ namespace FAMIS.Controllers
                  {
                      var rule_tb = new tb_Asset_inventory_Details
                      {
-                          serial_number="",
+                          serial_number = pdsearial,
                           state="盘亏",
                           amountOfSys=asset.amount,
                           amountOfInv=0,
@@ -130,6 +131,7 @@ namespace FAMIS.Controllers
                           serial_number_Asset=asset.serial_number
 
                      };
+
                      db.tb_Asset_inventory_Details.Add(rule_tb);
                     
                  
@@ -164,10 +166,10 @@ namespace FAMIS.Controllers
 
                      };
                      db.tb_Asset_inventory_Details.Add(rule_tb);
-                     db.SaveChanges();
+                    
 
                  }
-
+                 db.SaveChanges();
 
              }
              if (searchtype == SystemConfig.nameFlag_2_ZCZT)
@@ -197,25 +199,71 @@ namespace FAMIS.Controllers
 
                      };
                      db.tb_Asset_inventory_Details.Add(rule_tb);
-                     db.SaveChanges();
+                   
 
                  }
-
+                 db.SaveChanges();
 
              }
 
+             AddPDList(pdsearial);//添加盘点明细汇总数据到盘点表。
+
              return "";
             
+         
+         }
+         public void AddPDList(string pdsearial)
+         {
+             int? sys = 0;
+             int? ivt = 0;
+             int? def = 0;
+             var q = from o in db.tb_Asset_inventory_Details
+                     where o.serial_number == pdsearial
+                     select o;
+             foreach(var p in q)
+             {
+                 sys += p.amountOfSys;
+                 ivt += p.amountOfInv;
+                 def += p.difference;
+             }
+             
+             var z = from o in db.tb_Asset_inventory
+                     where o.ID.ToString() == pdsearial
+                     select o;
+             foreach (var p in z)
+             {
+                 p.amountOfSys = sys;
+                 p.amountOfInv = ivt;
+                 p.difference = def;
+             }
+             db.SaveChanges();
+
          
          }
        [HttpPost]
         public string Get_Serial_Deatails()
          {
              string json = "";
+              
+                 json = Session["Deatails_Searial"].ToString();
+             
 
-             json = Session["Deatails_Searial"].ToString();
             return json;
         }
+       [HttpPost]
+       public string Get_Current_Row()
+       {
+           string json = "";
+           try
+           {
+               json = Session["CurrentRow"].ToString();
+           }
+           catch 
+           {
+               return json;
+           }
+           return json;
+       }
         [HttpPost]
         public JsonResult Load_Asset(string JSdata)
         {

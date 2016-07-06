@@ -197,15 +197,17 @@ namespace FAMIS.Controllers
             var json = new
             {
                 total = list.Count(),
-                rows = (from r in list
-                        select new tb_user()
+                rows = (from u in db.tb_user
+                        join r in db.tb_role on u.roleID_User equals r.ID
+                        join d in db.tb_department on u.ID_DepartMent equals d.ID
+                        select new  
                         {
-                             ID=r.ID,
-                            name_User = r.name_User,
-                            password_User=r.password_User,
-                            true_Name=r.true_Name,
-                            roleID_User = r.roleID_User,
-                            ID_DepartMent=r.ID_DepartMent
+                             ID=u.ID,
+                            name_User = u.name_User,
+                            password_User=u.password_User,
+                            true_Name=u.true_Name,
+                            roleID_User = r.name,
+                            ID_DepartMent=d.name_Department
                         }).ToArray()
             };
             return Json(json, JsonRequestBehavior.AllowGet);

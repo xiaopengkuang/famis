@@ -165,6 +165,24 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             return json;
         }
         [HttpPost]
+        public String GetUserID()
+        {
+
+            List<tb_user> list = mydb.tb_user.OrderBy(a => a.ID).ToList();
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            var result = (from r in list
+                          select new tb_user()
+                          {
+                              ID = r.ID,
+                              true_Name = r.true_Name
+                          }).ToList();
+
+            String json = jss.Serialize(result).ToString().Replace("\\", "");
+
+
+            return json;
+        }
+        [HttpPost]
         public String GetDepID()
         {
 
@@ -413,11 +431,27 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             catch(Exception e) {
                 ;
             }
+            int rid=0;
+            int did=0; 
+             string ridtemp=JSdata.Split(',')[4];
+             string deptemp = JSdata.Split(',')[5];
             string name = JSdata.Split(',')[1];
             string pwd = JSdata.Split(',')[2];
             string tname = JSdata.Split(',')[3];
-            int rid = int.Parse(JSdata.Split(',')[4]);
-            int did = int.Parse(JSdata.Split(',')[5]);
+            IEnumerable<int> ri = from o in mydb.tb_role
+                     where o.name == ridtemp
+                     select o.ID;
+            foreach (int roids in ri)
+            {
+                rid = roids;
+            }
+            IEnumerable<int> de = from o in mydb.tb_department
+                     where o.name_Department ==deptemp
+                     select o.ID;
+            foreach (int d in de)
+            {
+                did = d;
+            }
             /* var q = from p in mydb.tb_Menu
               where p.Role_ID == Roleid
               select p;*/
