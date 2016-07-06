@@ -48,6 +48,33 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult Repair_edit(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+        public ActionResult Repair_detail(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+        public ActionResult Repair_review(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
 
 
         [HttpPost]
@@ -160,6 +187,324 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
+
+        }
+
+        [HttpPost]
+        public JsonResult getRepairByID(int? id)
+        {
+
+            var data = from p in DB_C.tb_Asset_Repair
+                       where p.ID == id
+                       where p.flag == true
+                       join tb_SP in DB_C.tb_supplier on p.supplierID_Torepair equals tb_SP.ID into temp_SP
+                       from SP in temp_SP.DefaultIfEmpty()
+                       join tb_AS in DB_C.tb_Asset on p.ID_Asset equals tb_AS.ID into temp_AS
+                       from AS in temp_AS.DefaultIfEmpty()
+                       select new Json_repair_edit
+                       {
+                           Address_supplier=SP.address,
+                           CostToRepair=p.CostToRepair==null?0:p.CostToRepair,
+                           date_ToRepair=p.date_create,
+                           date_ToReturn=p.date_ToReturn,
+                           ID=p.ID,
+                           ID_Asset=p.ID_Asset,
+                           linkMan_supplier=SP.linkman,
+                           Name_asset=AS.name_Asset,
+                           Name_equipment=p.Name_equipment,
+                           note_repair=p.note_repair,
+                           reason_ToRepair=p.reason_ToRepair,
+                           serial_asset=AS.serial_number,
+                           serialNumber=p.serialNumber,
+                           supplierID_Torepair=p.supplierID_Torepair,
+                           supplierName_Torepair=SP.name_supplier,
+                           userID_applying=p.userID_applying,
+                           userID_authorize=p.userID_authorize
+                       };
+            Json_repair_edit result = data.First();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public int updateRepairStateByID(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_State_Update Json_data = serializer.Deserialize<Json_State_Update>(data);
+            if (Json_data != null)
+            {
+                 if(isOkToReview_Repair(Json_data.id_state,Json_data.id_Item))
+                 {
+                     if (!RightToSubmit_Repair(Json_data.id_state, Json_data.id_Item))
+                     {
+                        return -2;
+                     }
+                 }
+                 int id_state_target = commonConversion.getStateListID(Json_data.id_state);
+                 try {
+                     //获取用户ID
+                     int? userID = commonConversion.getUSERID();
+                     var db_data = from p in DB_C.tb_Asset_Repair
+                                   where p.flag == true
+                                   where p.ID == Json_data.id_Item
+                                   select p;
+                     foreach (var item in db_data)
+                     {
+                         item.state_list = id_state_target;
+                         item.date_create = DateTime.Now;
+                     }
+                     if (commonConversion.is_YSH(Json_data.id_state))
+                     {
+
+                         foreach (var item in db_data)
+                         {
+                             item.userID_review = userID;
+                             item.date_review = DateTime.Now;
+                             item.content_Review = Json_data.review;
+                         }
+
+                         List<int> ids_asset = getAssetIdsByRepairID(Json_data.id_Item);
+                         var dataAsset = from p in DB_C.tb_Asset
+                                         where p.flag == true
+                                         where ids_asset.Contains(p.ID)
+                                         select p;
+                         if (dataAsset != null && dataAsset.Count() > 0 && dataAsset.Count() != ids_asset.Count)
+                         {
+                             return -3;
+                         }
+                         foreach (var item_as in dataAsset)
+                         {
+                             item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_loan);
+                         }
+                     }
+                     DB_C.SaveChanges();
+                     return 1;
+                 }catch(Exception e){
+                     return 0;
+                 }
+
+            }
+            return 0;
+           
+        }
+
+
+        /// <summary>
+        /// 判断单据是否有权限去操作
+        /// </summary>
+        /// <param name="id_stateTarget"></param>
+        /// <param name="id_Repair"></param>
+        /// <returns></returns>
+        public bool isOkToReview_Repair(int? id_stateTarget, int? id_Repair)
+        {
+            if (id_Repair == null || id_stateTarget == null || !SystemConfig.state_List.Contains((int)id_stateTarget))
+            {
+                return false;
+            }
+            //获取当前状态
+            var data = from p in DB_C.tb_Asset_Repair
+                       where p.flag == true
+                       where p.ID == id_Repair
+                       join tb_SL in DB_C.tb_State_List on p.state_list equals tb_SL.id
+                       select new dto_state_List
+                       {
+                           id = tb_SL.id,
+                           Name = tb_SL.Name,
+                       };
+            dto_state_List item = data.First();
+            if (item != null)
+            {
+                String stateName = item.Name;
+                String stateName_target = commonConversion.getTargetStateName(id_stateTarget);
+                bool fs = false;
+                switch (stateName_target)
+                {
+                    case SystemConfig.state_List_CG:
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_DSH:
+                        {
+                            if (SystemConfig.state_List_DSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_YSH:
+                        {
+                            if (SystemConfig.state_List_YSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_TH:
+                        {
+                            if (SystemConfig.state_List_TH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    default: { fs = false; }; break;
+                }
+                return fs;
+            }
+            return false;
+        }
+
+
+
+
+
+
+        [HttpPost]
+        public int Handler_UpdateRepairList(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_repair_add Json_data = serializer.Deserialize<Json_repair_add>(data);
+            if (Json_data == null || Json_data.id == null)
+            {
+                return 0;
+            }
+            try {
+                if (!RightToSubmit_Repair(Json_data.state_list, Json_data.id))
+                {
+                    return -2;
+                }
+                var db_data = from p in DB_C.tb_Asset_Repair
+                              where p.ID == Json_data.id
+                              select p;
+                foreach(var item in db_data)
+                {
+                    item.CostToRepair = Json_data.Cost_Repair;
+                    item.date_ToRepair = Json_data.dateToP;
+                    item.date_ToReturn = Json_data.dateToR;
+                    item.ID_Asset = Json_data.id_asset_repair;
+                    item.Name_equipment = Json_data.name_Equipment;
+                    item.note_repair = Json_data.note_add;
+                    item.reason_ToRepair = Json_data.reason_add;
+                    item.state_list = commonConversion.getStateListID(Json_data.state_list);
+                    item.supplierID_Torepair = Json_data.supplier_repair;
+                    item.userID_applying = Json_data.UAP_add;
+                    item.userID_authorize = Json_data.UAT_add;
+                    item.date_create = DateTime.Now;
+                }
+                DB_C.SaveChanges();
+                return 1;
+            }
+            catch (Exception e) {
+                return -3;
+            }
+        }
+
+
+
+        /// <summary>
+        /// 判断选中资产是否满足条件
+        /// </summary>
+        /// <param name="id_state_target"></param>
+        /// <param name="id_repair"></param>
+        /// <returns></returns>
+        public bool RightToSubmit_Repair(int? id_state_target, int? id_repair)
+        {
+            if (id_repair == null || id_state_target==null)
+            {
+                return false;
+            }
+            String NameTarget = commonConversion.getTargetStateName(id_state_target);
+            if (NameTarget == SystemConfig.state_List_YSH)
+            {
+                //获取AssetID
+                List<int> ids_asset = getAssetIdsByRepairID(id_repair);
+
+                //没有附加明细
+                if (ids_asset.Count == 0)
+                {
+                    return false;
+                }
+
+                //检查里面是否还有不是在用状态状态的资产
+                var checkData = from p in DB_C.tb_Asset
+                                where p.flag == true
+                                where ids_asset.Contains(p.ID)
+                                join tb_AS in DB_C.tb_dataDict_para on p.state_asset equals tb_AS.ID
+                                where tb_AS.name_para == SystemConfig.state_asset_using
+                                select p;
+                if (checkData.Count() == ids_asset.Count)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public List<int> getAssetIdsByRepairID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_Repair
+                       where p.ID == id
+                       where p.flag == true || p.flag == null
+                       select p;
+
+            List<int> ids = new List<int>();
+            foreach (var item in data)
+            {
+                ids.Add((int)item.ID_Asset);
+            }
+            return ids;
+        }
+
+
+        /// <summary>
+        /// 判断当前用户是否拥有该单据的编辑权
+        /// 默认只有创建者才拥有编辑权限 超级管理员也不行
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public int RightToEdit(int? id)
+        {
+            //获取当前用户
+            int? userID = commonConversion.getUSERID();
+            if (id == null)
+            {
+                return 0;
+            }
+            tb_Asset_Repair data = DB_C.tb_Asset_Repair.Where(a => a.ID == id).First();
+
+            if (data != null)
+            {
+
+                if (data.userID_create == userID)
+                {
+                    //单据状态处于状态
+                    var info = from p in DB_C.tb_State_List
+                               where p.id == data.state_list
+                               select p;
+                    if (info.Count() == 1)
+                    {
+                        foreach (var item in info)
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(item.Name))
+                            {
+                                return 1;
+                            }
+                        }
+                        return 0;
+                    }
+
+
+                    return 0;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            return 0;
 
         }
 

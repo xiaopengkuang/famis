@@ -10,6 +10,7 @@ namespace FAMIS.DTO
     public class Json_repair_add
     {
 
+        public int? id { get; set; }
         public DateTime? dateToP { get; set; }
 
         public DateTime? dateToR { get; set; }

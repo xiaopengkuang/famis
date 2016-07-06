@@ -37,6 +37,7 @@ namespace FAMIS.Models
 
         public int? supplierID { get; set; }
 
+        [Column(TypeName = "date")]
         public DateTime? Time_Purchase { get; set; }
 
         public int? YearService_month { get; set; }
