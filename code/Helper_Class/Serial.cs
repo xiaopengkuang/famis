@@ -1,15 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using FAMIS.Models;
+using FAMIS.DTO;
+using FAMIS.Helper_Class;
 using System.Collections;
-using System.Collections.Generic;
-
+using System.ComponentModel;
+using System.Data;
+using System.Text;
+using System.Reflection;
+using System.Threading.Tasks;
+using FAMIS.DataConversion;
+using FAMIS.ViewCommon;
+using FAMIS.DAL;
+using System.Web.Script.Serialization;
+using System.Runtime.Serialization.Json;
+using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 namespace FAMIS.Helper_Class
 {
     public class Serial
     {
+        private FAMISDBTBModels db = new FAMISDBTBModels();
         public String GetSerialNumber(String serialNumber, int serial_bits, String shead, bool YYYY, bool MM, bool DD)//根据现有的序列号生成新的序列号
         {
             String temp = "";
@@ -90,7 +105,133 @@ namespace FAMIS.Helper_Class
             return shead + hdate + temp.Substring(0, serial_bits);
 
         }
+        public string GetlatestSearial(string shead)
+        {
+            string latest_serial="";
+            switch (shead)
+            {
+                case "PD":
+                    {
+                        var q = from o in db.tb_Asset_inventory
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serial_number != null)
+                                latest_serial = p.serial_number;
 
+                        }
+
+                        break;
+                    }
+                case "ZC":
+                    {
+                        var q = from o in db.tb_Asset
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serial_number != null)
+                                latest_serial = p.serial_number;
+
+                        }
+
+                        break;
+                    }
+                case "LY":
+                    {
+                        var q = from o in db.tb_Asset_collar
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serial_number != null)
+                                latest_serial = p.serial_number;
+
+                        }
+
+                        break;
+                    }
+                case "YH":
+                    {
+
+                        latest_serial = "YH20160707000001";//因为这些表数据库暂时还没有，所以随便初始化一个
+                        break;
+                    }
+
+                case "WX":
+                    {
+                        var q = from o in db.tb_Asset_Repair
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serialNumber != null)
+                                latest_serial = p.serialNumber;
+
+                        }
+
+                        break;
+                    }
+                case "JC":
+                    {
+
+                        latest_serial = "JC20160707000001";//因为这些表数据库暂时还没有，所以随便初始化一个
+                        break;
+                    }
+
+                case "DB":
+                    {
+                        var q = from o in db.tb_Asset_allocation
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serial_number != null)
+                                latest_serial = p.serial_number;
+
+                        }
+
+                        break;
+                    }
+                case "JS":
+                    {
+                        var q = from o in db.tb_Asset_Reduction
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.Serial_number != null)
+                                latest_serial = p.Serial_number;
+
+                        }
+
+                        break;
+                    }
+            }
+            return latest_serial; 
+
+        }
+        public ArrayList ReturnNewSearial(string shead,int num)
+        {
+            ArrayList ar = null;
+            int rulelenth=0;
+            string latest_serail=GetlatestSearial(shead);
+            
+            var q = from o in db.tb_Rule_Generate
+                    where o.Name_SeriaType==shead
+                    select o;
+            foreach (var p in q)
+            {
+                rulelenth = (p.Name_SeriaType + p.Rule_Generate).ToString().Length + (int)p.serialNum_length;
+                if (rulelenth != latest_serail.Length)
+                    ar = Serial_View(p.Rule_Generate, num, (int)p.serialNum_length);
+                else
+                   ar =Generate_SN_Interface(p.Rule_Generate, num, (int)p.serialNum_length, latest_serail);
+            }
+          
+            return ar;
+        }
 
         public ArrayList Serial_Generator(int bits, int num, String shead, bool YYYY, bool MM, bool DD) // 编号位数，编号个数，字母缩写，年，月，日
         {
