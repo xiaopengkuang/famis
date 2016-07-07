@@ -166,7 +166,7 @@ namespace FAMIS.Controllers
                 return 0;
             }
             //TODO:获取系列编号
-            String seriaNumber = commonConversion.getUnqiIDString();
+            String seriaNumber =commonController.getLatestOneSerialNumber(SystemConfig.serialType_WC);
             int? userID = commonConversion.getUSERID();
             
             int state_list_ID = commonConversion.getStateListID(data_json.state_list);
