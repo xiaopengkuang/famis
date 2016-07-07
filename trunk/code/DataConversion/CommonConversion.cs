@@ -20,11 +20,7 @@ namespace FAMIS.DataConversion
        
 
 
-        /// <summary>
-        /// 将Sting类型ID转换成List类型
-        /// </summary>
-        /// <param name="idStr"></param>
-        /// <returns></returns>
+      
         public List<int> StringToIntList(String idStr)
         {
             List<int> results = new List<int>();

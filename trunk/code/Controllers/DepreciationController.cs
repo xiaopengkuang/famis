@@ -18,6 +18,7 @@ using NPOI.HPSF;
 using NPOI.POIFS.FileSystem;
 using NPOI.SS.UserModel;
 using FAMIS.Helper_Class;
+using System.Collections;
 
 namespace FAMIS.Controllers
 {
@@ -29,6 +30,7 @@ namespace FAMIS.Controllers
         StringBuilder result_tree_SearchTree = new StringBuilder();
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         Excel_Helper excel = new Excel_Helper();
+        Serial serial = new Serial();
         public ActionResult depreciation()
         {
             return View();
@@ -106,13 +108,13 @@ namespace FAMIS.Controllers
             for (int i = 0; i < Assetrows.Length; i++)
             {
                
-                //StreamWriter sw = new StreamWriter("D:\\qp2.txt", true);
+               // StreamWriter sw = new StreamWriter("D:\\zima2.txt", true);
                 string[] parameters = Assetrows[i].Split(',');
-                if (parameters[1] == null)
+                if (parameters[1] == null || parameters[1]=="")
                     continue;
-              //  sw.WriteLine(parameters[1] + ",");
-              //  sw.WriteLine(GetMethod_depreciation(int.Parse(parameters[1])));
-               // sw.Close();
+               //   sw.WriteLine(parameters[1] + ",");
+               //  sw.WriteLine(GetMethod_depreciation(int.Parse(parameters[1])));
+              //  sw.Close();
             
                 switch (GetMethod_depreciation(int.Parse(parameters[1])))
                 {
@@ -194,12 +196,20 @@ namespace FAMIS.Controllers
         [HttpPost]
         public JsonResult Load_Asset(string JSdata)
         {
-            string[] temp = JSdata.Split('o');
-            int rid = int.Parse(temp[0]);
-            string searchtype = temp[1];
-            string searchmethod = temp[2];
+
+            int flagnum = int.Parse(JSdata);
+            int name_flag = flagnum/1000000;
+            string name_flag_string = "";
+            int item_id=flagnum%1000000;
+            IEnumerable<String> flags = from o in db.tb_dataDict
+                                        where o.ID == name_flag
+                                        select o.name_flag;
+            foreach(string p in flags)
+            {
+                name_flag_string = p;
+            }
             List<tb_Asset> list = db.tb_Asset.ToList();
-            if (searchtype == SystemConfig.nameFlag_2_SYBM)
+            if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
                 var json = new
                 {
@@ -208,7 +218,7 @@ namespace FAMIS.Controllers
                             join t in db.tb_AssetType on r.type_Asset equals t.ID
                             join D in db.tb_department on r.department_Using equals D.ID
                             join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
-                            where D.ID_Department.ToString() == searchmethod
+                            where D.ID_Department == item_id
                             select new
                             {
                                 ID = r.ID,
@@ -236,7 +246,7 @@ namespace FAMIS.Controllers
                 return Json(json, JsonRequestBehavior.AllowGet);
 
             }
-            if (searchtype == SystemConfig.nameFlag_2_ZCLB)
+            if (name_flag_string == SystemConfig.nameFlag_2_ZCLB)
             {
                 var json = new
                 {
@@ -245,7 +255,7 @@ namespace FAMIS.Controllers
                             join t in db.tb_AssetType on r.type_Asset equals t.ID
                             join D in db.tb_department on r.department_Using equals D.ID
                             join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
-                            where t.orderID == searchmethod
+                            where t.orderID == item_id.ToString()
                             select new
                             {
                                 ID = r.ID,
@@ -300,8 +310,20 @@ namespace FAMIS.Controllers
         public ActionResult PDdelete(string ID)
         {
 
-            var Model = db.tb_role.Find(int.Parse(ID));
-            db.tb_role.Remove(Model);
+            var Model = db.tb_Asset_inventory.Find(int.Parse(ID));
+            db.tb_Asset_inventory.Remove(Model);
+            db.SaveChanges();
+            var pdsearail=from o in db.tb_Asset_inventory
+                          where o.ID.ToString()==ID
+                          select o;
+            foreach(var p in pdsearail)
+            {
+                var deatails = from o in db.tb_Asset_inventory_Details
+                               where o.serial_number == p.ID.ToString()
+                               select o;
+
+                db.tb_Asset_inventory_Details.Remove((tb_Asset_inventory_Details)deatails);
+            }
             db.SaveChanges();
 
             return this.Json(Model);
@@ -310,6 +332,8 @@ namespace FAMIS.Controllers
         [HttpPost]
         public string AddDP(string JSdata)
         {
+            ArrayList mysearial = serial.ReturnNewSearial("PD", 1);
+            
             int id = 0;
             try
             {
@@ -321,7 +345,7 @@ namespace FAMIS.Controllers
             }
             string oper= JSdata.Split(',')[1];
             string ps = JSdata.Split(',')[2];
-            DateTime pddate = DateTime.Parse(JSdata.Split(',')[3]);
+            DateTime pddate = DateTime.Parse(JSdata.Split(',')[3].ToString());
             string type = JSdata.Split(',')[4];
 
 
@@ -336,6 +360,7 @@ namespace FAMIS.Controllers
             {
                 var rule_tb = new tb_Asset_inventory
                 {
+                     serial_number=mysearial[0].ToString(),
                      _operator = oper,
                      state="未盘点",
                      date=pddate,

@@ -7,7 +7,7 @@ namespace FAMIS.DataConversion
 {
     public static class SystemConfig
     {
-        public  const int ratio_dictPara = 100000;
+        public  const int ratio_dictPara = 1000000;
 
         public  const String role_menu = "menu";
         public  const String role_department = "department";
@@ -61,11 +61,14 @@ namespace FAMIS.DataConversion
         public static String[] treeType_collarSearch_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD };
         public static String[] treeType_allocation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD,nameFlag_2_SYRY };
         public static String[] treeType_repair_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD, nameFlag_2_SYRY };
+        public static String[] treeType_depreciation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB };
+        public static String[] treeType_newdeatails_Search_Menu = new String[] { nameFlag_2_SYBM,nameFlag_2_ZCLB,nameFlag_2_ZCZT};
         public const String treeType_Accounting = "Accounting";
         public const String treeType_collarSearch = "collarSearch";
         public const String treeType_allocationSearch = "allocationSearch";
-        public const String treeType_repairSearch = "repairSearch";  
-
+        public const String treeType_repairSearch = "repairSearch";
+        public const String treeType_depreciationSearch = "DepreciationSearch";
+        public const String treeType_newdeatails = "NewDeatails";  
         public static String state_asset_free = "闲置";
         public static String state_asset_using = "在用";
         public static String state_asset_bad = "报废";

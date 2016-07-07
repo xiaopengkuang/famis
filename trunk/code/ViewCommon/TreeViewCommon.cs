@@ -59,7 +59,7 @@ namespace FAMIS.ViewCommon
             }
              
            // orderID,name_Asset_Type,father_MenuID_Type,url,RoleID
-            string json = GetTreeJsonByTable(dt, "orderID", "name_Asset_Type", "url", "father_MenuID_Type", "0");
+            string json = GetTreeJsonByTable(dt, "ID", "name_Asset_Type", "url", "father_MenuID_Type", "0");
             return json;
         }
 
@@ -85,7 +85,7 @@ namespace FAMIS.ViewCommon
             }
             
             // orderID,name_Asset_Type,father_MenuID_Type,url,RoleID
-            string json = GetTreeJsonByTable(dt, "Department_ID", "name_Department", "url", "ID_Father_Department", "0");
+            string json = GetTreeJsonByTable(dt, "ID", "name_Department", "url", "ID_Father_Department", "0");
             return json;
         }
         public String getTreeJson(DataTable dt,string id,string name,string url ,string fatherid, string order)
@@ -191,15 +191,15 @@ namespace FAMIS.ViewCommon
 
             DataTable dt = new DataTable();
 
-          dt.Columns.Add("orderID");
+          dt.Columns.Add("ID");
             dt.Columns.Add("name_Asset_Type");
             dt.Columns.Add("father_MenuID_Type");
             dt.Columns.Add("url");
-            dt.Columns.Add("ID");
+            dt.Columns.Add("orderID");
 
 
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
-            SqlDataAdapter sda = new SqlDataAdapter("select orderID,name_Asset_Type,father_MenuID_Type,url,ID from tb_AssetType  order by orderID", con);
+            SqlDataAdapter sda = new SqlDataAdapter("select ID,name_Asset_Type,father_MenuID_Type,url,orderID from tb_AssetType  order by ID", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
             con.Close();
@@ -241,15 +241,15 @@ namespace FAMIS.ViewCommon
 
             DataTable dt = new DataTable();
 
-            dt.Columns.Add("Department_ID");
+            dt.Columns.Add("ID");
             dt.Columns.Add("name_Department");
             dt.Columns.Add("ID_Father_Department");
             dt.Columns.Add("url");
-            dt.Columns.Add("ID");
+            dt.Columns.Add("Department_ID");
 
         
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
-            SqlDataAdapter sda = new SqlDataAdapter("select ID_Department,name_Department,ID_Father_Department,url,ID from tb_department order by ID_Department", con);
+            SqlDataAdapter sda = new SqlDataAdapter("select ID,name_Department,ID_Father_Department,url,treeLevel from tb_department order by ID", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
             con.Close();

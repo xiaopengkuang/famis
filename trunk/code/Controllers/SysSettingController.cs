@@ -24,6 +24,8 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        
+
         [HttpPost]
         
         public ActionResult AddRule([Bind(Include = "Name_SeriaType,Rule_Generate,serialNum_length")] tb_Rule_Generate rule)
@@ -162,13 +164,20 @@ namespace FAMIS.Controllers
 
         }
         [HttpPost]
-        public ActionResult RoleDelete(string ID) {
-            
-            var Model = db.tb_role.Find(int.Parse(ID));
-            db.tb_role.Remove(Model);
+        public string RoleDelete(string ID) {
+
+            var q = from o in db.tb_role
+                    where o.ID.ToString() == ID
+                    select o;
+            foreach (var p in q)
+            {
+                if (!(bool)p.isSuperUser)
+                    p.flag = false;
+                else
+                    return "Supper";
+            }
             db.SaveChanges();
-            
-            return this.Json(Model);
+            return "OK";
         }
         [HttpPost]
         public ActionResult UserDelete(string ID)
@@ -229,6 +238,7 @@ namespace FAMIS.Controllers
             {
                 total = list.Count(),
                 rows = (from r in list
+                        where r.flag==true
                         select new tb_role()
                         {
                             ID = r.ID,

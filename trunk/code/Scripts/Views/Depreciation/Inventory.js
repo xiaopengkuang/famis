@@ -7,7 +7,8 @@ var AssetState = "";
 var Address = [{ "value": "1", "text": "固定资产" }, { "value": "3", "text": "低值易耗品" }];
 var CurrentRow = "0";
 var flag = "0";
-//alert(flag);
+var sysamount=0;
+alert("互相伤害啊！");
 //alert("asd");
 //alert("dsd");
 $(document).ready(function () {
@@ -317,7 +318,7 @@ function LoadInitData(searchCondtiion) {
                      var pddate = rowdata.rows[index].date;
                      var ps = rowdata.rows[index].ps;
                      var zctype = rowdata.rows[index].property;
-
+                     alert(pddate);
                      $.ajax({
 
                          type: "post",
@@ -356,12 +357,8 @@ function LoadInitData(searchCondtiion) {
              text: '开始盘点', iconCls: 'icon-search', handler: function () {
                  //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
                  var rowdata = $('#TableList_0_1').datagrid('getData');
-                 try {
-                     var sysamount = rowdata.row[CurrentRow].sysamount;//因为IE不允许空值，所以catch掉，不过不影响数据。
-                 }
-                 catch (e)
-                 {
-                 }
+                 
+                
                  if (AssetState != "未盘点" && AssetState == "盘点中")
                  {
                      alert("当前盘点单已开始盘点！");
@@ -370,8 +367,9 @@ function LoadInitData(searchCondtiion) {
                      alert("该盘点单已盘点完成！");
                  }
                  else {
+                      
                      if (sysamount == null)
-                         alert("请先选择您要盘点资产的明细！")
+                         alert("请先选择您要盘点资产的明细！");
                      else {
                          alert("请在盘点明细列表导入盘点数据的Excel");
                          //  alert(PDsearial);
@@ -457,12 +455,22 @@ function LoadInitData(searchCondtiion) {
             */
             var rowdata = $('#TableList_0_1').datagrid('getData');
             try{
-                var ID = rowdata.rows[index].ID;//暂时先用ID代替编号
-            }
+                var searial = rowdata.rows[index].serial_number;//暂时先用ID代替编号
+               
+              }
             catch(e)
             {
             }
-            PDsearial = ID;
+            try {
+                
+                var sys = rowdata.rows[index].amountOfSys;
+                
+            }
+            catch (e) {
+            }
+          //  alert(sys+" "+ID);
+            sysamount=sys;
+            PDsearial = searial;
             
             $.ajax({
 
@@ -730,7 +738,8 @@ function loadPageTool_Detail() {
                      maximizable: false,
                      collapsible: false,
                      onClose: function () {
-                         $('#TableList_0_2').datagrid('reload');
+                         $('#TableList_0_1').datagrid('reload');
+                         $('#TableList_0_1').datagrid('reload');
                          // alert('盘点数据提交成功！');
                          //    $.messager.show({
                          //        title: '提示',

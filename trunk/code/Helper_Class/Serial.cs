@@ -127,6 +127,7 @@ namespace FAMIS.Helper_Class
                 case "ZC":
                     {
                         var q = from o in db.tb_Asset
+                                where o.serial_number.Contains("ZC")
                                 orderby o.ID
                                 select o;
                         foreach (var p in q)
@@ -154,8 +155,18 @@ namespace FAMIS.Helper_Class
                     }
                 case "YH":
                     {
+                        var q = from o in db.tb_Asset
+                                where o.serial_number.Contains("YH")
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serial_number != null)
+                                latest_serial = p.serial_number;
 
-                        latest_serial = "YH20160707000001";//因为这些表数据库暂时还没有，所以随便初始化一个
+                        }
+
+                       ;//因为这些表数据库暂时还没有，所以随便初始化一个
                         break;
                     }
 

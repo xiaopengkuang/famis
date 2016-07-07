@@ -9,8 +9,13 @@
     <link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/icon.css" />
     <script type="text/javascript" src="../../LIB/UIlib/js/jquery-1.7.2.min.js"></script>
     <script type="text/javascript" src="../../LIB/UIlib/js/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src='../../LIB/UIlib/js/LoadPage.js'> </script>
+    <script type="text/javascript" src="../../Scripts/Views/User/LoadMenubyRoless.js"></script>
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/User/Index.js"></script>
+        <!--[if lte IE 9]>
+    <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
+    <![endif]-->
 
 </head>
 <body class="easyui-layout" style="overflow-y: hidden" fit="true" scroll="no">
@@ -29,7 +34,7 @@
     </div>
 
     <div region="north" split="true" border="false" style="overflow: hidden; height: 30px; background: url(../../LIB/UIlib/images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%; line-height: 20px; color: #fff; font-family: Verdana, 微软雅黑,黑体">
-        <span style="float: right; padding-right: 20px;" class="head">欢迎 BYRD <a href="#" id="editpass">修改密码</a> <a href="#" id="loginOut">安全退出</a></span>
+        <span style="float: right; padding-right: 20px;" class="head">欢迎 BYRD <a href="#" id="editpass">修改密码</a> <a href="#" id="loginOut" onclick="signOut()">安全退出</a></span>
         <span style="padding-left: 10px; font-size: 16px;">
             <img src="../../LIB/UIlib/images/blocks.gif" width="20" height="20" align="absmiddle" />
             固定资产管理系统</span>
@@ -50,10 +55,6 @@
             </div>
         </div>
     </div>
-
-
-    
-
     <div id="mm" class="easyui-menu" style="width: 150px;">
         <div id="tabupdate">刷新</div>
         <div class="menu-sep"></div>

@@ -99,13 +99,21 @@ namespace FAMIS.Controllers
          public string Add_InventDeatails(string Json)
          {
              string[] temp = Json.Split('o');
-             int rid = int.Parse(temp[0]);
-             string searchtype = temp[1];
-             string searchmethod = temp[2];
-             string pdsearial = temp[3];
-
+             string condiation = temp[0];
+             string pdsearial = temp[1];
+             int flagnum = int.Parse(condiation);
+             int name_flag = flagnum / 1000000;
+             string name_flag_string = "";
+             int item_id = flagnum % 1000000;
+             IEnumerable<String> flags = from o in db.tb_dataDict
+                                         where o.ID == name_flag
+                                         select o.name_flag;
+             foreach (string p in flags)
+             {
+                 name_flag_string = p;
+             }
             
-             if (searchtype == SystemConfig.nameFlag_2_SYBM)
+             if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
              {
 
 
@@ -117,7 +125,7 @@ namespace FAMIS.Controllers
                                            join u in db.tb_user on a.Owener equals u.ID
                                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where p.ID_Department.ToString() == searchmethod
+                                           where p.ID_Department == item_id
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
@@ -139,9 +147,9 @@ namespace FAMIS.Controllers
                  db.SaveChanges();         
                             
             }
-             if (searchtype == SystemConfig.nameFlag_2_ZCLB)
+             if (name_flag_string == SystemConfig.nameFlag_2_ZCLB)
              {
-
+               
 
                  IEnumerable<tb_Asset> q = from a in db.tb_Asset
                                            join t in db.tb_AssetType on a.type_Asset equals t.ID
@@ -151,13 +159,14 @@ namespace FAMIS.Controllers
                                            join u in db.tb_user on a.Owener equals u.ID
                                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where t.ID.ToString() == searchmethod
+                                           where t.orderID== item_id.ToString()
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
+                      
                      var rule_tb = new tb_Asset_inventory_Details
                      {
-                         serial_number = "",
+                         serial_number = pdsearial,
                          state = "盘亏",
                          amountOfSys = asset.amount,
                          amountOfInv = 0,
@@ -169,10 +178,11 @@ namespace FAMIS.Controllers
                     
 
                  }
-                 db.SaveChanges();
+                
 
              }
-             if (searchtype == SystemConfig.nameFlag_2_ZCZT)
+             db.SaveChanges();
+             if (name_flag_string == SystemConfig.nameFlag_2_ZCZT)
              {
 
 
@@ -184,13 +194,13 @@ namespace FAMIS.Controllers
                                            join u in db.tb_user on a.Owener equals u.ID
                                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where e.ID.ToString() == searchmethod
+                                           where e.ID == item_id
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
                      var rule_tb = new tb_Asset_inventory_Details
                      {
-                         serial_number = "",
+                         serial_number = pdsearial,
                          state = "盘亏",
                          amountOfSys = asset.amount,
                          amountOfInv = 0,
@@ -202,10 +212,10 @@ namespace FAMIS.Controllers
                    
 
                  }
-                 db.SaveChanges();
+                
 
              }
-
+              db.SaveChanges();
              AddPDList(pdsearial);//添加盘点明细汇总数据到盘点表。
 
              return "";
@@ -228,7 +238,7 @@ namespace FAMIS.Controllers
              }
              
              var z = from o in db.tb_Asset_inventory
-                     where o.ID.ToString() == pdsearial
+                     where o.serial_number.ToString() == pdsearial
                      select o;
              foreach (var p in z)
              {
@@ -267,12 +277,19 @@ namespace FAMIS.Controllers
         [HttpPost]
         public JsonResult Load_Asset(string JSdata)
         {
-            string[] temp = JSdata.Split('o');
-            int rid = int.Parse(temp[0]);
-            string searchtype = temp[1];
-            string searchmethod = temp[2];
+            int flagnum = int.Parse(JSdata);
+            int name_flag = flagnum / 1000000;
+            string name_flag_string = "";
+            int item_id = flagnum % 1000000;
+            IEnumerable<String> flags = from o in db.tb_dataDict
+                                        where o.ID == name_flag
+                                        select o.name_flag;
+            foreach (string p in flags)
+            {
+                name_flag_string = p;
+            }
             List<tb_Asset> list = db.tb_Asset.ToList();
-            if (searchtype ==SystemConfig.nameFlag_2_SYBM)
+            if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
                 var json = new
                 {
@@ -285,7 +302,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            where p.ID_Department.ToString() == searchmethod
+                            where p.ID_Department == item_id
                             select new
                             {
                                 ID = a.ID,
@@ -311,7 +328,7 @@ namespace FAMIS.Controllers
                 return Json(json, JsonRequestBehavior.AllowGet);
 
             }
-            if (searchtype == SystemConfig.nameFlag_2_ZCLB)
+            if (name_flag_string == SystemConfig.nameFlag_2_ZCLB)
             {
                 var json = new
                 {
@@ -324,7 +341,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID 
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            where t.orderID == searchmethod
+                            where t.orderID == item_id.ToString()
                             select new
                             {
                                 ID = a.ID,
@@ -348,7 +365,7 @@ namespace FAMIS.Controllers
                 return Json(json, JsonRequestBehavior.AllowGet);
 
             }
-            if (searchtype == SystemConfig.nameFlag_2_ZCZT)
+            if (name_flag_string == SystemConfig.nameFlag_2_ZCZT)
             {
                 var json = new
                 {
@@ -362,7 +379,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID
-                            where e.ID.ToString() == searchmethod
+                            where e.ID == item_id
                             select new
                             {
                                 ID = a.ID,
