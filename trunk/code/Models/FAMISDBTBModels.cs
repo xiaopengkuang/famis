@@ -20,6 +20,7 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset_allocation_detail> tb_Asset_allocation_detail { get; set; }
         public virtual DbSet<tb_Asset_collar> tb_Asset_collar { get; set; }
         public virtual DbSet<tb_Asset_collar_detail> tb_Asset_collar_detail { get; set; }
+        public virtual DbSet<tb_Asset_CustomAttr> tb_Asset_CustomAttr { get; set; }
         public virtual DbSet<tb_Asset_inventory> tb_Asset_inventory { get; set; }
         public virtual DbSet<tb_Asset_inventory_Details> tb_Asset_inventory_Details { get; set; }
         public virtual DbSet<tb_Asset_Reduction> tb_Asset_Reduction { get; set; }
@@ -104,6 +105,10 @@ namespace FAMIS.Models
                 .Property(e => e.info_review)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_Asset_CustomAttr>()
+                .Property(e => e.value)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset_inventory>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
@@ -170,6 +175,10 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_Repair>()
                 .Property(e => e.Name_equipment)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Repair>()
+                .Property(e => e.content_Review)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_AssetType>()

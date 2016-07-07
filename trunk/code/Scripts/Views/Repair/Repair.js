@@ -33,6 +33,7 @@ function refresh() {
 function loadInitData() {
     //加载所有
     LoadInitDatagrid("datagrid_Repair");
+    
 }
 
 

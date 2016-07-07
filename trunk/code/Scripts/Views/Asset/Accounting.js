@@ -224,8 +224,7 @@ function loadPageTool_Detail() {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
-                $("#modalwindow").window("close");
-              openModelWindow("/Asset/AddAsset", "添加资产");
+              openModelWindow("/Asset/Asset_add", "添加资产");
             }
         }, {
             text: '编辑',
@@ -240,17 +239,9 @@ function loadPageTool_Detail() {
                     return;
                 }
                 var id_asset = rows[0].ID;
-                //将数据传入后台
-                $.ajax({
-                    url: '/Asset/Asset_edit',
-                    data: { "id": id_asset },
-                    dataType: "json",
-                    type: "POST",
-                    traditional: true,
-                    success: function () {
-                        $('#TableList_0_1').datagrid('reload');
-                    }
-                });
+                var url = "/Asset/Asset_edit?id="+id_asset;
+                var titleName = "编辑资产";
+                openModelWindow(url, titleName);
             }
         }
         //, {
@@ -415,6 +406,10 @@ function MessShow(mess) {
 
 
 function openModelWindow(url, titleName) {
+
+    try{
+        $("#modalwindow").window("close");
+    }catch(e){}
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,

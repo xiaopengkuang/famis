@@ -57,7 +57,7 @@ namespace FAMIS.DataConversion
         public const String Flag_NodeID = "_";
 
 
-        public static String[] treeType_Accounting_Menu =new String[] { nameFlag_2_JLDW, nameFlag_2_ZJFS_JIA, nameFlag_2_JSFS, nameFlag_2_ZCZT, nameFlag_2_CFDD, nameFlag_2_ZJFS_JIU, nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_GYS };
+        public static String[] treeType_Accounting_Menu = new String[] { nameFlag_2_JLDW, nameFlag_2_ZJFS_JIA, nameFlag_2_JSFS, nameFlag_2_ZCZT, nameFlag_2_CFDD, nameFlag_2_ZJFS_JIU, nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_GYS, nameFlag_2_SYRY };
         public static String[] treeType_collarSearch_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD };
         public static String[] treeType_allocation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD,nameFlag_2_SYRY };
         public static String[] treeType_repair_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD, nameFlag_2_SYRY };
