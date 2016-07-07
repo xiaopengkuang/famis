@@ -42,6 +42,17 @@ function chanegeTableType_Radio() {
 }
 
 
+function reloadDataGrid()
+{
+    var selectType = $("input[name='table_TYPE']:checked").val();
+    if (selectType == "0") {
+        LoadInitData_Summary();
+    } else if (selectType == "1") {
+        LoadInitData_Detail();
+    } else {
+    }
+}
+
 function getTime(/** timestamp=0 **/) {
     var ts = arguments[0] || 0;
     var t, y, m, d, h, i, s;

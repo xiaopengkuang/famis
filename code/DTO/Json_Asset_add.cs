@@ -8,6 +8,7 @@ namespace FAMIS.DTO
 {
     public class Json_Asset_add
     {
+        public int? ID { get; set; }
         //基础属性
        [StringLength(20)]
         public string d_ZCBH_add { get; set; }

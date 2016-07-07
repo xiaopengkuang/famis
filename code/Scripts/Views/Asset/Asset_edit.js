@@ -1,15 +1,13 @@
 ﻿//==================================global data==========================================//
-var d_SZBM_add;
-var d_ZCLB_add;
-var d_CFDD_add;
-var d_Other_SYNX_add = 0;
-var d_Other_ZCDJ_add = 0;
-var d_Other_ZCSL_add = 0;
 
 var arry_CAttr = new Array();
 
 var flag_load_BM = false;
 var flag_load_XH = false;
+var flag_load_CA = false;
+
+//待处理数据
+var cattrs = new Array();
 
 //==================================global data==========================================//
 
@@ -49,7 +47,6 @@ function update_Value()
 }
  
 function loadInitDate() {
-
     load_GYS_add();
     load_ZJFS_add();
     load_JLDW_add();
@@ -59,7 +56,6 @@ function loadInitDate() {
     load_Other_ZJFS_add();
 
 }
-
 
 function bindData(id)
 {
@@ -89,7 +85,7 @@ function bindData(id)
                 $("#ZCXH_add").combobox('setValue', data.specification);
                 $("#ZCXH_add").combobox('setText', data.specification);
                 $("#SYRY_add").combobox('setValue', data.Owener);
-                $("#SYRY_add").combobox('setValue', data.name_owner);
+                $("#SYRY_add").combobox('setText', data.name_owner);
 
                 var date_add = dateString(data.Time_Purchase);
                 $("#GZRQ_add").datebox('setValue', date_add);
@@ -104,12 +100,11 @@ function bindData(id)
                 $("#Other_JZ_add").val(data.Net_value);
 
                 //自定义属性
-
+                cattrs = data.cattrs;
+                update_ZDY_attr(data.type_Asset);
 
 
                 //延迟加载
-
-
 
             } else {
             }
@@ -140,8 +135,8 @@ function load_ZCLB_add() {
                load_ZCXH_add(node.id);
            }
 
-           updateZCXZ(tree, node);
            update_ZDY_attr(node.id)
+           updateZCXZ(tree, node);
        }, //全部折叠
        onLoadSuccess: function (node, data) {
            $('#ZCLB_add').combotree('tree').tree("collapseAll");
@@ -208,6 +203,18 @@ function initAttr(data) {
     }
     table.appendChild(tbody);
     panelDIV.appendChild(table);
+   
+
+    //cattrs
+
+    //if (cattrs) {
+    //    alert(cattrs.length);
+    //} else {
+    //    alert("kong");
+    //}
+
+
+
     for (var i = 0; i < data.length; i++) {
         var id_a = "CAttr_INPUT_" + data[i].ID;
         var cattr_item = new Object();
@@ -219,30 +226,49 @@ function initAttr(data) {
         cattr_item.type_value = data[i].type_value;
         cattr_item.type_Name = data[i].type_Name;
 
+        //获取适配的数据
+        var ca_checked = getCAttrByID(data[i].ID, cattrs);
         //判断数据类型
         if (data[i].type_Name == "字典类型") {
             //获取其数据结构类型
             if (data[i].isTree != null && data[i].isTree == true) {
-                initcombotree(id_a, data[i].type_value, data[i].necessary);
+                initcombotree(id_a, data[i].type_value, data[i].necessary, ca_checked);
                 cattr_item.InputType = 1;
             } else {
-                initCombobox(id_a, data[i].type_value, data[i].necessary);
+                initCombobox(id_a, data[i].type_value, data[i].necessary, ca_checked);
                 cattr_item.InputType = 2;
             }
         } else {
             //设置成number
-            initNumberBox(id_a);
+            initNumberBox(id_a, ca_checked);
             cattr_item.InputType = 3;
         }
-      
-       
-
         arry_CAttr.push(cattr_item);
     }
 
+
+
+
+
+
+
+
 }
 
-function initCombobox(id_combobox, id_dic, requiredFlag)
+function getCAttrByID(id_ca,cattrs)
+{
+    for (var i = 0; i < cattrs.length; i++)
+    {
+        if (cattrs[i].ID_customAttr == id_ca)
+        {
+            return cattrs[i];
+        }
+    }
+    return null;
+}
+
+
+function initCombobox(id_combobox, id_dic, requiredFlag, ca_checked)
 {
     $("#" + id_combobox).combobox({
         valueField: 'ID',
@@ -254,12 +280,19 @@ function initCombobox(id_combobox, id_dic, requiredFlag)
         onSelect: function (rec) {
             $('#' + id_combobox).combobox('setValue', rec.ID);
             $('#' + id_combobox).combobox('setText', rec.name_para);
+        },
+        onLoadSuccess: function ()
+        {
+            if (ca_checked) {
+                $('#' + id_combobox).combobox('setValue', ca_checked.value);
+
+            }
         }
     });
 }
 
 
-function initcombotree(id_combotree, id_dic,requiredFlag)
+function initcombotree(id_combotree, id_dic, requiredFlag, ca_checked)
 {
     $('#' + id_combotree).combotree
   ({
@@ -274,16 +307,25 @@ function initcombotree(id_combotree, id_dic,requiredFlag)
       }, //全部折叠
       onLoadSuccess: function (node, data) {
           $('#' + id_combotree).combotree('tree').tree("collapseAll");
+          //设置绑定数据
+          if (ca_checked) {
+              $('#' + id_combotree).combotree('setValue', ca_checked.value);
+          }
       }
   });
 }
 
-function initNumberBox(id_Numbox)
+function initNumberBox(id_Numbox, ca_checked)
 {
     $('#'+id_Numbox).numberbox({
         min: 0,
         precision: 2
     });
+
+    if (ca_checked)
+    {
+        $('#' + id_Numbox).val(ca_checked.value);
+    }
 }
 
 
@@ -494,7 +536,7 @@ function showAreaNum_PLTJ_add() {
 
 
 
-function submitForm() {
+function submitForm(id_asset) {
 
     //============================基础属性========================================//
 
@@ -503,38 +545,22 @@ function submitForm() {
     //获取资产性质
     var zcxz = $("#ZCXZ_add").val();
     var d_ZCXZ_ID_add;
-    if (d_ZCLB_add == "" || d_ZCLB_add == null) {
-
-        d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
-        if (d_ZCLB_add == "" || d_ZCLB_add == undefined) {
-            //$.messager.alert('提示', "调皮的肖金龙", 'info'); return;
-        }
-    }
+    var d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
+    
     var d_ZCMC_add = $("#ZCMC_add").val();
 
     var d_ZCXH_add = $('#ZCXH_add').combobox("getValue");
     var d_JLDW_add = $("#JLDW_add").combobox("getValue");
 
-
-    if (d_SZBM_add == "" || d_SZBM_add == null) {
-
-        d_SZBM_add = $("#SZBM_add").combotree("getValue");
-        if (d_SZBM_add == "" || d_SZBM_add == undefined) {
-        }
-    }
+    var d_SZBM_add = $("#SZBM_add").combotree("getValue");
 
 
     var d_SYRY_add = $("#SYRY_add").combobox("getValue");
+    var d_CFDD_add = $("#CFDD_add").combotree("getValue");
 
-    if (d_CFDD_add == "" || d_CFDD_add == null) {
-        d_CFDD_add = $("#CFDD_add").combotree("getValue");
-        if (d_CFDD_add == "" || d_CFDD_add == undefined) {
-        }
-    }
-    d_CFDD_add = d_CFDD_add == "" ? -1 : parseInt(d_CFDD_add);
+    
 
-
-    var d_ZJFS_add = $("#ZJFS_add").combobox("getValue") == "" ? -1 : parseInt($("#ZJFS_add").combobox("getValue"));
+    var d_ZJFS_add = $("#ZJFS_add").combobox("getValue");
 
     var d_GYS_add = $("#GYS_add").combogrid("getValue");
 
@@ -545,7 +571,7 @@ function submitForm() {
     var d_GYSDD_add = $("#GYSDD_add").val();
 
     var d_Check_PLZJ_add = $("#Num_PLTJ_add").is(":hidden");  //true表示未被选选中  false表示选择
-
+    d_Check_PLZJ_add = true;
     var d_Num_PLTJ_add = d_Check_PLZJ_add == true ? 1 : $("#Num_PLTJ_add").val();
 
     //===============================其他属性===================================//
@@ -563,11 +589,6 @@ function submitForm() {
 
     var d_Other_ZCJZ_add = $("#Other_ZCJZ_add").val();
 
-    //var d_Other_YTZJ_add = $("#Other_YTZJ_add").val();;
-
-    //var d_Other_LJZJ_add = $("#Other_LJZJ_add").val();
-
-    //var d_Other_JZ_add = $("#Other_JZ_add").val();
 
     //===============================自定义属性===================================//
 
@@ -591,10 +612,8 @@ function submitForm() {
         "d_Other_JCZL_add": d_Other_JCZL_add,
         "d_Other_ZCDJ_add": d_Other_ZCDJ_add,
         "d_Other_ZCSL_add": d_Other_ZCSL_add,
-        "d_Other_ZCJZ_add": d_Other_ZCJZ_add
-        //"d_Other_YTZJ_add": d_Other_YTZJ_add,
-        //"d_Other_LJZJ_add": d_Other_LJZJ_add,
-        //"d_Other_JZ_add": d_Other_JZ_add
+        "d_Other_ZCJZ_add": d_Other_ZCJZ_add,
+        "ID":id_asset
     };
 
     var data_cattr = new Array();
@@ -606,15 +625,12 @@ function submitForm() {
         switch (arry_CAttr[i].InputType)
         {
             case 1: {
-                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combotree("getValue") + "\t";
                 new_attr.value = $("#" + arry_CAttr[i].id).combotree("getValue");
             }; break;
             case 2: {
-                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combobox("getValue") + "\t";
                 new_attr.value = $("#" + arry_CAttr[i].id).combobox("getValue");
             }; break;
             case 3: {
-                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).val() + "\t";
                 new_attr.value = $("#" + arry_CAttr[i].id).val();
             }; break;
             default:;break;
@@ -625,7 +641,7 @@ function submitForm() {
 
 
     $.ajax({
-        url: "/Asset/Handler_addNewAsset",
+        url: "/Asset/Handler_updateAsset",
         type: 'POST',
         data: {
             "Asset_add": JSON.stringify(Asset_add),
@@ -637,7 +653,7 @@ function submitForm() {
             var result
             if (data > 0) {
                 parent.$("#modalwindow").window("close");
-
+                parent.$('#TableList_0_1').datagrid("reload");
             } else {
                 result = "系统正忙，请稍后继续！";
                 $.messager.alert('警告', result, 'warning');
