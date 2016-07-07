@@ -606,6 +606,78 @@ namespace FAMIS.Controllers
             return insertNum;
         }
 
+
+        [HttpPost]
+        public int Handler_updateAsset(string Asset_add, String data_cattr)
+        {
+            int insertNum = 0;
+
+            String data_f = data_cattr.Replace("\\", "");
+            data_f = data_f.Replace("\"", "");
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_Asset_add json_data = serializer.Deserialize<Json_Asset_add>(Asset_add);
+            List<Json_asset_cattr_ad>  cattr_list = serializer.Deserialize<List<Json_asset_cattr_ad>>(data_f);
+            //先判断是添加单个函数批量添加
+
+            if (json_data == null || json_data.ID == null)
+            {
+                return -1;
+            }
+
+            try
+            {
+                //获取tb_Asset
+                var data = from p in DB_C.tb_Asset
+                           where p.ID == json_data.ID
+                           where p.flag == true
+                           select p;
+                if (data.Count() < 0)
+                {
+                    return -2;
+                }
+                //更新数据
+                foreach (var item in data)
+                {
+                    item.name_Asset = json_data.d_ZCMC_add;
+                    item.type_Asset = json_data.d_ZCLB_add;
+                    item.specification = json_data.d_ZCXH_add;
+                    item.measurement = json_data.d_JLDW_add;
+                    item.unit_price = json_data.d_Other_ZCDJ_add;
+                    item.amount = json_data.d_Other_ZCSL_add;
+                    item.value = json_data.d_Other_ZCJZ_add;
+                    item.department_Using = json_data.d_SZBM_add;
+                    item.addressCF = json_data.d_CFDD_add;
+                    item.Time_add = DateTime.Now;
+                    item.supplierID = json_data.d_GYS_add;
+                    item.Time_Purchase = json_data.d_GZRQ_add;
+                    item.YearService_month = json_data.d_Other_SYNX_add;
+                    item.Method_depreciation = json_data.d_Other_ZJFS_add;
+                    item.Net_residual_rate = json_data.d_Other_JCZL_add;
+                    item.Method_add = json_data.d_ZJFS_add;
+                }
+                var data_detail = from p in DB_C.tb_Asset_CustomAttr
+                                  where p.flag == true
+                                  where p.ID_Asset == json_data.ID
+                                  select p;
+                foreach (var item in data_detail)
+                {
+                    item.flag = false;
+                }
+                List<tb_Asset_CustomAttr> tbList_aCAttr = createAssetCAttr((int)json_data.ID, (int)json_data.d_ZCLB_add, cattr_list);
+                DB_C.tb_Asset_CustomAttr.AddRange(tbList_aCAttr);
+                DB_C.SaveChanges();
+                insertNum = 3;
+            }
+            catch (Exception e)
+            {
+
+                return -4;
+            }
+            return insertNum;
+
+        }
+
+
         /// <summary>
         /// 根据单个ID获取详细信息学
         /// </summary>
@@ -772,7 +844,7 @@ namespace FAMIS.Controllers
                                  from dic in temp_dic.DefaultIfEmpty()
                                  select new Json_asset_cattr_ad { 
                                   ID_Asset=id,
-                                  ID_customAttr=p.ID,
+                                  ID_customAttr=p.ID_customAttr,
                                   isTree=dic.isTree==null?false:dic.isTree,
                                   value=p.value,
                                   type_Name=type_ca.name
