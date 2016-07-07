@@ -5,44 +5,42 @@ var d_CFDD_add;
 var d_Other_SYNX_add = 0;
 var d_Other_ZCDJ_add = 0;
 var d_Other_ZCSL_add = 0;
+
+var arry_CAttr = new Array();
+
 //==================================global data==========================================//
-
-
 
 $(function () {
 
     loadInitDate();
-
     $("#Num_PLTJ_add").hide();
-
-    $("#Other_ZCDJ_add").numberspinner({
-        min: 0,
-        editable: false,
-        onChange: function (value) {
-            $('#Other_ZCDJ_add').numberspinner('setValue', value);
-            //d_Other_ZCDJ_add = value;
-
-        }
-
-    });
+    $("#LABEL_PL").hide();
 
 
-    $("#Other_SYNX_add").numberspinner({
-        min: 0,
-        editable: false,
-        onChange: function (value) {
-            $('#Other_SYNX_add').numberspinner('setValue', value);
+    $('#Other_ZCDJ_add').numberbox({
+        onChange: function () {
+            update_Value(); //设置折扣率
         }
     });
-    $("#Other_ZCSL_add").numberspinner({
-        min: 0,
-        editable: false,
-        onChange: function (value) {
-            $('#Other_ZCSL_add').numberspinner('setValue', value);
+
+    $('#Other_ZCSL_add').numberbox({
+        onChange: function () {
+            update_Value(); //设置折扣率
         }
     });
+    update_Value();
+
+
 });
 
+function update_Value()
+{
+    var sl = $('#Other_ZCSL_add').numberbox('getValue')
+    var dj = $('#Other_ZCDJ_add').numberbox('getValue')
+    var value_f = parseFloat(sl) * parseFloat(dj);
+    $('#Other_ZCJZ_add').val(value_f);
+}
+ 
 function loadInitDate() {
     load_GYS_add();
     load_ZJFS_add();
@@ -50,8 +48,8 @@ function loadInitDate() {
     load_SZBM_add();
     load_ZCLB_add();
     load_CFDD_add();
-    load_User_add();
     load_Other_ZJFS_add();
+
 }
 
 
@@ -69,24 +67,9 @@ function load_ZCLB_add() {
        onSelect: function (node) {
            //返回树对象  
            var tree = $(this).tree;
-           d_ZCLB_add = $('#ZCLB_add').combotree("getValue");
-               //资产类别
-           load_ZCXH_add(node.text);
-           //资产性质
-           var parent = node;
-           var tree = $('#ZCLB_add').combotree('tree');
-           var path = new Array();
-           while (parent) {
-               path.unshift(parent.id + "-" + parent.text);
-               var parent = tree.tree('getParent', parent.target);
-           };
-           //获得根节点
-           var rootText = "";
-           if (path.length > 0) {
-               rootText = path[0];
-           }
-           //$.messager.alert('提示', rootText, 'warning');
-           $('#ZCXZ_add').val(rootText);
+           load_ZCXH_add(node.id);
+           updateZCXZ(tree, node);
+           update_ZDY_attr(node.id)
        }, //全部折叠
        onLoadSuccess: function (node, data) {
            $('#ZCLB_add').combotree('tree').tree("collapseAll");
@@ -94,13 +77,180 @@ function load_ZCLB_add() {
    });
 }
 
+function update_ZDY_attr(id_zclb)
+{
+    //获取该类别有哪些属性
 
-function load_User_add() {
+    $.ajax({
+        url: "/Dict/Handler_loadCAttr?id="+id_zclb,
+        type: 'POST',
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+                initAttr(data);
+            } else {
+                clearCAttr();
+            }
+        }
+    });
+}
+
+function initAttr(data) {
+    document.getElementById('CATTR').innerHTML = '';
+    var panelDIV = document.getElementById("CATTR");
+    var row = Math.ceil(data.length / 3);
+    var endIndex = data.length % 3;
+    var table = document.createElement("table"); 
+    var tbody = document.createElement("tbody");
+    arry_CAttr = new Array();
+    for (var i = 0; i < data.length; i++) {
+        var tr;
+        if (i % 3 == 0)
+        {
+             tr = document.createElement("tr");
+        }
+        var td1 = document.createElement("td");
+        td1.style.width = "50px";
+        var td2 = document.createElement("td");
+        td2.style.width = "200px";
+
+        var lable_item = document.createElement("label");
+        lable_item.innerHTML = data[i].title + ":";
+        var input_item = document.createElement("input");
+        input_item.id = "CAttr_INPUT_" + data[i].ID;
+        input_item.style.width = "200px";
+        td1.appendChild(lable_item);
+        td2.appendChild(input_item);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        if ((i + 1) % 3 == 0 || (i + 1) == data.length) {
+            tbody.appendChild(tr);
+        }
+    }
+    table.appendChild(tbody);
+    panelDIV.appendChild(table);
+    for (var i = 0; i < data.length; i++) {
+        var id_a = "CAttr_INPUT_" + data[i].ID;
+        var cattr_item = new Object();
+        cattr_item.id = id_a;
+        cattr_item.isTree = data[i].isTree;
+        cattr_item.necessary = data[i].necessary;
+        cattr_item.id_cattr = data[i].ID;
+        cattr_item.type = data[i].type;
+        cattr_item.type_value = data[i].type_value;
+        cattr_item.type_Name = data[i].type_Name;
+
+        //判断数据类型
+        if (data[i].type_Name == "字典类型") {
+            //获取其数据结构类型
+            if (data[i].isTree != null && data[i].isTree == true) {
+                initcombotree(id_a, data[i].type_value, data[i].necessary);
+                cattr_item.InputType = 1;
+            } else {
+                initCombobox(id_a, data[i].type_value, data[i].necessary);
+                cattr_item.InputType = 2;
+            }
+        } else {
+            //设置成number
+            initNumberBox(id_a);
+            cattr_item.InputType = 3;
+        }
+      
+       
+
+        arry_CAttr.push(cattr_item);
+    }
+
+}
+
+function initCombobox(id_combobox, id_dic, requiredFlag)
+{
+    $("#" + id_combobox).combobox({
+        valueField: 'ID',
+        required: requiredFlag,
+        method: 'POST',
+        editable: false,
+        textField: 'name_para',
+        url: '/Dict/load_dict_combobox?id='+id_dic,
+        onSelect: function (rec) {
+            $('#' + id_combobox).combobox('setValue', rec.ID);
+            $('#' + id_combobox).combobox('setText', rec.name_para);
+        }
+    });
+}
+
+
+function initcombotree(id_combotree, id_dic,requiredFlag)
+{
+    $('#' + id_combotree).combotree
+  ({
+      url: '/Dict/load_dict_combotree?id='+id_dic,
+      valueField: 'id',
+      textField: 'nameText',
+      required: requiredFlag,
+      method: 'POST',
+      editable: false,
+      //选择树节点触发事件  
+      onSelect: function (node) {
+      }, //全部折叠
+      onLoadSuccess: function (node, data) {
+          $('#' + id_combotree).combotree('tree').tree("collapseAll");
+      }
+  });
+}
+
+function initNumberBox(id_Numbox)
+{
+    $('#'+id_Numbox).numberbox({
+        min: 0,
+        precision: 2
+    });
+}
+
+
+
+
+
+function clearCAttr()
+{
+    document.getElementById('CATTR').innerHTML = '';
+    var panelDIV = document.getElementById("CATTR");
+    var childs = panelDIV.childNodes;
+    for (var i = 0; i < childs.length; i++)
+    {
+        panelDIV.removeChild(childs[i]);
+    }
+}
+
+
+function updateZCXZ(tree,node)
+{
+    d_ZCLB_add = $('#ZCLB_add').combotree("getValue");
+    //资产类别
+    //资产性质
+    var parent = node;
+    var tree = $('#ZCLB_add').combotree('tree');
+    var path = new Array();
+    while (parent) {
+        path.unshift(parent.text);
+        var parent = tree.tree('getParent', parent.target);
+    };
+    //获得根节点
+    var rootText = "";
+    if (path.length > 0) {
+        rootText = path[0];
+    }
+    $('#ZCXZ_add').val(rootText);
+}
+
+function load_User_add(id_DP) {
     $("#SYRY_add").combobox({
         valueField: 'id',
         method: 'POST',
+        editable: false,
         textField: 'name',
-        url: '/Dict/load_User_add',
+        url: '/Dict/load_User_add?id_DP=' + id_DP,
         onSelect: function (rec) {
             $('#SYRY_add').combobox('setValue', rec.id);
             $('#SYRY_add').combobox('setText', rec.name);
@@ -114,6 +264,7 @@ function load_JLDW_add() {
     $("#JLDW_add").combobox({
         valueField: 'ID',
         method: 'POST',
+        editable: false,
         textField: 'name_para',
         url: '/Dict/load_FS_add?nameFlag=2_JLDW',
         onSelect: function (rec) {
@@ -136,7 +287,7 @@ function load_SZBM_add() {
         //选择树节点触发事件  
         onSelect: function (node) {
             d_SZBM_add = $('#SZBM_add').combotree('getValue');
-
+            load_User_add(node.id);
         }, //全部折叠
         onLoadSuccess: function (node, data) {
             //$('#SZBM_add').combotree('tree').tree("collapseAll");
@@ -173,6 +324,7 @@ function load_GYS_add() {
         panelWidth: 300,
         value: '006',
         idField: 'code',
+        editable: false,
         textField: 'name',
         url: '/Dict/load_GYS_add',
         method: 'POST', //默认是post,不允许对静态文件访问
@@ -196,11 +348,11 @@ function load_GYS_add() {
         }
     });
 }
-
 function load_ZJFS_add() {
     $("#ZJFS_add").combobox({
         valueField: 'ID',
         method: 'POST',
+        editable: false,
         textField: 'name_para',
         url: '/Dict/load_FS_add?nameFlag=2_ZJFS_JIA',
         onSelect: function (rec) {
@@ -209,7 +361,6 @@ function load_ZJFS_add() {
         }
     });
 }
-
 
 //加载规格型号
 function load_ZCXH_add(assetType) {
@@ -225,11 +376,11 @@ function load_ZCXH_add(assetType) {
     });
 }
 
-
 function load_Other_ZJFS_add() {
     $("#Other_ZJFS_add").combobox({
         valueField: 'ID',
         method: 'POST',
+        editable: false,
         textField: 'name_para',
         url: '/Dict/load_FS_add?nameFlag=2_ZJFS_JIU',
         onSelect: function (rec) {
@@ -242,51 +393,14 @@ function load_Other_ZJFS_add() {
 
 
 
-function ReComputeAssetValue() {
-    alert(12);
-}
 
-
-function loadNewAssetCode() {
-    $.ajax({
-        type: "POST",
-        url: "/Common/GetOneSerialNumber?ruleType=ZC&num=1",
-        data: "",
-        success: function (data) {
-            if (data == $("#ZCBH_add").val()) {
-                $.messager.alert('提示', '已经是最新编号!无须重复刷新', 'info');
-            } else {
-                $("#ZCBH_add").val(data);
-            }
-        }
-    });
-}
-
-
-
-
-function loadNewAssetCode_Blocked() {
-    $.messager.alert('提示', '批量添加不支持刷新编号!', 'info');
-}
 
 
 
 function showAreaNum_PLTJ_add() {
     $("#Num_PLTJ_add").toggle();
-    if ($("#Num_PLTJ_add").is(":hidden")) {
-        //当前是hide状态
-        //alert("当前是hide状态");
-        var objBt = document.getElementById("New_ZCBH_add");
-        objBt.onclick = loadNewAssetCode;
-        //$("#New_ZCBH_add").attr("onclick", "loadNewAssetCode");
+    $("#LABEL_PL").toggle();
 
-    } else {
-        //当前是show状态
-        //alert("当前是show状态");
-        //$("#New_ZCBH_add").removeAttr("onclick");
-        var objBt = document.getElementById("New_ZCBH_add");
-        objBt.onclick = loadNewAssetCode_Blocked;
-    }
 }
 
 
@@ -319,25 +433,19 @@ function submitForm() {
 
         d_SZBM_add = $("#SZBM_add").combotree("getValue");
         if (d_SZBM_add == "" || d_SZBM_add == undefined) {
-            //$.messager.alert('提示', "调皮的肖金龙2", 'info'); return;
         }
     }
 
-    //var d_SZBM_add;
-    //= $("#SZBM_add").combotree("gettext")
 
     var d_SYRY_add = $("#SYRY_add").combobox("getValue");
 
     if (d_CFDD_add == "" || d_CFDD_add == null) {
         d_CFDD_add = $("#CFDD_add").combotree("getValue");
         if (d_CFDD_add == "" || d_CFDD_add == undefined) {
-            //$.messager.alert('提示', "调皮的肖金龙3", 'info'); return;
         }
     }
     d_CFDD_add = d_CFDD_add == "" ? -1 : parseInt(d_CFDD_add);
 
-    //var d_CFDD_add;
-    //= $("#CFDD_add").combotree("getValue");
 
     var d_ZJFS_add = $("#ZJFS_add").combobox("getValue") == "" ? -1 : parseInt($("#ZJFS_add").combobox("getValue"));
 
@@ -355,40 +463,24 @@ function submitForm() {
 
     //===============================其他属性===================================//
 
-    //var d_Other_SYNX_add = document.getElementById("Other_SYNX_add").lastChild.value();
-    //parseInt($("#Other_SYNX_add").numberspinner("getValue").text);
-    //= $("#Other_SYNX_add").val();
 
     d_Other_SYNX_add = $('#Other_SYNX_add').numberspinner('getValue')
-    d_Other_SYNX_add = d_Other_SYNX_add == "" ? -1 : parseInt(d_Other_SYNX_add);
 
     var d_Other_ZJFS_add = $("#Other_ZJFS_add").combobox('getValue');
-    d_Other_ZJFS_add = d_Other_ZJFS_add == "" ? -1 : parseInt(d_Other_ZJFS_add);
 
     var d_Other_JCZL_add = $("#Other_JCZL_add").val();
-    d_Other_JCZL_add = d_Other_JCZL_add == "" ? -1 : parseInt(d_Other_JCZL_add);
-    //var v = $('#ss').numberspinner('getValue');  // get value
 
     d_Other_ZCDJ_add = $('#Other_ZCDJ_add').numberspinner('getValue')
-    d_Other_ZCDJ_add = d_Other_ZCDJ_add == "" ? -1 : parseInt(d_Other_ZCDJ_add);
-    //var d_Other_ZCDJ_add =$('#Other_ZCDJ_add').numberspinner('getValue');  
-    //= $("#Other_ZCDJ_add").val();
 
-    //var d_Other_ZCSL_add = $("#Other_ZCSL_add").val();
     d_Other_ZCSL_add = $('#Other_ZCSL_add').numberspinner('getValue')
-    d_Other_ZCSL_add = d_Other_ZCSL_add == "" ? -1 : parseInt(d_Other_ZCSL_add);
 
     var d_Other_ZCJZ_add = $("#Other_ZCJZ_add").val();
-    d_Other_ZCJZ_add = d_Other_ZCJZ_add == "" ? -1 : parseFloat(d_Other_ZCJZ_add);
 
-    var d_Other_YTZJ_add = $("#Other_YTZJ_add").val();;
-    d_Other_YTZJ_add = d_Other_YTZJ_add == "" ? -1 : parseFloat(d_Other_YTZJ_add);
+    //var d_Other_YTZJ_add = $("#Other_YTZJ_add").val();;
 
-    var d_Other_LJZJ_add = $("#Other_LJZJ_add").val();
-    d_Other_LJZJ_add = d_Other_LJZJ_add == "" ? -1 : parseFloat(d_Other_LJZJ_add);
+    //var d_Other_LJZJ_add = $("#Other_LJZJ_add").val();
 
-    var d_Other_JZ_add = $("#Other_JZ_add").val();
-    d_Other_JZ_add = d_Other_JZ_add == "" ? -1 : parseFloat(d_Other_JZ_add);
+    //var d_Other_JZ_add = $("#Other_JZ_add").val();
 
     //===============================自定义属性===================================//
 
@@ -412,27 +504,49 @@ function submitForm() {
         "d_Other_JCZL_add": d_Other_JCZL_add,
         "d_Other_ZCDJ_add": d_Other_ZCDJ_add,
         "d_Other_ZCSL_add": d_Other_ZCSL_add,
-        "d_Other_ZCJZ_add": d_Other_ZCJZ_add,
-        "d_Other_YTZJ_add": d_Other_YTZJ_add,
-        "d_Other_LJZJ_add": d_Other_LJZJ_add,
-        "d_Other_JZ_add": d_Other_JZ_add
+        "d_Other_ZCJZ_add": d_Other_ZCJZ_add
+        //"d_Other_YTZJ_add": d_Other_YTZJ_add,
+        //"d_Other_LJZJ_add": d_Other_LJZJ_add,
+        //"d_Other_JZ_add": d_Other_JZ_add
     };
 
-    //$.messager.alert('提示', d_Other_SYNX_add + "|" + d_Other_ZCSL_add + "|" + d_Other_ZCDJ_add, 'info');
+    var data_cattr = new Array();
+    //获取自定义属性
+    for (var i = 0; i < arry_CAttr.length;i++)
+    {
+        var new_attr = new Object();
+        new_attr.ID_customAttr = arry_CAttr[i].id_cattr;
+        switch (arry_CAttr[i].InputType)
+        {
+            case 1: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combotree("getValue") + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).combotree("getValue");
+            }; break;
+            case 2: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combobox("getValue") + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).combobox("getValue");
+            }; break;
+            case 3: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).val() + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).val();
+            }; break;
+            default:;break;
+        }
+        data_cattr.push(JSON.stringify(new_attr));
+    }
+
+
+
     $.ajax({
         url: "/Asset/Handler_addNewAsset",
         type: 'POST',
         data: {
-            "Asset_add": JSON.stringify(Asset_add)
+            "Asset_add": JSON.stringify(Asset_add),
+            "data_cattr":JSON.stringify(data_cattr)
         },
         beforeSend: ajaxLoading,
         success: function (data) {
             ajaxLoadEnd();
-            //// TODO  
-            ////alert(data);
-            //$("#printLable").text(data);
-            //$("#printLable").val(data);
-            //$.messager.alert('提示', "调皮的肖金龙3", 'info'); return;
             var result
             if (data > 0) {
                 parent.$("#modalwindow").window("close");
@@ -457,5 +571,20 @@ function ajaxLoading() {
 function ajaxLoadEnd() {
     $(".datagrid-mask").remove();
     $(".datagrid-mask-msg").remove();
+}
+
+
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
 }
 

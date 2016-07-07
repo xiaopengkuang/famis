@@ -83,6 +83,13 @@ namespace FAMIS.DataConversion
         }
 
 
+        public String getUnqiID_serialNum(String Type)
+        {
+            string str = Type + DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            return str;
+        }
+
+
         /// <summary>
         /// 默认url
         /// </summary>

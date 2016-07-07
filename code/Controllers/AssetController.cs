@@ -17,9 +17,6 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
 using FAMIS.DataConversion;
-
-
-
 namespace FAMIS.Controllers
 {
     public class AssetController : Controller
@@ -39,14 +36,19 @@ namespace FAMIS.Controllers
         }
        
 
-        public ActionResult AddAsset()
+        public ActionResult Asset_add()
         {
             return View();
         }
 
-      
-        public ActionResult reduction()
+
+        public ActionResult Asset_edit(int? id)
         {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
             return View();
         }
       
@@ -55,13 +57,15 @@ namespace FAMIS.Controllers
       
      
         [HttpPost]
-        public int Handler_addNewAsset(string Asset_add)
+        public int Handler_addNewAsset(string Asset_add, String data_cattr)
         {
             int info = 0;
             //插入对象方式
-            //info = addNewAsset_hanlder_ByClass(Asset_add);
-            info = Handler_addNewAsset_ByClass(Asset_add);
-
+           String data_f = data_cattr.Replace("\\","");
+           data_f = data_f.Replace("\"", "");
+           JavaScriptSerializer serializer = new JavaScriptSerializer();
+           List<Json_asset_cattr_ad> Asset_CAttr = serializer.Deserialize<List<Json_asset_cattr_ad>>(data_f);
+           info = Handler_addNewAsset_ByClass(Asset_add, Asset_CAttr);
             return info;
         }
       
@@ -101,21 +105,26 @@ namespace FAMIS.Controllers
             rows = rows == null ? 15 : rows;
             JsonResult json = new JsonResult();
 
-            if (dto_condition == null)
-            {
-                return NULL_dataGrid();
-            }
+           
 
             //获取部门权限
             List<int?> idsRight_deparment = commonConversion.getids_departmentByRole(role);
             //获取资产类别权限
             List<int?> idsRight_assetType = commonConversion.getids_AssetTypeByRole(role);
-            switch (dto_condition.typeFlag)
+
+            if (dto_condition == null)
             {
-                case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs,dataType); break;
-                case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType,selectedIDs,dataType); break;
-                default: ; break;
+                json = json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType);
             }
+            else {
+                switch (dto_condition.typeFlag)
+                {
+                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType); break;
+                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType); break;
+                    default: ; break;
+                }
+            }
+            
             return json;
         }
 
@@ -131,61 +140,66 @@ namespace FAMIS.Controllers
                             where idsRight_deparment.Contains(p.department_Using) || p.department_Using == null
                             where !selectedIDs.Contains(p.ID)
                             select p);
-
-            switch (cond.DataType)
+            if(cond==null)
             {
-                case SystemConfig.searchCondition_Date:
-                    {
-                        DateTime beginTime = Convert.ToDateTime(((DateTime)cond.begin).ToString("yyyy-MM-dd") + " 00:00:00");
-                        DateTime endTime = Convert.ToDateTime(((DateTime)cond.end).ToString("yyyy-MM-dd") + " 23:59:59");
-                        switch (cond.dataName)
+
+            }else{
+                switch (cond.DataType)
+                {
+                    case SystemConfig.searchCondition_Date:
                         {
-                            case SystemConfig.searchCondition_DJRQ:
-                                {
-                                    data_ORG = from p in data_ORG
-                                               where p.Time_add > beginTime && p.Time_add < endTime
-                                               select p;
-                                }; break;
+                            DateTime beginTime = Convert.ToDateTime(((DateTime)cond.begin).ToString("yyyy-MM-dd") + " 00:00:00");
+                            DateTime endTime = Convert.ToDateTime(((DateTime)cond.end).ToString("yyyy-MM-dd") + " 23:59:59");
+                            switch (cond.dataName)
+                            {
+                                case SystemConfig.searchCondition_DJRQ:
+                                    {
+                                        data_ORG = from p in data_ORG
+                                                   where p.Time_add > beginTime && p.Time_add < endTime
+                                                   select p;
+                                    }; break;
 
-                            case SystemConfig.searchCondition_GZRQ:
-                                {
-                                    data_ORG = from p in data_ORG
-                                               where p.Time_Purchase > beginTime && p.Time_Purchase < endTime
-                                               select p;
-                                }; break;
+                                case SystemConfig.searchCondition_GZRQ:
+                                    {
+                                        data_ORG = from p in data_ORG
+                                                   where p.Time_Purchase > beginTime && p.Time_Purchase < endTime
+                                                   select p;
+                                    }; break;
 
-                            default: ; break;
-                        }
-                    }; break;
-                case SystemConfig.searchCondition_Content:
-                    {
-                        switch (cond.dataName)
+                                default: ; break;
+                            }
+                        }; break;
+                    case SystemConfig.searchCondition_Content:
                         {
-                            case SystemConfig.searchCondition_ZCBH:
-                                {
-                                    data_ORG = from p in data_ORG
-                                               where p.serial_number.Contains(cond.contentSC)
-                                               select p;
-                                }; break;
+                            switch (cond.dataName)
+                            {
+                                case SystemConfig.searchCondition_ZCBH:
+                                    {
+                                        data_ORG = from p in data_ORG
+                                                   where p.serial_number.Contains(cond.contentSC)
+                                                   select p;
+                                    }; break;
 
-                            case SystemConfig.searchCondition_ZCMC:
-                                {
-                                    data_ORG = from p in data_ORG
-                                               where p.name_Asset.Contains(cond.contentSC)
-                                               select p;
-                                }; break;
+                                case SystemConfig.searchCondition_ZCMC:
+                                    {
+                                        data_ORG = from p in data_ORG
+                                                   where p.name_Asset.Contains(cond.contentSC)
+                                                   select p;
+                                    }; break;
 
-                            case SystemConfig.searchCondition_ZCXH:
-                                {
-                                    data_ORG = from p in data_ORG
-                                               where p.specification.Contains(cond.contentSC)
-                                               select p;
-                                }; break;
+                                case SystemConfig.searchCondition_ZCXH:
+                                    {
+                                        data_ORG = from p in data_ORG
+                                                   where p.specification.Contains(cond.contentSC)
+                                                   select p;
+                                    }; break;
 
-                            default: ; break;
-                        }
-                    }; break;
-                default: ; break;
+                                default: ; break;
+                            }
+                        }; break;
+                    default: ; break;
+                }
+            
             }
 
              switch(dataType)
@@ -527,8 +541,15 @@ namespace FAMIS.Controllers
                 return 0;
             }
         }
+
+        /// <summary>
+        /// 添加新资产 要求序列号唯一
+        /// </summary>
+        /// <param name="Asset_add"></param>
+        /// <param name="cattr_list"></param>
+        /// <returns></returns>
         [HttpPost]
-        public int Handler_addNewAsset_ByClass(string Asset_add)
+        public int Handler_addNewAsset_ByClass(string Asset_add,List<Json_asset_cattr_ad> cattr_list)
         {
             int insertNum = 0;
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -536,41 +557,51 @@ namespace FAMIS.Controllers
             //先判断是添加单个函数批量添加
             if (dto_aa.d_Check_PLZJ_add == true)//单数添加
             {
-                dto_aa.flag = true;
-                dto_aa.OperateTime = DateTime.Now;
-                tb_Asset newItem = JTM.ConverJsonToTable(dto_aa);
-                newItem.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_free);
-
-                DB_C.tb_Asset.Add(newItem); 
+                dto_aa.d_Num_PLTJ_add = 1;
             }
-            else
-            { //批量添加
-
-                String ruleType = "ZC";
+            try
+            {
                 int num = (int)dto_aa.d_Num_PLTJ_add;
                 CommonController tmc = new CommonController();
-                ArrayList serailNums = tmc.getNewSerialNumber(ruleType, num);
+                ArrayList serailNums = tmc.getNewSerialNumber(SystemConfig.serialType_ZC, num);
+                List<String> ser_StrList = new List<string>();
                 List<tb_Asset> datasToadd = new List<tb_Asset>();
                 for (int i = 0; i < serailNums.Count; i++)
                 {
-                    dto_aa.d_ZCBH_add = serailNums[i].ToString().Trim();
+                    //TODO:
+                    //dto_aa.d_ZCBH_add = serailNums[i].ToString().Trim();
+                    dto_aa.d_ZCBH_add = commonConversion.getUnqiID_serialNum(SystemConfig.serialType_ZC);
+                    ser_StrList.Add(dto_aa.d_ZCBH_add);
                     dto_aa.flag = true;
                     dto_aa.OperateTime =DateTime.Now;
-
                     tb_Asset newItem = JTM.ConverJsonToTable(dto_aa);
                     newItem.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_free);
                     DB_C.tb_Asset.Add(newItem); 
                 }
                 DB_C.tb_Asset.AddRange(datasToadd);
-            }
-
-            try
-            {
-                insertNum = DB_C.SaveChanges();
+                DB_C.SaveChanges();
+                insertNum = 2;
+                List<int> ids_asset_S = getAssetIDBySerialNum(ser_StrList);
+                //对于每一个asset
+                for (int i = 0; i < ids_asset_S.Count; i++)
+                {
+                    int id_asset=ids_asset_S[i];
+                    int id_asset_type =(int)dto_aa.d_ZCLB_add;
+                    List<tb_Asset_CustomAttr> tbList_aCAttr = createAssetCAttr(id_asset,id_asset_type, cattr_list);
+                    DB_C.tb_Asset_CustomAttr.AddRange(tbList_aCAttr);
+                }
+                DB_C.SaveChanges();
+                insertNum = 3;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                if (insertNum == 2)
+                {
+                    //TODO：
+                    //删除相应的asset
+                }
+
+                return -4;
             }
             return insertNum;
         }
@@ -645,30 +676,41 @@ namespace FAMIS.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public List<int> getAssetIDBySerialNum(List<String> list)
+        {
 
-        //===============================================================Action Function Area===================================================================================//
-
-
-
-      
-
-
-        //===============================================================Convert  Area===================================================================================//
-
-
-
-
-
-
-
-
-
-
+            List<int> ids = new List<int>();
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true
+                       where list.Contains(p.serial_number)
+                       select new { 
+                       id=p.ID
+                       };
+            foreach (var item in data)
+            {
+                ids.Add(item.id);
+            }
+            return ids;
+        }
 
 
 
-
-
+        public List<tb_Asset_CustomAttr> createAssetCAttr(int id_asset,int id_assetType,List<Json_asset_cattr_ad> data)
+        {
+            List<tb_Asset_CustomAttr> res = new List<tb_Asset_CustomAttr>();
+            foreach (Json_asset_cattr_ad item in data)
+            {
+                tb_Asset_CustomAttr newItem = new tb_Asset_CustomAttr();
+                newItem.flag = true;
+                newItem.ID_Asset = id_asset;
+                newItem.ID_AssetType = id_assetType;
+                newItem.ID_customAttr = item.ID_customAttr;
+                newItem.value = item.value;
+                res.Add(newItem);
+            }
+            return res;
+        }
 
 
 

@@ -9,7 +9,8 @@ function loadinitData()
     //加载属性类别
     var name = "SXLX";
     var url = "/Dict/load_CAttrType";
-    load_combobox(name,url);
+    load_combobox(name, url);
+    loadDict();
 }
 
 
@@ -45,12 +46,29 @@ function opendicType()
 {
     //获取选中值
     var sxlx = $("#SXLX").combobox("getValue");
+    var sxlx_name = $("#SXLX").combobox("getText");
     //这里可以优化成读数据看书否需要进行  
-    if (sxlx==3) {
+    if (sxlx_name == "字典类型") {
         $("#dicType").show(100);
     } else {
         $("#dicType").hide(100);
     }
+}
+
+
+function loadDict()
+{
+    $("#GLZD").combobox({
+        valueField: 'ID',
+        method: 'POST',
+        editable: false,
+        textField: 'name_para',
+        url: '/Dict/load_dict_CAttr',
+        onSelect: function (rec) {
+            $('#GLZD').combobox('setValue', rec.ID);
+            $('#GLZD').combobox('setText', rec.name_para);
+        }
+    });
 }
 
 

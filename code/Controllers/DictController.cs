@@ -78,7 +78,6 @@ namespace FAMIS.Controllers
                 String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
                 String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
                 //23.ToString().PadLeft(6, '0');
-
                 ViewBag.CodeAssetType = h + m + s;
 
                 return View();
@@ -179,7 +178,6 @@ namespace FAMIS.Controllers
                 String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
                 String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
                 //23.ToString().PadLeft(6, '0');
-
                 ViewBag.CodeAssetType = h + m + s;
 
                 return View("add_department");
@@ -350,27 +348,107 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
-        public JsonResult load_User_add()
+        public JsonResult load_User_add(int? id_DP)
         {
-            var data = from p in DB_C.tb_user
+            if (id_DP != null)
+            {
+
+                //获取其自身的ID
+                int? id_self = getID_byID_Department(id_DP);
+                List<int?> ids_DP=new List<int?>();
+                ids_DP.Add(id_self);
+                var d_id_DP = GetSonID_Department(id_DP);
+                foreach (var item in d_id_DP)
+                {
+                    ids_DP.Add(item.ID);
+                }
+                var data = from p in DB_C.tb_user
+                           where p.flag == true
+                           where ids_DP.Contains(p.ID_DepartMent)
+                           select new
+                           {
+                               id = p.ID,
+                               name = p.true_Name
+                           };
+                return Json(data.ToList(), JsonRequestBehavior.AllowGet);
+
+
+            }else{
+
+                var data = from p in DB_C.tb_user
                        where p.flag == true
                        select new
                        { 
                        id=p.ID,
                        name=p.true_Name
                        };
-
-            //JavaScriptSerializer jss = new JavaScriptSerializer();
-            //String json = jss.Serialize(data).ToString().Replace("\\", "");
-            //return json;
             return Json(data.ToList(), JsonRequestBehavior.AllowGet);
+            }
+
+            
+        }
+
+        public int? getID_byID_Department(int? id)
+        {
+            var data = from p in DB_C.tb_department
+                       where p.ID_Department == id
+                       select p;
+            if (data.Count() > 0)
+            {
+                tb_department dp = data.First();
+                return dp.ID;
+            }
+            return null;
         }
 
 
 
-        
+        /// <summary>
+        /// 根据资产类型返回数据的自定义属性
+        /// 继承其父节点所有属性
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult Handler_loadCAttr(int? id)
+        {
+            if (id == null)
+            {
+                return NULL_DATAList();
+            }
+            var ds_parent = GetParents_AsseType(id);
+            List<int?> ids = new List<int?>();
+            ids.Add(id);
+            foreach(var item in ds_parent)
+            {
+                ids.Add(item.ID);
+            }
+            //获取自定义属性
 
-
+            var data =from p in DB_C.tb_customAttribute
+                      where p.flag==true
+                      where ids.Contains(p.assetTypeID)
+                      join tb_ATT in DB_C.tb_customAttribute_Type on p.type equals tb_ATT.ID into temp_ATT
+                      from ATT in temp_ATT.DefaultIfEmpty()
+                      join tb_dic in DB_C.tb_dataDict on p.type_value equals tb_dic.ID into temp_dic
+                      from dic in temp_dic.DefaultIfEmpty()
+                      orderby p.assetTypeID 
+                      select new Json_CAtrr{
+                        ID=p.ID,
+                        length=p.length,
+                        necessary=p.necessary,
+                        title=p.title,
+                        type=p.type,
+                        type_Name=ATT.name,
+                        isTree=dic==null?false:dic.isTree,
+                        type_value=p.type_value==null?-1:p.type_value
+                      };
+            if (data.Count()>0)
+            {
+                return Json(data.ToList(), JsonRequestBehavior.AllowGet);
+            }
+            return NULL_DATAList() ;
+        }
 
 
          [HttpPost]
@@ -604,6 +682,19 @@ namespace FAMIS.Controllers
 
              return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_dataDict_Para(t.ID)));
          }
+
+
+        //获取取子节点 但是没有包含父节点
+         public IEnumerable<tb_department> GetSonID_Department(int? p_id)
+         {
+             var query = from c in DB_C.tb_department
+                         where c.ID_Father_Department == p_id
+                         where c.effective_Flag == true
+                         select c;
+
+             return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_Department(t.ID_Department)));
+         }
+
          public IEnumerable<tb_AssetType> GetSonID_AsseType(int? p_id)
          {
              var query = from c in DB_C.tb_AssetType
@@ -708,6 +799,13 @@ namespace FAMIS.Controllers
                         where p.flag_Search == true
                         select p;
              List<dto_TreeNode> nodesAll = new List<dto_TreeNode>();
+
+             //    int? role = commonConversion.getRoleID();
+
+             //    //获取资产类别权限
+             //    List<int?> idsRight_assetType = commonConversion.getids_AssetTypeByRole(role);
+             //    //获取部门权限
+             //    List<int?> idsRight_deparment = commonConversion.getids_departmentByRole(role);
 
              foreach (var item in idList)
              {
@@ -848,7 +946,6 @@ namespace FAMIS.Controllers
              List<int?> ids = commonConversion.getids_departmentByRole(roleID);
 
 
-
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
                         where ids.Contains(p.ID_Department)
@@ -960,7 +1057,7 @@ namespace FAMIS.Controllers
                     tb_dp =convertHandler.ConverJsonToTable(dp);
                     //获取用户信息以及插入时间
                     //获取操作用户
-                    tb_dp._operator = "KXP";
+                    tb_dp._operator = commonConversion.getOperatorName(); ;
                     //获取插入时间
                     tb_dp.create_TIME = DateTime.Now;
                     tb_dp.effective_Flag = true;
@@ -996,7 +1093,7 @@ namespace FAMIS.Controllers
                     //初始化相应的数据
                     tb_CAttr.time = DateTime.Now;
                     //TODO:
-                    tb_CAttr.operatorName = "KXP";
+                    tb_CAttr.operatorName = commonConversion.getOperatorName();
                     DB_C.tb_customAttribute.Add(tb_CAttr);
                     DB_C.SaveChanges();
                     return 1;
@@ -1341,6 +1438,62 @@ namespace FAMIS.Controllers
                 return 0;
             }
         }
+
+        [HttpPost]
+        public JsonResult load_dict_combobox(int? id)
+        {
+            //
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.isSysSet == false
+                       where p.ID_dataDict==id
+                       select new dto_DataDict_para
+                       { 
+                         ID=p.ID,
+                         name_para=p.name_para
+                       };
+            return Json(data.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public String load_dict_combotree(int? id)
+        {
+            //
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.isSysSet == false
+                       where p.ID_dataDict==id
+                       select new dto_TreeNode
+                       {
+                          id=p.ID,
+                          fatherID=(int)p.fatherid,
+                           nameText=p.name_para,
+                           orderID=p.ID,
+                           url="javascript:void(0)"
+
+                       };
+            return  TreeListToString(data.ToList());
+        }
+
+        [HttpPost]
+        public JsonResult load_dict_CAttr()
+        {
+            //
+            var data = from p in DB_C.tb_dataDict
+                       where p.active_flag == true
+                       where p.isSysSet==false
+                       where p.father_ID!=0
+                       select new dto_DataDict_para
+                       {
+                           ID = p.ID,
+                           name_para = p.name_dataDict
+                       };
+            return Json(data.ToList(), JsonRequestBehavior.AllowGet);
+        }
+
+
 
 
         [HttpPost]
