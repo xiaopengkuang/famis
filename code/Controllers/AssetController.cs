@@ -714,6 +714,77 @@ namespace FAMIS.Controllers
 
 
 
+        /// <summary>
+        /// 获取绑定信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult loadAsset_Toedit(int? id)
+        {
+            var data = from p in DB_C.tb_Asset
+                       where p.ID == id
+                       where p.flag == true
+                       join tb_SP in DB_C.tb_supplier on p.supplierID equals tb_SP.ID into temp_SP
+                       from SP in temp_SP.DefaultIfEmpty()
+                       join tb_US in DB_C.tb_user on p.Owener equals tb_US.ID into temp_US
+                       from US in temp_US.DefaultIfEmpty()
+                       select new Json_asset_edit { 
+                        ID=p.ID,
+                        address_supplier=SP.address,
+                        amount =p.amount,
+                        addressCF=p.addressCF,
+                        department_Using=p.department_Using,
+                        depreciation_Month=p.depreciation_Month==null?0:p.depreciation_Month,
+                        depreciation_tatol=p.depreciation_tatol==null?0:p.depreciation_tatol,
+                        linkMan_supplier=SP.linkman,
+                        measurement=p.measurement,
+                        Method_add=p.Method_add,
+                        Method_depreciation=p.Method_depreciation,
+                        name_Asset=p.name_Asset,
+                        Net_residual_rate=p.Net_residual_rate,
+                        Net_value=p.Net_value==null?0:p.Net_value,
+                        serial_number=p.serial_number,
+                        specification=p.specification,
+                        supplierID=p.supplierID,
+                        supplierName=SP.name_supplier,
+                        Time_Purchase=p.Time_Purchase,
+                        Total_price=p.Total_price,
+                        type_Asset=p.type_Asset,
+                        unit_price=p.unit_price,
+                        value=p.value,
+                        YearService_month=p.YearService_month,
+                        Owener=p.Owener,
+                        name_owner=US.true_Name
+                       };
+            if (data.Count() > 0)
+            {
+                Json_asset_edit result = data.First();
+                //接着获取自定义属性
+                var data_CAttr = from p in DB_C.tb_Asset_CustomAttr
+                                 where p.flag == true
+                                 where p.ID_Asset == id
+                                 join tb_cattr in DB_C.tb_customAttribute on p.ID_customAttr equals tb_cattr.ID into temp_cattr
+                                 from cattr in temp_cattr.DefaultIfEmpty()
+                                 join tb_type_ca in DB_C.tb_customAttribute_Type on cattr.type equals tb_type_ca.ID into temp_type_ca
+                                 from type_ca in temp_type_ca.DefaultIfEmpty()
+                                 join tb_dic in DB_C.tb_dataDict on cattr.type_value equals tb_dic.ID into temp_dic
+                                 from dic in temp_dic.DefaultIfEmpty()
+                                 select new Json_asset_cattr_ad { 
+                                  ID_Asset=id,
+                                  ID_customAttr=p.ID,
+                                  isTree=dic.isTree==null?false:dic.isTree,
+                                  value=p.value,
+                                  type_Name=type_ca.name
+                                 };
+
+                result.cattrs = data_CAttr.ToList();
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                return null;
+            }
+        }
 
         public JsonResult NULL_dataGrid()
         {

@@ -13,7 +13,6 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string serial_number { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? date { get; set; }
 
         public int? addree_Storage { get; set; }

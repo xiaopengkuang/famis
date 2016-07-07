@@ -13,6 +13,9 @@ namespace FAMIS.DTO
 
         public int? ID_customAttr { get; set; }
 
+        public String type_Name { get; set; }
+        public bool? isTree { get;set;}
+
         [StringLength(20)]
         public string value { get; set; }
     }

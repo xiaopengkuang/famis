@@ -18,6 +18,10 @@
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
 
     <script type="text/javascript" src="../../Scripts/Views/Asset/Asset_edit.js"></script>
+
+    <script type="text/javascript">
+        setTimeout(bindData('@ViewBag.id'),3000);
+    </script>
       <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
     <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
@@ -73,7 +77,7 @@
                             </td>
                             <td>存放地点:</td>
                             <td>
-                                <input class="easyui-textbox" id="CFDD_add" name="CFDD_add" style="width: 150px;" />
+                                <input class="easyui-combotree" id="CFDD_add" name="CFDD_add" style="width: 150px;" />
                             </td>
                         </tr>
                         <tr>
@@ -102,10 +106,10 @@
                                 <input class="easyui-textbox" id="GYSDD_add" readonly="readonly"  data-options="editable: false" name="GYSDD_add" style="width: 146px;" />
                             </td>
                         </tr>
-                         <tr>
+                         <tr id="vfalse_D">
                             <td>批量添加:</td>
                             <td>
-                                <input type="checkbox" name="Check_PLZJ_add" onclick='showAreaNum_PLTJ_add()' id="Check_PLZJ_add" value="1" />
+                                <input  type="checkbox" name="Check_PLZJ_add" onclick='showAreaNum_PLTJ_add()' id="Check_PLZJ_add" value="1" />
                             </td>
                             <td><label id="LABEL_PL">添加数量：</label></td>
                             <td>
@@ -151,15 +155,15 @@
                         <tr>
                             <td>月提折旧:</td>
                             <td>
-                                <input class="easyui-textbox"  data-options="editable: false" readonly="readonly" id="Other_YTZJ_add" name="Other_YTZJ_add" style="width: 146px;" />
+                                <input class="easyui-textbox"  readonly="readonly" id="Other_YTZJ_add" name="Other_YTZJ_add" style="width: 146px;" />
                             </td>
                             <td>累计折旧:</td>
                             <td>
-                                <input class="easyui-textbox"   data-options="editable: false" readonly="readonly" id="Other_LJZJ_add" name="Other_LJZJ_add" style="width: 146px;" />
+                                <input class="easyui-textbox"  readonly="readonly" id="Other_LJZJ_add" name="Other_LJZJ_add" style="width: 146px;" />
                             </td>
                             <td>净值:</td>
                             <td>
-                                <input class="easyui-textbox"   data-options="editable: false" readonly="readonly" id="Other_JZ_add" name="Other_JZ_add" style="width: 146px;" />
+                                <input class="easyui-textbox"   readonly="readonly" id="Other_JZ_add" name="Other_JZ_add" style="width: 146px;" />
                             </td>
                         </tr>
                     </table>
