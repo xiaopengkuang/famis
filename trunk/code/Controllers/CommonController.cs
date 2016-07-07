@@ -25,7 +25,7 @@ namespace FAMIS.Controllers
     {
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
         CommonConversion commonConversion = new CommonConversion();
-        
+        Serial myserial = new Serial();
         // GET: Common
         public ActionResult Index()
         {
@@ -53,26 +53,7 @@ namespace FAMIS.Controllers
          * */
         public ArrayList getNewSerialNumber(String ruleType, int num)
         {
-             //num = num == null ? 1 : num;
-
-
-             ArrayList newSerialNumber = new ArrayList();
-
-             //获取Type规则
-             dto_rule_Generate ruleDTO = getRuleByType(ruleType);
-
-            //获取数据库中的最新的数列号
-            String currentNum_DB = getLastestSerialNumber(ruleType,ruleDTO);
-            
-            //生成数据
-            if (currentNum_DB != null && currentNum_DB != "" && ruleDTO != null && ruleDTO.rule != null && ruleDTO.rule != "" && ruleDTO.length > 0)
-            {
-                Serial serialGenerator = new Serial();
-                int length = ruleDTO.length;
-                newSerialNumber = serialGenerator.Generate_SN_Interface(ruleDTO.rule.ToString(), num, length, currentNum_DB.ToString());
-                
-            }
-            return newSerialNumber;
+            return myserial.ReturnNewSearial(ruleType, num);
         }
 
 
