@@ -245,9 +245,7 @@ namespace FAMIS.Models
                 .Property(e => e.orderNum)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_department>()
-                .Property(e => e.Department_ID)
-                .IsUnicode(false);
+          
 
             modelBuilder.Entity<tb_Menu>()
                 .Property(e => e.ID_Menu)

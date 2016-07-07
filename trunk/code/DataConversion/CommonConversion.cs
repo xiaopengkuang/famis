@@ -71,21 +71,27 @@ namespace FAMIS.DataConversion
         }
 
 
-        public int getUnqiID()
+        public int getUniqueID()
         {
             string str = DateTime.Now.ToString("ddhhmmss");
             return int.Parse(str);
         }
 
-        public String getUnqiIDString() 
+        public String getUniqueIDString() 
         {
             return DateTime.Now.ToString("ddhhmmss");
         }
 
 
-        public String getUnqiID_serialNum(String Type)
+        public String getUniqueID_serialNum(String Type)
         {
             string str = Type + DateTime.Now.ToString("yyyyMMddHHmmssffff");
+            return str;
+        }
+
+        public String getUniqueID(String head)
+        {
+            string str = head + DateTime.Now.ToString("yyyyMMddHHmmssffff");
             return str;
         }
 
@@ -230,6 +236,8 @@ namespace FAMIS.DataConversion
                 }
 
 
+
+                //TODO:
                 if (typeName == SystemConfig.role_department)
                 {
                     var data_DP = from p in DB_C.tb_department
@@ -239,7 +247,7 @@ namespace FAMIS.DataConversion
                     List<int?> ids_DP = new List<int?>();
                     foreach (var it in data_DP)
                     {
-                        ids_DP.Add(it.ID_Department);
+                        ids_DP.Add(it.ID);
                     }
                     return ids_DP;
                 }
@@ -270,7 +278,7 @@ namespace FAMIS.DataConversion
 
             foreach (var item in data)
             {
-                ids.Add(item.ID_Department);
+                ids.Add(item.ID);
             }
             return ids;
         }

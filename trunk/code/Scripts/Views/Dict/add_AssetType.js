@@ -20,9 +20,9 @@ function loadinit_JLDW()
 {
     $("#JLDW").combobox({
         valueField: 'ID',
-        method: 'get',
+        method: 'POST',
         textField: 'name_para',
-        url: '/Dict/load_FS_add?TypeID=2',
+        url: '/Dict/load_FS_add?nameFlag=2_JLDW',
         onSelect: function (rec) {
             $('#JLDW').combobox('setValue', rec.ID);
             $('#JLDW').combobox('setText', rec.name_para);
@@ -41,9 +41,9 @@ function loadinit_ZJFS()
 {
     $("#ZJFS").combobox({
         valueField: 'ID',
-        method: 'get',
+        method: 'POST',
         textField: 'name_para',
-        url: '/Dict/load_FS_add?TypeID=10',
+        url: '/Dict/load_FS_add?nameFlag=2_ZJFS_JIU',
         onSelect: function (rec) {
             $('#ZJFS').combobox('setValue', rec.ID);
             $('#ZJFS').combobox('setText', rec.name_para);

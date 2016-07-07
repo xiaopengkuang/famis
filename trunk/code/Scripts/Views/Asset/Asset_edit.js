@@ -652,8 +652,8 @@ function submitForm(id_asset) {
             ajaxLoadEnd();
             var result
             if (data > 0) {
-                parent.$("#modalwindow").window("close");
                 parent.$('#TableList_0_1').datagrid("reload");
+                parent.$("#modalwindow").window("close");
             } else {
                 result = "系统正忙，请稍后继续！";
                 $.messager.alert('警告', result, 'warning');

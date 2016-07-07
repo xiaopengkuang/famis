@@ -107,6 +107,9 @@ namespace FAMIS.DataConversion
 
         public const String serialType_WC = "WC";
 
+        public const String serialType_BM= "BM";
+
+
 
     }
 }
