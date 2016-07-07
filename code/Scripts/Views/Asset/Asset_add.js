@@ -549,8 +549,8 @@ function submitForm() {
             ajaxLoadEnd();
             var result
             if (data > 0) {
+                parent.$("#TableList_0_1").datagrid("reload");
                 parent.$("#modalwindow").window("close");
-                parent.reloadDataGrid();
             } else {
                 result = "系统正忙，请稍后继续！";
                 $.messager.alert('警告', result, 'warning');

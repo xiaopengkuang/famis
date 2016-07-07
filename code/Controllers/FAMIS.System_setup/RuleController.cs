@@ -391,7 +391,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     int Stored_ID = 0;
                     bool mflag = false;
                     IEnumerable<tb_department> department= from f in mydb.tb_department
-                                   where f.ID_Department.ToString() == id
+                                   where f.ID.ToString() == id
                                    select f;
                     if (department.Count() > 0)
                     {
@@ -659,9 +659,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     {
 
                         if (temp != role_au.Count() - 1)
-                            json += d.ID_Department + ",";
+                            json += d.ID + ",";
                         else
-                            json += d.ID_Department;
+                            json += d.ID;
                         temp++;
                     }
                 }

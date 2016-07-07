@@ -26,7 +26,7 @@ namespace FAMIS.DataConversion
         public tb_department ConverJsonToTable(Json_department data)
         {
             tb_department tb=new tb_department();
-            tb.ID_Department = data.bmbh;
+            tb.CODE_Department=data.bmbh;
             tb.name_Department = data.bmmc;
             tb.treeLevel = data.level;
             tb.ID_Father_Department = data.sjbm;

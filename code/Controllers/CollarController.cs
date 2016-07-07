@@ -451,7 +451,7 @@ namespace FAMIS.Controllers
                        where p._operator!=null
                        where  p._operator==userID || isAllUser==true
                        where p.department_collar == null || idsRight_department.Contains(p.department_collar)
-                       join tb_DP in DB_C.tb_department on p.department_collar equals tb_DP.ID_Department into temp_DP
+                       join tb_DP in DB_C.tb_department on p.department_collar equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_ST in DB_C.tb_State_List on p.state_List equals tb_ST.id into temp_ST
                        from ST in temp_ST.DefaultIfEmpty()
@@ -749,7 +749,7 @@ namespace FAMIS.Controllers
            var data= from p in DB_C.tb_Asset_collar
                        where p.flag == true
                        where p.ID==id
-                       join tb_DP in DB_C.tb_department on p.department_collar equals tb_DP.ID_Department into temp_DP
+                       join tb_DP in DB_C.tb_department on p.department_collar equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_ST in DB_C.tb_State_List on p.state_List equals tb_ST.id into temp_ST
                        from ST in temp_ST.DefaultIfEmpty()

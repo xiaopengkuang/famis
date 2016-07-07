@@ -64,7 +64,7 @@ namespace FAMIS.DataConversion
                        from AT in temp_AT.DefaultIfEmpty()
                        join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
                        from MM in temp_MM.DefaultIfEmpty()
-                       join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID_Department into temp_DP
+                       join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_DZ in DB_C.tb_dataDict_para on p.addressCF equals tb_DZ.ID into temp_DZ
                        from DZ in temp_DZ.DefaultIfEmpty()

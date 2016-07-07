@@ -11,7 +11,7 @@ namespace FAMIS.DTO
 
 
 
-        public int? bmbh { get; set; }
+        public String bmbh { get; set; }
 
         public int? sjbm { get; set; }
 

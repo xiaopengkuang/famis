@@ -116,7 +116,7 @@ namespace FAMIS.Controllers
                        where p._operator!=null
                        where  p._operator==userID || isAllUser==true
                        where p.department_allocation == null || idsRight_department.Contains(p.department_allocation)
-                       join tb_DP in DB_C.tb_department on p.department_allocation equals tb_DP.ID_Department into temp_DP
+                       join tb_DP in DB_C.tb_department on p.department_allocation equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_ST in DB_C.tb_State_List on p.state_List equals tb_ST.id into temp_ST
                        from ST in temp_ST.DefaultIfEmpty()
@@ -243,7 +243,7 @@ namespace FAMIS.Controllers
                        where p.ID == id
                        join tb_AD in DB_C.tb_dataDict_para on p.addree_Storage equals tb_AD.ID into temp_AD
                        from AD in temp_AD.DefaultIfEmpty()
-                       join tb_DP in DB_C.tb_department on p.department_allocation equals tb_DP.ID_Department into temp_DP
+                       join tb_DP in DB_C.tb_department on p.department_allocation equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_USA in DB_C.tb_user on p.user_allocation equals tb_USA.ID into temp_USA
                        from USA in temp_USA.DefaultIfEmpty()

@@ -173,13 +173,7 @@ namespace FAMIS.Controllers
                 ViewBag.level = level;
                 //获取  获取新的资产编号
                 //TODO: 
-                //DateTime dt = DateTime.Now;
-                String h = DateTime.Now.Hour.ToString().PadLeft(2, '0');      //获取当前时间的小时部分
-                String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
-                String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
-                //23.ToString().PadLeft(6, '0');
-                ViewBag.CodeAssetType = h + m + s;
-
+                ViewBag.CodeAssetType =commonConversion.getUniqueID(SystemConfig.serialType_BM);
                 return View("add_department");
             }
             else
@@ -391,7 +385,7 @@ namespace FAMIS.Controllers
         public int? getID_byID_Department(int? id)
         {
             var data = from p in DB_C.tb_department
-                       where p.ID_Department == id
+                       where p.ID == id
                        select p;
             if (data.Count() > 0)
             {
@@ -692,7 +686,7 @@ namespace FAMIS.Controllers
                          where c.effective_Flag == true
                          select c;
 
-             return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_Department(t.ID_Department)));
+             return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_Department(t.ID)));
          }
 
          public IEnumerable<tb_AssetType> GetSonID_AsseType(int? p_id)
@@ -720,7 +714,7 @@ namespace FAMIS.Controllers
              for (int i = 0; i < list_ORG.Count; i++)
              {
                  dto_TreeNode node = new dto_TreeNode();
-                 int idYY = Convert.ToInt32(list_ORG[i].ID_Department);
+                 int idYY = Convert.ToInt32(list_ORG[i].ID);
                  node.id = idYY;
                  node.nameText = list_ORG[i].name_Department;
                  node.url = "javascript:void(0)";
@@ -948,9 +942,9 @@ namespace FAMIS.Controllers
 
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
-                        where ids.Contains(p.ID_Department)
+                        where ids.Contains(p.ID)
                         select new dto_TreeNode {
-                            id =(int)(fathernode.id+p.ID_Department),
+                            id =(int)(fathernode.id+p.ID),
                             nameText=p.name_Department,
                             url = "javascript:void(0)",
                             fatherID=(int)(fathernode.id+p.ID_Father_Department),
@@ -1062,7 +1056,7 @@ namespace FAMIS.Controllers
                     tb_dp.create_TIME = DateTime.Now;
                     tb_dp.effective_Flag = true;
                     tb_dp.url = "javascript:void(0)";
-                    tb_dp.orderNum = tb_dp.ID_Department.ToString();
+                    tb_dp.orderNum = commonConversion.getUniqueID().ToString() ;
 
                     DB_C.tb_department.Add(tb_dp);
                     DB_C.SaveChanges();
@@ -1120,7 +1114,7 @@ namespace FAMIS.Controllers
                     tb_data.active_flag = true;
                     tb_data.flag_Search = false;
                     tb_data.isSysSet = false;
-                    tb_data.orderID=commonConversion.getUnqiID();
+                    tb_data.orderID=commonConversion.getUniqueID();
                     tb_data.url = "javascript:void(0)";
                     DB_C.tb_dataDict.Add(tb_data);
                     DB_C.SaveChanges();
@@ -1145,7 +1139,7 @@ namespace FAMIS.Controllers
                     //其他默认数据填充
                     tb_data.activeFlag = true;
                     tb_data.create_Time = DateTime.Now;
-                    tb_data.orderID = commonConversion.getUnqiIDString();
+                    tb_data.orderID = commonConversion.getUniqueIDString();
                     tb_data.url = commonConversion.getDefaultUrl();
 
                     DB_C.tb_dataDict_para.Add(tb_data);
@@ -1414,7 +1408,7 @@ namespace FAMIS.Controllers
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_department json_data = serializer.Deserialize<Json_department>(data);
 
-            var q=from p in DB_C.tb_department where p.ID_Department == id select p;
+            var q=from p in DB_C.tb_department where p.ID == id select p;
             if (q.Count() != 1)
             {
                 return 0;
@@ -1645,10 +1639,10 @@ namespace FAMIS.Controllers
             }
 
             var data = from p in DB_C.tb_department
-                       join q in DB_C.tb_department on p.ID_Father_Department equals q.ID_Department
-                       where p.ID_Department == bmbh
+                       join q in DB_C.tb_department on p.ID_Father_Department equals q.ID
+                       where p.ID == bmbh
                        select new { 
-                       bmbh=p.ID_Department,
+                       bmbh=p.ID,
                        bmmc=p.name_Department,
                        sjbm=p.ID_Father_Department,
                        sjbm_Name=q.name_Department
@@ -1656,10 +1650,10 @@ namespace FAMIS.Controllers
             if (data.ToList().Count < 1)
             {
                 var data2 = from p in DB_C.tb_department
-                           where p.ID_Department == bmbh
+                           where p.ID == bmbh
                            select new
                            {
-                               bmbh = p.ID_Department,
+                               bmbh = p.ID,
                                bmmc = p.name_Department,
                                sjbm = p.ID_Father_Department,
                                sjbm_Name = ""
@@ -1987,12 +1981,12 @@ namespace FAMIS.Controllers
              sb_tree_department.Clear();
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
-                        where ids_de.Contains(p.ID_Department)
+                        where ids_de.Contains(p.ID)
                         select new dto_TreeNode { 
-                        id=(int)p.ID_Department,
+                        id=(int)p.ID,
                         fatherID=(int)p.ID_Father_Department,
                         nameText=p.name_Department,
-                        orderID = (int)p.ID_Department,
+                        orderID = (int)p.ID,
                         url=p.url
                         };
 
@@ -2180,23 +2174,39 @@ namespace FAMIS.Controllers
         {
                 //读取数据
             List<tb_AssetType> list = DB_C.tb_AssetType.Where(a => a.flag == true).ToList();
+
+            var data =from p in DB_C.tb_AssetType
+                      where p.flag==true
+                      join tb_dic in DB_C.tb_dataDict_para on p.measurement equals tb_dic.ID into temp_dic
+                      from dic in temp_dic.DefaultIfEmpty()
+                      join tb_dic in DB_C.tb_dataDict_para on p.method_Depreciation equals tb_dic.ID into temp_dic2
+                      from dic2 in temp_dic2.DefaultIfEmpty()
+                      select new 
+                       {
+                           id=p.ID,
+                           lbmc = p.name_Asset_Type,
+                           zjfs = dic2.name_para,
+                           zjnx = p.period_Depreciation,
+                           jczl = p.Net_residual_rate,
+                           lastEditTime = p.lastEditTime,
+                           jldw = dic.name_para,
+                           _parentId=p.father_MenuID_Type,
+                           level=p.treeLevel
+                       };
+
+
             
-            MODEL_TO_JSON co=new MODEL_TO_JSON();
-            List<Json_AssetType_add> data = co.ConverMdoelToJsonList(list);
             var json_NULL = new
                 {
-                    total = data.Count,
+                    total = data.Count(),
                     rows = data.ToArray()
-                    //sql = selectSQL
-
                 };
-
             return Json(json_NULL, JsonRequestBehavior.AllowGet);
         }
         public JsonResult loadTreeGrid_Department()
         {
             var data = from p in DB_C.tb_department where p.effective_Flag == true select new {
-            id=p.ID_Department,
+            id=p.ID,
             _parentId=p.ID_Father_Department,
             name=p.name_Department,
             time=p.create_TIME,
