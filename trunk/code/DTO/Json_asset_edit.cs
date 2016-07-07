@@ -1,12 +1,14 @@
-namespace FAMIS.Models
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
 
-    public partial class tb_Asset
+namespace FAMIS.DTO
+{
+    public class Json_asset_edit
     {
         public int ID { get; set; }
 
@@ -33,17 +35,20 @@ namespace FAMIS.Models
 
         public int? addressCF { get; set; }
 
-        public int? state_asset { get; set; }
-
         public int? supplierID { get; set; }
+        public String supplierName { get; set; }
 
+        public String address_supplier { get; set; }
+        
+        public String linkMan_supplier { get; set; }
+
+
+        [Column(TypeName = "date")]
         public DateTime? Time_Purchase { get; set; }
 
         public int? YearService_month { get; set; }
 
         public int? Method_depreciation { get; set; }
-
-        public int? Method_decrease { get; set; }
 
         public int? Method_add { get; set; }
 
@@ -53,14 +58,18 @@ namespace FAMIS.Models
 
         public double? depreciation_tatol { get; set; }
 
+
         public double? Net_value { get; set; }
 
-        public bool? flag { get; set; }
-
-        public DateTime? Time_add { get; set; }
 
         public double? Total_price { get; set; }
 
+        /// <summary>
+        /// 当前拥有者
+        /// </summary>
         public int? Owener { get; set; }
+        public String name_owner { get; set; }
+        
+        public List<Json_asset_cattr_ad> cattrs { get; set; }
     }
 }

@@ -13,10 +13,8 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string serialNumber { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? date_ToRepair { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? date_ToReturn { get; set; }
 
         [StringLength(200)]

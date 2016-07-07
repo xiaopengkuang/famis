@@ -8,6 +8,9 @@ var d_Other_ZCSL_add = 0;
 
 var arry_CAttr = new Array();
 
+var flag_load_BM = false;
+var flag_load_XH = false;
+
 //==================================global data==========================================//
 
 $(function () {
@@ -15,6 +18,7 @@ $(function () {
     loadInitDate();
     $("#Num_PLTJ_add").hide();
     $("#LABEL_PL").hide();
+    $("#vfalse_D").hide();
 
 
     $('#Other_ZCDJ_add').numberbox({
@@ -33,6 +37,9 @@ $(function () {
 
 });
 
+
+
+
 function update_Value()
 {
     var sl = $('#Other_ZCSL_add').numberbox('getValue')
@@ -42,6 +49,7 @@ function update_Value()
 }
  
 function loadInitDate() {
+
     load_GYS_add();
     load_ZJFS_add();
     load_JLDW_add();
@@ -51,6 +59,65 @@ function loadInitDate() {
     load_Other_ZJFS_add();
 
 }
+
+
+function bindData(id)
+{
+    //获取数据
+    $.ajax({
+        url: "/Asset/loadAsset_Toedit?id=" + id,
+        type: 'POST',
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+                //开始绑定数据
+                //基础属性
+                $("#ZCBH_add").val(data.serial_number);
+                $("#ZCMC_add").val(data.name_Asset);
+                $("#LXR_add").val(data.linkMan_supplier);
+                $("#GYSDD_add").val(data.address_supplier);
+                $("#ZCBH_add").val(data.serial_number);
+
+                $("#ZCLB_add").combotree('setValue', data.type_Asset);
+                $("#SZBM_add").combotree('setValue', data.department_Using);
+                $("#CFDD_add").combotree('setValue', data.addressCF);
+                $("#JLDW_add").combobox('setValue', data.measurement);
+                $("#ZJFS_add").combobox('setValue', data.Method_add);
+                $('#GYS_add').combogrid('setValue', data.supplierID);
+                $('#GYS_add').combogrid('setText', data.supplierName);
+                $("#ZCXH_add").combobox('setValue', data.specification);
+                $("#ZCXH_add").combobox('setText', data.specification);
+                $("#SYRY_add").combobox('setValue', data.Owener);
+                $("#SYRY_add").combobox('setValue', data.name_owner);
+
+                var date_add = dateString(data.Time_Purchase);
+                $("#GZRQ_add").datebox('setValue', date_add);
+
+                //其他属性
+                $('#Other_SYNX_add').numberspinner('setValue', data.YearService_month);
+                $("#Other_ZJFS_add").combobox('setValue', data.Method_depreciation);
+                $("#Other_JCZL_add").val(data.Net_residual_rate);
+                $("#Other_ZCJZ_add").val(data.value);
+                $("#Other_YTZJ_add").val(data.depreciation_Month);
+                $("#Other_LJZJ_add").val(data.depreciation_tatol);
+                $("#Other_JZ_add").val(data.Net_value);
+
+                //自定义属性
+
+
+
+                //延迟加载
+
+
+
+            } else {
+            }
+        }
+    });
+}
+
+
 
 
 
@@ -67,12 +134,23 @@ function load_ZCLB_add() {
        onSelect: function (node) {
            //返回树对象  
            var tree = $(this).tree;
-           load_ZCXH_add(node.id);
+           if (flag_load_XH == false) {
+
+           } else {
+               load_ZCXH_add(node.id);
+           }
+
            updateZCXZ(tree, node);
            update_ZDY_attr(node.id)
        }, //全部折叠
        onLoadSuccess: function (node, data) {
            $('#ZCLB_add').combotree('tree').tree("collapseAll");
+           flag_load_XH = true;
+
+           var lb_s = $('#ZCLB_add').combotree('getValue')
+           var zxch_c = $("#ZCXH_add").combobox('getValue');
+           load_ZCXH_add(lb_s);
+           $("#ZCXH_add").combobox('setValue', zxch_c);
        }
    });
 }
@@ -287,10 +365,19 @@ function load_SZBM_add() {
         //选择树节点触发事件  
         onSelect: function (node) {
             d_SZBM_add = $('#SZBM_add').combotree('getValue');
-            load_User_add(node.id);
+            if (flag_load_BM == false) {
+                return;
+            } else {
+                load_User_add(node.id);
+            }
         }, //全部折叠
         onLoadSuccess: function (node, data) {
             //$('#SZBM_add').combotree('tree').tree("collapseAll");
+            flag_load_BM = true;
+            d_SZBM_add = $('#SZBM_add').combotree('getValue');
+            d_user = $('#SYRY_add').combobox('getValue');
+            load_User_add(d_SZBM_add);
+            $('#SYRY_add').combobox('setValue', d_user);
         }
     });
 
@@ -588,3 +675,24 @@ function MessShow(mess) {
     });
 }
 
+
+
+function dateString(date) {
+    var pa = /.*\((.*)\)/;
+    var unixtime = date.match(pa)[1].substring(0, 10);
+    return getTime(unixtime);
+}
+
+function getTime(/** timestamp=0 **/) {
+    var ts = arguments[0] || 0;
+    var t, y, m, d, h, i, s;
+    t = ts ? new Date(ts * 1000) : new Date();
+    y = t.getFullYear();
+    m = t.getMonth() + 1;
+    d = t.getDate();
+    h = t.getHours();
+    i = t.getMinutes();
+    s = t.getSeconds();
+    // 可根据需要在这里定义时间格式  
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+}
