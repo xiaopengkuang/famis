@@ -9,6 +9,7 @@ using System.IO;
 using System.Web.Script.Serialization;
 using FAMIS.DAL;
 using FAMIS.Models;
+using FAMIS.DataConversion;
 namespace FAMIS.Controllers.FAMIS.System_setup
 {
     public class RuleController : Controller
@@ -16,8 +17,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         // GET: Rule_
         private  string serial="";
         private FAMISDBTBModels mydb = new FAMISDBTBModels();
-       
-        
+        CommonConversion commonConversion = new CommonConversion();
         public class GetRule// 绑定页面规则数据
          {
             
@@ -491,9 +491,10 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         }
        
         [HttpPost]
-        public ActionResult AddRole(string JSdata)
+        public string AddRole(string JSdata)
         {
             GetRule model = new GetRule();
+            bool? flag=false;
             int id = 0;
             try
             {
@@ -520,9 +521,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 var rule_tb = new tb_role
                 {
                     name = name,
-                    description  = des
-                   
-
+                    description  = des,
+                    flag=true,
+                    isSuperUser=false
                 };
                 mydb.tb_role.Add(rule_tb);
                 mydb.SaveChanges();
@@ -532,13 +533,17 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 {
                     p.name = name;
                     p.description = des;
-                    
+                   
+                    flag = p.isSuperUser;
                 }
-            mydb.SaveChanges();
+            if (!(bool)flag || commonConversion.isSuperUser((commonConversion.getRoleID())))
+                mydb.SaveChanges();
 
+            else
+                return "Supper";
 
-            //return View();
-            return this.Json(model);
+            return "Saved";
+           
         }
         [HttpPost]
         public ActionResult Jugdement(string JSON,string name)

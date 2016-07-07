@@ -822,6 +822,18 @@ namespace FAMIS.Controllers
                      if (SystemConfig.treeType_repair_Search_Menu.Contains(item.name_flag)) { }
                      else { continue; }
                  }
+                 else if (treeType == SystemConfig.treeType_depreciationSearch)
+                 {
+                     if (SystemConfig.treeType_depreciation_Search_Menu.Contains(item.name_flag))
+                     { }
+                     else { continue;}
+                 }
+                 else if (treeType == SystemConfig.treeType_newdeatails)
+                 {
+                     if (SystemConfig.treeType_newdeatails_Search_Menu.Contains(item.name_flag))
+                     { }
+                     else { continue; }
+                 }
                  else
                  {
                      continue;

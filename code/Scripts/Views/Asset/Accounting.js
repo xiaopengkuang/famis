@@ -175,6 +175,7 @@ function resetSC() {
 
 
 function LoadInitData_Detail() {
+    alert(searchCondtiion);
 
     $('#TableList_0_1').datagrid({
         url: '/Asset/LoadAssets?tableType=1&searchCondtiion=' + searchCondtiion,

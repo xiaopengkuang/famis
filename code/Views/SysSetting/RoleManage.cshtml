@@ -100,9 +100,13 @@
                                          datatype: "json",//数据类型
 
                                          success: function (result) {
-                                             alert("Success!");
+                                             if (result == "Supper") {
+                                                 alert("伦家是超级管理员，你是奈何不了我的哦！");
+                                                 $('#dd').datagrid('reload');
 
-
+                                             }
+                                             else
+                                                 alert("成功删除！");
 
                                          }, error: function (msg) {
                                              alert("删除角色失败！请先将该角色上的权限全部取消，然后尝试删除该角色。");
@@ -172,9 +176,12 @@
 
                              success: function (result) {
 
-
-                                 alert("添加成功！");
-                                 $('#dd').datagrid('reload');
+                                 if (result == "Supper")
+                                     alert("伦家是超级管理员，你是奈何不了我的哦！");
+                                 else {
+                                     alert("添加成功！");
+                                     $('#dd').datagrid('reload');
+                                 }
                                  
 
                              }, error: function (msg) {

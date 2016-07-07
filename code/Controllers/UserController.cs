@@ -8,13 +8,14 @@ using FAMIS.DAL;
 using FAMIS.DTO;
 using FAMIS.Models;
 using System.IO;
+using FAMIS.DataConversion;
 namespace FAMIS.Controllers
 {
     public class UserController : Controller
     {
         //
         FAMISDBTBModels DBConnecting = new FAMISDBTBModels();
-
+        CommonConversion commonConversion = new CommonConversion();
 
 
         // GET: Login
@@ -100,9 +101,7 @@ namespace FAMIS.Controllers
        [HttpPost]
         public string GetRole()
         {
-            
-            return Session["userRole"].ToString();
-           
+            return commonConversion.getRoleID().ToString();
         }
 
         public String signOut()
