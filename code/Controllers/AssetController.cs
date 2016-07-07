@@ -569,8 +569,8 @@ namespace FAMIS.Controllers
                 for (int i = 0; i < serailNums.Count; i++)
                 {
                     //TODO:
-                    //dto_aa.d_ZCBH_add = serailNums[i].ToString().Trim();
-                    dto_aa.d_ZCBH_add = commonConversion.getUnqiID_serialNum(SystemConfig.serialType_ZC);
+                    dto_aa.d_ZCBH_add = serailNums[i].ToString().Trim();
+                    //dto_aa.d_ZCBH_add = commonConversion.getUnqiID_serialNum(SystemConfig.serialType_ZC);
                     ser_StrList.Add(dto_aa.d_ZCBH_add);
                     dto_aa.flag = true;
                     dto_aa.OperateTime =DateTime.Now;
