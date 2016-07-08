@@ -297,7 +297,7 @@ namespace FAMIS.ViewCommon
 
 
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
-            SqlDataAdapter sda = new SqlDataAdapter("select ID_Menu,name_Menu,father_Menu_ID,url,ID from tb_Menu order by ID_Menu", con);
+            SqlDataAdapter sda = new SqlDataAdapter("select ID,name_Menu,father_Menu_ID,url,ID from tb_Menu order by ID_Menu", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
             con.Close();

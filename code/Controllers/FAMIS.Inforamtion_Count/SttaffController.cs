@@ -88,23 +88,7 @@ namespace FAMIS.Controllers.FAMIS.ASSET_TYPE
              
             
         }
-        public String load_Depart()
-        {
-
-            List<tb_department> list = db.tb_department.OrderBy(a => a.ID).ToList();
-            JavaScriptSerializer jss = new JavaScriptSerializer();
-            var result = (from r in list
-                          select new tb_department()
-                          {
-                              ID = r.ID,
-                              ID_Department = r.ID_Department
-                          }).ToList();
-
-            String json = jss.Serialize(result).ToString().Replace("\\", "");
-
-            this.load_StaffID();
-            return json;
-        }
+      
 
         [HttpPost]
         public ActionResult test()
