@@ -180,14 +180,21 @@ namespace FAMIS.Controllers
             return "OK";
         }
         [HttpPost]
-        public ActionResult UserDelete(string ID)
+        public string UserDelete(string ID)
         {
-             
-            var Model = db.tb_user.Find(int.Parse(ID));
-            db.tb_user.Remove(Model);
-            db.SaveChanges();
 
-            return this.Json(Model);
+
+            var q = from o in db.tb_user
+                    where o.ID.ToString() == ID
+                    select o;
+            foreach (var p in q)
+            {
+               
+                    p.flag = false;
+           
+            }
+            db.SaveChanges();
+            return "OK";
         }
         
        
