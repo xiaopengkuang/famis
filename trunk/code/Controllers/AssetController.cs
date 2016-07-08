@@ -24,6 +24,7 @@ namespace FAMIS.Controllers
 
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
         CommonConversion commonConversion = new CommonConversion();
+        CommonController comController = new CommonController();
         MODEL_TO_JSON MTJ = new MODEL_TO_JSON();
         JSON_TO_MODEL JTM = new JSON_TO_MODEL();
 
@@ -384,22 +385,25 @@ namespace FAMIS.Controllers
 
                     case SystemConfig.nameFlag_2_CFDD:
                         {
+                            List<int?> ids_dic = comController.GetSonIDs_dataDict_Para(dic_paraID);
                             data_ORG = from p in data_ORG
-                                       where p.addressCF == dic_paraID
+                                       where ids_dic.Contains(p.addressCF)
                                        select p;
                         }; break;
 
                     case SystemConfig.nameFlag_2_SYBM:
                         {
+                            List<int?> ids_dic =comController.GetSonIDs_Department(dic_paraID);
                             data_ORG = from p in data_ORG
-                                       where p.department_Using == dic_paraID
+                                       where ids_dic.Contains(p.department_Using)
                                        select p;
                         }; break;
 
                     case SystemConfig.nameFlag_2_ZCLB:
                         {
+                            List<int?> ids_dic = comController.GetSonID_AsseType(dic_paraID);
                             data_ORG = from p in data_ORG
-                                       where p.type_Asset == dic_paraID
+                                       where ids_dic.Contains(p.type_Asset)
                                        select p;
                         }; break;
 

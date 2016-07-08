@@ -609,7 +609,7 @@ namespace FAMIS.Controllers
                 int? id_collar = getIDBySerialNum_collar(newItem.serial_number);
                 //获取单据明细
                 //获取选中的Ids
-                List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+                List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
                 List<tb_Asset_collar_detail> details = createCollarDetialList(id_collar, selectedAssets);
                 DB_C.tb_Asset_collar_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -704,7 +704,7 @@ namespace FAMIS.Controllers
                     item.flag = false;
                 }
                 //获取选中IDs
-                List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+                List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
                 List<tb_Asset_collar_detail> details = createCollarDetialList(Json_data.id, selectedAssets);
                 DB_C.tb_Asset_collar_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -718,7 +718,7 @@ namespace FAMIS.Controllers
 
 
 
-        public List<tb_Asset_collar_detail> createCollarDetialList(int? id_collar,List<int> ids_asset)
+        public List<tb_Asset_collar_detail> createCollarDetialList(int? id_collar,List<int?> ids_asset)
         {
             List<tb_Asset_collar_detail> list = new List<tb_Asset_collar_detail>();
             if(id_collar==null||id_collar<1)
@@ -787,19 +787,19 @@ namespace FAMIS.Controllers
             
             int? id_collar=int.Parse(id);
             //获取相应的AssetID
-            List<int> ids_asset = getAssetIdsByCollarID(id_collar);
+            List<int?> ids_asset = getAssetIdsByCollarID(id_collar);
             return commonController.getAssetsByIDs(page,rows,ids_asset);
         }
 
 
-        public List<int> getAssetIdsByCollarID(int? id)
+        public List<int?> getAssetIdsByCollarID(int? id)
         {
             var data = from p in DB_C.tb_Asset_collar_detail
                        where p.ID_collar == id
                        where p.flag==true || p.flag==null
                        select p;
 
-            List<int> ids = new List<int>();
+            List<int?> ids = new List<int?>();
             foreach (var item in data)
             {
                 ids.Add((int)item.ID_asset);
@@ -824,7 +824,7 @@ namespace FAMIS.Controllers
                             serial_number=p.serial_number
                        };
             dto_collar_edit result = data.First();
-            List<int> ids_select = getAssetIdsByCollarID(id);
+            List<int?> ids_select = getAssetIdsByCollarID(id);
 
             //result.idsStr = commonConversion.IntListToString(ids_select);
             result.idsList = ids_select;
@@ -892,7 +892,7 @@ namespace FAMIS.Controllers
                         }
                         if (commonConversion.is_YSH(Json_data.id_state))
                         {
-                            List<int> ids_asset = getAssetIdsByCollarID(Json_data.id_collar);
+                            List<int?> ids_asset = getAssetIdsByCollarID(Json_data.id_collar);
                             var dataAsset = from p in DB_C.tb_Asset
                                             where p.flag == true
                                             where ids_asset.Contains(p.ID)
@@ -1046,7 +1046,7 @@ namespace FAMIS.Controllers
             if (NameTarget == SystemConfig.state_List_YSH)
             {
                 //获取AssetID
-                List<int> ids_asset = getAssetIdsByCollarID(id_collar);
+                List<int?> ids_asset = getAssetIdsByCollarID(id_collar);
 
                 //没有附加明细
                 if (ids_asset.Count == 0)

@@ -226,11 +226,11 @@ namespace FAMIS.Controllers
 
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
-            List<int> ids_selected = commonConversion.StringToIntList(selectedIDs);
+            List<int?> ids_selected = commonConversion.StringToIntList(selectedIDs);
             return getAssetsByIDs(page, rows, ids_selected);
         }
 
-        public JsonResult getAssetsByIDs(int? page, int? rows, List<int> ids_selected)
+        public JsonResult getAssetsByIDs(int? page, int? rows, List<int?> ids_selected)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -314,7 +314,7 @@ namespace FAMIS.Controllers
         [HttpPost]
         public JsonResult LoadAsset_ByState(int? page, int? rows, String searchCondtiion, String selectedIDs,int? stateID)
         {
-            List<int> ids_Gone = commonConversion.StringToIntList(selectedIDs);
+            List<int?> ids_Gone = commonConversion.StringToIntList(selectedIDs);
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             dto_SC_Asset dto_condition = dto_condition = serializer.Deserialize<dto_SC_Asset>(searchCondtiion);
             JsonResult json = new JsonResult();
@@ -341,7 +341,7 @@ namespace FAMIS.Controllers
             return json;
         }
 
-        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int> selectedIDs, String stateName_asset)
+        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, String stateName_asset)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -395,22 +395,29 @@ namespace FAMIS.Controllers
                     {
                         case SystemConfig.nameFlag_2_CFDD:
                             {
+
+                                //获取其所有子节点
+                                List<int?> ids_dic = GetSonIDs_dataDict_Para(dic_paraID);
                                 data_ORG = from p in data_ORG
-                                           where p.addressCF == dic_paraID
+                                           where ids_dic.Contains(p.addressCF)
                                            select p;
                             }; break;
 
                         case SystemConfig.nameFlag_2_SYBM:
                             {
+                                //获取部门所有节点
+                                List<int?> ids_dic = GetSonIDs_Department(dic_paraID);
                                 data_ORG = from p in data_ORG
-                                           where p.department_Using == dic_paraID
+                                           where ids_dic.Contains(p.department_Using)
                                            select p;
                             }; break;
 
                         case SystemConfig.nameFlag_2_ZCLB:
                             {
+
+                                List<int?> ids_dic = GetSonID_AsseType(dic_paraID);
                                 data_ORG = from p in data_ORG
-                                           where p.type_Asset == dic_paraID
+                                           where ids_dic.Contains(p.type_Asset)
                                            select p;
                             }; break;
                         case SystemConfig.nameFlag_2_SYRY:
@@ -482,7 +489,7 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int> selectedIDs, String stateName_asset)
+        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, String stateName_asset)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -505,6 +512,7 @@ namespace FAMIS.Controllers
                 {
                     case SystemConfig.searchCondition_Date:
                         {
+                            //TODO:异常处理
                             DateTime beginTime = Convert.ToDateTime(((DateTime)cond.begin).ToString("yyyy-MM-dd") + " 00:00:00");
                             DateTime endTime = Convert.ToDateTime(((DateTime)cond.end).ToString("yyyy-MM-dd") + " 23:59:59");
                             switch (cond.dataName)
@@ -618,8 +626,98 @@ namespace FAMIS.Controllers
         }
 
 
+        /// <summary>
+        /// 获取相关子节点
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
+        public IEnumerable<tb_dataDict_para> GetSon_dataDict_Para(int? p_id)
+        {
+            var query = from c in DB_C.tb_dataDict_para
+                        where c.fatherid == p_id
+                        where c.activeFlag == true
+                        select c;
+
+            return query.ToList().Concat(query.ToList().SelectMany(t => GetSon_dataDict_Para(t.ID)));
+        }
 
 
+        public List<int?> GetSonIDs_dataDict_Para(int? p_id)
+        {
+            var data = GetSon_dataDict_Para(p_id);
+            List<int?> ids = new List<int?>();
+            foreach (var item in data)
+            {
+                ids.Add(item.ID);
+            }
+            ids.Add(p_id);
+            return ids;
+        }
+
+        //获取取子节点 但是没有包含父节点
+        public IEnumerable<tb_department> GetSon_Department(int? p_id)
+        {
+            var query = from c in DB_C.tb_department
+                        where c.ID_Father_Department == p_id
+                        where c.effective_Flag == true
+                        select c;
+
+            return query.ToList().Concat(query.ToList().SelectMany(t => GetSon_Department(t.ID)));
+        }
+
+        public List<int?> GetSonIDs_Department(int? p_id)
+        {
+            var data = GetSon_Department(p_id);
+            List<int?> ids = new List<int?>();
+            foreach (var item in data)
+            {
+                ids.Add(item.ID);
+            }
+            ids.Add(p_id);
+            return ids;
+        }
+
+        public IEnumerable<tb_AssetType> GetSon_AsseType(int? p_id)
+        {
+            var query = from c in DB_C.tb_AssetType
+                        where c.father_MenuID_Type == p_id
+                        where c.flag == true
+                        select c;
+
+            return query.ToList().Concat(query.ToList().SelectMany(t => GetSon_AsseType(t.ID)));
+        }
+        //获取取子节点 但是没有包含父节点
+        public IEnumerable<tb_AssetType> GetParents_AsseType(int? id)
+        {
+            var query = from c in DB_C.tb_AssetType
+                        where c.ID == id
+                        where c.flag == true
+                        select c;
+
+            return query.ToList().Concat(query.ToList().SelectMany(t => GetParents_AsseType(t.father_MenuID_Type)));
+        }  
+        public List<int?> GetSonID_AsseType(int? p_id)
+        {
+            var data = GetSon_AsseType(p_id);
+            List<int?> ids = new List<int?>();
+            foreach (var item in data)
+            {
+                ids.Add(item.ID);
+            }
+            ids.Add(p_id);
+            return ids;
+        }
+        public List<int?> GetParentID_AsseType(int? id)
+        {
+            var data = GetParents_AsseType(id);
+            List<int?> ids = new List<int?>();
+            foreach (var item in data)
+            {
+                ids.Add(item.ID);
+            }
+            ids.Add(id);
+            return ids;
+        }
 
         public JsonResult NULL_dataGrid()
         {

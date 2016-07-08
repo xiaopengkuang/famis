@@ -21,9 +21,9 @@ namespace FAMIS.DataConversion
 
 
       
-        public List<int> StringToIntList(String idStr)
+        public List<int?> StringToIntList(String idStr)
         {
-            List<int> results = new List<int>();
+            List<int?> results = new List<int?>();
             if (idStr == null || idStr == "")
             {
                 return results;

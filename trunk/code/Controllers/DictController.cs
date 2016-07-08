@@ -22,7 +22,7 @@ namespace FAMIS.Controllers
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
         JSON_TO_MODEL convertHandler = new JSON_TO_MODEL();
         CommonConversion commonConversion = new CommonConversion();
-
+        CommonController commonController = new CommonController();
 
 
         //TODO:
@@ -347,15 +347,7 @@ namespace FAMIS.Controllers
             if (id_DP != null)
             {
 
-                //获取其自身的ID
-                int? id_self = getID_byID_Department(id_DP);
-                List<int?> ids_DP=new List<int?>();
-                ids_DP.Add(id_self);
-                var d_id_DP = GetSonID_Department(id_DP);
-                foreach (var item in d_id_DP)
-                {
-                    ids_DP.Add(item.ID);
-                }
+                List<int?> ids_DP = commonController.GetSonIDs_Department(id_DP);
                 var data = from p in DB_C.tb_user
                            where p.flag == true
                            where ids_DP.Contains(p.ID_DepartMent)
@@ -382,18 +374,7 @@ namespace FAMIS.Controllers
             
         }
 
-        public int? getID_byID_Department(int? id)
-        {
-            var data = from p in DB_C.tb_department
-                       where p.ID == id
-                       select p;
-            if (data.Count() > 0)
-            {
-                tb_department dp = data.First();
-                return dp.ID;
-            }
-            return null;
-        }
+     
 
 
 
@@ -410,13 +391,9 @@ namespace FAMIS.Controllers
             {
                 return NULL_DATAList();
             }
-            var ds_parent = GetParents_AsseType(id);
             List<int?> ids = new List<int?>();
-            ids.Add(id);
-            foreach(var item in ds_parent)
-            {
-                ids.Add(item.ID);
-            }
+            ids = commonController.GetParentID_AsseType(id);
+
             //获取自定义属性
 
             var data =from p in DB_C.tb_customAttribute
@@ -618,12 +595,13 @@ namespace FAMIS.Controllers
             //迭代获取数据
              //获取其所有父节点
              List<int?> ids=new List<int?>();
-             var ids_data = GetParents_AsseType(assetTypeID);
-             foreach (var q in ids_data)
-             {
-                 ids.Add(q.ID);
-             }
-             ids.Remove(assetTypeID);
+             ids = commonController.GetParentID_AsseType(assetTypeID);
+             //var ids_data = GetParents_AsseType(assetTypeID);
+             //foreach (var q in ids_data)
+             //{
+             //    ids.Add(q.ID);
+             //}
+             //ids.Remove(assetTypeID);
 
              //int selectID_base = (int)assetTypeID;
              //根据父节点获取相应的属性
@@ -662,51 +640,9 @@ namespace FAMIS.Controllers
 
 
 
-        /// <summary>
-        /// 获取相关子节点
-        /// </summary>
-        /// <param name="p_id"></param>
-        /// <returns></returns>
-         public IEnumerable<tb_dataDict_para> GetSonID_dataDict_Para(int? p_id)
-         {
-             var query = from c in DB_C.tb_dataDict_para
-                         where c.fatherid == p_id
-                         where c.activeFlag == true
-                         select c;
+   
 
-             return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_dataDict_Para(t.ID)));
-         }
-
-
-        //获取取子节点 但是没有包含父节点
-         public IEnumerable<tb_department> GetSonID_Department(int? p_id)
-         {
-             var query = from c in DB_C.tb_department
-                         where c.ID_Father_Department == p_id
-                         where c.effective_Flag == true
-                         select c;
-
-             return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_Department(t.ID)));
-         }
-
-         public IEnumerable<tb_AssetType> GetSonID_AsseType(int? p_id)
-         {
-             var query = from c in DB_C.tb_AssetType
-                         where c.father_MenuID_Type == p_id
-                         where c.flag==true
-                         select c;
-
-             return query.ToList().Concat(query.ToList().SelectMany(t => GetSonID_AsseType(t.ID)));
-         }
-         public IEnumerable<tb_AssetType> GetParents_AsseType(int? id)
-         {
-             var query = from c in DB_C.tb_AssetType
-                         where c.ID == id
-                         where c.flag == true
-                         select c;
-
-             return query.ToList().Concat(query.ToList().SelectMany(t => GetParents_AsseType(t.father_MenuID_Type)));
-         }  
+     
          public String loadDepartment()
          {
              List<tb_department> list_ORG = DB_C.tb_department.Where(a=>a.effective_Flag==true).ToList();
@@ -1199,7 +1135,7 @@ namespace FAMIS.Controllers
                 return 0;
             }
 
-            List<int> id_list = commonConversion.StringToIntList(ids);
+            List<int?> id_list = commonConversion.StringToIntList(ids);
 
             var target = from p in DB_C.tb_customAttribute
                          where p.flag == true
@@ -1265,7 +1201,7 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
-            List<int> ids_dict = commonConversion.StringToIntList(ids);
+            List<int?> ids_dict = commonConversion.StringToIntList(ids);
 
             isTree = isTree == null ? false : isTree;
 
@@ -1275,17 +1211,11 @@ namespace FAMIS.Controllers
                 {
                     return 0;
                 }
+
                 //找到其父节点
                 for (int i = 0; i < ids_dict.Count; i++)
                 {
-                    var fatherIDs = GetSonID_dataDict_Para(ids_dict[i]);
-                    foreach (var q in fatherIDs)
-                    {
-                        if (q.ID != ids_dict[i])
-                        {
-                            ids_dict.Add(q.ID);
-                        }
-                    }
+                    ids_dict.AddRange(commonController.GetSonIDs_dataDict_Para(ids_dict[i]));
                 }
             }
 
@@ -1324,18 +1254,7 @@ namespace FAMIS.Controllers
                 return 0;
             }
 
-            List<int> ids = new List<int>();
-            //获取到父节点
-            var pids = GetSonID_AsseType(id);
-            foreach(var pid in pids)
-            {
-                ids.Add(pid.ID);
-            }
-            if (!ids.Contains((int)id))
-            {
-                ids.Add((int)id);
-            }
-
+            List<int?> ids = commonController.GetSonID_AsseType(id);
             var data = from p in DB_C.tb_AssetType
                        where p.flag == true
                        where ids.Contains(p.ID)
@@ -1360,7 +1279,7 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
-            List<int> id_list = commonConversion.StringToIntList(ids);
+            List<int?> id_list = commonConversion.StringToIntList(ids);
             var data = from p in DB_C.tb_supplier
                        where p.flag == true
                        where id_list.Contains(p.ID)
