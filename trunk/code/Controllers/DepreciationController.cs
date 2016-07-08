@@ -37,20 +37,23 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
-        public string Dep_JT()
+       public string Dep_JT()
         {
             StreamWriter sw = new StreamWriter("D:\\qp0.txt", true);
-
+             string ads;
             List<String> list = Get_Depreciation_Data();
-            string ads = list[0];
-            UpdateAsset_table(list);
-            for (int i = 0; i < list.Count(); i++)
+            if (list.Count() != 0)
+            {
+                ads = list[0];
+                UpdateAsset_table(list);
+            }
+           /* for (int i = 0; i < list.Count(); i++)
             {
                 sw.WriteLine(list[i]);
             }
-            sw.Close();
+            sw.Close();测试*/
 
-            return "sad";
+            return "NewDepreciation";
         }
         public void UpdateAsset_table(List<String> list)
         {
@@ -218,7 +221,7 @@ namespace FAMIS.Controllers
                             join t in db.tb_AssetType on r.type_Asset equals t.ID
                             join D in db.tb_department on r.department_Using equals D.ID
                             join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
-                            where D.ID_Department == item_id
+                            where D.ID == item_id || item_id == 0
                             select new
                             {
                                 ID = r.ID,
@@ -255,7 +258,7 @@ namespace FAMIS.Controllers
                             join t in db.tb_AssetType on r.type_Asset equals t.ID
                             join D in db.tb_department on r.department_Using equals D.ID
                             join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
-                            where t.orderID == item_id.ToString()
+                            where t.ID == item_id||item_id==0
                             select new
                             {
                                 ID = r.ID,

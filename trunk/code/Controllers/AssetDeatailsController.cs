@@ -125,7 +125,7 @@ namespace FAMIS.Controllers
                                            join u in db.tb_user on a.Owener equals u.ID
                                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where p.ID_Department == item_id
+                                           where p.ID == item_id
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
@@ -302,7 +302,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            where p.ID_Department == item_id
+                            where p.ID == item_id
                             select new
                             {
                                 ID = a.ID,
@@ -318,7 +318,7 @@ namespace FAMIS.Controllers
                                 department_using = p.name_Department,
                                 address = j.name_para,
                                 owener = u.true_Name,
-                               // state_asset = e.name_para,
+                                state_asset = e.name_para,
                                 supllier = sp.name_supplier
 
                             }).ToArray()

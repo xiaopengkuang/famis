@@ -205,93 +205,50 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         public ActionResult Add_Right(string JSON)
         {
             GetRule model = new GetRule();
-            
+
             string[] Rightdetail = JSON.Split('o');
-            
+
             int Roleid = int.Parse(Rightdetail[0]);
-            int fatherid = 0;
-            
-                  /* var q = from p in mydb.tb_Menu
-                    where p.Role_ID == Roleid
-                    select p;*/
+
+
+            /* var q = from p in mydb.tb_Menu
+              where p.Role_ID == Roleid
+              select p;*/
             IEnumerable<tb_role_authorization> role_au = from o in mydb.tb_role_authorization
-                                          where o.role_ID == Roleid
-                                          && o.type=="menu"
-                                          select o;
-              if (role_au.Count() > 0)
-                 {
-                     foreach (tb_role_authorization o in role_au)
-                         mydb.tb_role_authorization.Remove(o);
-                        
-                  }
-                  mydb.SaveChanges();
-                  if (JSON.Contains('o'))
-                  {
+                                                         where o.role_ID == Roleid
+                                                          && o.type == "menu"
+                                                         select o;
+            if (role_au.Count() > 0)
+            {
+                foreach (tb_role_authorization o in role_au)
+                    mydb.tb_role_authorization.Remove(o);
 
-                      for (int i = 1; i < Rightdetail.Count(); i++)
-                      {
-                          string[] name_id = Rightdetail[i].Split(',');
-                          string name = name_id[0];
-                          string id = name_id[1];
-                          string currentfather;
-                          int Stored_ID = 0;
-                          IEnumerable<tb_Menu> menu = from f in mydb.tb_Menu
-                                                                where f.ID_Menu == id
-                                                                select f;
-                          if (menu.Count() > 0)
-                          {
-                              foreach (tb_Menu q in menu)
-                              {
-                                   
-                                  Stored_ID = q.ID;
-                              }
-                          }
-                          if (!id.Contains("_"))
-                              continue;
-                          else
-                              currentfather = id.Split('_')[0];
-                          if (fatherid != int.Parse(currentfather))
-                          {
-                              int myid = 0;
-                              IEnumerable<tb_Menu> fm = from f in mydb.tb_Menu
-                                                        where f.ID_Menu == currentfather
-                                                         select f;
-                              if (fm.Count() > 0)
-                              {
-                                  foreach (tb_Menu q in fm)
-                                  {
+            }
+            mydb.SaveChanges();
+            if (JSON.Contains('o'))
+            {
 
-                                      myid = q.ID;
-                                  }
-                              }
-                              var addfather = new tb_role_authorization
-                              {
-                                  role_ID = Roleid,
-                                  type = "menu",
-                                  Right_ID = myid,
-                                  flag=true
-                              };
-                              mydb.tb_role_authorization.Add(addfather);
-                              fatherid = int.Parse(currentfather);
-                          }
-                          
-                              var menue_tb = new tb_role_authorization
-                              {
-                                  role_ID = Roleid,
-                                  type = "menu",
-                                  Right_ID = Stored_ID,
-                                  flag = true
+                for (int i = 1; i < Rightdetail.Count(); i++)
+                {
 
-                              };
-                              mydb.tb_role_authorization.Add(menue_tb);
-                              
-                         
-                      }
-                      mydb.SaveChanges();
-                  }
-            
-           
-            
+
+                    int Stored_ID = int.Parse(Rightdetail[i]);
+                   
+                
+                    var role_au_tb = new tb_role_authorization
+                    {
+                        role_ID = Roleid,
+                        type = "menu",
+                        Right_ID = Stored_ID,
+                        flag = true
+                    };
+                    mydb.tb_role_authorization.Add(role_au_tb);
+                }
+                mydb.SaveChanges();
+            }
+
+
+
             //return View();
             return this.Json(model);
         }
@@ -331,7 +288,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     int Stored_ID = 0;
                     bool mflag = false;
                     IEnumerable<tb_AssetType> Assettype = from f in mydb.tb_AssetType
-                                                            where f.orderID == id
+                                                            where f.ID.ToString() == id
                                                             select f;
                     if (Assettype.Count() > 0)
                     {
@@ -584,15 +541,15 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                      foreach (tb_role_authorization o in role_au)
                      {
                          IEnumerable<tb_Menu>  me = from a in mydb.tb_Menu
-                                                           where a.ID == o.Right_ID
+                                                           where a.ID == o.Right_ID&&a.isleafnode
                                                            select a;
                          foreach (tb_Menu tb in me)
                          {
                              if (temp != role_au.Count() - 1)
 
-                                 json += tb.ID_Menu+ ",";
+                                 json += tb.ID+ ",";
                              else
-                                 json += tb.ID_Menu;
+                                 json += tb.ID;
                              temp++;
                          
                          }
@@ -626,9 +583,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     foreach (tb_AssetType at in asset)
                     {
                         if (temp != role_au.Count() - 1)
-                            json += at.orderID + ",";
+                            json += at.ID+ ",";
                         else
-                            json += at.orderID;
+                            json += at.ID;
                         temp++;
                     }
                    

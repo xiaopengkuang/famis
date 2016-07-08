@@ -31,7 +31,7 @@ namespace FAMIS.Models
         public virtual DbSet<tb_dataDict_para> tb_dataDict_para { get; set; }
         public virtual DbSet<tb_department> tb_department { get; set; }
         public virtual DbSet<tb_Menu> tb_Menu { get; set; }
-        public virtual DbSet<tb_ReviewReminding> tb_ReviewReminding { get; set; }
+        public virtual DbSet<tb_Method_Add> tb_Method_Add { get; set; }
         public virtual DbSet<tb_role> tb_role { get; set; }
         public virtual DbSet<tb_role_authorization> tb_role_authorization { get; set; }
         public virtual DbSet<tb_Rule_Generate> tb_Rule_Generate { get; set; }
@@ -230,10 +230,6 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_department>()
-                .Property(e => e.CODE_Department)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_department>()
                 .Property(e => e.name_Department)
                 .IsUnicode(false);
 
@@ -249,8 +245,13 @@ namespace FAMIS.Models
                 .Property(e => e.orderNum)
                 .IsUnicode(false);
 
+          
+            
             modelBuilder.Entity<tb_Menu>()
                 .Property(e => e.ID_Menu)
+                .IsUnicode(false);
+            modelBuilder.Entity<tb_Menu>()
+                .Property(e => e.operation)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Menu>()
@@ -269,12 +270,8 @@ namespace FAMIS.Models
                 .Property(e => e.url)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Menu>()
-                .Property(e => e.operation)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_ReviewReminding>()
-                .Property(e => e.Type_Review_TB)
+            modelBuilder.Entity<tb_Method_Add>()
+                .Property(e => e.Name_Method)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_role>()
