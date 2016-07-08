@@ -423,6 +423,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     name_User = name,
                     password_User = pwd,
                     true_Name = tname,
+                    flag=true,
                     time_LastLogined = DateTime.Now,
                     roleID_User=rid,
                     ID_DepartMent=did
@@ -435,6 +436,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             {
                 p.name_User = name;
                 p.password_User = pwd;
+                
                 p.true_Name = tname;
                 p.time_LastLogined = DateTime.Now;
                 p.roleID_User =rid;
