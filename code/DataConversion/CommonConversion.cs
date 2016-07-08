@@ -232,7 +232,6 @@ namespace FAMIS.DataConversion
                 }
 
 
-
                 //TODO:
                 if (typeName == SystemConfig.role_department)
                 {
@@ -282,6 +281,7 @@ namespace FAMIS.DataConversion
         {
             List<int?> ids = new List<int?>();
             var data = from p in DB_C.tb_Menu
+                       where p.isMenu==true
                        select p;
 
             foreach (var item in data)

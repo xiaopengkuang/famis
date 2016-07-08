@@ -39,12 +39,20 @@ namespace FAMIS.Controllers
 
         public ActionResult Asset_add()
         {
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_add))
+            {
+                return View("Error");
+            }
             return View();
         }
 
 
         public ActionResult Asset_edit(int? id)
         {
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_edit))
+            {
+                return View("Error");
+            }
             if (id == null)
             {
                 return View("Error");
@@ -60,6 +68,13 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_addNewAsset(string Asset_add, String data_cattr)
         {
+
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ,SystemConfig.operation_add))
+            {
+                return -6;
+            }
+
+
             int info = 0;
             //插入对象方式
            String data_f = data_cattr.Replace("\\","");
@@ -526,6 +541,12 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int deleteAssets(List<int> selectedIDs)
         {
+
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_delete))
+            {
+                return -6;
+            }
+
             var data = from p in DB_C.tb_Asset
                        where p.flag == true
                        where selectedIDs.Contains(p.ID)
@@ -555,6 +576,12 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_addNewAsset_ByClass(string Asset_add,List<Json_asset_cattr_ad> cattr_list)
         {
+
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_add))
+            {
+                return -6;
+            }
+
             int insertNum = 0;
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_Asset_add dto_aa = serializer.Deserialize<Json_Asset_add>(Asset_add);
@@ -614,8 +641,13 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_updateAsset(string Asset_add, String data_cattr)
         {
-            int insertNum = 0;
 
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_edit))
+            {
+                return -6;
+            }
+
+            int insertNum = 0;
             String data_f = data_cattr.Replace("\\", "");
             data_f = data_f.Replace("\"", "");
             JavaScriptSerializer serializer = new JavaScriptSerializer();

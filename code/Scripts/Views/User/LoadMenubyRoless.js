@@ -69,8 +69,6 @@ $.ajax({
                 });
                 $('#nav').accordion('select', selectedPanelname);
 
-
-
                 $('.navlist li a').click(function () {
                     var tabTitle = $(this).children('.nav').text();
 

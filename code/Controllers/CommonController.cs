@@ -32,6 +32,44 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult SelectReviewer(String reviewType)
+        {
+            if (reviewType == null)
+            {
+                return View("Error");
+            }
+            ViewBag.reviewType = reviewType;
+            return View();
+        }
+
+
+        public ActionResult Error()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        ///根据类型获取有权限审核的用户
+        /// </summary>
+        /// <param name="reviewType"></param>
+        /// <returns></returns>
+        public JsonResult LoadReviewer(String reviewType)
+        {
+            //TODO:
+            List<int?> ids_satisfied = new List<int?>();
+            var data = from p in DB_C.tb_user
+                       where p.flag == true
+                       join tb_RO in DB_C.tb_role on p.roleID_User equals tb_RO.ID
+                       where tb_RO.isSuperUser == true
+                       select p;
+            return null;
+        }
+
+
+
+
+
 
 
 
@@ -119,7 +157,6 @@ namespace FAMIS.Controllers
                     list.ForEach(item =>
                     {
                         SerialNum_Latest = item.serial_number;
-
                     });
 
                 }
@@ -717,6 +754,120 @@ namespace FAMIS.Controllers
             }
             ids.Add(id);
             return ids;
+        }
+
+
+
+        public JsonResult getOperationRightsByMenu(String menu)
+        {
+            Json_operationRight right=new Json_operationRight ();
+            int? roleID=commonConversion.getRoleID();
+            bool supU=commonConversion.isSuperUser(roleID);
+
+
+
+
+            //TODO: TEST
+            right.add = true;
+            right.edit = true;
+            right.export = true;
+            right.print = false;
+            right.review = false;
+            right.submit = false;
+            right.view = false;
+            right.delete = false;
+            return Json(right, JsonRequestBehavior.AllowGet);
+
+            if (supU)
+            {
+                right.add = true;
+                right.edit = true;
+                right.export = true;
+                right.print = true;
+                right.review = true;
+                right.submit = true;
+                right.view = true;
+                right.delete = true;
+                return Json(right, JsonRequestBehavior.AllowGet);
+            }
+            else {
+                var data = from p in DB_C.tb_Menu
+                           where p.father_Menu == menu
+                           join tb_at in DB_C.tb_role_authorization on p.ID equals tb_at.Right_ID into temp_at
+                           from at in temp_at.DefaultIfEmpty()
+                           where at.role_ID==roleID
+                           select new
+                           {
+                               operation = p.operation,
+                               flag = at.flag == true ? true : false,
+                           };
+                foreach (var item in data)
+                {
+                    switch (item.operation)
+                    {
+                        case SystemConfig.operation_add: { right.add = item.flag; }; break;
+                        case SystemConfig.operation_delete: { right.delete = item.flag; }; break;
+                        case SystemConfig.operation_edit: { right.edit = item.flag; }; break;
+                        case SystemConfig.operation_export: { right.export = item.flag; }; break;
+                        case SystemConfig.operation_print: { right.print = item.flag; }; break;
+                        case SystemConfig.operation_review: { right.review = item.flag; }; break;
+                        case SystemConfig.operation_submit: { right.submit = item.flag; }; break;
+                        case SystemConfig.operation_view: { right.view = item.flag; }; break;
+                        default: { }; break;
+                    }
+                }
+
+                if(right.add==null)
+                {
+                    right.add = false;
+                }
+                if (right.delete == null)
+                {
+                    right.delete = false;
+                } 
+                if (right.edit == null)
+                {
+                    right.edit = false;
+                } 
+                if (right.export == null)
+                {
+                    right.export = false;
+                } 
+                if (right.print == null)
+                {
+                    right.print = false;
+                } 
+                if (right.review == null)
+                {
+                    right.review = false;
+                }
+                if (right.submit == null)
+                {
+                    right.submit = false;
+                }
+                if (right.view == null)
+                {
+                    right.view = false;
+                }
+
+                return Json(right, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+
+        public bool isRightToOperate(String menu,String operation)
+        {
+            int? roleID = commonConversion.getRoleID();
+              var data = from p in DB_C.tb_Menu
+                           where p.father_Menu == menu
+                           where p.operation==operation
+                           join tb_at in DB_C.tb_role_authorization on p.ID equals tb_at.Right_ID 
+                           where tb_at.flag==true
+                           where tb_at.role_ID==roleID
+                           select p;
+            return data.Count()>0?true:false;
         }
 
         public JsonResult NULL_dataGrid()

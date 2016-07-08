@@ -41,6 +41,10 @@ namespace FAMIS.Controllers
         }
         public ActionResult Allocation_add()
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_add))
+            {
+                return View("Error");
+            }
             return View();
         }
         public ActionResult Allocation_SelectingAsset()
@@ -50,6 +54,11 @@ namespace FAMIS.Controllers
 
         public ActionResult Allocation_edit(int? id)
         {
+
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_edit))
+            {
+                return View("Error");
+            }
             if (id == null)
             {
                 return View("Error");
@@ -61,6 +70,11 @@ namespace FAMIS.Controllers
 
         public ActionResult Allocation_detail(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_view))
+            {
+                return View("Error");
+            }
+
             if (id == null)
             {
                 return View("Error");
@@ -71,8 +85,12 @@ namespace FAMIS.Controllers
 
 
 
-        public ActionResult Allocation_review(int? id) 
+        public ActionResult Allocation_review(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_review))
+            {
+                return View("Error");
+            }
             if (id == null)
             {
                 return View("Error");
@@ -157,6 +175,14 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_allocation_add(String data)
         {
+
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB,SystemConfig.operation_add))
+            {
+                return -6;
+            }
+
+
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_allocation_add json_data = serializer.Deserialize<Json_allocation_add>(data);
             if (json_data == null)
@@ -270,6 +296,12 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_allocation_update(String data)
         {
+
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_edit))
+            {
+                return -6;
+            }
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_allocation_add Json_data = serializer.Deserialize<Json_allocation_add>(data);
 
@@ -320,14 +352,23 @@ namespace FAMIS.Controllers
 
 
 
+
+
+
         [HttpPost]
         public int updateAllocationrStateByID(String data)
         {
+
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_allocation_review Json_data = serializer.Deserialize<Json_allocation_review>(data);
            
             if (Json_data != null)
             {
+                if (!RightToUpdateState(Json_data.id_state))
+                {
+                    return -6;
+                }
 
                 //判断是否有权限
                 if (isOkToReview_allocation(Json_data.id_state, Json_data.id_allocation))
@@ -400,6 +441,27 @@ namespace FAMIS.Controllers
             }
             return 0;
 
+        }
+
+
+
+
+        public bool RightToUpdateState(int? id_json)
+        {
+            String operation = null;
+            switch (id_json) {
+                case SystemConfig.state_List_CG_jsonID: { operation = SystemConfig.operation_add; }; break;
+                case SystemConfig.state_List_DSH_jsonID: { operation = SystemConfig.operation_edit; }; break;
+                case SystemConfig.state_List_TH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                case SystemConfig.state_List_YSH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                default: return false; break;
+            }
+
+            if (commonController.isRightToOperate(SystemConfig.Menu_ZCDB, operation))
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>
