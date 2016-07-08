@@ -26,6 +26,6 @@ namespace FAMIS.DTO
         [StringLength(200)]
         public string ps { get; set; }
 
-        public List<int> idsList { get; set; }
+        public List<int?> idsList { get; set; }
     }
 }

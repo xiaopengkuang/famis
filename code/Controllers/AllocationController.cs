@@ -183,7 +183,7 @@ namespace FAMIS.Controllers
                 int? id_allocation = getIDBySerialNum(newItem.serial_number);
                 //获取单据明细
                 //获取选中的Ids
-                List<int> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+                List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
                 List<tb_Asset_allocation_detail> details = createAllocationDetailList(id_allocation, selectedAssets);
                 DB_C.tb_Asset_allocation_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -209,7 +209,7 @@ namespace FAMIS.Controllers
 
         }
 
-        public List<tb_Asset_allocation_detail> createAllocationDetailList(int? id_collar, List<int> ids_asset)
+        public List<tb_Asset_allocation_detail> createAllocationDetailList(int? id_collar, List<int?> ids_asset)
         {
             List<tb_Asset_allocation_detail> list = new List<tb_Asset_allocation_detail>();
             if (id_collar == null || id_collar < 1)
@@ -307,7 +307,7 @@ namespace FAMIS.Controllers
                     item.flag = false;
                 }
                 //获取选中IDs
-                List<int> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+                List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
                 List<tb_Asset_allocation_detail> details = createAllocationDetailList(Json_data.id, selectedAssets);
                 DB_C.tb_Asset_allocation_detail.AddRange(details);
                 DB_C.SaveChanges();
