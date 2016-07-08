@@ -8,10 +8,14 @@ namespace FAMIS.Models
 
     public partial class tb_department
     {
+        [Key]
+        [Column(Order = 0)]
         public int ID { get; set; }
 
+        [Key]
+        [Column(Order = 1)]
         [StringLength(20)]
-        public String CODE_Department { get; set; }
+        public string CODE_Department { get; set; }
 
         public int? ID_Father_Department { get; set; }
 
@@ -35,7 +39,5 @@ namespace FAMIS.Models
 
         [StringLength(20)]
         public string orderNum { get; set; }
-
-   
     }
 }

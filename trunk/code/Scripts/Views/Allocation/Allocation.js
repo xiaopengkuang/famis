@@ -39,108 +39,107 @@ function loadInitData() {
 
 function LoadInitDatagrid(datagrid) {
 
-    //判断用户是不是超级管理员
-    //将数据传入后台
-    $.ajax({
-        url: '/Common/rightToCheck',
-        dataType: "json",
-        type: "POST",
-        traditional: true,
-        success: function (data) {
-            var disabledFlag = true;
-            if (data > 0) {
-                disabledFlag = false;
-            } else {
-                disabledFlag = true;
-            }
-            loadDataGrid(datagrid, disabledFlag);
-        }
-    });
+  
+    loadDataGrid(datagrid);
 
   
 }
 
 
 
-function loadDataGrid(datagrid,disabledFlag)
+function loadDataGrid(datagrid)
 {
-    $('#' + datagrid).datagrid({
-        url: '/Allocation/LoadAllocation?searchCondtiion=' + searchCondtiion,
-        method: 'POST', //默认是post,不允许对静态文件访问
-        width: 'auto',
-        height: '300px',
-        iconCls: 'icon-save',
+    //获取操作权限
+    $.ajax({
+        url: '/Common/getOperationRightsByMenu?menu=ZCDB',
         dataType: "json",
-        fitColumns: true,
-        pagePosition: 'top',
-        rownumbers: true, //是否加行号 
-        pagination: true, //是否显式分页 
-        pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
-        pageNumber: 1, //默认显示第几页 
-        pageList: [15, 30, 45],//分页中下拉选项的数值 
-        columns: [[
-            { field: 'ID', checkbox: true, width: 50 },
-            { field: 'serialNumber', title: '单据号', width: 50 },
-            { field: 'user_allocation', title: '申请人', width: 50 },
-            { field: 'operatorUser', title: '操作人', width: 50 },
-            {
-                field: 'state', title: '状态', width: 50,
-                formatter: function (data) {
-                    if (data == "草稿") {
-                        return '<font color="#696969">' + data + '</font>';
+        type: "POST",
+        traditional: true,
+        success: function (dataRight) {
+            $('#' + datagrid).datagrid({
+                url: '/Allocation/LoadAllocation?searchCondtiion=' + searchCondtiion,
+                method: 'POST', //默认是post,不允许对静态文件访问
+                width: 'auto',
+                height: '300px',
+                iconCls: 'icon-save',
+                dataType: "json",
+                fitColumns: true,
+                pagePosition: 'top',
+                rownumbers: true, //是否加行号 
+                pagination: true, //是否显式分页 
+                pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
+                pageNumber: 1, //默认显示第几页 
+                pageList: [15, 30, 45],//分页中下拉选项的数值 
+                columns: [[
+                    { field: 'ID', checkbox: true, width: 50 },
+                    { field: 'serialNumber', title: '单据号', width: 50 },
+                    { field: 'user_allocation', title: '申请人', width: 50 },
+                    { field: 'operatorUser', title: '操作人', width: 50 },
+                    {
+                        field: 'state', title: '状态', width: 50,
+                        formatter: function (data) {
+                            if (data == "草稿") {
+                                return '<font color="#696969">' + data + '</font>';
+                            }
+                            else if (data == "待审核") {
+                                return '<font color="#FFD700">' + data + '</font>';
+                            } else if (data == "已审核") {
+                                return '<font color="#228B22">' + data + '</font>';
+                            } else if (data == "退回") {
+                                return '<font color="red">' + data + '</font>';
+                            } else {
+                                return data;
+                            }
+                        }
+                    },
+                    { field: 'address', title: '调入地址', width: 50 },
+                    { field: 'department', title: '调入部门', width: 50 }
+                    ,
+                    {
+                        field: 'date_allocation', title: '调拨时间', width: 100,
+                        formatter: function (date) {
+                            if (date == null) {
+                                return "";
+                            }
+                            var pa = /.*\((.*)\)/;
+                            var unixtime = date.match(pa)[1].substring(0, 10);
+                            return getTime(unixtime);
+                        }
+                    },
+                    {
+                        field: 'date_Operated', title: '登记时间', width: 100,
+                        formatter: function (date) {
+                            if (date == null) {
+                                return "";
+                            }
+                            var pa = /.*\((.*)\)/;
+                            var unixtime = date.match(pa)[1].substring(0, 10);
+                            return getTime(unixtime);
+                        }
                     }
-                    else if (data == "待审核") {
-                        return '<font color="#FFD700">' + data + '</font>';
-                    } else if (data == "已审核") {
-                        return '<font color="#228B22">' + data + '</font>';
-                    } else if (data == "退回") {
-                        return '<font color="red">' + data + '</font>';
-                    } else {
-                        return data;
-                    }
-                }
-            },
-            { field: 'address', title: '调入地址', width: 50 },
-            { field: 'department', title: '调入部门', width: 50 }
-            ,
-            {
-                field: 'date_allocation', title: '调拨时间', width: 100,
-                formatter: function (date) {
-                    if (date == null) {
-                        return "";
-                    }
-                    var pa = /.*\((.*)\)/;
-                    var unixtime = date.match(pa)[1].substring(0, 10);
-                    return getTime(unixtime);
-                }
-            },
-            {
-                field: 'date_Operated', title: '登记时间', width: 100,
-                formatter: function (date) {
-                    if (date == null) {
-                        return "";
-                    }
-                    var pa = /.*\((.*)\)/;
-                    var unixtime = date.match(pa)[1].substring(0, 10);
-                    return getTime(unixtime);
-                }
-            }
-        ]],
-        singleSelect: true, //允许选择多行
-        selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
-        checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+                ]],
+                singleSelect: true, //允许选择多行
+                selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+                checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+            });
+            loadPageTool(datagrid,dataRight);
+        }
     });
-    loadPageTool(datagrid, disabledFlag);
+
 }
 
-function loadPageTool(datagrid, disabledFlag) {
+function loadPageTool(datagrid, dataRight) {
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '添加',
             iconCls: 'icon-add',
+            disabled: !dataRight.add,
             height: 50,
             handler: function () {
+                if (!!dataRight.add) {
+                    return;
+                }
                 var title = "添加调拨单";
                 var url = "/Allocation/Allocation_add";
                 if (parent.$('#tabs').tabs('exists', title)) {
@@ -158,8 +157,12 @@ function loadPageTool(datagrid, disabledFlag) {
         }, {
             text: '编辑',
             height: 50,
+            disabled: !dataRight.edit,
             iconCls: 'icon-edit',
             handler: function () {
+                if (!!dataRight.edit) {
+                    return;
+                }
                 ////获取选择行
                 var rows = $('#' + datagrid).datagrid('getSelections');
                 if (rows.length != 1)
@@ -214,8 +217,12 @@ function loadPageTool(datagrid, disabledFlag) {
         {
             text: '明细',
             height: 50,
+            disabled: !dataRight.view,
             iconCls: 'icon-tip',
             handler: function () {
+                if (!dataRight.view) {
+                    return;
+                }
                 var rows = $('#' + datagrid).datagrid('getSelections');
                 var id_;
                 if (rows == null)
@@ -238,8 +245,13 @@ function loadPageTool(datagrid, disabledFlag) {
           {
               text: '提交',
               height: 50,
+              disabled: !dataRight.submit,
               iconCls: 'icon-redo',
               handler: function () {
+                  if (!dataRight.submit)
+                  {
+                      return;
+                  }
                   var rows = $('#' + datagrid).datagrid('getSelections');
                   var id_;
                   if (rows == null) {
@@ -282,9 +294,9 @@ function loadPageTool(datagrid, disabledFlag) {
                text: '审核',
                height: 50,
                iconCls: 'icon-ok',
-               disabled:disabledFlag,
+               disabled: !dataRight.review,
                handler: function () {
-                   if (disabledFlag) {
+                   if (!dataRight.review) {
                        return;
                    }
                    var rows = $('#' + datagrid).datagrid('getSelections');
@@ -306,42 +318,15 @@ function loadPageTool(datagrid, disabledFlag) {
                    } else {
                    }
                }
-           }, {
-               text: '退回',
-               height: 50,
-               disabled: disabledFlag,
-               iconCls: 'icon-undo',
-               handler: function () {
-                   if (disabledFlag) {
-                       return;
-                   }
-                   var rows = $('#' + datagrid).datagrid('getSelections');
-                   var id_;
-                   if (rows == null) {
-                       MessShow("请选择领用单!");
-                       return;
-                   }
-                   if (rows.length == 1) {
-                       id_ = rows[0].ID;
-                       if (rows[0].state != "待审核") {
-                           MessShow("只有待审核单据才能退回!")
-                           //$('#allocationDG').datagrid('reload');
-                           return;
-                       }
-                       var titleName = "审核";
-                       var url = "/Allocation/Allocation_review?id=" + id_;
-                       openModelWindow(url, titleName);
-
-                   } else {
-                       MessShow("一次只能处理一个单据!")
-                       return;
-                   }
-               }
            },{
                text: '导出',
                height: 50,
                iconCls: 'icon-save',
+               disabled: !dataRight.export,
                handler: function () {
+                   if (!dataRight.export) {
+                       return;
+                   }
                    var filename = getNowFormatDate_FileName();
                    Export(filename, $('#' + datagrid));
                }

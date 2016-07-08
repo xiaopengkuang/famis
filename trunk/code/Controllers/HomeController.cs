@@ -14,7 +14,7 @@ namespace FAMIS.Controllers
 {
     public class HomeController : Controller
     {
-        FAMISDBTBModels DBConnecting = new FAMISDBTBModels();
+        FAMISDBTBModels DBC= new FAMISDBTBModels();
         CommonConversion commonConversion = new CommonConversion();
 
 
@@ -46,15 +46,16 @@ namespace FAMIS.Controllers
             String password = fc["password"];
 
             //验证处理
-            String sql_check = UserActionSQL.getSQL_Select_User_CheckCount(userName, password);
-            SQLRunner runner = new SQLRunner();
-            int count = runner.runSelectSQL_Counter(sql_check, "total");
+        
+            var data = from p in DBC.tb_user
+                       where p.flag == true
+                       where p.name_User == userName && p.password_User == password
+                       select p;
 
 
-
-            if (count == 1)//存在用户
+            if (data.Count()== 1)//存在用户
             {
-                List<tb_user> userList = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(f => f.flag == true).ToList();
+                List<tb_user> userList = DBC.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(f => f.flag == true).ToList();
                 if (userList != null && userList.Count == 1)
                 {
 
@@ -146,7 +147,7 @@ namespace FAMIS.Controllers
                 String userName = Session["userName"] == null ? "" : Session["userName"].ToString();
                 String password = Session["password"] == null ? "" : Session["password"].ToString();
                 int userRole = int.Parse(Session["userRole"] == null ? "0" : Session["userRole"].ToString());
-                List<tb_user> list = DBConnecting.tb_user.Where(f => f.flag == true).Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(c => c.roleID_User == userRole).ToList();
+                List<tb_user> list = DBC.tb_user.Where(f => f.flag == true).Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(c => c.roleID_User == userRole).ToList();
                 if (list.Count == 1)
                 {
                     return true;
@@ -171,7 +172,7 @@ namespace FAMIS.Controllers
             string Menu_JSON = "";
             int rid = int.Parse(JSON);
             int indexof_menu_ID = 1;
-            IEnumerable<int?> menu_ID = from o in DBConnecting.tb_role_authorization
+            IEnumerable<int?> menu_ID = from o in DBC.tb_role_authorization
                                         where o.role_ID == rid
                                         && o.type == "menu"
 
@@ -180,7 +181,7 @@ namespace FAMIS.Controllers
 
             foreach (int mid in menu_ID)
             {
-                IEnumerable<tb_Menu> menue_details = from m in DBConnecting.tb_Menu
+                IEnumerable<tb_Menu> menue_details = from m in DBC.tb_Menu
                                                      where m.ID == mid
                                                      orderby m.ID_Menu
                                                      select m;

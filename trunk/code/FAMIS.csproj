@@ -1894,6 +1894,7 @@
     <Content Include="Scripts\Views\Collar\Collar_Review.js" />
     <Content Include="Scripts\Views\Collar\Collar_edit.js" />
     <Content Include="Scripts\Views\common\common.js" />
+    <Content Include="Scripts\Views\common\SelectReviewer.js" />
     <Content Include="Scripts\Views\Dict\edit_supplier.js" />
     <Content Include="Scripts\Views\Repair\Repair_review.js" />
     <Content Include="Scripts\Views\Repair\Repair_detail.js" />
@@ -1901,6 +1902,8 @@
     <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
     <Content Include="Scripts\Views\Repair\Repair.js" />
     <Content Include="Scripts\Views\Repair\Repair_add.js" />
+    <Content Include="Scripts\Views\User\LoadMenubyRole.js" />
+    <Content Include="Scripts\Views\User\LoadMenubyRoless.js" />
     <Content Include="Views\Dict\edit_supplier.cshtml" />
     <None Include="Scripts\_references.js" />
     <Content Include="Scripts\UI\easyui-lang-zh_CN.js" />
@@ -1969,6 +1972,8 @@
     <Content Include="Views\Repair\Repair_detail.cshtml" />
     <Content Include="Views\Repair\Repair_review.cshtml" />
     <Content Include="Views\Asset\Asset_edit.cshtml" />
+    <Content Include="Views\Common\SelectReviewer.cshtml" />
+    <Content Include="Views\Common\Error.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -2044,6 +2049,7 @@
     <Compile Include="DTO\dto_rule_Generate.cs" />
     <Compile Include="DTO\dto_Staff.cs" />
     <Compile Include="DTO\dto_supplier.cs" />
+    <Compile Include="DTO\Json_operationRight.cs" />
     <Compile Include="DTO\Json_repair_add.cs" />
     <Compile Include="DTO\Json_repair_edit.cs" />
     <Compile Include="DTO\Json_State_Update.cs" />
@@ -2086,6 +2092,7 @@
     <Compile Include="Models\tb_Rule_Generate.cs" />
     <Compile Include="Models\tb_State_List.cs" />
     <Compile Include="Models\tb_supplier.cs" />
+    <Compile Include="Models\tb_ReviewReminding.cs" />
     <Compile Include="Models\tb_user.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewCommon\TreeCommon.cs" />
@@ -2145,7 +2152,6 @@
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
     <Folder Include="ViewModel\" />
-    <Folder Include="Views\Common\" />
     <Folder Include="Views\Customer\" />
   </ItemGroup>
   <ItemGroup>

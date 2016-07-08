@@ -35,11 +35,19 @@ namespace FAMIS.Controllers
 
         public ActionResult add_collarView()
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_add))
+            {
+                return View("Error");
+            }
             return View("add_collar");
         }
 
           public ActionResult add_collar()
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_add))
+            {
+                return View("Error");
+            }
             return View();
         }
         public ActionResult collar()
@@ -55,7 +63,10 @@ namespace FAMIS.Controllers
 
         public ActionResult Detail_collar(int? id)
         {
-
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_view))
+            {
+                return View("Error");
+            }
             Json_collar data = getCollarByID(id);
 
             if (data!=null )
@@ -76,7 +87,10 @@ namespace FAMIS.Controllers
 
         public ActionResult review_collar(int? id) 
         {
-
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_review))
+            {
+                return View("Error");
+            }
             Json_collar data = getCollarByID(id);
 
             if (data != null)
@@ -96,6 +110,10 @@ namespace FAMIS.Controllers
 
         public ActionResult edit_collarView(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_edit))
+            {
+                return View("Error");
+            }
             if (id == null)
             {
                 return View("Error");
@@ -581,6 +599,12 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_addCollar(String data)
         {
+
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_add))
+            {
+                return -6;
+            }
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_collar_add Json_data = serializer.Deserialize<Json_collar_add>(data);
             if (Json_data == null)
@@ -675,6 +699,12 @@ namespace FAMIS.Controllers
                 return 0;
             }
             try {
+
+                if (!commonController.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_edit))
+                {
+                    return -6;
+                }
+
 
                 if (!RightToSubmit_collar(Json_data.statelist,Json_data.id))
                 {
@@ -852,11 +882,20 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int updateCollarStateByID(String data)
         {
+
+
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_collar_review Json_data = serializer.Deserialize<Json_collar_review>(data);
             if (Json_data != null)
             {
-                
+
+                if (!RightToUpdateState(Json_data.id_state))
+                {
+                    return -6;
+                }
+
+
                //判断是否有权限
                 if (isOkToReview_collar(Json_data.id_state, Json_data.id_collar))
                 {
@@ -1071,7 +1110,24 @@ namespace FAMIS.Controllers
                 return true;
             }
         }
+        public bool RightToUpdateState(int? id_json)
+        {
+            String operation = null;
+            switch (id_json)
+            {
+                case SystemConfig.state_List_CG_jsonID: { operation = SystemConfig.operation_add; }; break;
+                case SystemConfig.state_List_DSH_jsonID: { operation = SystemConfig.operation_edit; }; break;
+                case SystemConfig.state_List_TH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                case SystemConfig.state_List_YSH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                default: return false; break;
+            }
 
+            if (commonController.isRightToOperate(SystemConfig.Menu_ZCDB, operation))
+            {
+                return true;
+            }
+            return false;
+        }
 
       
          public JsonResult NULL_dataGrid()

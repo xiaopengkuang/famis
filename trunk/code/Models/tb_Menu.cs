@@ -14,7 +14,7 @@ namespace FAMIS.Models
         public string ID_Menu { get; set; }
 
         [StringLength(10)]
-        public string menu_Type { get; set; }
+        public string father_Menu { get; set; }
 
         [StringLength(8)]
         public string father_Menu_ID { get; set; }
@@ -26,5 +26,10 @@ namespace FAMIS.Models
 
         [StringLength(30)]
         public string url { get; set; }
+
+        public bool? isMenu { get; set; }
+
+        [StringLength(50)]
+        public string operation { get; set; }
     }
 }

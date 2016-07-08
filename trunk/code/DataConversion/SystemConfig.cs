@@ -114,5 +114,28 @@ namespace FAMIS.DataConversion
 
 
 
+
+        //用户操作
+        public const String operation_add = "add";
+        public const String operation_edit = "edit";
+        public const String operation_export = "export";
+        public const String operation_view = "view";
+        public const String operation_review = "review";
+        public const String operation_submit = "submit";  //提交至审核
+        public const String operation_delete = "delete";
+        public const String operation_print = "print";
+
+
+
+        public const String Menu_ZCTZ = "ZCTZ";
+        public const String Menu_ZCLY = "ZCLY";
+        public const String Menu_ZCDB = "ZCDB";
+        public const String Menu_ZCWX = "ZCWX";
+        public const String Menu_ZCJS = "ZCJS";
+        public const String Menu_ZCJC = "ZCJC";
+        public const String Menu_ZCGH = "ZCGH";
+
+
+
     }
 }
