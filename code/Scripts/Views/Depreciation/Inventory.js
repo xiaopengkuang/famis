@@ -176,8 +176,9 @@ function LoadInitData(searchCondtiion) {
                 formatter: function (amount) {
                     try {
                         if (parseInt(amount) < 0)
-                            return '<span style="color:red">'+amount+'</span>';
-
+                            return '<span style="color:red">' + amount + '</span>';
+                        else
+                            return amount;
                     }
                     catch (e) {
                         return "";
@@ -780,8 +781,9 @@ function loadPageTool_Detail() {
                      maximizable: false,
                      collapsible: false,
                      onClose: function () {
-                         $('#TableList_0_1').datagrid('reload');
-                         $('#TableList_0_1').datagrid('reload');
+                         // alert("当我入梦，这个世界就将颤抖!!!");
+                           alert("盘点数据导入成功！")
+                         LoadInitData(searchCondtiion);
                          // alert('盘点数据提交成功！');
                          //    $.messager.show({
                          //        title: '提示',
