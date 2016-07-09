@@ -113,7 +113,7 @@ function LoadTreeLeft() {
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
 
             searchCondtiion = node.id;
-            alert(searchCondtiion);
+           // alert(searchCondtiion);
             LoadInitData_Detail(searchCondtiion);
 
         },

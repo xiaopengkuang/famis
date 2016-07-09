@@ -247,7 +247,7 @@ namespace FAMIS.Controllers
                  p.difference = def;
              }
              db.SaveChanges();
-
+              
          
          }
        [HttpPost]
@@ -260,6 +260,27 @@ namespace FAMIS.Controllers
 
             return json;
         }
+       [HttpPost]
+       public string Get_Serial()
+       {
+           string json = "";
+
+           json = Session["Searial"].ToString();
+
+
+           return json;
+       }
+       [HttpPost]
+       public string Get_Error_File()
+       {
+           string json = "";
+           if (Session["ErrorFile"] == null)
+               return "nullsession";
+           json = Session["ErrorFile"].ToString();
+
+
+           return json;
+       }
        [HttpPost]
        public string Get_Current_Row()
        {
@@ -278,7 +299,7 @@ namespace FAMIS.Controllers
         public JsonResult Load_Asset(string JSdata)
         {
             int flagnum = int.Parse(JSdata);
-            int name_flag = flagnum / 1000000;
+            int name_flag = flagnum /1000000;
             string name_flag_string = "";
             int item_id = flagnum % 1000000;
             IEnumerable<String> flags = from o in db.tb_dataDict
@@ -302,7 +323,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            where p.ID == item_id
+                            where p.ID == item_id||item_id == 0
                             select new
                             {
                                 ID = a.ID,
@@ -341,7 +362,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID 
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            where t.orderID == item_id.ToString()
+                            where t.orderID == item_id.ToString() || item_id == 0
                             select new
                             {
                                 ID = a.ID,
@@ -379,7 +400,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID
-                            where e.ID == item_id
+                            where e.ID == item_id || item_id == 0
                             select new
                             {
                                 ID = a.ID,

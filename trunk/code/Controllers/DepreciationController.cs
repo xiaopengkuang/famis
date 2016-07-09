@@ -289,10 +289,18 @@ namespace FAMIS.Controllers
 
         }
         [HttpPost]
+        public string Set_ErroFile(string Json)
+        {
+
+            Session["ErrorFile"] = Json;
+            return "";
+        }
+
+        [HttpPost]
         public string Set_SearialNum(string Json)
         {
 
-            Session["Deatails_Searial"] = Json;
+            Session["Searial"] = Json;
             return "";
         }
           [HttpPost]
@@ -469,10 +477,38 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
 
         }
-      
+
+        public void AddPDList(string pdsearial)
+        {
+            int? sys = 0;
+            int? ivt = 0;
+            int? def = 0;
+            var q = from o in db.tb_Asset_inventory_Details
+                    where o.serial_number == pdsearial
+                    select o;
+            foreach (var p in q)
+            {
+                sys += p.amountOfSys;
+                ivt += p.amountOfInv;
+                def += p.difference;
+            }
+
+            var z = from o in db.tb_Asset_inventory
+                    where o.serial_number.ToString() == pdsearial
+                    select o;
+            foreach (var p in z)
+            {
+                p.amountOfSys = sys;
+                p.amountOfInv = ivt;
+                p.difference = def;
+            }
+            db.SaveChanges();
+
+
+        }
         public void Upadate_Inventory_Deatails(string serial, string Asset_serial, string inventory_amount)
         {
-
+            string searailnum=Session["Deatails_Searial"].ToString();
             var q = from p in db.tb_Asset_inventory_Details
                     where p.serial_number == serial && p.serial_number_Asset == Asset_serial
                     select p;
@@ -488,16 +524,17 @@ namespace FAMIS.Controllers
                     p.state = "持平";
             }
 
-
+            
             db.SaveChanges();
+            AddPDList(searailnum);
 
         }
         [HttpPost]
         public string ChangeState(string JSdata)
         {
-            int searial = int.Parse(Session["Deatails_Searial"].ToString());
+            string searial = Session["Deatails_Searial"].ToString();
             var q = from o in db.tb_Asset_inventory
-                    where searial == o.ID
+                    where searial == o.serial_number
                     select o;
             foreach (var p in q)
             { 
@@ -513,6 +550,7 @@ namespace FAMIS.Controllers
          [HttpPost]
         public string GetForm()
         {
+            
             HttpRequest request = System.Web.HttpContext.Current.Request;
             HttpFileCollection FileCollect = request.Files;
             if (FileCollect.Count > 0)           
@@ -521,16 +559,33 @@ namespace FAMIS.Controllers
                 {
 
                     HttpPostedFile FileSave = FileCollect[str];  //用key获取单个文件对象HttpPostedFile
-                    string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
-                    string imgPath = "/" + imgName + FileSave.FileName;     //通过此对象获取文件名
-                    string AbsolutePath = Server.MapPath(imgPath);
-                    FileSave.SaveAs(AbsolutePath); 
-                    //将上传的东西保存
-                    ReadExcel( Session["Deatails_Searial"].ToString(), AbsolutePath);
+                   // Response.Write("<script>alert('"+FileSave.FileName+"')</script>");
+                    if (FileSave.FileName == "")
+                    {
+                        Session["ErrorFile"] = "nofile";
+                        Response.Redirect("/Verify/AddExcel");
+
+                        return "no";
+
+                    }
+                    else
+                    {
+                        Session["ErrorFile"] = "FileUploaded";
+                        string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
+                        string imgPath = "/" + imgName + FileSave.FileName;     //通过此对象获取文件名
+                        string AbsolutePath = Server.MapPath(imgPath);
+                        FileSave.SaveAs(AbsolutePath);
+                        //将上传的东西保存
+                        ReadExcel(Session["Deatails_Searial"].ToString(), AbsolutePath);
+                        Response.Redirect("/Verify/AddExcel");
+                        
+                    }
+                   
                     
                 }
             }
-         return "盘点数据提交成功！";
+           
+            return "盘点数据提交成功！";
         }
         
         public void ReadExcel(string pd,string path)

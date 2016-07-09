@@ -2,7 +2,7 @@
 $.ajax({
 
     type: "post",
-    url: "/AssetDeatails/Get_Serial_Deatails",
+    url: "/AssetDeatails/Get_Serial",
 
     datatype: "json",//数据类型
 
