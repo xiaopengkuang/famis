@@ -18,7 +18,7 @@
 </script>
 <html>
 <head>
-    <title>资产折旧</title>
+    <title>资产盘点</title>
 
 </head>
 <body>
@@ -49,17 +49,17 @@
                         <td>盘点状态</td>
                         <td>
                             <select class="easyui-combobox" id="Invention_State" name="Invention_State" style="width: 150px;">
-                                <option value="Univented">未盘点</option>
-                                <option value="Inventing">盘点中</option>
-                                <option value="Inventing">已盘点</option>
+                                <option value="未盘点">未盘点</option>
+                                <option value="盘点中">盘点中</option>
+                                <option value="已盘点">已盘点</option>
                             </select>
                         </td>
                         <td>盘点人</td>
                         <td> <select class="easyui-combobox" id="operator" name="operator" style="width: 150px;"></select></td>
 
-                        <td> <a href="#" onclick="alert('龙岩你来写这个吧！')" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'">查询</a></td>
+                        <td> <a href="#" onclick=" LoadBYSearchCondition()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'">查询</a></td>
                         <td>
-                            <a href="#" onclick="alert('就剩下个查询条件了，很简单的哦！')" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-back'">重置</a>
+                            <a href="#" onclick="ReSetSeachCondition()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-back'">重置</a>
                         </td>
                     <tr>
                 </table>

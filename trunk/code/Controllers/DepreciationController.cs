@@ -570,6 +570,194 @@ namespace FAMIS.Controllers
           return Json(json, JsonRequestBehavior.AllowGet);
        
        }
+
+       public JsonResult Query_By_Condition(String JSON) 
+       { 
+           string [] temp= JSON.Split(',');
+           List<tb_Asset_inventory> list = db.tb_Asset_inventory.ToList();
+           DateTime BeginDate = Convert.ToDateTime("8888-12-12"+ " 00:00:00");
+           DateTime EndDate = Convert.ToDateTime("0001-01-01" + " 23:59:59");
+
+           int Effective_Query_Num = 0;
+           for (int i = 0; i < temp.Length; i++)
+           {
+               if (temp[i]!=SystemConfig.NullString_Replace)
+                  
+                   Effective_Query_Num++;
+           }
+           string searial = temp[0];
+           if (temp[1] != SystemConfig.NullString_Replace)
+            BeginDate = DateTime.Parse(temp[1]);
+
+           if (temp[2] != SystemConfig.NullString_Replace)
+                 EndDate = DateTime.Parse(temp[2]);
+           
+           string PDstate = temp[3];
+           string PDperson = temp[4]; 
+           
+           switch(Effective_Query_Num)
+           {
+               case 0:
+                   {
+                       var json = new
+                       {
+                           total = list.Count(),
+
+                           rows = (from r in db.tb_Asset_inventory
+                                    
+                                   select new
+                                   {
+                                       ID = r.ID,
+                                       serial_number = r.serial_number,
+                                       date = r.date,
+                                       _operator = r._operator,
+                                       amountOfSys = r.amountOfSys,
+                                       amountOfInv = r.amountOfInv,
+                                       difference = r.difference,
+                                       property = r.property,
+                                       state = r.state,
+                                       date_Create = r.date_Create,
+                                       ps = r.ps
+
+                                   }).ToArray()
+                       };
+
+                       return Json(json, JsonRequestBehavior.AllowGet);
+
+
+                   }
+               case 2:
+                   {
+                       var json = new
+                       {
+                           total = list.Count(),
+
+                           rows = (from r in db.tb_Asset_inventory
+                                   where r.state==PDstate&&r._operator==PDperson
+                                   select new
+                                   {
+                                       ID = r.ID,
+                                       serial_number = r.serial_number,
+                                       date = r.date,
+                                       _operator = r._operator,
+                                       amountOfSys = r.amountOfSys,
+                                       amountOfInv = r.amountOfInv,
+                                       difference = r.difference,
+                                       property = r.property,
+                                       state = r.state,
+                                       date_Create = r.date_Create,
+                                       ps = r.ps
+
+                                   }).ToArray()
+                       };
+
+                       return Json(json, JsonRequestBehavior.AllowGet);
+
+
+                   }
+               case 3:
+                 {
+                     var json = new
+                     {
+                         total = list.Count(),
+
+                         rows = (from r in db.tb_Asset_inventory
+                                 where (r.state == PDstate && r._operator == PDperson&&BeginDate<=r.date)
+                                 ||(r.state == PDstate && r._operator == PDperson&&EndDate>=r.date)
+                                 || (r.state == PDstate && r._operator == PDperson && r.serial_number.Contains(searial))
+
+                                 select new
+                                 {
+                                     ID = r.ID,
+                                     serial_number = r.serial_number,
+                                     date = r.date,
+                                     _operator = r._operator,
+                                     amountOfSys = r.amountOfSys,
+                                     amountOfInv = r.amountOfInv,
+                                     difference = r.difference,
+                                     property = r.property,
+                                     state = r.state,
+                                     date_Create = r.date_Create,
+                                     ps = r.ps
+
+                                 }).ToArray()
+                     };
+
+                     return Json(json, JsonRequestBehavior.AllowGet);
+                   
+                     
+                 }
+               case 4:
+                 {
+                     var json = new
+                     {
+                         total = list.Count(),
+
+                         rows = (from r in db.tb_Asset_inventory
+                                 where (r.state == PDstate && r._operator == PDperson && EndDate >= r.date&&r.date>=BeginDate)
+                                 || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && searial.Contains(searial))
+                                 || (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial))
+                                 select new
+                                 {
+                                     ID = r.ID,
+                                     serial_number = r.serial_number,
+                                     date = r.date,
+                                     _operator = r._operator,
+                                     amountOfSys = r.amountOfSys,
+                                     amountOfInv = r.amountOfInv,
+                                     difference = r.difference,
+                                     property = r.property,
+                                     state = r.state,
+                                     date_Create = r.date_Create,
+                                     ps = r.ps
+
+                                 }).ToArray()
+                     };
+
+                     return Json(json, JsonRequestBehavior.AllowGet);
+
+                
+                 
+                 }
+               case 5:
+                 {
+                     var json = new
+                     {
+                         total = list.Count(),
+
+                         rows = (from r in db.tb_Asset_inventory
+                                 where r.serial_number.Contains(searial) && BeginDate <= r.date && r.date <= EndDate && r.state == PDstate && r._operator == PDperson
+                                 select new
+                                 {
+                                     ID = r.ID,
+                                     serial_number = r.serial_number,
+                                     date = r.date,
+                                     _operator = r._operator,
+                                     amountOfSys = r.amountOfSys,
+                                     amountOfInv = r.amountOfInv,
+                                     difference = r.difference,
+                                     property = r.property,
+                                     state = r.state,
+                                     date_Create = r.date_Create,
+                                     ps = r.ps
+
+                                 }).ToArray()
+                     };
+
+                     return Json(json, JsonRequestBehavior.AllowGet);
+
+
+
+                 }
+             
+                 
+                
+           }
+
+         return  Null_dataGrid();
+
+       
+       }
        
       
     }
