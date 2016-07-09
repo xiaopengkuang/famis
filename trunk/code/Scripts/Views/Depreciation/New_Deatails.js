@@ -145,7 +145,7 @@ function LoadTreeLeft() {
             
           //  var nodes = $('#mtree').tree('getChecked');
             searchCondtiion = node.id;
-             //alert(searchCondtiion);
+             alert(searchCondtiion);
             LoadInitData_Detail(String(searchCondtiion));
 
         },
