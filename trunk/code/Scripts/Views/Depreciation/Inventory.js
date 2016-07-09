@@ -782,7 +782,7 @@ function loadPageTool_Detail() {
                      collapsible: false,
                      onClose: function () {
                          // alert("当我入梦，这个世界就将颤抖!!!");
-                           alert("盘点数据导入成功！")
+                          
                          LoadInitData(searchCondtiion);
                          // alert('盘点数据提交成功！');
                          //    $.messager.show({
