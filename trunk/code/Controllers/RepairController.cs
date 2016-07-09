@@ -40,6 +40,10 @@ namespace FAMIS.Controllers
 
         public ActionResult Repair_add()
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_add))
+            {
+                return View("Error");
+            }
             return View();
         }
 
@@ -50,6 +54,11 @@ namespace FAMIS.Controllers
 
         public ActionResult Repair_edit(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_edit))
+            {
+                return View("Error");
+            }
+
             if (id == null)
             {
                 return View("Error");
@@ -59,6 +68,11 @@ namespace FAMIS.Controllers
         }
         public ActionResult Repair_detail(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_view))
+            {
+                return View("Error");
+            }
+
             if (id == null)
             {
                 return View("Error");
@@ -68,6 +82,11 @@ namespace FAMIS.Controllers
         }
         public ActionResult Repair_review(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_review))
+            {
+                return View("Error");
+            }
+
             if (id == null)
             {
                 return View("Error");
@@ -154,6 +173,11 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_InsertRepairList(String data)
         {
+
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_add))
+            {
+                return -6;
+            }
             if (data == null)
             {
                 return -5;
@@ -232,59 +256,82 @@ namespace FAMIS.Controllers
             Json_State_Update Json_data = serializer.Deserialize<Json_State_Update>(data);
             if (Json_data != null)
             {
+                if (!RightToUpdateState(Json_data.id_state))
+                {
+                    return -6;
+                }
+
                  if(isOkToReview_Repair(Json_data.id_state,Json_data.id_Item))
                  {
                      if (!RightToSubmit_Repair(Json_data.id_state, Json_data.id_Item))
                      {
                         return -2;
                      }
-                 }
-                 int id_state_target = commonConversion.getStateListID(Json_data.id_state);
-                 try {
-                     //获取用户ID
-                     int? userID = commonConversion.getUSERID();
-                     var db_data = from p in DB_C.tb_Asset_Repair
-                                   where p.flag == true
-                                   where p.ID == Json_data.id_Item
-                                   select p;
-                     foreach (var item in db_data)
-                     {
-                         item.state_list = id_state_target;
-                         item.date_create = DateTime.Now;
-                     }
-                     if (commonConversion.is_YSH(Json_data.id_state))
-                     {
-
+                     int id_state_target = commonConversion.getStateListID(Json_data.id_state);
+                     try {
+                         //获取用户ID
+                         int? userID = commonConversion.getUSERID();
+                         var db_data = from p in DB_C.tb_Asset_Repair
+                                       where p.flag == true
+                                       where p.ID == Json_data.id_Item
+                                       select p;
                          foreach (var item in db_data)
                          {
-                             item.userID_review = userID;
-                             item.date_review = DateTime.Now;
-                             item.content_Review = Json_data.review;
+                             item.state_list = id_state_target;
+                             item.date_create = DateTime.Now;
                          }
+                         if (commonConversion.is_YSH(Json_data.id_state))
+                         {
 
-                         List<int> ids_asset = getAssetIdsByRepairID(Json_data.id_Item);
-                         var dataAsset = from p in DB_C.tb_Asset
-                                         where p.flag == true
-                                         where ids_asset.Contains(p.ID)
-                                         select p;
-                         if (dataAsset != null && dataAsset.Count() > 0 && dataAsset.Count() != ids_asset.Count)
-                         {
-                             return -3;
+                             foreach (var item in db_data)
+                             {
+                                 item.userID_review = userID;
+                                 item.date_review = DateTime.Now;
+                                 item.content_Review = Json_data.review;
+                             }
+
+                             List<int> ids_asset = getAssetIdsByRepairID(Json_data.id_Item);
+                             var dataAsset = from p in DB_C.tb_Asset
+                                             where p.flag == true
+                                             where ids_asset.Contains(p.ID)
+                                             select p;
+                             if (dataAsset != null && dataAsset.Count() > 0 && dataAsset.Count() != ids_asset.Count)
+                             {
+                                 return -3;
+                             }
+                             foreach (var item_as in dataAsset)
+                             {
+                                 item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_loan);
+                             }
                          }
-                         foreach (var item_as in dataAsset)
-                         {
-                             item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_loan);
-                         }
+                         DB_C.SaveChanges();
+                         return 1;
+                     }catch(Exception e){
+                         return 0;
                      }
-                     DB_C.SaveChanges();
-                     return 1;
-                 }catch(Exception e){
-                     return 0;
                  }
-
             }
             return 0;
            
+        }
+
+        public bool RightToUpdateState(int? id_json)
+        {
+            String operation = null;
+            switch (id_json)
+            {
+                case SystemConfig.state_List_CG_jsonID: { operation = SystemConfig.operation_add; }; break;
+                case SystemConfig.state_List_DSH_jsonID: { operation = SystemConfig.operation_edit; }; break;
+                case SystemConfig.state_List_TH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                case SystemConfig.state_List_YSH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                default: return false; break;
+            }
+
+            if (commonController.isRightToOperate(SystemConfig.Menu_ZCWX, operation))
+            {
+                return true;
+            }
+            return false;
         }
 
 
@@ -361,6 +408,11 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int Handler_UpdateRepairList(String data)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_edit))
+            {
+                return -6;
+            }
+
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_repair_add Json_data = serializer.Deserialize<Json_repair_add>(data);
             if (Json_data == null || Json_data.id == null)

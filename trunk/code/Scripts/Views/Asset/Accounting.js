@@ -113,7 +113,6 @@ function isRootNode(tree, node) {
 }
 
 
-
 //根据输入查询条件查询
 function SearchByCondition_right() {
     var jsonSC;
@@ -182,7 +181,6 @@ function LoadInitData_Detail() {
         type: "POST",
         traditional: true,
         success: function (dataRight) {
-
             $('#TableList_0_1').datagrid({
                 url: '/Asset/LoadAssets?tableType=1&searchCondtiion=' + searchCondtiion,
                 method: 'POST', //默认是post,不允许对静态文件访问
@@ -240,15 +238,17 @@ function LoadInitData_Detail() {
 
 
 function loadPageTool_Detail(dataRight) {
+    //alert(dataRight.add);
+
     var pager = $('#TableList_0_1').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '添加',
             iconCls: 'icon-add',
             height: 50,
-            disabled:!dataRight.add,
+            disabled: !dataRight.add_able,
             handler: function () {
-                if (!dataRight.add)
+                if (!dataRight.add_able)
                 {
                     return;
                 }
@@ -258,9 +258,9 @@ function loadPageTool_Detail(dataRight) {
             text: '编辑',
             iconCls: 'icon-edit',
             height: 50,
-            disabled: !dataRight.edit,
+            disabled: !dataRight.edit_able,
             handler: function () {
-                if (!dataRight.edit)
+                if (!dataRight.edit_able)
                 {
                     return;
                 }
@@ -281,9 +281,9 @@ function loadPageTool_Detail(dataRight) {
             text: '删除',
             iconCls: 'icon-remove',
             height: 50,
-            disabled: !dataRight.delete,
+            disabled: !dataRight.delete_able,
             handler: function () {
-                if (!dataRight.delete)
+                if (!dataRight.delete_able)
                 {
                     return;
                 }
@@ -318,10 +318,10 @@ function loadPageTool_Detail(dataRight) {
         }, {
             text: '导出',
             height: 50,
-            disabled: !dataRight.export,
+            disabled:!dataRight.export_able,
             iconCls: 'icon-save',
             handler: function () {
-                if (!dataRight.export)
+                if (!dataRight.export_able)
                 {
                     return;
                 }
@@ -356,15 +356,19 @@ function getNowFormatDate_FileName() {
 }
 
 function loadPageTool_Summary(dataRight) {
+
+    //var editFlag = dataRight.edit == false ? true : false;
+    //var exportFlag = dataRight.export == false ? true : false;
+
     var pager = $('#TableList_0_1').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '批量修改',
             iconCls: 'icon-edit',
             height: 50,
-            disabled:!dataRight.edit,
+            disabled: !dataRight.edit_able,
             handler: function () {
-                if (!dataRight, edit)
+                if (!dataright.edit_able)
                 {
                     return;
                 }
@@ -374,9 +378,9 @@ function loadPageTool_Summary(dataRight) {
             text: '导出',
             iconCls: 'icon-save',
             height: 50,
-            disabled: !dataRight.export,
+            disabled: !dataRight.export_able,
             handler: function () {
-                if (!dataRight.export)
+                if (!dataRight.export_able)
                 {
                     return;
                 }
