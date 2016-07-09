@@ -1890,6 +1890,23 @@
     <Content Include="Scripts\Views\Allocation\Allocation_add.js" />
     <Content Include="Scripts\Views\Allocation\Allocation.js" />
     <Content Include="Scripts\Views\Allocation\Allocation_SelectingAsset.js" />
+    <Content Include="Scripts\Views\Collar\Collar_Review.js" />
+    <Content Include="Scripts\Views\Collar\Collar_edit.js" />
+    <Content Include="Scripts\Views\common\common.js" />
+    <Content Include="Scripts\Views\Dict\edit_supplier.js" />
+    <Content Include="Scripts\Views\Repair\Repair_review.js" />
+    <Content Include="Scripts\Views\Repair\Repair_detail.js" />
+    <Content Include="Scripts\Views\Repair\Repair_edit.js" />
+    <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
+    <Content Include="Scripts\Views\Repair\Repair.js" />
+    <Content Include="Scripts\Views\Repair\Repair_add.js" />
+    <Content Include="Views\Dict\edit_supplier.cshtml" />
+    <Content Include="Scripts\Views\Allocation\Allocation_detail.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_review.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_edit.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_add.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_SelectingAsset.js" />
     <Content Include="Scripts\Views\Asset\Asset_edit.js" />
     <Content Include="Scripts\Views\Collar\Collar_Review.js" />
     <Content Include="Scripts\Views\Collar\Collar_edit.js" />
@@ -1910,6 +1927,7 @@
     <Content Include="Scripts\UI\js_Accounting.js" />
     <Content Include="Scripts\UI\LoadTreeMenu.js" />
     <Content Include="Scripts\Views\Asset\Accounting.js" />
+    <Content Include="Scripts\Views\Asset\AddAsset.js" />
     <Content Include="Scripts\Views\Asset\Asset_add.js" />
     <Content Include="Scripts\Views\Collar\addCollar.js" />
     <Content Include="Scripts\Views\Collar\Collar.js" />
@@ -1934,10 +1952,12 @@
     <Content Include="Scripts\Views\User\Index.js" />
     <Content Include="Scripts\Views\User\Login.js" />
     <Content Include="Views\Shared\Navigation.ascx" />
+    <Content Include="Views\Asset\AddAsset.cshtml" />
     <Content Include="Views\Asset\Asset_add.cshtml" />
     <Content Include="Views\Rule\Index.cshtml" />
     <Content Include="Views\SysSetting\AddRole.cshtml" />
     <Content Include="Views\SysSetting\loadSearchTreeByRole.cshtml" />
+    <Content Include="Views\Asset\EditAsset.cshtml" />
     <Content Include="Views\Collar\add_collar.cshtml" />
     <Content Include="Views\Collar\collar_selectAsset.cshtml" />
     <Content Include="Views\Collar\Detail_collar.cshtml" />
@@ -2024,6 +2044,7 @@
     <Compile Include="DTO\Json_allocation.cs" />
     <Compile Include="DTO\Json_allocation_add.cs" />
     <Compile Include="DTO\Json_allocation_review.cs" />
+
     <Compile Include="DTO\Json_asset_cattr_ad.cs" />
     <Compile Include="DTO\Json_asset_edit.cs" />
     <Compile Include="DTO\Json_CAtrr.cs" />
@@ -2074,6 +2095,7 @@
     <Compile Include="Models\tb_Asset_allocation_detail.cs" />
     <Compile Include="Models\tb_Asset_collar.cs" />
     <Compile Include="Models\tb_Asset_collar_detail.cs" />
+
     <Compile Include="Models\tb_Asset_CustomAttr.cs" />
     <Compile Include="Models\tb_Asset_inventory.cs" />
     <Compile Include="Models\tb_Asset_inventory_Details.cs" />
@@ -2112,6 +2134,7 @@
     <Content Include="Views\Asset\Accounting.cshtml" />
     <Content Include="Views\Allocation\Allocation.cshtml" />
     <Content Include="Views\Collar\collar.cshtml" />
+    <Content Include="Views\Asset\reduction.cshtml" />
     <Content Include="Views\Dict\Asset_type.cshtml" />
     <Content Include="Views\Dict\dataDict.cshtml" />
     <Content Include="Views\Dict\staff.cshtml" />
@@ -2181,6 +2204,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
+      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
       <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
