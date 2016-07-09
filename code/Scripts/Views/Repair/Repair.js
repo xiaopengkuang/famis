@@ -143,9 +143,9 @@ function loadPageTool(datagrid, dataRight) {
             text: '添加',
             iconCls: 'icon-add',
             height: 50,
-            disabled: !dataRight.add,
+            disabled: !dataRight.add_able,
             handler: function () {
-                if (!dataRight.add) {
+                if (!dataRight.add_able) {
                     return;
                 }
                 var title = "添加维修单";
@@ -164,11 +164,11 @@ function loadPageTool(datagrid, dataRight) {
             }
         }, {
             text: '编辑',
-            disabled: !dataRight.edit,
+            disabled: !dataRight.edit_able,
             height: 50,
             iconCls: 'icon-edit',
             handler: function () {
-                if (!dataRight.edit) {
+                if (!dataRight.edit_able) {
                     return;
                 }
                 ////获取选择行
@@ -229,9 +229,9 @@ function loadPageTool(datagrid, dataRight) {
             text: '明细',
             height: 50,
             iconCls: 'icon-tip',
-            disabled: !dataRight.view,
+            disabled: !dataRight.view_able,
             handler: function () {
-                if (!dataRight.view) {
+                if (!dataRight.view_able) {
                     return;
                 }
                 var rows = $('#' + datagrid).datagrid('getSelections');
@@ -256,10 +256,10 @@ function loadPageTool(datagrid, dataRight) {
           {
               text: '提交',
               height: 50,
-              disabled: !dataRight.submit,
+              disabled: !dataRight.submit_able,
               iconCls: 'icon-redo',
               handler: function () {
-                  if (!dataRight.submit) {
+                  if (!dataRight.submit_able) {
                       return;
                   }
                   var rows = $('#' + datagrid).datagrid('getSelections');
@@ -304,9 +304,9 @@ function loadPageTool(datagrid, dataRight) {
                text: '审核',
                height: 50,
                iconCls: 'icon-ok',
-               disabled: !dataRight.review,
+               disabled: !dataRight.review_able,
                handler: function () {
-                   if (!dataRight.review) {
+                   if (!dataRight.review_able) {
                        return;
                    }
                    var rows = $('#' + datagrid).datagrid('getSelections');
@@ -331,10 +331,10 @@ function loadPageTool(datagrid, dataRight) {
            },{
                text: '导出',
                height: 50,
-               disabled: !dataRight.export,
+               disabled: !dataRight.export_able,
                iconCls: 'icon-save',
                handler: function () {
-                   if (!dataRight.export) {
+                   if (!dataRight.export_able) {
                        return;
                    }
                    var filename = getNowFormatDate_FileName();

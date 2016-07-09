@@ -32,13 +32,13 @@ namespace FAMIS.Controllers
             return View();
         }
 
-        public ActionResult SelectReviewer(String reviewType)
+        public ActionResult SelectReviewer(String menuName)
         {
-            if (reviewType == null)
+            if (menuName == null)
             {
                 return View("Error");
             }
-            ViewBag.reviewType = reviewType;
+            ViewBag.menuName = menuName;
             return View();
         }
 
@@ -50,20 +50,55 @@ namespace FAMIS.Controllers
 
 
         /// <summary>
+        /// 当用户提交单据时  需要选择用户去审核
         ///根据类型获取有权限审核的用户
         /// </summary>
         /// <param name="reviewType"></param>
         /// <returns></returns>
-        public JsonResult LoadReviewer(String reviewType)
+        public JsonResult LoadReviewer(int? page,int? rows, String menuName)
         {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+
             //TODO:
-            List<int?> ids_satisfied = new List<int?>();
+            List<int?> idsUser_satisfied = new List<int?>();
+            //选择用户=》角色=》权限
             var data = from p in DB_C.tb_user
                        where p.flag == true
-                       join tb_RO in DB_C.tb_role on p.roleID_User equals tb_RO.ID
-                       where tb_RO.isSuperUser == true
-                       select p;
-            return null;
+                       join tb_ro in DB_C.tb_role on p.roleID_User equals tb_ro.ID
+                       where tb_ro.isSuperUser==false
+                       join tb_RAT in DB_C.tb_role_authorization on p.roleID_User equals tb_RAT.role_ID
+                       where tb_RAT.flag == true
+                       where tb_RAT.type == SystemConfig.role_menu
+                       join tb_me in DB_C.tb_Menu on tb_RAT.Right_ID equals tb_me.ID
+                       where tb_me.name_Menu == menuName
+                       where tb_me.operation == SystemConfig.operation_submit
+                       select new { 
+                       id=p.ID,
+                       name=p.true_Name
+                       };
+
+            var data_super = from p in DB_C.tb_user
+                             where p.flag == true
+                             join tb_ro in DB_C.tb_role on p.roleID_User equals tb_ro.ID
+                             where tb_ro.isSuperUser == true
+                             select new
+                             {
+                                 id=p.ID,
+                                 name=p.true_Name
+                             };
+            data = data.Union(data_super).OrderBy(a=>a.name);
+
+
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
+            var json = new
+            {
+                total = data.ToList().Count,
+                rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                //rows = data.ToList().ToArray()
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -768,26 +803,26 @@ namespace FAMIS.Controllers
 
 
             //TODO: TEST
-            right.add = true;
-            right.edit = true;
-            right.export = true;
-            right.print = false;
-            right.review = false;
-            right.submit = false;
-            right.view = false;
-            right.delete = false;
+            right.add_able = true;
+            right.edit_able = true;
+            right.export_able = true;
+            right.print_able = false;
+            right.review_able = false;
+            right.submit_able = true;
+            right.view_able = false;
+            right.delete_able = false;
             return Json(right, JsonRequestBehavior.AllowGet);
 
             if (supU)
             {
-                right.add = true;
-                right.edit = true;
-                right.export = true;
-                right.print = true;
-                right.review = true;
-                right.submit = true;
-                right.view = true;
-                right.delete = true;
+                right.add_able = true;
+                right.edit_able = true;
+                right.export_able = true;
+                right.print_able = true;
+                right.review_able = true;
+                right.submit_able = true;
+                right.view_able = true;
+                right.delete_able = true;
                 return Json(right, JsonRequestBehavior.AllowGet);
             }
             else {
@@ -805,49 +840,49 @@ namespace FAMIS.Controllers
                 {
                     switch (item.operation)
                     {
-                        case SystemConfig.operation_add: { right.add = item.flag; }; break;
-                        case SystemConfig.operation_delete: { right.delete = item.flag; }; break;
-                        case SystemConfig.operation_edit: { right.edit = item.flag; }; break;
-                        case SystemConfig.operation_export: { right.export = item.flag; }; break;
-                        case SystemConfig.operation_print: { right.print = item.flag; }; break;
-                        case SystemConfig.operation_review: { right.review = item.flag; }; break;
-                        case SystemConfig.operation_submit: { right.submit = item.flag; }; break;
-                        case SystemConfig.operation_view: { right.view = item.flag; }; break;
+                        case SystemConfig.operation_add: { right.add_able = item.flag; }; break;
+                        case SystemConfig.operation_delete: { right.delete_able = item.flag; }; break;
+                        case SystemConfig.operation_edit: { right.edit_able = item.flag; }; break;
+                        case SystemConfig.operation_export: { right.export_able = item.flag; }; break;
+                        case SystemConfig.operation_print: { right.print_able = item.flag; }; break;
+                        case SystemConfig.operation_review: { right.review_able = item.flag; }; break;
+                        case SystemConfig.operation_submit: { right.submit_able = item.flag; }; break;
+                        case SystemConfig.operation_view: { right.view_able = item.flag; }; break;
                         default: { }; break;
                     }
                 }
 
-                if(right.add==null)
+                if(right.add_able==null)
                 {
-                    right.add = false;
+                    right.add_able = false;
                 }
-                if (right.delete == null)
+                if (right.delete_able == null)
                 {
-                    right.delete = false;
+                    right.delete_able = false;
                 } 
-                if (right.edit == null)
+                if (right.edit_able == null)
                 {
-                    right.edit = false;
+                    right.edit_able = false;
                 } 
-                if (right.export == null)
+                if (right.export_able == null)
                 {
-                    right.export = false;
+                    right.export_able = false;
                 } 
-                if (right.print == null)
+                if (right.print_able == null)
                 {
-                    right.print = false;
+                    right.print_able = false;
                 } 
-                if (right.review == null)
+                if (right.review_able == null)
                 {
-                    right.review = false;
+                    right.review_able = false;
                 }
-                if (right.submit == null)
+                if (right.submit_able == null)
                 {
-                    right.submit = false;
+                    right.submit_able = false;
                 }
-                if (right.view == null)
+                if (right.view_able == null)
                 {
-                    right.view = false;
+                    right.view_able = false;
                 }
 
                 return Json(right, JsonRequestBehavior.AllowGet);

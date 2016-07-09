@@ -1,9 +1,8 @@
 ﻿
-
-function loadUserByType(reviewType, datagrid)
+function loadUserByType(menuName)
 {
-    $('#' + datagrid).datagrid({
-        url: '/Common/LoadReviewer?reviewType=' + reviewType,
+    $('#datagrid_reviewer').datagrid({
+        url: '/Common/LoadReviewer?menuName=' + menuName,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -18,23 +17,24 @@ function loadUserByType(reviewType, datagrid)
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
             { field: 'id', checkbox: true, width: 50 },
-            { field: 'name', title: '姓名', width: 50 },
+            { field: 'name', title: '审核用户', width: 50 }
+           
         ]],
         singleSelect: true, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool(datagrid);
+    loadPageTool();
 }
-function loadPageTool(datagrid) {
-    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
+function loadPageTool() {
+    var pager = $('#datagrid_reviewer').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '选择',
             height: 50,
             iconCls: 'icon-reload',
             handler: function () {
-                var row = $('#' + datagrid).datagrid('getSelected');
+                var row = $('#datagrid_reviewer').datagrid('getSelected');
                 if (row)
                 {
                     alert(row.id);
