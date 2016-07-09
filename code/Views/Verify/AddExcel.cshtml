@@ -24,12 +24,29 @@
 
         success: function (result) {
 
-            if (result == "nofile")
+            if (result == "nofile") {
+                $.ajax({
+
+                    type: "post",
+                    url: "/Depreciation/Set_ErroFile?Json=reset",
+
+                    datatype: "json",//数据类型
+
+                    success: function (result) {
+
+
+
+
+                    }, error: function (msg) {
+                        alert("Error");
+                    }
+                });
                 alert("请添加盘点数据Excel文件");
+            }
                 
             if (result == "FileUploaded")
             {
-
+                alert("盘点数据导入成功！");
                  
                 $.ajax({
 
