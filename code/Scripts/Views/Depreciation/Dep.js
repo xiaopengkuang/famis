@@ -1,4 +1,5 @@
 ﻿var searchCondtiion = "0";
+
 //alert(searchCondtiion+"88");
 function depreciation() {
 

@@ -1,5 +1,6 @@
 ﻿ 
-var searchCondtiion = "1o使用部门o销售部";
+var searchCondtiion = "o,o,o,o,o";
+//alert(searchCondtiion);
 var datagrid; //定义全局变量datagrid
 var editRow = undefined; //定义全局变量：当前编辑的行
 var PDsearial = "";
@@ -8,7 +9,7 @@ var Address = [{ "value": "1", "text": "固定资产" }, { "value": "3", "text":
 var CurrentRow = "0";
 var flag = "0";
 var sysamount=0;
-alert("互相伤害啊！");
+//alert("互相伤害啊！");
 //alert("asd");
 //alert("dsd");
 $(document).ready(function () {
@@ -55,24 +56,65 @@ function extend()
 function loadOperator() {
     
     $("#operator").combobox({
-        valueField: 'ID',
+        valueField: 'true_Name',
         method: 'POST',
         textField: 'true_Name',
         url: '/Rule/GetUserID',
+        onLoadSuccess:function(){
+            var data = $('#operator').combobox('getData');
+            $("#operator").combobox('select', data[0].true_Name);
+        },
         onSelect: function (rec) {
-            $('#operator').combobox('setValue', rec.ID);
+            $('#operator').combobox('setValue', rec.true_Name);
             $('#operator').combobox('setText', rec.true_Name);
         }
     });
    
 }
+function LoadBYSearchCondition()
+{
+    var searial="o";
+    var begin="o";
+    var end="o";
+    var state="o";
+    var person="o";
+    if($('#Invention_Code').val()!="")
+      searial=$('#Invention_Code').val();
+   
+    if( $('#BeginDate_SC').datebox('getValue')!="")
+       begin= $('#BeginDate_SC').datebox('getValue');
+  
+      
+    if($('#EndDate_SC').datebox('getValue')!="")
+        end = $('#EndDate_SC').datebox('getValue');
+
+    if ($('#Invention_State').combobox('getValue')!="");
+    state = $('#Invention_State').combobox('getValue')
+
+    if ($('#operator').combobox('getValue') != "");
+    person = $('#operator').combobox('getValue')
+
+    searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
+   // alert(searchCondtiion);
+    LoadInitData(searchCondtiion);
+
+}
+function ReSetSeachCondition()
+{
+    $("#Invention_Code").val("");
+    $('#BeginDate_SC').datebox('setValue', '');
+    $('#EndDate_SC').datebox('setValue', '');
+    var searchCondtiion = "o,o,o,o,o";
+    LoadInitData(searchCondtiion);
+}
 function LoadInitData(searchCondtiion) {
+    //alert(searchCondtiion);
     var datagrid; //定义全局变量datagrid
     var editRow = undefined; //定义全局变量：当前编辑的行
     datagrid = $("#TableList_0_1").datagrid({
 
 
-        url: '/Depreciation/Load_Inventory',
+        url: '/Depreciation/Query_By_Condition?JSON='+searchCondtiion+'',
       
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',

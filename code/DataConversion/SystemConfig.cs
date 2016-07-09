@@ -13,7 +13,8 @@ namespace FAMIS.DataConversion
         public  const String role_department = "department";
         public  const String role_assetType = "AssetType";
 
-
+        public const Char Split_Char = ',';
+        public const String NullString_Replace = "o";
 
         public  const String treeTB_deparment = "tb_department";
         public  const String treeTB_supplier = "tb_supplier";

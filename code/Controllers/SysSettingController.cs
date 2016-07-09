@@ -36,7 +36,9 @@ namespace FAMIS.Controllers
             sw.Write(staff.sex+ "\r\n");
             sw.Write(staff.entry_Time + "\r\n");
             sw.Write(staff.phoneNumber + "\r\n");
-            sw.Write(staff.email + "\r\n");
+            sw.Write(staff.email + "\r\n")
+             * 
+             * 
             sw.Write(staff.effective_Flag+"\r\n");
             sw.Write(staff.create_TIME + "\r\n");
             sw.Write(staff.invalid_TIME + "\r\n");
