@@ -80,9 +80,9 @@ function submitForm(id_collar, id_state)
     //获取审核意见
     var shyj = $("#SHYJ_collar").val();
     var data = {
-        "id_collar": id_collar,
+        "id_Item": id_collar,
         "id_state": id_state,
-        "shyj": shyj
+        "review": shyj
     }
 
 

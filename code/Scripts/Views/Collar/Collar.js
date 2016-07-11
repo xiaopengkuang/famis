@@ -1,5 +1,10 @@
 ﻿//========================全局数据================================//
 var searchCondtiion = "";
+
+var ID_datagrid = "";
+var ID_targetState = null;
+var ID_collar = null;
+
 //========================全局数据================================//
 
 
@@ -49,9 +54,9 @@ function LoadInitDatagrid(datagrid) {
 }
 
 
-function SubmitToUser()
+function SubmitToUser(userID)
 {
-
+    updateRecordState(ID_datagrid, ID_targetState, ID_collar,userID);
 }
 
 
@@ -276,10 +281,11 @@ function loadPageTool(datagrid, dataRight) {
                       }
                       var url = "/Common/SelectReviewer?menuName=ZCLY"
                       var titleName = "选择管理员";
+                      ID_collar = rows[0].ID;
+                      ID_targetState = 2;
                       openModelWindow(url,titleName);
                       //选择超级管理员
                       //$('#selectUser_Window').window('open')
-
 
 
                       //id_ = rows[0].ID;
@@ -364,11 +370,12 @@ function loadPageTool(datagrid, dataRight) {
 
 
 //根据单据ID更新单据状态
-function updateRecordState(datagrid,id_target, id)
+function updateRecordState(datagrid,id_target, id,id_reviewer)
 {
 
     var data = {
-        "id_collar": id,
+        "id_Item": id,
+        "id_reviewer":id_reviewer,  //用户提交订单时候显示  用户ID
         "id_state": id_target
     }
     //将数据传入后台

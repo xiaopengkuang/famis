@@ -543,7 +543,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                      foreach (tb_role_authorization o in role_au)
                      {
                          IEnumerable<tb_Menu>  me = from a in mydb.tb_Menu
-                                                           where a.ID == o.Right_ID&&a.isleafnode
+                                                           where a.ID == o.Right_ID && a.isleafnode==true
                                                            select a;
                          foreach (tb_Menu tb in me)
                          {

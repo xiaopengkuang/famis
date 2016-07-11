@@ -120,6 +120,37 @@ namespace FAMIS.Controllers
             List<int?> idsRight_department = commonConversion.getids_departmentByRole(roleID);
             bool isAllUser = commonConversion.isSuperUser(roleID);
 
+              var data_1= from p in DB_C.tb_ReviewReminding
+                        where p.flag==true && p.Type_Review_TB==SystemConfig.TB_Repair
+                        where p.ID_reviewer==userID
+                        join tb_rep in DB_C.tb_Asset_Repair on p.ID_review_TB equals tb_rep.ID
+                          join tb_ST in DB_C.tb_State_List on tb_rep.state_list equals tb_ST.id into temp_ST
+                        from ST in temp_ST.DefaultIfEmpty()
+                          join tb_SP in DB_C.tb_supplier on tb_rep.supplierID_Torepair equals tb_SP.ID into temp_SP
+                        from SP in temp_SP.DefaultIfEmpty()
+                          join tb_UAP in DB_C.tb_user on tb_rep.userID_applying equals tb_UAP.ID into temp_UAP
+                        from UAP in temp_UAP.DefaultIfEmpty()
+                          join tb_UAT in DB_C.tb_user on tb_rep.userID_authorize equals tb_UAT.ID into temp_UAT
+                        from UAT in temp_UAT.DefaultIfEmpty()
+                          join tb_UCT in DB_C.tb_user on tb_rep.userID_create equals tb_UCT.ID into temp_UCT
+                        from UCT in temp_UCT.DefaultIfEmpty()
+                          orderby tb_rep.date_create descending
+                        select new Json_repair
+                        {
+                            cost_ToRepair = tb_rep.CostToRepair == null ? 0 : tb_rep.CostToRepair,
+                            date_create = tb_rep.date_create,
+                            date_ToRepair = tb_rep.date_ToRepair,
+                            date_ToReturn = tb_rep.date_ToReturn,
+                            ID = tb_rep.ID,
+                            serialNumber = tb_rep.serialNumber,
+                            state_list = ST.Name,
+                            supplier_Name = SP.name_supplier,
+                            userName_applying = UAP.true_Name,
+                            userName_authorize = UAT.true_Name,
+                            userName_create = UCT.true_Name,
+                        };
+
+
             var data = from p in DB_C.tb_Asset_Repair
                        where p.flag == true
                        where p.userID_create != null
@@ -149,6 +180,9 @@ namespace FAMIS.Controllers
                            userName_authorize=UAT.true_Name,
                            userName_create=UCT.true_Name,
                        };
+
+            data = data.Union(data_1).OrderByDescending(a => a.date_create);
+
             if (cond != null)
             {
                 //TODO:  条件查询  留给研一

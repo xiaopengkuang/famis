@@ -462,6 +462,35 @@ namespace FAMIS.Controllers
             //获取部门ID
             List<int?> idsRight_department = commonConversion.getids_departmentByRole(roleID);
             bool isAllUser = commonConversion.isSuperUser(roleID);
+            
+            //获取该用户可以去审核的单据
+            var data_1= from p in DB_C.tb_ReviewReminding
+                        where p.flag==true && p.Type_Review_TB==SystemConfig.TB_Collar
+                        where p.ID_reviewer==userID
+                        join tb_Collar in DB_C.tb_Asset_collar on p.ID_review_TB equals tb_Collar.ID
+                        join tb_DP in DB_C.tb_department on tb_Collar.department_collar equals tb_DP.ID into temp_DP
+                        from DP in temp_DP.DefaultIfEmpty()
+                        join tb_ST in DB_C.tb_State_List on tb_Collar.state_List equals tb_ST.id into temp_ST
+                        from ST in temp_ST.DefaultIfEmpty()
+                        join tb_AD in DB_C.tb_dataDict_para on tb_Collar.addree_Storage equals tb_AD.ID into temp_AD
+                        from AD in temp_AD.DefaultIfEmpty()
+                        join tb_US in DB_C.tb_user on tb_Collar._operator equals tb_US.ID into temp_US
+                        from US in temp_US.DefaultIfEmpty()
+                        join tb_USC in DB_C.tb_user on tb_Collar.user_collar equals tb_USC.ID into temp_USC
+                        from USC in temp_USC.DefaultIfEmpty()
+                        orderby tb_Collar.date_Operated descending
+                        select new Json_collar
+                        {
+                            ID = tb_Collar.ID,
+                            address = AD.name_para,
+                            date_Operated = tb_Collar.date_Operated,
+                            date_collar = tb_Collar.date,
+                            department = DP.name_Department,
+                            operatorUser = US.name_User,
+                            serialNumber = tb_Collar.serial_number,
+                            state = ST.Name,
+                            user_collar = USC.true_Name
+                        };
 
 
             var data = from p in DB_C.tb_Asset_collar
@@ -491,7 +520,8 @@ namespace FAMIS.Controllers
                             state=ST.Name,
                             user_collar=USC.true_Name
                        };
-            
+            data = data.Union(data_1);
+            data = data.OrderByDescending(a => a.date_Operated);
             if (cond != null)
             {
                 //TODO:  条件查询  留给研一
@@ -886,7 +916,7 @@ namespace FAMIS.Controllers
 
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            Json_collar_review Json_data = serializer.Deserialize<Json_collar_review>(data);
+            Json_State_Update Json_data = serializer.Deserialize<Json_State_Update>(data);
             if (Json_data != null)
             {
 
@@ -895,18 +925,17 @@ namespace FAMIS.Controllers
                     return -6;
                 }
 
-
                //判断是否有权限
-                if (isOkToReview_collar(Json_data.id_state, Json_data.id_collar))
+                if (isOkToReview_collar(Json_data.id_state, Json_data.id_Item))
                 {
-                    if (!RightToSubmit_collar(Json_data.id_state, Json_data.id_collar))
+                    if (!RightToSubmit_collar(Json_data.id_state, Json_data.id_Item))
                     {
                         return -2;
                     }
                     //获取数据库中的ID
                     int id_state_target = commonConversion.getStateListID(Json_data.id_state);
-                    tb_Asset_collar co = getCollarTBbyID(Json_data.id_collar);
-                    if (co == null)
+                    tb_Asset_collar co = getCollarTBbyID(Json_data.id_Item);
+                    if (co == null||co.ID==null)
                     {
                         return -1;
                     }
@@ -917,7 +946,7 @@ namespace FAMIS.Controllers
                         int? userID = commonConversion.getUSERID();
                         var db_data = from p in DB_C.tb_Asset_collar
                                       where p.flag == true
-                                      where p.ID == Json_data.id_collar
+                                      where p.ID == Json_data.id_Item
                                       select p;
 
                       
@@ -927,11 +956,14 @@ namespace FAMIS.Controllers
                             item.state_List = id_state_target;
                             item.userID_reView = userID;
                             item.date_Operated = DateTime.Now;
-                            item.info_review = Json_data.shyj;
+                            item.info_review = Json_data.review;
                         }
+
                         if (commonConversion.is_YSH(Json_data.id_state))
                         {
-                            List<int?> ids_asset = getAssetIdsByCollarID(Json_data.id_collar);
+
+                            //修改
+                            List<int?> ids_asset = getAssetIdsByCollarID(Json_data.id_Item);
                             var dataAsset = from p in DB_C.tb_Asset
                                             where p.flag == true
                                             where ids_asset.Contains(p.ID)
@@ -947,7 +979,46 @@ namespace FAMIS.Controllers
                                 item_as.department_Using = co.department_collar;
                                 item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_using);
                             }
+                            //将提醒标记为false
+                            var data_rem = from p in DB_C.tb_ReviewReminding
+                                           where p.flag == true
+                                           where p.Type_Review_TB == SystemConfig.TB_Collar
+                                           where p.ID_review_TB == co.ID
+                                           select p;
 
+                            foreach (var item in data_rem)
+                            {
+                                item.flag = false;
+                                item.time_review = DateTime.Now;
+                            }
+
+
+
+                        }else if(commonConversion.is_DSH(Json_data.id_state))
+                        {
+
+                            //往提醒表里面添加
+                            tb_ReviewReminding tb = new tb_ReviewReminding();
+                            tb.flag = true;
+                            tb.Type_Review_TB = SystemConfig.TB_Collar;
+                            tb.ID_review_TB = co.ID;
+                            tb.ID_reviewer = Json_data.id_reviewer;
+                            tb.time_add = DateTime.Now;
+                            DB_C.tb_ReviewReminding.Add(tb);
+                        }else if(commonConversion.is_TH(Json_data.id_state))
+                        {
+                            //将提醒标记为false
+                            var data_rem = from p in DB_C.tb_ReviewReminding
+                                           where p.flag == true
+                                           where p.Type_Review_TB == SystemConfig.TB_Collar
+                                           where p.ID_review_TB == co.ID
+                                           select p;
+
+                            foreach (var item in data_rem)
+                            {
+                                item.flag = false;
+                                item.time_review = DateTime.Now;
+                            }
                         }
 
 
