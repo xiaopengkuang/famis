@@ -803,15 +803,15 @@ namespace FAMIS.Controllers
 
 
             //TODO: TEST
-            right.add_able = true;
-            right.edit_able = true;
-            right.export_able = true;
-            right.print_able = false;
-            right.review_able = false;
-            right.submit_able = true;
-            right.view_able = false;
-            right.delete_able = false;
-            return Json(right, JsonRequestBehavior.AllowGet);
+            //right.add_able = true;
+            //right.edit_able = true;
+            //right.export_able = true;
+            //right.print_able = false;
+            //right.review_able = false;
+            //right.submit_able = true;
+            //right.view_able = false;
+            //right.delete_able = false;
+            //return Json(right, JsonRequestBehavior.AllowGet);
 
             if (supU)
             {

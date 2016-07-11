@@ -167,7 +167,7 @@ namespace FAMIS.Controllers
             int indexof_menu_ID=1;
           var menu_ID = from o in DBConnecting.tb_role_authorization
                                         join m in DBConnecting.tb_Menu on o.Right_ID equals m.ID
-                                        where o.role_ID == rid && o.type == "menu" && m.isMenu
+                                        where o.role_ID == rid && o.type == "menu" && m.isMenu==true
                                         orderby m.ID_Menu
                                         select m;
            

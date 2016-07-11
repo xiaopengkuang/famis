@@ -37,12 +37,31 @@ function loadPageTool() {
                 var row = $('#datagrid_reviewer').datagrid('getSelected');
                 if (row)
                 {
-                    alert(row.id);
+                    try{
+                        parent.SubmitToUser(row.id);
+                        parent.$('#modalwindow').window(close);
+                    }catch(e)
+                    {
+                        MessShow("系统忙！请稍后再试。");
+                    }
                 }
             }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+    });
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
     });
 }

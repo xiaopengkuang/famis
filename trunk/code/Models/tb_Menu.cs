@@ -15,19 +15,23 @@ namespace FAMIS.Models
 
         [StringLength(10)]
         public string father_Menu { get; set; }
-        [StringLength(10)]
-        public string operation { get; set; }
 
         [StringLength(8)]
         public string father_Menu_ID { get; set; }
 
         [StringLength(20)]
         public string name_Menu { get; set; }
-        public bool isMenu { get; set; }
-        public bool isleafnode { get; set; }
+
         public int? treeLevel { get; set; }
 
         [StringLength(30)]
         public string url { get; set; }
+
+        public bool? isMenu { get; set; }
+
+        [StringLength(50)]
+        public string operation { get; set; }
+
+        public bool? isleafnode { get; set; }
     }
 }

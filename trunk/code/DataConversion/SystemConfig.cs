@@ -138,5 +138,13 @@ namespace FAMIS.DataConversion
 
 
 
+        public const String TB_Collar = "Collar";
+        public const String TB_Allocation = "Allocation";
+        public const String TB_Repair = "Repair";
+
+
+
+
+
     }
 }

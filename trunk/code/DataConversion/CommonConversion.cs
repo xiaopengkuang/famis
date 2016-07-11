@@ -410,6 +410,45 @@ namespace FAMIS.DataConversion
             }
             return false;
         }
+
+        /// <summary>
+        /// 待审核模式
+        /// </summary>
+        /// <returns></returns>
+        public bool is_DSH(int? id_state_target)
+        {
+            if (id_state_target == null)
+            {
+                return false;
+            }
+            String nameState = getTargetStateName(id_state_target);
+            if (nameState == SystemConfig.state_List_DSH)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id_state_target"></param>
+        /// <returns></returns>
+        public bool is_TH(int? id_state_target)
+        {
+            if (id_state_target == null)
+            {
+                return false;
+            }
+            String nameState = getTargetStateName(id_state_target);
+            if (nameState == SystemConfig.state_List_TH)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
         public List<String> getSerialNumByID_Asset(List<int> ids)
         {
             List<String> serials = new List<String>();
