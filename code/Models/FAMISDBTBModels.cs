@@ -146,19 +146,23 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Reduction>()
-                .Property(e => e.Applicant)
+                .Property(e => e.userID_apply)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Reduction>()
-                .Property(e => e.Approver)
+                .Property(e => e.userID_approver)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_Reduction_detail>()
-                .Property(e => e.serial_number)
+            modelBuilder.Entity<tb_Asset_Reduction>()
+                .Property(e => e.reason_reduce)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<tb_Asset_Reduction_detail>()
-                .Property(e => e.serial_number_Asset)
+            modelBuilder.Entity<tb_Asset_Reduction>()
+                .Property(e => e.note_reduce)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Reduction>()
+                .Property(e => e.conten_review)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Repair>()

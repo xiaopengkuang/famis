@@ -243,6 +243,7 @@ namespace FAMIS.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return -1;
             }
 
@@ -341,6 +342,7 @@ namespace FAMIS.Controllers
                          DB_C.SaveChanges();
                          return 1;
                      }catch(Exception e){
+                         Console.WriteLine(e.Message);
                          return 0;
                      }
                  }
@@ -358,7 +360,7 @@ namespace FAMIS.Controllers
                 case SystemConfig.state_List_DSH_jsonID: { operation = SystemConfig.operation_edit; }; break;
                 case SystemConfig.state_List_TH_jsonID: { operation = SystemConfig.operation_review; }; break;
                 case SystemConfig.state_List_YSH_jsonID: { operation = SystemConfig.operation_review; }; break;
-                default: return false; break;
+                default: { }; break;
             }
 
             if (commonController.isRightToOperate(SystemConfig.Menu_ZCWX, operation))
@@ -480,6 +482,7 @@ namespace FAMIS.Controllers
                 return 1;
             }
             catch (Exception e) {
+                Console.WriteLine(e.Message);
                 return -3;
             }
         }

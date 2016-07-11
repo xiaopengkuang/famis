@@ -13,22 +13,33 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string Serial_number { get; set; }
 
-        public DateTime? date { get; set; }
+        public DateTime? date_reduction { get; set; }
 
-        public int? Method_reduction { get; set; }
-
-        [StringLength(20)]
-        public string Applicant { get; set; }
+        public int? method_reduction { get; set; }
 
         [StringLength(20)]
-        public string Approver { get; set; }
+        public string userID_apply { get; set; }
+
+        [StringLength(20)]
+        public string userID_approver { get; set; }
 
         public bool? flag { get; set; }
 
-        public int? Person_Operator { get; set; }
+        public int? userID_operate { get; set; }
 
-        public DateTime? Date_Operated { get; set; }
+        public DateTime? date_Operated { get; set; }
 
         public int? state_List { get; set; }
+
+        [StringLength(200)]
+        public string reason_reduce { get; set; }
+
+        [StringLength(200)]
+        public string note_reduce { get; set; }
+
+        public int? userID_reviewer { get; set; }
+
+        [StringLength(200)]
+        public string conten_review { get; set; }
     }
 }

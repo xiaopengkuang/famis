@@ -159,10 +159,6 @@ namespace FAMIS.Controllers
                             serialNumber = tb_allocation.serial_number,
                             state = ST.Name
                         };
-
-
-
-
             var data =from p in DB_C.tb_Asset_allocation
                        where p.flag == true
                        where p._operator!=null
@@ -218,8 +214,6 @@ namespace FAMIS.Controllers
                 return -6;
             }
 
-
-
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_allocation_add json_data = serializer.Deserialize<Json_allocation_add>(data);
             if (json_data == null)
@@ -252,6 +246,7 @@ namespace FAMIS.Controllers
                 DB_C.SaveChanges();
                 return 1;
             }catch(Exception e){
+                Console.WriteLine(e.Message);
                 int? id_allocation = getIDBySerialNum(newItem.serial_number);
                 if (id_allocation != null)
                 {
@@ -263,6 +258,7 @@ namespace FAMIS.Controllers
                     }
                     catch (Exception e2)
                     {
+                        Console.WriteLine(e2.Message);
                         return -4;
                     }
                 }
@@ -382,6 +378,7 @@ namespace FAMIS.Controllers
                 DB_C.SaveChanges();
                 return 1;
             }catch(Exception e){
+                Console.WriteLine(e.Message);
                 return 0;
             }
 
@@ -467,6 +464,7 @@ namespace FAMIS.Controllers
                     }
                     catch (Exception e)
                     {
+                        Console.WriteLine(e.Message);
                         return 0;
                     }
 
@@ -491,7 +489,7 @@ namespace FAMIS.Controllers
                 case SystemConfig.state_List_DSH_jsonID: { operation = SystemConfig.operation_edit; }; break;
                 case SystemConfig.state_List_TH_jsonID: { operation = SystemConfig.operation_review; }; break;
                 case SystemConfig.state_List_YSH_jsonID: { operation = SystemConfig.operation_review; }; break;
-                default: return false; break;
+                default: { }; break;
             }
 
             if (commonController.isRightToOperate(SystemConfig.Menu_ZCDB, operation))
