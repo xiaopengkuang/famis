@@ -1884,41 +1884,44 @@
     <Content Include="Scripts\tabs\bootStrap_addTable.js" />
     <Content Include="Scripts\tabs\easyUI_addTabs.js" />
     <Content Include="Scripts\tabs\tabs.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_detail.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_review.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_edit.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_add.js" />
     <Content Include="Scripts\Views\Allocation\Allocation.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_add.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_detail.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_edit.js" />
+    <Content Include="Scripts\Views\Allocation\Allocation_review.js" />
     <Content Include="Scripts\Views\Allocation\Allocation_SelectingAsset.js" />
-    <Content Include="Scripts\Views\Collar\Collar_Review.js" />
+    <Content Include="Scripts\Views\Collar\addCollar.js" />
+    <Content Include="Scripts\Views\Collar\Collar.js" />
+    <Content Include="Scripts\Views\Collar\Collar_Detail.js" />
     <Content Include="Scripts\Views\Collar\Collar_edit.js" />
+    <Content Include="Scripts\Views\Collar\Collar_Review.js" />
+    <Content Include="Scripts\Views\Collar\Collar_SelectAsset.js" />
     <Content Include="Scripts\Views\common\common.js" />
+    <Content Include="Scripts\Views\Dict\add_AssetType.js" />
+    <Content Include="Scripts\Views\Dict\add_customAttr.js" />
+    <Content Include="Scripts\Views\Dict\add_dataDict.js" />
+    <Content Include="Scripts\Views\Dict\add_dataDictPara.js" />
+    <Content Include="Scripts\Views\Dict\add_department.js" />
+    <Content Include="Scripts\Views\Dict\add_supplier.js" />
+    <Content Include="Scripts\Views\Dict\Asset_Type.js" />
+    <Content Include="Scripts\Views\Dict\customAttributes.js" />
+    <Content Include="Scripts\Views\Dict\dataDict.js" />
+    <Content Include="Scripts\Views\Dict\departmentManager.js" />
+    <Content Include="Scripts\Views\Dict\edit_AssetType.js" />
+    <Content Include="Scripts\Views\Dict\edit_dataDict.js" />
+    <Content Include="Scripts\Views\Dict\edit_dataDictPara.js" />
+    <Content Include="Scripts\Views\Dict\edit_department.js" />
     <Content Include="Scripts\Views\Dict\edit_supplier.js" />
-    <Content Include="Scripts\Views\Repair\Repair_review.js" />
-    <Content Include="Scripts\Views\Repair\Repair_detail.js" />
-    <Content Include="Scripts\Views\Repair\Repair_edit.js" />
-    <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
+    <Content Include="Scripts\Views\Dict\supplierManager.js" />
     <Content Include="Scripts\Views\Repair\Repair.js" />
     <Content Include="Scripts\Views\Repair\Repair_add.js" />
+    <Content Include="Scripts\Views\Repair\Repair_detail.js" />
+    <Content Include="Scripts\Views\Repair\Repair_edit.js" />
+    <Content Include="Scripts\Views\Repair\Repair_review.js" />
+    <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
     <Content Include="Views\Dict\edit_supplier.cshtml" />
-    <Content Include="Scripts\Views\Allocation\Allocation_detail.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_review.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_edit.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_add.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation.js" />
-    <Content Include="Scripts\Views\Allocation\Allocation_SelectingAsset.js" />
     <Content Include="Scripts\Views\Asset\Asset_edit.js" />
-    <Content Include="Scripts\Views\Collar\Collar_Review.js" />
-    <Content Include="Scripts\Views\Collar\Collar_edit.js" />
-    <Content Include="Scripts\Views\common\common.js" />
     <Content Include="Scripts\Views\common\SelectReviewer.js" />
-    <Content Include="Scripts\Views\Dict\edit_supplier.js" />
-    <Content Include="Scripts\Views\Repair\Repair_review.js" />
-    <Content Include="Scripts\Views\Repair\Repair_detail.js" />
-    <Content Include="Scripts\Views\Repair\Repair_edit.js" />
-    <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
-    <Content Include="Scripts\Views\Repair\Repair.js" />
-    <Content Include="Scripts\Views\Repair\Repair_add.js" />
     <Content Include="Scripts\Views\User\LoadMenubyRole.js" />
     <Content Include="Scripts\Views\User\LoadMenubyRoless.js" />
     <Content Include="Views\Dict\edit_supplier.cshtml" />
@@ -1927,28 +1930,8 @@
     <Content Include="Scripts\UI\js_Accounting.js" />
     <Content Include="Scripts\UI\LoadTreeMenu.js" />
     <Content Include="Scripts\Views\Asset\Accounting.js" />
-    <Content Include="Scripts\Views\Asset\AddAsset.js" />
     <Content Include="Scripts\Views\Asset\Asset_add.js" />
-    <Content Include="Scripts\Views\Collar\addCollar.js" />
-    <Content Include="Scripts\Views\Collar\Collar.js" />
-    <Content Include="Scripts\Views\Collar\Collar_Detail.js" />
-    <Content Include="Scripts\Views\Collar\Collar_SelectAsset.js" />
     <Content Include="Scripts\Views\Commom.js" />
-    <Content Include="Scripts\Views\Dict\add_AssetType.js" />
-    <Content Include="Scripts\Views\Dict\add_customAttr.js" />
-    <Content Include="Scripts\Views\Dict\add_supplier.js" />
-    <Content Include="Scripts\Views\Dict\edit_dataDictPara.js" />
-    <Content Include="Scripts\Views\Dict\add_dataDictPara.js" />
-    <Content Include="Scripts\Views\Dict\edit_dataDict.js" />
-    <Content Include="Scripts\Views\Dict\add_dataDict.js" />
-    <Content Include="Scripts\Views\Dict\add_department.js" />
-    <Content Include="Scripts\Views\Dict\Asset_Type.js" />
-    <Content Include="Scripts\Views\Dict\customAttributes.js" />
-    <Content Include="Scripts\Views\Dict\dataDict.js" />
-    <Content Include="Scripts\Views\Dict\departmentManager.js" />
-    <Content Include="Scripts\Views\Dict\edit_AssetType.js" />
-    <Content Include="Scripts\Views\Dict\edit_department.js" />
-    <Content Include="Scripts\Views\Dict\supplierManager.js" />
     <Content Include="Scripts\Views\User\Index.js" />
     <Content Include="Scripts\Views\User\Login.js" />
     <Content Include="Views\Shared\Navigation.ascx" />
@@ -1994,6 +1977,7 @@
     <Content Include="Views\Asset\Asset_edit.cshtml" />
     <Content Include="Views\Common\SelectReviewer.cshtml" />
     <Content Include="Views\Common\Error.cshtml" />
+    <Content Include="Views\Reduction\Reduction.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -2020,6 +2004,7 @@
     <Compile Include="Controllers\FAMIS.System_setup\TestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ReductionController.cs" />
     <Compile Include="Controllers\RepairController.cs" />
     <Compile Include="Controllers\SysSettingController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -2044,7 +2029,6 @@
     <Compile Include="DTO\Json_allocation.cs" />
     <Compile Include="DTO\Json_allocation_add.cs" />
     <Compile Include="DTO\Json_allocation_review.cs" />
-
     <Compile Include="DTO\Json_asset_cattr_ad.cs" />
     <Compile Include="DTO\Json_asset_edit.cs" />
     <Compile Include="DTO\Json_CAtrr.cs" />
@@ -2095,7 +2079,6 @@
     <Compile Include="Models\tb_Asset_allocation_detail.cs" />
     <Compile Include="Models\tb_Asset_collar.cs" />
     <Compile Include="Models\tb_Asset_collar_detail.cs" />
-
     <Compile Include="Models\tb_Asset_CustomAttr.cs" />
     <Compile Include="Models\tb_Asset_inventory.cs" />
     <Compile Include="Models\tb_Asset_inventory_Details.cs" />
@@ -2174,6 +2157,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
+    <Folder Include="Scripts\Views\Reduction\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\Customer\" />
   </ItemGroup>
@@ -2205,7 +2189,6 @@
         </WebProjectProperties>
       </FlavorProperties>
       <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
-      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
