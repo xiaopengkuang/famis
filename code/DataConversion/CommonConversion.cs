@@ -500,6 +500,23 @@ namespace FAMIS.DataConversion
             }
             return result;
         }
+
+
+        public List<String> getAssetStateNameListByJsonID(List<int?> id_ast)
+        {
+            List<String> list = new List<String>();
+
+            foreach (int id_st in id_ast)
+            {
+                String nameState = getAssetStateNameByJsonID(id_st);
+                if (nameState != null)
+                {
+                    list.Add(nameState);
+                }
+            }
+
+            return list;
+        }
         
 
 

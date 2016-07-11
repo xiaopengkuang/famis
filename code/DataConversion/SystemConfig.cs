@@ -63,13 +63,15 @@ namespace FAMIS.DataConversion
         public static String[] treeType_allocation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD,nameFlag_2_SYRY };
         public static String[] treeType_repair_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD, nameFlag_2_SYRY };
         public static String[] treeType_depreciation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB };
-        public static String[] treeType_newdeatails_Search_Menu = new String[] { nameFlag_2_SYBM,nameFlag_2_ZCLB,nameFlag_2_ZCZT};
+        public static String[] treeType_newdeatails_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_ZCZT };
+        public static String[] treeType_reduction_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_ZCZT, nameFlag_2_SYRY, nameFlag_2_CFDD };
         public const String treeType_Accounting = "Accounting";
         public const String treeType_collarSearch = "collarSearch";
         public const String treeType_allocationSearch = "allocationSearch";
         public const String treeType_repairSearch = "repairSearch";
         public const String treeType_depreciationSearch = "DepreciationSearch";
-        public const String treeType_newdeatails = "NewDeatails";  
+        public const String treeType_newdeatails = "NewDeatails";
+        public const String treeType_Reduction = "ReductionSearch";  
         public static String state_asset_free = "闲置";
         public static String state_asset_using = "在用";
         public static String state_asset_bad = "报废";
@@ -103,15 +105,17 @@ namespace FAMIS.DataConversion
 
 
 
-        public const String serialType_LY = "LY";
+        public const String serialType_LY = "LY";  //资产领用
 
-        public const String serialType_DB = "DB";
+        public const String serialType_DB = "DB";  //资产调拨
 
-        public const String serialType_ZC = "ZC";
+        public const String serialType_ZC = "ZC";  //资产
 
-        public const String serialType_WC = "WC";
+        public const String serialType_WX = "WX";  //资产维修
+         
+        public const String serialType_JS = "JS";  //资产减少
 
-        public const String serialType_BM= "BM";
+        public const String serialType_BM= "BM";  //部门？ TODO：
 
 
 
@@ -141,6 +145,7 @@ namespace FAMIS.DataConversion
         public const String TB_Collar = "Collar";
         public const String TB_Allocation = "Allocation";
         public const String TB_Repair = "Repair";
+        public const String TB_Reduction = "Redution";
 
 
 

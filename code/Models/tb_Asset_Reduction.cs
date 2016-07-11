@@ -17,11 +17,9 @@ namespace FAMIS.Models
 
         public int? method_reduction { get; set; }
 
-        [StringLength(20)]
-        public string userID_apply { get; set; }
+        public int? userID_apply { get; set; }
 
-        [StringLength(20)]
-        public string userID_approver { get; set; }
+        public int? userID_approver { get; set; }
 
         public bool? flag { get; set; }
 

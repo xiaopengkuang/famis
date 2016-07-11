@@ -154,5 +154,18 @@ namespace FAMIS.DataConversion
             return repair;
         }
 
+
+        public tb_Asset_Reduction ConverJsonToTable(Json_reduction_add data)
+        {
+            tb_Asset_Reduction tb = new tb_Asset_Reduction();
+            tb.date_reduction = data.date_reduction;
+            tb.method_reduction = data.method_reduction;
+            tb.note_reduce = data.note;
+            tb.reason_reduce = data.reason;
+            tb.userID_apply = data.user_apply;
+            tb.userID_approver = data.user_approve;
+            return tb;
+        }
+
     }
 }

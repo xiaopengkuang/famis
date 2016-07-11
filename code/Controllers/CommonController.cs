@@ -107,7 +107,6 @@ namespace FAMIS.Controllers
 
 
 
-
         [HttpPost]
         public String GetOneSerialNumber(String ruleType, int num)
         {
@@ -384,7 +383,7 @@ namespace FAMIS.Controllers
         /// <param name="selectedIDs"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult LoadAsset_ByState(int? page, int? rows, String searchCondtiion, String selectedIDs,int? stateID)
+        public JsonResult LoadAsset_ByState(int? page, int? rows, String searchCondtiion, String selectedIDs,String stateID)
         {
             List<int?> ids_Gone = commonConversion.StringToIntList(selectedIDs);
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -396,10 +395,12 @@ namespace FAMIS.Controllers
             //获取部门权限
             List<int?> idsRight_deparment = commonConversion.getids_departmentByRole(role);
 
-            String stateName_asset = commonConversion.getAssetStateNameByJsonID(stateID);
+            List<int?> ids_state = commonConversion.StringToIntList(stateID);
+
+            List<String> stateName_asset = commonConversion.getAssetStateNameListByJsonID(ids_state);
             if (dto_condition == null)
             {
-                json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset);
+              return loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset);
             }
             else
             {
@@ -413,11 +414,10 @@ namespace FAMIS.Controllers
             return json;
         }
 
-        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, String stateName_asset)
+        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
-
             var data_ORG = from p in DB_C.tb_Asset
                            where p.flag == true
                            where p.department_Using == null || idsRight_deparment.Contains(p.department_Using)
@@ -425,8 +425,9 @@ namespace FAMIS.Controllers
                            where !selectedIDs.Contains(p.ID)
                            join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
                            from ST in temp_ST.DefaultIfEmpty()
-                           where ST.name_para == stateName_asset
+                           where stateName_asset.Contains(ST.name_para)
                            select p;
+
             if (data_ORG == null)
             {
                 return NULL_dataGrid();
@@ -498,10 +499,17 @@ namespace FAMIS.Controllers
                                            where p.Owener == dic_paraID
                                            select p;
                             }; break;
+                        case SystemConfig.nameFlag_2_ZCZT:
+                            {
+                                data_ORG = from p in data_ORG
+                                           where p.state_asset == dic_paraID
+                                           select p;
+                            }; break;
                         default: ; break;
                     }
                 }
             }
+
             var data = from p in data_ORG
                        join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
                        from AT in temp_AT.DefaultIfEmpty()
@@ -521,6 +529,7 @@ namespace FAMIS.Controllers
                        from MDC in temp_MDC.DefaultIfEmpty()
                        join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
                        from MA in temp_MA.DefaultIfEmpty()
+                       orderby p.Time_add descending
                        select new dto_Asset_Detail
                        {
                            addressCF = DZ.name_para,
@@ -548,20 +557,18 @@ namespace FAMIS.Controllers
                            value = p.value,
                            YearService_month = p.YearService_month
                        };
-            data = data.OrderByDescending(a => a.Time_Operated);
-
+            data = data.OrderByDescending(a=>a.Time_Operated);
             int skipindex = ((int)page - 1) * (int)rows;
             int rowsNeed = (int)rows;
             var json = new
             {
                 total = data.ToList().Count,
                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
-                //rows = data.ToList().ToArray()
             };
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, String stateName_asset)
+        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -572,7 +579,7 @@ namespace FAMIS.Controllers
                            where !selectedIDs.Contains(p.ID)
                            join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
                            from ST in temp_ST.DefaultIfEmpty()
-                           where ST.name_para == stateName_asset
+                           where stateName_asset.Contains(ST.name_para)
                            select p;
             if (data_ORG == null)
             {
@@ -641,7 +648,7 @@ namespace FAMIS.Controllers
             var data = from p in data_ORG
                        join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
                        from AT in temp_AT.DefaultIfEmpty()
-                       join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
+                       join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID  into temp_MM
                        from MM in temp_MM.DefaultIfEmpty()
                        join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
@@ -657,6 +664,7 @@ namespace FAMIS.Controllers
                        from MDC in temp_MDC.DefaultIfEmpty()
                        join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
                        from MA in temp_MA.DefaultIfEmpty()
+                       orderby p.Time_add descending
                        select new dto_Asset_Detail
                        {
                            addressCF = DZ.name_para,
@@ -665,7 +673,7 @@ namespace FAMIS.Controllers
                            depreciation_tatol = p.depreciation_tatol,
                            depreciation_Month = p.depreciation_Month,
                            ID = p.ID,
-                           measurement = MM.name_para,
+                           //measurement = tb_MM.name_para,
                            Method_add = MA.name_para,
                            Method_depreciation = MDP.name_para,
                            Method_decrease = MDC.name_para,
@@ -673,7 +681,6 @@ namespace FAMIS.Controllers
                            Net_residual_rate = p.Net_residual_rate,
                            Net_value = p.Net_value,
                            Time_Operated = p.Time_add,
-                           //people_using = p.people_using,
                            serial_number = p.serial_number,
                            specification = p.specification,
                            state_asset = ST.name_para,
@@ -684,16 +691,14 @@ namespace FAMIS.Controllers
                            value = p.value,
                            YearService_month = p.YearService_month
                        };
-            data = data.OrderByDescending(a => a.Time_Operated);
-
             int skipindex = ((int)page - 1) * (int)rows;
             int rowsNeed = (int)rows;
             var json = new
             {
                 total = data.ToList().Count,
                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
-                //rows = data.ToList().ToArray()
             };
+
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
@@ -798,10 +803,6 @@ namespace FAMIS.Controllers
             Json_operationRight right=new Json_operationRight ();
             int? roleID=commonConversion.getRoleID();
             bool supU=commonConversion.isSuperUser(roleID);
-
-
-
-
             //TODO: TEST
             //right.add_able = true;
             //right.edit_able = true;
@@ -812,7 +813,6 @@ namespace FAMIS.Controllers
             //right.view_able = false;
             //right.delete_able = false;
             //return Json(right, JsonRequestBehavior.AllowGet);
-
             if (supU)
             {
                 right.add_able = true;
