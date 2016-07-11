@@ -146,14 +146,6 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_Reduction>()
-                .Property(e => e.userID_apply)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_Reduction>()
-                .Property(e => e.userID_approver)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_Reduction>()
                 .Property(e => e.reason_reduce)
                 .IsUnicode(false);
 

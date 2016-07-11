@@ -1,7 +1,7 @@
 ﻿//========================全局数据================================//
 var searchCondtiion = "";
 
-var ID_datagrid = "";
+var ID_datagrid = "datagrid_collor";
 var ID_targetState = null;
 var ID_collar = null;
 

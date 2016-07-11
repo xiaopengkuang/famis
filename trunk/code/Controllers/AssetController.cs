@@ -225,8 +225,9 @@ namespace FAMIS.Controllers
                     var data = from p in data_ORG
                                join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
                                from AT in temp_AT.DefaultIfEmpty()
-                               join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
-                               from MM in temp_MM.DefaultIfEmpty()
+                               //join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID 
+                               //into temp_MM
+                               //from MM in temp_MM.DefaultIfEmpty()
                                join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID into temp_DP
                                from DP in temp_DP.DefaultIfEmpty()
                                join tb_DZ in DB_C.tb_dataDict_para on p.addressCF equals tb_DZ.ID into temp_DZ
@@ -249,7 +250,7 @@ namespace FAMIS.Controllers
                                    depreciation_tatol = p.depreciation_tatol,
                                    depreciation_Month = p.depreciation_Month,
                                    ID = p.ID,
-                                   measurement = MM.name_para,
+                                   //measurement = tb_MM.name_para,
                                    Method_add = MA.name_para,
                                    Method_depreciation = MDP.name_para,
                                    Method_decrease = MDC.name_para,
@@ -284,20 +285,21 @@ namespace FAMIS.Controllers
                        var data_ORG2 = from p in data_ORG
                                    join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
                                    from AT in temp_AT.DefaultIfEmpty()
-                                   join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
-                                   from MM in temp_MM.DefaultIfEmpty()
+                                   join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID
+                                       //into temp_MM
+                                   //from MM in temp_MM.DefaultIfEmpty()
                                    select new {
                                        name_Asset=p.name_Asset,
                                        type_Asset=p.type_Asset,
                                        measurement=p.measurement,
                                        specification=p.specification,
                                        type_Asset_name=AT.name_Asset_Type,
-                                       measurement_name=MM.name_para,
+                                       measurement_name = tb_MM.name_para,
                                        amount=p.amount,
                                        value=p.value
                                    };
                         //数据分组
-                       var data = from a in data_ORG2
+                       var data = (from a in data_ORG2
                                   group a by new { a.name_Asset, a.type_Asset_name, a.measurement_name, a.specification } into b
                                   select new
                                   {
@@ -307,7 +309,7 @@ namespace FAMIS.Controllers
                                       measurement = b.Key.measurement_name,
                                       specification = b.Key.specification,
                                       value = b.Sum(a => a.value)
-                                  };
+                                  }).Distinct();
                         data = data.OrderByDescending(a => a.AssetName);
                         int skipindex = ((int)page - 1) * (int)rows;
                         int rowsNeed = (int)rows;
@@ -494,23 +496,24 @@ namespace FAMIS.Controllers
                 };break;
                 case SystemConfig.tableType_summary:{
                                //在进行数据绑定
-                       var data_ORG2 = from p in data_ORG
-                                   join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
-                                   from AT in temp_AT.DefaultIfEmpty()
-                                   join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
-                                   from MM in temp_MM.DefaultIfEmpty()
-                                   select new {
-                                       name_Asset=p.name_Asset,
-                                       type_Asset=p.type_Asset,
-                                       measurement=p.measurement,
-                                       specification=p.specification,
-                                       type_Asset_name=AT.name_Asset_Type,
-                                       measurement_name=MM.name_para,
-                                       amount=p.amount,
-                                       value=p.value
-                                   };
+                    var data_ORG2 = from p in data_ORG
+                                    join tb_AT in DB_C.tb_AssetType on p.type_Asset equals tb_AT.ID into temp_AT
+                                    from AT in temp_AT.DefaultIfEmpty()
+                                    join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
+                                    from MM in temp_MM.DefaultIfEmpty()
+                                    select new
+                                    {
+                                        name_Asset = p.name_Asset,
+                                        type_Asset = p.type_Asset,
+                                        measurement = p.measurement,
+                                        specification = p.specification,
+                                        type_Asset_name = AT.name_Asset_Type,
+                                        measurement_name = MM.name_para,
+                                        amount = p.amount,
+                                        value = p.value
+                                    };
                         //数据分组
-                       var data = from a in data_ORG2
+                       var data = (from a in data_ORG2
                                   group a by new { a.name_Asset, a.type_Asset_name, a.measurement_name, a.specification } into b
                                   select new
                                   {
@@ -520,7 +523,7 @@ namespace FAMIS.Controllers
                                       measurement = b.Key.measurement_name,
                                       specification = b.Key.specification,
                                       value = b.Sum(a => a.value)
-                                  };
+                                  }).Distinct();
                         data = data.OrderByDescending(a => a.AssetName);
                         int skipindex = ((int)page - 1) * (int)rows;
                         int rowsNeed = (int)rows;
