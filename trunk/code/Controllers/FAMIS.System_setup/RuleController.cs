@@ -15,7 +15,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
     public class RuleController : Controller
     {
         // GET: Rule_
-        private  string serial="";
+        //private  string serial="";
         private FAMISDBTBModels mydb = new FAMISDBTBModels();
         CommonConversion commonConversion = new CommonConversion();
         public class GetRule// 绑定页面规则数据
@@ -386,7 +386,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 id = int.Parse(JSdata.Split(',')[0]);
             }
             catch(Exception e) {
-                ;
+                Console.WriteLine(e.Message);
             }
             int rid=0;
             int did=0; 
@@ -461,6 +461,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 ;
             }
             string name = JSdata.Split(',')[1];

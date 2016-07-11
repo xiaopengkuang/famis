@@ -18,8 +18,6 @@ using FAMIS.DAL;
 using System.Web.Script.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Data.SqlClient;
-using System.Text;
-using System.Threading.Tasks;
 namespace FAMIS.Helper_Class
 {
     public class Serial

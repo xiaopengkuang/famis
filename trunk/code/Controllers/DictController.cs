@@ -981,6 +981,7 @@ namespace FAMIS.Controllers
                     DB_C.SaveChanges();
                     return 1;
                 }catch(Exception e){
+                    Console.WriteLine(e.Message);
                     return 0;
                 }
             }
@@ -1011,6 +1012,7 @@ namespace FAMIS.Controllers
                     return 1;
                 }
                 catch(Exception e){
+                    Console.WriteLine(e.Message);
                 }
             }
             return 0;
@@ -1042,6 +1044,7 @@ namespace FAMIS.Controllers
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                 }
             }
             return 0;
@@ -1068,6 +1071,7 @@ namespace FAMIS.Controllers
                     DB_C.SaveChanges();
                     return 1;
                 }catch(Exception e){
+                    Console.WriteLine(e.Message);
 
                 }
             }
@@ -1096,6 +1100,7 @@ namespace FAMIS.Controllers
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     return 0;
                 }
             }
@@ -1120,6 +1125,7 @@ namespace FAMIS.Controllers
                     return 1;
 
                 }catch(Exception e){
+                    Console.WriteLine(e.Message);
                     return 0;
                 }
             }
@@ -1154,6 +1160,7 @@ namespace FAMIS.Controllers
                 DB_C.SaveChanges();
                 return 1;
             }catch(Exception e){
+                Console.WriteLine(e.Message);
             }
 
             return 0;
@@ -1189,6 +1196,7 @@ namespace FAMIS.Controllers
 
             }catch(Exception e){
 
+                Console.WriteLine(e.Message);
             }
             return 0;
 
@@ -1240,6 +1248,7 @@ namespace FAMIS.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
 
             }
             return 0;
@@ -1268,6 +1277,7 @@ namespace FAMIS.Controllers
                 return 1;
             }catch(Exception e){
 
+                Console.WriteLine(e.Message);
                 return 0;
             }
         }
@@ -1293,6 +1303,7 @@ namespace FAMIS.Controllers
                 DB_C.SaveChanges();
                 return 1;
             }catch(Exception e){
+                Console.WriteLine(e.Message);
                 return 0;
             }
         }
@@ -1360,6 +1371,7 @@ namespace FAMIS.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return 0;
             }
         }
@@ -1448,6 +1460,7 @@ namespace FAMIS.Controllers
                 DB_C.SaveChanges();
                 return 1;
             }catch(Exception e){
+                Console.WriteLine(e.Message);
                 return 0;
             }
            
@@ -1484,6 +1497,7 @@ namespace FAMIS.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
             }
             return 0;
         }
@@ -1516,6 +1530,7 @@ namespace FAMIS.Controllers
                 DB_C.SaveChanges();
                 return 1;
             }catch(Exception e){
+                Console.WriteLine(e.Message);
                 return 0;
             }
 
@@ -1554,6 +1569,7 @@ namespace FAMIS.Controllers
                 DB_C.SaveChanges();
                 return 1;
             }catch(Exception e){
+                Console.WriteLine(e.Message);
                 return 0;
             }
             return 0;
