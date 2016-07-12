@@ -912,6 +912,11 @@ namespace FAMIS.Controllers
         }
 
 
+        /// <summary>
+        /// 更新单据状态
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int updateCollarStateByID(String data)
         {
@@ -938,7 +943,7 @@ namespace FAMIS.Controllers
                     //获取数据库中的ID
                     int id_state_target = commonConversion.getStateListID(Json_data.id_state);
                     tb_Asset_collar co = getCollarTBbyID(Json_data.id_Item);
-                    if (co == null||co.ID>0)
+                    if (co == null||co.ID<1)
                     {
                         return -1;
                     }
@@ -951,9 +956,6 @@ namespace FAMIS.Controllers
                                       where p.flag == true
                                       where p.ID == Json_data.id_Item
                                       select p;
-
-                      
-                         
                         foreach (var item in db_data)
                         {
                             item.state_List = id_state_target;
