@@ -517,7 +517,7 @@ namespace FAMIS.Controllers
         {
             var data = from p in DB_C.tb_Asset_allocation_detail
                        where p.ID_allocation == id
-                       where p.flag==true || p.flag==null
+                       where p.flag==true
                        select p;
 
             List<int> ids = new List<int>();

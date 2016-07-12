@@ -41,6 +41,36 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        public ActionResult Reduction_edit(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+
+        public ActionResult Reduction_detail(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+
+        public ActionResult Reduction_review(int? id)
+        {
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+
         public ActionResult Reduction_SelectingAsset()
         {
             return View();
@@ -121,11 +151,14 @@ namespace FAMIS.Controllers
                          method_reduction = dic.name_para,
                          serialNumber = p.Serial_number,
                          state_list = ST.Name,
-                         user_operate = UOP.true_Name,
                          user_apply = UAP.true_Name,
+                         user_operate = UOP.true_Name,
                          user_approve = UAV.true_Name,
                      };
-            data = data.Union(data_1).OrderByDescending(a=>a.dateTime_add);
+           
+
+            data = data.Union(data_1);
+            data = data.OrderByDescending(a => a.dateTime_add);
             if (cond != null)
             {
                 //TODO:  条件查询  留给研一
@@ -175,7 +208,7 @@ namespace FAMIS.Controllers
                 //获取单据明细
                 //获取选中的Ids
                 List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
-                List<tb_Asset_Reduction_detail> details = createAllocationDetailList(id_reduction, selectedAssets);
+                List<tb_Asset_Reduction_detail> details = createReductionDetailList(id_reduction, selectedAssets);
                 DB_C.tb_Asset_Reduction_detail.AddRange(details);
                 DB_C.SaveChanges();
                 return 1;
@@ -202,6 +235,60 @@ namespace FAMIS.Controllers
 
         }
 
+
+        [HttpPost]
+        public int Handler_reduction_update(String data)
+        {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCJS, SystemConfig.operation_edit))
+            {
+                return -6;
+            }
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_reduction_add Json_data = serializer.Deserialize<Json_reduction_add>(data);
+            if (Json_data == null || Json_data.ID == null)
+            {
+                return 0;
+            }
+            try {
+                if (!RightToSubmit_reduction(Json_data.statelist, Json_data.ID))
+                {
+                    return -5;
+                }
+                int? userID=commonConversion.getUSERID();
+                var db_data = from p in DB_C.tb_Asset_Reduction
+                              where p.ID == Json_data.ID
+                              select p;
+                foreach(var item in db_data)
+                {
+                    item.date_Operated = DateTime.Now;
+                    item.method_reduction = Json_data.method_reduction;
+                    item.note_reduce = Json_data.note;
+                    item.reason_reduce = Json_data.reason;
+                    item.state_List = Json_data.statelist;
+                    item.userID_apply = Json_data.user_apply;
+                    item.userID_approver = Json_data.user_approve;
+                    item.userID_operate = userID;
+                }
+                var data_delete = from p in DB_C.tb_Asset_Reduction_detail
+                                  where p.flag == true
+                                  where p.ID_reduction == Json_data.ID
+                                  select p;
+                foreach (var item in data_delete)
+                {
+                    item.flag = false;
+                }
+                List<int?> ids_asset_selected = commonConversion.StringToIntList(Json_data.assetList);
+                List<tb_Asset_Reduction_detail> details = createReductionDetailList(Json_data.ID,ids_asset_selected);
+                DB_C.tb_Asset_Reduction_detail.AddRange(details);
+                DB_C.SaveChanges();
+                return 1;
+            }
+            catch (Exception e){
+                Console.WriteLine(e.Message);
+                return 0;
+            }
+        }
+
         public int? getIDBySerialNum(String serialNum)
         {
             if (serialNum == null)
@@ -223,7 +310,7 @@ namespace FAMIS.Controllers
 
             return null;
         }
-        public List<tb_Asset_Reduction_detail> createAllocationDetailList(int? id_reduction, List<int?> ids_asset)
+        public List<tb_Asset_Reduction_detail> createReductionDetailList(int? id_reduction, List<int?> ids_asset)
         {
             List<tb_Asset_Reduction_detail> list = new List<tb_Asset_Reduction_detail>();
             if (id_reduction == null || id_reduction < 1)
@@ -247,6 +334,360 @@ namespace FAMIS.Controllers
                 //return list;
             }
             return list;
+        }
+
+
+        [HttpPost]
+        public int RightToEdit(int? id)
+        {
+            //获取当前用户
+            int? userID = commonConversion.getUSERID();
+            if (id == null)
+            {
+                return 0;
+            }
+            tb_Asset_Reduction data = DB_C.tb_Asset_Reduction.Where(a => a.ID == id).First();
+
+            if (data != null)
+            {
+                if (data.userID_operate == userID)
+                {
+                    //单据状态处于状态
+                    var info = from p in DB_C.tb_State_List
+                               where p.id == data.state_List
+                               select p;
+                    if (info.Count() == 1)
+                    {
+                        foreach (var item in info)
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(item.Name))
+                            {
+                                return 1;
+                            }
+                        }
+                        return 0;
+                    }
+
+
+                    return 0;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            return 0;
+        }
+
+
+        [HttpPost]
+        public ActionResult loadReductionByID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_Reduction
+                       where p.flag == true && p.ID == id
+                       join tb_dic in DB_C.tb_dataDict_para on p.method_reduction equals tb_dic.ID into  temp_dic
+                       from dic in temp_dic.DefaultIfEmpty()
+                       join tb_UAP in DB_C.tb_user on p.userID_apply equals tb_UAP.ID into temp_UAP
+                       from UAP in temp_UAP.DefaultIfEmpty()
+                       join tb_UAT in DB_C.tb_user on p.userID_approver equals tb_UAT.ID into temp_UAT
+                       from UAT in temp_UAT.DefaultIfEmpty()
+                       select new Json_redution_edit
+                       {
+                            date_reduction=p.date_reduction,
+                            ID=p.ID,
+                            note_reduce=p.note_reduce,
+                            reason_reduce=p.reason_reduce,
+                            Serial_number=p.Serial_number,
+                            method_reduction=p.method_reduction,
+                            methodName_reduction=dic.name_para,
+                            user_apply=UAP.true_Name,
+                            user_approver=UAT.true_Name,
+                            userID_apply=p.userID_apply,
+                            userID_approver=p.userID_approver
+                       };
+            Json_redution_edit result = data.First();
+            List<int?> ids_select = getAssetIdsByReductionID(id);
+            result.ids_asset = ids_select;
+            return Json(result, JsonRequestBehavior.AllowGet);
+                        
+        }
+
+
+        public List<int?> getAssetIdsByReductionID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_Reduction_detail
+                       where p.ID_reduction == id
+                       where p.flag == true
+                       select p;
+
+            List<int?> ids = new List<int?>();
+            foreach (var item in data)
+            {
+                ids.Add((int)item.ID_Asset);
+            }
+            return ids;
+        }
+
+        /// <summary>
+        /// 判断详细是否符合标准提交
+        /// 存在报废不需要报废
+        /// </summary>
+        /// <param name="id_state_Target"></param>
+        /// <param name="id_allocation"></param>
+        /// <returns></returns>
+        public bool RightToSubmit_reduction(int? id_state_Target, int? id_reduction)
+        {
+            if (id_reduction == null || id_state_Target == null)
+            {
+                return false;
+            }
+
+            String NameTarget = commonConversion.getTargetStateName(id_state_Target);
+            if (NameTarget == SystemConfig.state_List_YSH)
+            {
+                //获取AssetID
+                List<int?> ids_asset = getAssetIdsByReductionID(id_reduction);
+
+                //没有附加明细
+                if (ids_asset.Count == 0)
+                {
+                    return false;
+                }
+
+                //检查里面是否还有是否存在报废资产
+                var checkData = from p in DB_C.tb_Asset
+                                where p.flag == true
+                                where ids_asset.Contains(p.ID)
+                                join tb_AS in DB_C.tb_dataDict_para on p.state_asset equals tb_AS.ID
+                                where tb_AS.name_para != SystemConfig.state_asset_bad
+                                select p;
+                if (checkData.Count() == ids_asset.Count)
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+
+        [HttpPost]
+        public int updateReductionStateByID(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_State_Update Json_data = serializer.Deserialize<Json_State_Update>(data);
+            if (Json_data != null)
+            {
+                if (!RightToUpdateState(Json_data.id_state))
+                {
+                    return -6;
+                }
+                ///状态前后保证
+                if (isOkToReview_reduction(Json_data.id_state, Json_data.id_Item))
+                {
+                    if (!RightToSubmit_reduction(Json_data.id_state, Json_data.id_Item))
+                    {
+                        return -5;
+                    }
+
+                    int id_state_target = commonConversion.getStateListID(Json_data.id_state);
+                    tb_Asset_Reduction reduc = getReductionTBbyID(Json_data.id_Item);
+                    if (reduc == null || reduc.ID < -4)
+                    {
+                        return -4;
+                    }
+                    try {
+                        //获取用户ID
+                        int? userID = commonConversion.getUSERID();
+                        var db_data = from p in DB_C.tb_Asset_Reduction
+                                      where p.flag == true
+                                      where p.ID == Json_data.id_Item
+                                      select p;
+                        foreach (var item in db_data)
+                        {
+                            item.state_List = id_state_target;
+                            item.userID_reviewer = userID;
+                            item.date_Operated = DateTime.Now;
+                            item.conten_review = Json_data.review;
+                        }
+
+                        if (commonConversion.is_YSH(Json_data.id_state))
+                        {
+
+                            //修改
+                            List<int?> ids_asset = getAssetIdsByReductionID(Json_data.id_Item);
+                            var dataAsset = from p in DB_C.tb_Asset
+                                            where p.flag == true
+                                            where ids_asset.Contains(p.ID)
+                                            select p;
+                            if (dataAsset != null && dataAsset.Count() > 0 && dataAsset.Count() != ids_asset.Count)
+                            {
+                                return -3;
+                            }
+
+                            foreach (var item_as in dataAsset)
+                            {
+                                //TODO:这里需要将Asset设置为False吗
+                                item_as.flag = false;
+                                item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_bad);
+                            }
+                            //将提醒标记为false
+                            var data_rem = from p in DB_C.tb_ReviewReminding
+                                           where p.flag == true
+                                           where p.Type_Review_TB == SystemConfig.TB_Reduction
+                                           where p.ID_review_TB == reduc.ID
+                                           select p;
+
+                            foreach (var item in data_rem)
+                            {
+                                item.flag = false;
+                                item.time_review = DateTime.Now;
+                            }
+
+                        }
+                        else if (commonConversion.is_DSH(Json_data.id_state))
+                        {
+
+                            //往提醒表里面添加
+                            tb_ReviewReminding tb = new tb_ReviewReminding();
+                            tb.flag = true;
+                            tb.Type_Review_TB = SystemConfig.TB_Reduction;
+                            tb.ID_review_TB = reduc.ID;
+                            tb.ID_reviewer = Json_data.id_reviewer;
+                            tb.time_add = DateTime.Now;
+                            DB_C.tb_ReviewReminding.Add(tb);
+                        }
+                        else if (commonConversion.is_TH(Json_data.id_state))
+                        {
+                            //将提醒标记为false
+                            var data_rem = from p in DB_C.tb_ReviewReminding
+                                           where p.flag == true
+                                           where p.Type_Review_TB == SystemConfig.TB_Reduction
+                                           where p.ID_review_TB == reduc.ID
+                                           select p;
+
+                            foreach (var item in data_rem)
+                            {
+                                item.flag = false;
+                                item.time_review = DateTime.Now;
+                            }
+                        }
+
+
+                        DB_C.SaveChanges();
+                        return 1;
+                    }catch(Exception e){
+                        Console.WriteLine(e.Message);
+                        return 0;
+                    }
+
+
+
+
+                }
+            } 
+            return 0;
+        }
+        public tb_Asset_Reduction getReductionTBbyID(int? id_reduction)
+        {
+            List<tb_Asset_Reduction> data = DB_C.tb_Asset_Reduction.Where(a => a.ID == id_reduction).ToList(); ;
+            if (data.Count > 0)
+            {
+                return data.First();
+            }
+            return null;
+
+        }
+
+
+        /// <summary>
+        ///判断是否有权限去更新
+        /// 
+        /// </summary>
+        /// <param name="id_json"></param>
+        /// <returns></returns>
+        public bool RightToUpdateState(int? id_json)
+        {
+            String operation = null;
+            switch (id_json)
+            {
+                case SystemConfig.state_List_CG_jsonID: { operation = SystemConfig.operation_add; }; break;
+                case SystemConfig.state_List_DSH_jsonID: { operation = SystemConfig.operation_edit; }; break;
+                case SystemConfig.state_List_TH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                case SystemConfig.state_List_YSH_jsonID: { operation = SystemConfig.operation_review; }; break;
+                default: { }; break;
+            }
+
+            if (commonController.isRightToOperate(SystemConfig.Menu_ZCJS, operation))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        public bool isOkToReview_reduction(int? id_stateTarget, int? id_reduction)
+        {
+            if (id_reduction == null || id_stateTarget == null || !SystemConfig.state_List.Contains((int)id_stateTarget))
+            {
+                return false;
+            }
+            //获取当前状态
+            var data = from p in DB_C.tb_Asset_Reduction
+                       where p.flag == true
+                       where p.ID == id_reduction
+                       join tb_SL in DB_C.tb_State_List on p.state_List equals tb_SL.id
+                       select new dto_state_List
+                       {
+                           id = tb_SL.id,
+                           Name = tb_SL.Name,
+                       };
+            dto_state_List item = data.First();
+            if (item != null)
+            {
+                String stateName = item.Name;
+                String stateName_target = commonConversion.getTargetStateName(id_stateTarget);
+                bool fs = false;
+                switch (stateName_target)
+                {
+                    case SystemConfig.state_List_CG:
+                        {
+                            if (SystemConfig.state_List_CG_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_DSH:
+                        {
+                            if (SystemConfig.state_List_DSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_YSH:
+                        {
+                            if (SystemConfig.state_List_YSH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    case SystemConfig.state_List_TH:
+                        {
+                            if (SystemConfig.state_List_TH_right.Contains(stateName))
+                            {
+                                fs = true;
+                            }
+                        }; break;
+                    default: { fs = false; }; break;
+                }
+                return fs;
+
+            }
+            return false;
         }
 
 

@@ -1913,6 +1913,9 @@
     <Content Include="Scripts\Views\Dict\edit_department.js" />
     <Content Include="Scripts\Views\Dict\edit_supplier.js" />
     <Content Include="Scripts\Views\Dict\supplierManager.js" />
+    <Content Include="Scripts\Views\Reduction\Reduction_review.js" />
+    <Content Include="Scripts\Views\Reduction\Reduction_detail.js" />
+    <Content Include="Scripts\Views\Reduction\Reduction_edit.js" />
     <Content Include="Scripts\Views\Reduction\Reduction_SelectingAsset.js" />
     <Content Include="Scripts\Views\Reduction\Reduction.js" />
     <Content Include="Scripts\Views\Reduction\Reduction_add.js" />
@@ -1981,6 +1984,10 @@
     <Content Include="Views\Reduction\Reduction.cshtml" />
     <Content Include="Views\Reduction\Reduction_add.cshtml" />
     <Content Include="Views\Reduction\Reduction_SelectingAsset.cshtml" />
+    <Content Include="Views\Reduction\Error.cshtml" />
+    <Content Include="Views\Reduction\Reduction_edit.cshtml" />
+    <Content Include="Views\Reduction\Reduction_detail.cshtml" />
+    <Content Include="Views\Reduction\Reduction_review.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -2014,7 +2021,6 @@
     <Compile Include="Controllers\VerifyController.cs" />
     <Compile Include="DAL\CommonConnecting.cs" />
     <Compile Include="DAL\SQLRunner.cs" />
-    <Compile Include="DataConversion\AssetIDComparer.cs" />
     <Compile Include="DataConversion\CommonConversion.cs" />
     <Compile Include="DataConversion\DTO_TO_MODEL.cs" />
     <Compile Include="DataConversion\JSON_TO_MODEL.cs" />
@@ -2061,6 +2067,7 @@
     <Compile Include="DTO\Json_operationRight.cs" />
     <Compile Include="DTO\Json_reduction.cs" />
     <Compile Include="DTO\Json_reduction_add.cs" />
+    <Compile Include="DTO\Json_redution_edit.cs" />
     <Compile Include="DTO\Json_repair_add.cs" />
     <Compile Include="DTO\Json_repair_edit.cs" />
     <Compile Include="DTO\Json_State_Update.cs" />
