@@ -478,6 +478,7 @@ namespace FAMIS.Controllers
                         from US in temp_US.DefaultIfEmpty()
                         join tb_USC in DB_C.tb_user on tb_Collar.user_collar equals tb_USC.ID into temp_USC
                         from USC in temp_USC.DefaultIfEmpty()
+                        where ST.Name==SystemConfig.state_List_DSH
                         orderby tb_Collar.date_Operated descending
                         select new Json_collar
                         {
@@ -996,7 +997,7 @@ namespace FAMIS.Controllers
                                 item.flag = false;
                                 item.time_review = DateTime.Now;
                             }
-
+                           
 
 
                         }else if(commonConversion.is_DSH(Json_data.id_state))

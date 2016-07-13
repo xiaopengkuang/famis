@@ -2,6 +2,8 @@
 
 var arry_CAttr = new Array();
 
+
+//初始化处理 防止二重加载
 var flag_load_BM = false;
 var flag_load_XH = false;
 var flag_load_CA = false;

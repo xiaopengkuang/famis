@@ -1,6 +1,9 @@
 ﻿//========================全局数据================================//
 var searchCondtiion = "";
 //========================全局数据================================//
+var ID_datagrid = "datagrid_allocation";
+var ID_targetState = null;
+var ID_Allocation = null;
 
 
 
@@ -23,7 +26,7 @@ $(function () {
             }
         }
     });
-    setTimeout('refresh()', 15000);
+    //setTimeout('refresh()', 15000);
 })
 function refresh() {
     //是否要判断是否存在新增标签
@@ -137,7 +140,7 @@ function loadPageTool(datagrid, dataRight) {
             disabled: !dataRight.add_able,
             height: 50,
             handler: function () {
-                if (!!dataRight.add_able) {
+                if (!dataRight.add_able) {
                     return;
                 }
                 var title = "添加调拨单";
@@ -160,7 +163,7 @@ function loadPageTool(datagrid, dataRight) {
             disabled: !dataRight.edit_able,
             iconCls: 'icon-edit',
             handler: function () {
-                if (!!dataRight.edit_able) {
+                if (!dataRight.edit_able) {
                     return;
                 }
                 ////获取选择行
@@ -264,24 +267,12 @@ function loadPageTool(datagrid, dataRight) {
                           return;
                       }
                       id_ = rows[0].ID;
-
-                      $.ajax({
-                          url: "/Allocation/RightToEdit",
-                          type: 'POST',
-                          data: {
-                              "id": id_
-                          },
-                          beforeSend: ajaxLoading,
-                          success: function (data) {
-                              ajaxLoadEnd();
-                              if (data > 0) {
-                                  updateRecordState(datagrid, 2, id_);
-                              } else {
-                                  $.messager.alert('警告', "暂无该单据的提交权限！", 'warning');
-                                  return;
-                              }
-                          }
-                      });
+                      var url = "/Common/SelectReviewer?menuName=ZCDB"
+                      var titleName = "选择管理员";
+                      ID_Allocation = rows[0].ID;
+                      ID_targetState = 2;
+                      //选择超级管理员
+                      openModelWindow(url, titleName);
 
                       //$('#' + datagrid).datagrid('reload');
                   } else {
@@ -338,15 +329,18 @@ function loadPageTool(datagrid, dataRight) {
 }
 
 
-
+function SubmitToUser(userID) {
+    updateRecordState(ID_datagrid, ID_targetState, ID_Allocation, userID);
+}
 
 
 
 //根据单据ID更新单据状态
-function updateRecordState(datagrid,id_target, id)
+function updateRecordState(datagrid, id_target, id, id_reviewer)
 {
     var data = {
-        "id_allocation": id,
+        "id_Item": id,
+        "id_reviewer": id_reviewer,  //用户提交订单时候显示  用户ID
         "id_state": id_target
     }
     //将数据传入后台

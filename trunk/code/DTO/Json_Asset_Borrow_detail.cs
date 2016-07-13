@@ -6,9 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FAMIS.DTO
 {
-    public class dto_Asset_Detail
+    public class Json_Asset_Borrow_detail
     {
-
         public int ID { get; set; }
 
         [StringLength(20)]
@@ -25,44 +24,19 @@ namespace FAMIS.DTO
 
         public String measurement { get; set; }
 
-        public double? unit_price { get; set; }
-
         public int? amount { get; set; }
 
         public double? value { get; set; }
 
         [StringLength(20)]
-        public string department_Using { get; set; }
-
-        public String addressCF { get; set; }
-
-
+        public string department_loan { get; set; }
+        public string user_loan { get; set; }
 
         [StringLength(10)]
         public string state_asset { get; set; }
 
-        [StringLength(20)]
-        public string supplierID { get; set; }
-
-        public DateTime? Time_Purchase { get; set; }
-
         public DateTime? Time_Operated { get; set; }
 
-        public int? YearService_month { get; set; }
-
-        public String Method_depreciation { get; set; }
-
-        public int? Net_residual_rate { get; set; }
-
-        public double? depreciation_Month { get; set; }
-
-        public double? depreciation_tatol { get; set; }
-
-        public double? Net_value { get; set; }
-
-        public String Method_add { get; set; }
-
-        public String Method_decrease { get; set; }
 
     }
 }
