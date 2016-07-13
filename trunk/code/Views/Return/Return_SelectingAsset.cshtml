@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加资产</title>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/Views/Return/Return_SelectingAsset.js"></script>
+    <!--[if lte IE 9]>
+    <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div class="easyui-layout" style="width: 100%; height: 100%;" fit="true">
+        <div id="p" data-options="region:'west'" title="查询条件" style="width: 210px; padding: 10px">
+            <div style="margin: 5px 0;" data-options="border:true,region:'west'">
+                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">刷新</a>
+                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="collapseAll()">收起</a>
+                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="expandAll()">展开</a>
+
+            </div>
+            <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true">
+            </ul>
+            <script type="text/javascript">
+                function collapseAll() {
+                    $('#lefttree').tree('collapseAll');
+                }
+                function expandAll() {
+                    $('#lefttree').tree('expandAll');
+                }
+
+                function C_query() {
+                    $('#lefttree').tree("reload");
+                }
+            </script>
+        </div>
+        <div data-options="region:'center'" title="资产信息列表">
+            <table>
+                <tr>
+                    <td>查询条件：</td>
+                    <td>
+                        <select class="easyui-combobox" name="state" style="width: 80px;" id="Accounting_SC">
+                            <option value="DJRQ" selected="selected">登记日期</option>
+                            <option value="GZRQ">购置日期</option>
+                            <option value="ZCBH">资产编号</option>
+                            <option value="ZCMC">资产名称</option>
+                            <option value="ZCXH">资产型号</option>
+                        </select>
+                    </td>
+                    <td class="SC_Date_Accounting">开始时间：</td>
+                    <td class="SC_Date_Accounting">
+                        <input class="easyui-datebox" id="beginDate_SC" style="width: 100px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                    </td>
+                    <td class="SC_Date_Accounting">结束时间:</td>
+                    <td class="SC_Date_Accounting">
+                        <input class="easyui-datebox" id="endDate_SC" style="width: 100px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                    </td>
+                    <td class="SC_Content_Accounting">
+                        <input class="easyui-textbox" style="margin-left: 10px" id="SC_Content" />
+                    </td>
+                    <td style="margin-left: 5px">
+                        <a href="javascript:void(0);" class="easyui-linkbutton" onclick="SearchByCondition_right()" data-options="iconCls:'icon-search'">查询</a>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="easyui-linkbutton" onclick="resetSC()" data-options="iconCls:'icon-reload'">重置</a>
+                    </td>
+                </tr>
+            </table>
+
+            <table id="tableList_return" class="easyui-datagrid" style="width: auto; height: 350px" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
+                
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

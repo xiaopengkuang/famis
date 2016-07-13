@@ -1,7 +1,7 @@
 ﻿//========================全局数据================================//
 var searchCondtiion = "";
 
-var ID_datagrid = "datagrid_borrow";
+var ID_datagrid = "datagrid_return";
 var ID_targetState = null;
 var ID_Reduction = null;
 
@@ -63,13 +63,13 @@ function loadDataGrid(datagrid)
 {
     //获取操作权限
     $.ajax({
-        url: '/Common/getOperationRightsByMenu?menu=ZCJC',
+        url: '/Common/getOperationRightsByMenu?menu=ZCGH',
         dataType: "json",
         type: "POST",
         traditional: true,
         success: function (dataRight) {
         $('#' + datagrid).datagrid({
-            url: '/Borrow/LoadBorrowList?searchCondtiion=' + searchCondtiion,
+            url: '/Return/LoadReturnList?searchCondtiion=' + searchCondtiion,
             method: 'POST', //默认是post,不允许对静态文件访问
             width: 'auto',
             height: '300px',
@@ -84,8 +84,9 @@ function loadDataGrid(datagrid)
             pageList: [15, 30, 45],//分页中下拉选项的数值 
             columns: [[
                 { field: 'ID', checkbox: true, width: 50 },
-                { field: 'serialNumber', title: '单据号', width: 50 }, {
-                    field: 'date_borrow', title: '借出时间', width: 100,
+                { field: 'serialNum', title: '单据号', width: 50 },
+                {
+                    field: 'date_return', title: '归还时间', width: 100,
                     formatter: function (date) {
                         if (date == null) {
                             return "";
@@ -96,20 +97,7 @@ function loadDataGrid(datagrid)
                     }
                 },
                 {
-                    field: 'date_return', title: '预计归还时间', width: 100,
-                    formatter: function (date) {
-                        if (date == null) {
-                            return "";
-                        }
-                        var pa = /.*\((.*)\)/;
-                        var unixtime = date.match(pa)[1].substring(0, 10);
-                        return getTime(unixtime);
-                    }
-                },
-                { field: 'department_borrow', title: '借用部门', width: 50 },
-                { field: 'user_borrow', title: '借用人', width: 50 },
-                {
-                    field: 'state', title: '状态', width: 50,
+                    field: 'state', title: '单据状态', width: 50,
                     formatter: function (data) {
                         if (data == "草稿") {
                             return '<font color="#696969">' + data + '</font>';
@@ -125,6 +113,7 @@ function loadDataGrid(datagrid)
                         }
                     }
                 },
+                { field: 'reason_return', title: '归还原因', width: 50 },
                 { field: 'user_operated', title: '登记人员', width: 50 },
                 {
                     field: 'date_operated', title: '操作时间', width: 100,
@@ -159,8 +148,8 @@ function loadPageTool(datagrid, dataRight) {
                 if (!dataRight.add_able) {
                     return;
                 }
-                var title = "添加借出单";
-                var url = "/Borrow/Borrow_add";
+                var title = "添加归还单";
+                var url = "/Return/Return_add";
                 if (parent.$('#tabs').tabs('exists', title)) {
                     parent.$('#tabs').tabs('select', title);
                 } else {
@@ -199,7 +188,7 @@ function loadPageTool(datagrid, dataRight) {
                 }
                 var id = rows[0].ID;
                 $.ajax({
-                    url: "/Borrow/RightToEdit",
+                    url: "/Return/RightToEdit",
                     type: 'POST',
                     data: {
                         "id": id
@@ -209,8 +198,8 @@ function loadPageTool(datagrid, dataRight) {
                         ajaxLoadEnd();
                         if (data > 0) {
                             //var id = rows[0].ID;
-                            var title = "编辑借出";
-                            var url = "/Borrow/Borrow_edit?id=" + id;
+                            var title = "编辑归还";
+                            var url = "/Return/Return_edit?id=" + id;
                             if (parent.$('#tabs').tabs('exists', title)) {
                                 parent.$('#tabs').tabs('close', title);
                             } 
@@ -261,7 +250,7 @@ function loadPageTool(datagrid, dataRight) {
                     return;
                 }
                 var titleName = "借出明细";
-                var url = "/Borrow/Borrow_detail?id=" + id_;
+                var url = "/Return/Return_detail?id=" + id_;
                 openModelWindow(url, titleName);
             }
         },
@@ -320,7 +309,7 @@ function loadPageTool(datagrid, dataRight) {
                        }
 
                        var titleName = "审核";
-                       var url = "/Borrow/Borrow_review?id=" + id_;
+                       var url = "/Return/Return_review?id=" + id_;
                        openModelWindow(url, titleName);
                    } else {
                    }
@@ -360,7 +349,7 @@ function updateRecordState(datagrid,id_target, id,id_reviewer)
     }
     //将数据传入后台
     $.ajax({
-        url: '/Borrow/updateBorrowStateByID',
+        url: '/Return/updateReturnStateByID',
         data: { "data": JSON.stringify(data) },
         dataType: "json",
         type: "POST",
