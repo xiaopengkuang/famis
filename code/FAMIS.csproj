@@ -2030,6 +2030,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReductionController.cs" />
     <Compile Include="Controllers\RepairController.cs" />
+    <Compile Include="Controllers\ReturnController.cs" />
     <Compile Include="Controllers\SysSettingController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VerifyController.cs" />
@@ -2190,6 +2191,7 @@
     <Folder Include="Content\App_LocalResources\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\Customer\" />
+    <Folder Include="Views\Return\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
