@@ -29,6 +29,8 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset_Reduction> tb_Asset_Reduction { get; set; }
         public virtual DbSet<tb_Asset_Reduction_detail> tb_Asset_Reduction_detail { get; set; }
         public virtual DbSet<tb_Asset_Repair> tb_Asset_Repair { get; set; }
+        public virtual DbSet<tb_Asset_Return> tb_Asset_Return { get; set; }
+        public virtual DbSet<tb_Asset_Return_detail> tb_Asset_Return_detail { get; set; }
         public virtual DbSet<tb_AssetType> tb_AssetType { get; set; }
         public virtual DbSet<tb_dataDict> tb_dataDict { get; set; }
         public virtual DbSet<tb_department> tb_department { get; set; }
@@ -209,6 +211,18 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_Repair>()
                 .Property(e => e.content_Review)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Return>()
+                .Property(e => e.serialNum)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Return>()
+                .Property(e => e.reason_return)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Return>()
+                .Property(e => e.note_return)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_AssetType>()
