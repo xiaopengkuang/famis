@@ -177,11 +177,10 @@ namespace FAMIS.Controllers
             
                 var menu_ID = !supU? from o in DBConnecting.tb_role_authorization
                               join m in DBConnecting.tb_Menu on o.Right_ID equals m.ID
-                              where o.role_ID == rid && o.type == "menu" && m.isMenu
+                              where o.role_ID == rid && o.type == "menu" && m.isMenu==true
                               orderby m.ID_Menu
                                     select m : from o in DBConnecting.tb_Menu
-
-                                               where o.isMenu
+                                               where o.isMenu==true
                                                orderby o.ID_Menu
                                                select o;
                 foreach (var menu in menu_ID)
