@@ -9,6 +9,7 @@ using FAMIS.DTO;
 using FAMIS.Models;
 using System.IO;
 using FAMIS.DataConversion;
+
 namespace FAMIS.Controllers
 {
     public class UserController : Controller
@@ -157,57 +158,72 @@ namespace FAMIS.Controllers
 
 
         }
+        
 
         [HttpPost]
         public String Get_Json_Memu(string JSON)
         {
+            int? roleID = commonConversion.getRoleID();
+            bool supU = commonConversion.isSuperUser(roleID);
             StreamWriter sw = new StreamWriter("D:\\msda.txt");
-            string Menu_JSON="";
+            string Menu_JSON = "";
             int rid = int.Parse(JSON);
-            int indexof_menu_ID=1;
-          var menu_ID = from o in DBConnecting.tb_role_authorization
-                                        join m in DBConnecting.tb_Menu on o.Right_ID equals m.ID
-                                        where o.role_ID == rid && o.type == "menu" && m.isMenu==true
-                                        orderby m.ID_Menu
-                                        select m;
+            int indexof_menu_ID = 1;
+            int ArgeFlag = 0;
+             
+              
+
+            
+            
+                var menu_ID = !supU? from o in DBConnecting.tb_role_authorization
+                              join m in DBConnecting.tb_Menu on o.Right_ID equals m.ID
+                              where o.role_ID == rid && o.type == "menu" && m.isMenu
+                              orderby m.ID_Menu
+                                    select m : from o in DBConnecting.tb_Menu
+
+                                               where o.isMenu
+                                               orderby o.ID_Menu
+                                               select o;
+                foreach (var menu in menu_ID)
+                {
+
+
+                    string menu_rankID = menu.ID_Menu;
+                    if (!menu_rankID.Contains("_"))
+                    {
+                        if (indexof_menu_ID == 1)
+                            Menu_JSON += "{\r\"menus\":[{\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\",\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
+                        else
+                            Menu_JSON += "]},\r{\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
+                        ArgeFlag = 1;
+                    }
+
+                    else
+                    {
+                        if (indexof_menu_ID != menu_ID.Count())
+                        {
+                            if (ArgeFlag == 1)
+                                Menu_JSON += "{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
+                            else
+                                Menu_JSON += ",{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
+                            ArgeFlag = 0;
+                        }
+                        else
+                        {
+                            if (ArgeFlag ==1)
+                                Menu_JSON += "{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
+                            else
+                                Menu_JSON += ",{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
+                            ArgeFlag =0;
+                        }
+                    }
+
+
+                    indexof_menu_ID++;
+                }
            
             
-           foreach(var  menu in menu_ID)
-           {
-               
-             
-                  string menu_rankID=menu.ID_Menu;
-                  if (!menu_rankID.Contains("_"))
-                  {
-                      if(indexof_menu_ID==1)
-                          Menu_JSON += "{\r\"menus\":[{\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\",\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
-                      else
-                          Menu_JSON += "]},\r{\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-sys\",\r \"menus\": [\r";
-
-                  }
-
-                  else
-                  {
-                      if (indexof_menu_ID != menu_ID.Count())
-                      {
-                          if (int.Parse(menu_rankID.Split('_')[1]) == 1)
-                              Menu_JSON += "{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
-                          else
-                              Menu_JSON += ",{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"\r}";
-
-                      }
-                      else
-                      {
-                          if (int.Parse(menu_rankID.Split('_')[1]) == 1)
-                              Menu_JSON += "{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
-                          else
-                              Menu_JSON += ",{\r\"menuid\":\"" + menu_rankID + "\",\r \"menuname\":\"" + menu.name_Menu + "\" ,\r\"icon\":\"icon-nav\",\r\"url\":\"" + menu.url + "\"}]\r}]\r}";
-                      }
-                  }
-             
-
-              indexof_menu_ID++;
-           }
+         
            sw.Write(Menu_JSON);
            sw.Close();
            return Menu_JSON;
