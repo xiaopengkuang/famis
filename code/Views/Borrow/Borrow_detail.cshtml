@@ -1,0 +1,85 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>借出-添加</title>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/Borrow/Borrow_detail.js"></script>
+
+    <script type="text/javascript">
+        bindData('@ViewBag.id');
+    </script>
+
+
+    <!--[if lte IE 9]>
+    <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div class="easyui-panel" fit="true">
+        
+        <div id="jcsx_add" class="easyui-panel" title="基础属性" style="padding: 2px;"
+            data-options="collapsible:true">
+            <table style="width: 100%">
+                <tr>
+                    <td style="width: 100px"><span style="width: 100px">单据号:</span></td>
+                    <td>
+                        <input class="easyui-textbox" placeholder="*自动生成*" id="DJH_add" name="DJH_add" readonly="readonly" style="width: 200px;" />
+                    </td>
+                    <td style="width: 100px"><span style="width: 100px">借出日期:</span></td>
+                    <td>
+                        <input class="easyui-datebox" name="date_borrow" id="date_borrow" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                    </td>
+                    <td style="width: 100px"><span style="width: 100px">预计归还日期:</span></td>
+                    <td>
+                        <input class="easyui-datebox" name="date_return" id="date_return" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>借用部门:</td>
+                    <td>
+                        <select class="easyui-combotree" aria-readonly="true" id="department_borrow" name="department_borrow" style="width: 200px;">
+                        </select>
+                    </td>
+                    <td>借用人:</td>
+                    <td>
+                        <input class="easyui-combobox" readonly="readonly" id="user_borrow" name="user_borrow" style="width: 200px;" />
+                    </td>
+                    <td style="width: 100px">借用原因：</td>
+                    <td>
+                        <input class="easyui-textbox" id="reason_Borrow" name="reason_Borrow" style="width: 200px;" /></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td style="width: 100px">备注：</td>
+                    <td>
+                        <input class="easyui-textbox" id="note_Borrow" name="note_Borrow" style="width: 500px;" /></td>
+                </tr>
+            </table>
+
+
+        </div>
+        <div id="qtsx_add" class="easyui-panel" title="资产明细" style="width: auto; padding: 1px;"
+            data-options="collapsible:true" fit="true">
+            <table id="datagrid_borrow" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
+            </table>
+        </div>
+        <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
+    </div>
+
+
+</body>
+</html>

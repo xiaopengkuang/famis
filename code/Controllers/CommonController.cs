@@ -358,6 +358,7 @@ namespace FAMIS.Controllers
                            value = p.value,
                            YearService_month = p.YearService_month
                        };
+            data = data.Distinct();
             data = data.OrderByDescending(a => a.Time_Operated);
 
             int skipindex = ((int)page - 1) * (int)rows;

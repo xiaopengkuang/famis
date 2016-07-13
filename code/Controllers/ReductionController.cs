@@ -114,6 +114,7 @@ namespace FAMIS.Controllers
                          from ST in temp_ST.DefaultIfEmpty()
                          join tb_UOP in DB_C.tb_user on tb_red.userID_operate equals tb_UOP.ID into temp_UOP
                          from UOP in temp_UOP.DefaultIfEmpty()
+                         where ST.Name==SystemConfig.state_List_DSH
                          orderby tb_red.date_Operated descending
                          select new Json_reduction
                          {
@@ -547,6 +548,7 @@ namespace FAMIS.Controllers
                                 item.flag = false;
                                 item.time_review = DateTime.Now;
                             }
+                           
 
                         }
                         else if (commonConversion.is_DSH(Json_data.id_state))

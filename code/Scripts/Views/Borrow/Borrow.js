@@ -1,13 +1,18 @@
 ﻿//========================全局数据================================//
 var searchCondtiion = "";
+
+var ID_datagrid = "datagrid_borrow";
+var ID_targetState = null;
+var ID_Reduction = null;
+
 //========================全局数据================================//
 
 
 
 //===================初始化数据=====================================//
 $(function () {
+    //$('#selectUser_Window').window('close')
     loadInitData();
-
     $(".SC_Date_Accounting").show();
     $(".SC_Content_Accounting").hide();
     $("#Accounting_SC").combobox({
@@ -22,7 +27,9 @@ $(function () {
                 $(".SC_Content_Accounting").show();
             }
         }
+
     });
+
     //setTimeout('refresh()', 15000);
 })
 function refresh() {
@@ -32,30 +39,37 @@ function refresh() {
 
 function loadInitData() {
     //加载所有
-    LoadInitDatagrid("datagrid_Repair");
-    
+    LoadInitDatagrid(ID_datagrid);
 }
+
 
 
 function LoadInitDatagrid(datagrid) {
 
   
     loadDataGrid(datagrid);
+
   
 }
 
 
+function SubmitToUser(userID)
+{
+    updateRecordState(ID_datagrid, ID_targetState, ID_Reduction, userID);
+}
+
+
 function loadDataGrid(datagrid)
-{ 
+{
     //获取操作权限
     $.ajax({
-        url: '/Common/getOperationRightsByMenu?menu=ZCWX',
+        url: '/Common/getOperationRightsByMenu?menu=ZCJC',
         dataType: "json",
         type: "POST",
         traditional: true,
         success: function (dataRight) {
         $('#' + datagrid).datagrid({
-            url: '/Repair/LoadRepair?searchCondtiion=' + searchCondtiion,
+            url: '/Borrow/LoadBorrowList?searchCondtiion=' + searchCondtiion,
             method: 'POST', //默认是post,不允许对静态文件访问
             width: 'auto',
             height: '300px',
@@ -70,9 +84,8 @@ function loadDataGrid(datagrid)
             pageList: [15, 30, 45],//分页中下拉选项的数值 
             columns: [[
                 { field: 'ID', checkbox: true, width: 50 },
-                { field: 'serialNumber', title: '单据号', width: 50 },
-                {
-                    field: 'date_ToRepair', title: '送修时间', width: 100,
+                { field: 'serialNumber', title: '单据号', width: 50 }, {
+                    field: 'date_borrow', title: '借出时间', width: 100,
                     formatter: function (date) {
                         if (date == null) {
                             return "";
@@ -83,7 +96,7 @@ function loadDataGrid(datagrid)
                     }
                 },
                 {
-                    field: 'date_ToReturn', title: '预计归还时间', width: 100,
+                    field: 'date_return', title: '预计归还时间', width: 100,
                     formatter: function (date) {
                         if (date == null) {
                             return "";
@@ -93,8 +106,10 @@ function loadDataGrid(datagrid)
                         return getTime(unixtime);
                     }
                 },
+                { field: 'department_borrow', title: '借用部门', width: 50 },
+                { field: 'user_borrow', title: '借用人', width: 50 },
                 {
-                    field: 'state_list', title: '状态', width: 50,
+                    field: 'state', title: '状态', width: 50,
                     formatter: function (data) {
                         if (data == "草稿") {
                             return '<font color="#696969">' + data + '</font>';
@@ -110,13 +125,9 @@ function loadDataGrid(datagrid)
                         }
                     }
                 },
-                { field: 'userName_applying', title: '申请人', width: 50 },
-                { field: 'userName_authorize', title: '批准人', width: 50 },
-                { field: 'supplier_Name', title: '维修商', width: 50 },
-                { field: 'cost_ToRepair', title: '维修费用', width: 50 },
-                { field: 'userName_create', title: '登记人', width: 50 },
+                { field: 'user_operated', title: '登记人员', width: 50 },
                 {
-                    field: 'date_create', title: '登记时间', width: 100,
+                    field: 'date_operated', title: '操作时间', width: 100,
                     formatter: function (date) {
                         if (date == null) {
                             return "";
@@ -142,14 +153,14 @@ function loadPageTool(datagrid, dataRight) {
         buttons: [{
             text: '添加',
             iconCls: 'icon-add',
-            height: 50,
             disabled: !dataRight.add_able,
+            height: 50,
             handler: function () {
                 if (!dataRight.add_able) {
                     return;
                 }
-                var title = "添加维修单";
-                var url = "/Repair/Repair_add";
+                var title = "添加借出单";
+                var url = "/Borrow/Borrow_add";
                 if (parent.$('#tabs').tabs('exists', title)) {
                     parent.$('#tabs').tabs('select', title);
                 } else {
@@ -164,8 +175,8 @@ function loadPageTool(datagrid, dataRight) {
             }
         }, {
             text: '编辑',
-            disabled: !dataRight.edit_able,
             height: 50,
+            disabled: !dataRight.edit_able,
             iconCls: 'icon-edit',
             handler: function () {
                 if (!dataRight.edit_able) {
@@ -177,14 +188,18 @@ function loadPageTool(datagrid, dataRight) {
                 {
                     return;
                 }
-                if (rows[0].state_list == "草稿" || rows[0].state_list == "退回") {
+                
+                //alert(rows[0].state);
+                //return;
+
+                if (rows[0].state == "草稿" || rows[0].state == "退回") {
                 } else {
                     MessShow("只有草稿/退回单据才能提交!")
                     return;
                 }
                 var id = rows[0].ID;
                 $.ajax({
-                    url: "/Repair/RightToEdit",
+                    url: "/Borrow/RightToEdit",
                     type: 'POST',
                     data: {
                         "id": id
@@ -194,12 +209,11 @@ function loadPageTool(datagrid, dataRight) {
                         ajaxLoadEnd();
                         if (data > 0) {
                             //var id = rows[0].ID;
-                            var title = "编辑维修单";
-                            var url = "/Repair/Repair_edit?id=" + id;
-                            try {
-                                if (parent.$('#tabs').tabs('exists', title)) {
-                                    parent.$('#tabs').tabs('close', title);
-                                }
+                            var title = "编辑借出";
+                            var url = "/Borrow/Borrow_edit?id=" + id;
+                            if (parent.$('#tabs').tabs('exists', title)) {
+                                parent.$('#tabs').tabs('close', title);
+                            } 
                                 var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
                                 parent.$('#tabs').tabs('add', {
                                     title: title,
@@ -207,9 +221,6 @@ function loadPageTool(datagrid, dataRight) {
                                     icon: 'icon-add',
                                     closable: true
                                 });
-                            } catch (e)
-                            {
-                            }
                         } else {
                             $.messager.alert('警告', "暂无该单据的编辑权限！", 'warning');
                             return;
@@ -223,13 +234,14 @@ function loadPageTool(datagrid, dataRight) {
             iconCls: 'icon-reload',
             handler: function () {
                 $('#' + datagrid).datagrid('reload');
+               
             }
         },
         {
             text: '明细',
             height: 50,
-            iconCls: 'icon-tip',
             disabled: !dataRight.view_able,
+            iconCls: 'icon-tip',
             handler: function () {
                 if (!dataRight.view_able) {
                     return;
@@ -238,18 +250,18 @@ function loadPageTool(datagrid, dataRight) {
                 var id_;
                 if (rows == null)
                 {
-                    MessShow('请选择维修单!');
+                    $.messager.alert('提示', '请选择借出单!', 'info');
                     return;
                 }
                 if(rows.length==1)
                 {
                     id_=rows[0].ID;
                 } else {
-                    MessShow("一次只能查看一个单据!");
+                    $.messager.alert('提示', '一次只能查看一个单据!', 'info');
                     return;
                 }
-                var titleName = "维修明细";
-                var url = "/Repair/Repair_detail?id=" + id_;
+                var titleName = "借出明细";
+                var url = "/Borrow/Borrow_detail?id=" + id_;
                 openModelWindow(url, titleName);
             }
         },
@@ -265,35 +277,19 @@ function loadPageTool(datagrid, dataRight) {
                   var rows = $('#' + datagrid).datagrid('getSelections');
                   var id_;
                   if (rows == null) {
-                      MessShow("请选择领用单!");
+                      MessShow("请选择借出单!");
                       return;
                   }
                   if (rows.length == 1) {
-                      if (rows[0].state_list != "草稿") {
+                      if (rows[0].state != "草稿") {
                           MessShow("只有草稿单据才能提交!")
                           return;
                       }
-                      id_ = rows[0].ID;
-
-                      $.ajax({
-                          url: "/Repair/RightToEdit",
-                          type: 'POST',
-                          data: {
-                              "id": id_
-                          },
-                          beforeSend: ajaxLoading,
-                          success: function (data) {
-                              ajaxLoadEnd();
-                              if (data > 0) {
-                                  updateRecordState(datagrid, 2, id_);
-                              } else {
-                                  $.messager.alert('警告', "暂无该单据的提交权限！", 'warning');
-                                  return;
-                              }
-                          }
-                      });
-
-                      //$('#' + datagrid).datagrid('reload');
+                      var url = "/Common/SelectReviewer?menuName=ZCJC"
+                      var titleName = "选择管理员";
+                      ID_Reduction = rows[0].ID;
+                      ID_targetState = 2;
+                      openModelWindow(url,titleName);
                   } else {
                       MessShow("请勿多选!")
                       return;
@@ -317,21 +313,24 @@ function loadPageTool(datagrid, dataRight) {
                    }
                    if (rows.length == 1) {
                        id_ = rows[0].ID;
-                       if (rows[0].state_list != "待审核") {
+                       if (rows[0].state != "待审核") {
                            MessShow("只有待审核单据才能提交!")
-                           //$('#RepairDG').datagrid('reload');
+                           //$('#allocationDG').datagrid('reload');
                            return;
                        }
+
                        var titleName = "审核";
-                       var url = "/Repair/Repair_review?id=" + id_;
+                       var url = "/Borrow/Borrow_review?id=" + id_;
                        openModelWindow(url, titleName);
                    } else {
                    }
+                  
                }
-           },{
+           }
+           , {
                text: '导出',
                height: 50,
-               disabled: !dataRight.export_able,
+               disabled:!dataRight.export_able,
                iconCls: 'icon-save',
                handler: function () {
                    if (!dataRight.export_able) {
@@ -350,18 +349,18 @@ function loadPageTool(datagrid, dataRight) {
 
 
 
-
-
 //根据单据ID更新单据状态
-function updateRecordState(datagrid,id_target, id)
+function updateRecordState(datagrid,id_target, id,id_reviewer)
 {
+
     var data = {
-        "id_item": id,
+        "id_Item": id,
+        "id_reviewer":id_reviewer,  //用户提交订单时候显示  用户ID
         "id_state": id_target
     }
     //将数据传入后台
     $.ajax({
-        url: '/Repair/updateRepairStateByID',
+        url: '/Borrow/updateBorrowStateByID',
         data: { "data": JSON.stringify(data) },
         dataType: "json",
         type: "POST",

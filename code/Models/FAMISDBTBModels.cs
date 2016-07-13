@@ -15,9 +15,12 @@ namespace FAMIS.Models
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<tb_customAttribute> tb_customAttribute { get; set; }
         public virtual DbSet<tb_customAttribute_Type> tb_customAttribute_Type { get; set; }
+        public virtual DbSet<tb_dataDict_para> tb_dataDict_para { get; set; }
         public virtual DbSet<tb_Asset> tb_Asset { get; set; }
         public virtual DbSet<tb_Asset_allocation> tb_Asset_allocation { get; set; }
         public virtual DbSet<tb_Asset_allocation_detail> tb_Asset_allocation_detail { get; set; }
+        public virtual DbSet<tb_Asset_Borrow> tb_Asset_Borrow { get; set; }
+        public virtual DbSet<tb_Asset_Borrow_detail> tb_Asset_Borrow_detail { get; set; }
         public virtual DbSet<tb_Asset_collar> tb_Asset_collar { get; set; }
         public virtual DbSet<tb_Asset_collar_detail> tb_Asset_collar_detail { get; set; }
         public virtual DbSet<tb_Asset_CustomAttr> tb_Asset_CustomAttr { get; set; }
@@ -28,7 +31,6 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset_Repair> tb_Asset_Repair { get; set; }
         public virtual DbSet<tb_AssetType> tb_AssetType { get; set; }
         public virtual DbSet<tb_dataDict> tb_dataDict { get; set; }
-        public virtual DbSet<tb_dataDict_para> tb_dataDict_para { get; set; }
         public virtual DbSet<tb_department> tb_department { get; set; }
         public virtual DbSet<tb_Menu> tb_Menu { get; set; }
         public virtual DbSet<tb_ReviewReminding> tb_ReviewReminding { get; set; }
@@ -61,6 +63,22 @@ namespace FAMIS.Models
                 .Property(e => e.description)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.name_para)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.description)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.url)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_dataDict_para>()
+                .Property(e => e.orderID)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
@@ -87,6 +105,22 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_allocation>()
                 .Property(e => e.reason)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Borrow>()
+                .Property(e => e.serialNum)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Borrow>()
+                .Property(e => e.reason_borrow)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Borrow>()
+                .Property(e => e.note_borrow)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Borrow>()
+                .Property(e => e.content_review)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_collar>()
@@ -207,22 +241,6 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_dataDict>()
                 .Property(e => e.tb_Ref)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_dataDict_para>()
-                .Property(e => e.name_para)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_dataDict_para>()
-                .Property(e => e.description)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_dataDict_para>()
-                .Property(e => e.url)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_dataDict_para>()
-                .Property(e => e.orderID)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_department>()

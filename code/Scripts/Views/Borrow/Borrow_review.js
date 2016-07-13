@@ -1,6 +1,11 @@
 ﻿//========================全局数据======================================//
 var CurrentList = new Array();
-
+var ID_DATAGRID_TABLE = "datagrid_borrow";
+var ID_USER_INPUT = "user_borrow";
+var ID_DEPARTMENT_INPUT = "department_borrow";
+//初始化处理 防止二重加载
+var flag_load_BM = false;
+var id_borrow_current = -1;
 //========================全局数据======================================//
 
 
@@ -27,73 +32,79 @@ function myparser(s) {
 }
 //====================================================================//
 
+//=======================初始化加载信息===================================//
+$(function () {
 
-function bindData(id) {
+    loadInitData();
+});
+
+
+
+//绑定数据
+function bindData(id_borrow)
+{
+    id_borrow_current = id_borrow;
     $.ajax({
-        url: "/Allocation/Allocation_getWithID",
+        url: "/Borrow/Handler_Borrow_Get",
         type: 'POST',
         data: {
-            "id": id
+            "id": id_borrow
         },
         beforeSend: ajaxLoading,
         success: function (data) {
             ajaxLoadEnd();
             if (data) {
-                //绑定数据
-                //Binddatagrid(data.idsStr);
-                CurrentList = data.idsList;
-                LoadInitData_datagrid();
-                //绑定其他数据
-                //绑定日期
-                var date = dateString(data.date);
-                $("#date_add").datebox("setValue", date);
-                $("#DJH_add").val(data.serial_number);
-                $("#DBYY_add").val(data.reason);
-                $("#PS_add").val(data.ps);
-                $("#LYBM_add").combotree("setValue", data.department);
-                $("#CFDD_add").combotree("setValue", data.address);
-                $("#SYRY_add").combobox("setValue", data.user_allocation);
 
-                $("#LYBM_add").combotree('disable');
-                $("#CFDD_add").combotree('disable');
-                $("#date_add").datebox('disable');
-                $('#date_add').datebox({
+                $("#DJH_add").val(data.serialNum);
+                $("#reason_Borrow").val(data.reason_Borrow);
+                $("#note_Borrow").val(data.note_Borrow);
+
+
+                var date1 = dateString(data.date_borrow);
+                $("#date_borrow").datebox("setValue", date1);
+                var date2 = dateString(data.date_return);
+                $("#date_return").datebox("setValue", date2);
+
+                //////绑定人员
+                $("#department_borrow").combotree("setValue", data.department_borrow);
+                $("#department_borrow").combotree("setText", data.departmentName_borrow);
+                $("#user_borrow").combobox("setValue", data.user_borrow);
+                $("#user_borrow").combobox("setText", data.userName_borrow);
+                id_borrow = data.ID;
+                CurrentList = data.assetList;
+                LoadInitData_datagrid();
+
+
+                $("#department_borrow").combotree('disable');
+                $("#user_borrow").combobox('disable');
+
+                $("#date_borrow").datebox('disable');
+                $('#date_borrow').datebox({
+                    disabled: true,
                     editable: false
                 });
+                $("#date_return").datebox('disable');
+                $('#date_return').datebox({
+                    disabled: true,
+                    editable: false
+                });
+
+            } else {
+               $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
             }
 
+
         }
     });
 }
-//=======================初始化加载信息===================================//
-$(function () {
-    
-    loadInitData();
 
-
-});
-
-function loadInitData()
-{
-    load_Department();
-    load_CFDD_add();
-    load_SYRY();
+function loadInitData() {
+    load_Department(ID_DEPARTMENT_INPUT, ID_USER_INPUT);
     //LoadInitData_datagrid();
 }
-function load_SYRY() {
-    $("#SYRY_add").combobox({
-        valueField: 'id',
-        method: 'POST',
-        textField: 'name',
-        url: '/Dict/load_User_add',
-        onSelect: function (rec) {
-            $('#SYRY_add').combobox('setValue', rec.id);
-            $('#SYRY_add').combobox('setText', rec.name);
-        }
-    });
-}
-function load_Department() {
-    $('#LYBM_add').combotree
+
+function load_Department(ID_department_INPUT,ID_User_INP) {
+    $('#' + ID_department_INPUT).combotree
      ({
          url: '/Dict/load_SZBM',
          valueField: 'id',
@@ -101,43 +112,45 @@ function load_Department() {
          required: true,
          method: 'POST',
          editable: false,
-         //选择树节点触发事件  
          onSelect: function (node) {
+             if (flag_load_BM == false) {
+                 return;
+             }
+             load_SYRY(ID_User_INP,node.id);
          }, //全部折叠
          onLoadSuccess: function (node, data) {
-             //$('#SZBM_add').combotree('tree').tree("collapseAll");
+             flag_load_BM = true;
+             id_BBM = $('#' + ID_department_INPUT).combotree('getValue');
+             id_UUSER = $('#' + ID_User_INP).combobox('getValue');
+             load_SYRY(ID_User_INP,id_BBM);
+             $('#' + ID_User_INP).combobox('setValue', id_UUSER);
+             $('#' + ID_department_INPUT).combotree('tree').tree("collapseAll");
+
          }
      });
 
 }
 
-function load_CFDD_add() {
-      $('#CFDD_add').combotree({
-        url: '/Dict/load_DictTree?nameFlag=2_CFDD',
+
+
+
+
+
+function load_SYRY(ID_USER_INP,id_dep) {
+    $("#" + ID_USER_INP).combobox({
         valueField: 'id',
-        textField: 'nameText',
-        required: true,
         method: 'POST',
-        editable: false,
-        //选择树节点触发事件  
-        onSelect: function (node) {
-            //返回树对象  
-            var tree = $(this).tree;
-            //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-            d_CFDD_add = $('#CFDD_add').combotree('getValue');
-            //
-        }, //全部折叠
-        onLoadSuccess: function (node, data) {
-            $('#CFDD_add').combotree('tree').tree("collapseAll");
+        textField: 'name',
+        url: '/Dict/load_User_add?id_DP=' + id_dep,
+        onSelect: function (rec) {
+            $('#' + ID_USER_INP).combobox('setValue', rec.id);
+            $('#' + ID_USER_INP).combobox('setText', rec.name);
         }
     });
 }
 
 
-
 function LoadInitData_datagrid() {
-
-    var dataGrid = "datagrid";
 
     var _list = "";
     for (var i = 0; i < CurrentList.length; i++) {
@@ -147,9 +160,9 @@ function LoadInitData_datagrid() {
             _list = _list + "_" + CurrentList[i];
         }
     }
-    
-    $('#'+dataGrid).datagrid({
-        url: '/Common/Load_SelectedAsset?selectedIDs=' + _list,
+
+    $('#' + ID_DATAGRID_TABLE).datagrid({
+        url: '/Borrow/Load_SelectedAsset?selectedIDs=' + _list + "&id_borrow=" + id_borrow_current,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
@@ -164,76 +177,42 @@ function LoadInitData_datagrid() {
         pageList: [15, 30, 45],//分页中下拉选项的数值 
         columns: [[
             { field: 'ID', checkbox: true, width: 50 },
+            { field: 'department_loan', title: '借出部门', width: 50 },
+            { field: 'user_loan', title: '借出人', width: 50 },
             { field: 'serial_number', title: '资产编号', width: 50 },
             { field: 'name_Asset', title: '资产名称', width: 50 },
             { field: 'type_Asset', title: '资产类型', width: 50 },
             { field: 'specification', title: '型号规范', width: 50 },
-            { field: 'unit_price', title: '单价', width: 50 },
+            { field: 'measurement', title: '计量单位', width: 50 },
             { field: 'amount', title: '数量', width: 50 },
-            { field: 'department_Using', title: '使用部门', width: 50 },
-            { field: 'addressCF', title: '地址', width: 50 },
-            { field: 'Method_add', title: '添加方式', width: 50 },
-            { field: 'state_asset', title: '资产状态', width: 50 },
-            { field: 'supplierID', title: '供应商', width: 50 }
+            { field: 'value', title: '资产价值', width: 50 },
+            { field: 'state_asset', title: '资产状态', width: 50 }
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool_Detail(dataGrid);
+    loadPageTool_Detail(ID_DATAGRID_TABLE);
 }
 
-function loadPageTool_Detail(datagrid) {
-    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
+function loadPageTool_Detail() {
+    var pager = $('#' + ID_DATAGRID_TABLE).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
-        buttons: [{
-            text: '添加明细',
-            iconCls: 'icon-add',
-            height: 50,
-            handler: function () {
-                var url = "/Allocation/Allocation_SelectingAsset";
-                var titleName = "选择资产";
-                openModelWindow(url, titleName);
-            }
-        }, {
-            text: '删除明细',
-            iconCls: 'icon-remove',
-            height:50,
-            handler: function () {
-                //获取选择行
-                var rows = $('#' + datagrid).datagrid('getSelections');
-                var IDS = [];
-                for (var i = 0; i < rows.length; i++) {
-                    IDS[i] = rows[i].ID;
-                }
-                //更新CurrentList
-                removeSelect(IDS);
-               
-            }
-        }, {
-            text: '刷新',
-            height: 50,
-            iconCls: 'icon-reload',
-            handler: function () {
-                $('#' + datagrid).datagrid('reload');
-                //alert('刷新');
-            }
-        }],
+        buttons: [],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
 
-function removeSelect(removeList)
-{
+
+function removeSelect(removeList) {
     //alert(removeList);
     //var tmp = new Array();
     var fi = 0;
     for (var i = 0; i < removeList.length; i++) {
-        var index=containAtIndex(CurrentList, removeList[i]); 
-        if (index!= -1)
-        {
+        var index = containAtIndex(CurrentList, removeList[i]);
+        if (index != -1) {
             CurrentList.splice(index, 1);
         }
     }
@@ -241,12 +220,9 @@ function removeSelect(removeList)
 
 }
 
-function containAtIndex(list, value)
-{
-    for (var i = 0; i < list.length;i++)
-    {
-        if (list[i] == value)
-        {
+function containAtIndex(list, value) {
+    for (var i = 0; i < list.length; i++) {
+        if (list[i] == value) {
             return i;
         }
     }
@@ -254,12 +230,10 @@ function containAtIndex(list, value)
 }
 
 
-function updateCurrentList(addList)
-{
+function updateCurrentList(addList) {
     var tmp = new Array();
     var fi = 0;
-    for (var i = 0; i < CurrentList.length; i++)
-    {
+    for (var i = 0; i < CurrentList.length; i++) {
         tmp[i] = CurrentList[i];
         fi++;
     }
@@ -277,18 +251,19 @@ function updateCurrentList(addList)
 
 
 //==============================================================获取表单数据===========================================================================//
+//==============================================================获取表单数据===========================================================================//
 
-function submitForm(id_allocation, id_state) {
+function submitForm(id_item, id_state) {
     //获取审核意见
-    var content_Review = $("#SHYJ_allocation").val();
+    var content_Review = $("#content_review").val();
     var data = {
-        "id_Item": id_allocation,
+        "id_Item": id_item,
         "id_state": id_state,
         "review": content_Review
     }
 
     $.ajax({
-        url: "/Allocation/updateAllocationrStateByID",
+        url: "/Borrow/updateBorrowStateByID",
         type: 'POST',
         data: {
             "data": JSON.stringify(data)
@@ -333,8 +308,7 @@ function cancelForm() {
     }
 }
 
-function getListAseet_()
-{
+function getListAseet_() {
     var _list = "";
     for (var i = 0; i < CurrentList.length; i++) {
         if (i == 0) {
@@ -346,21 +320,6 @@ function getListAseet_()
     return _list;
 }
 
-
-
-
-function cancelData() {
-
-    $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
-        if (r) {
-            try {
-                window.parent.$('#tabs').tabs('close', '添加调拨单');
-            } catch (e) { }
-        }
-    });
-
-
-}
 
 function dateString(date) {
     var pa = /.*\((.*)\)/;
@@ -381,14 +340,13 @@ function getTime(/** timestamp=0 **/) {
     // 可根据需要在这里定义时间格式  
     return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
 }
-
 function openModelWindow(url, titleName) {
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,
-        width: 1000,
+        width: 850,
         height: 650,
-        top: (($(window).height() - 1000) > 0 ? ($(window).height() - 1000) : 200) * 0.5,
+        top: (($(window).height() - 850) > 0 ? ($(window).height() - 850) : 200) * 0.5,
         left: (($(window).width() - 650) > 0 ? ($(window).width() - 650) : 100) * 0.5,
         shadow: true,
         modal: true,

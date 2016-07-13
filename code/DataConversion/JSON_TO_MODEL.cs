@@ -167,5 +167,18 @@ namespace FAMIS.DataConversion
             return tb;
         }
 
+
+        public tb_Asset_Borrow ConverJsonToTable(Json_Borrow_add data)
+        {
+            tb_Asset_Borrow tb=new tb_Asset_Borrow();
+            tb.date_borrow = data.date_borrow;
+            tb.date_return = data.date_return;
+            tb.department_borrow = data.department_borrow;
+            tb.userID_borrow = data.user_borrow;
+            tb.reason_borrow = data.reason_Borrow;
+            tb.note_borrow = data.note_Borrow;
+            return tb;
+        }
+
     }
 }

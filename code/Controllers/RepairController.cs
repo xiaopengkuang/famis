@@ -134,6 +134,7 @@ namespace FAMIS.Controllers
                         from UAT in temp_UAT.DefaultIfEmpty()
                           join tb_UCT in DB_C.tb_user on tb_rep.userID_create equals tb_UCT.ID into temp_UCT
                         from UCT in temp_UCT.DefaultIfEmpty()
+                        where ST.Name==SystemConfig.state_List_DSH
                           orderby tb_rep.date_create descending
                         select new Json_repair
                         {

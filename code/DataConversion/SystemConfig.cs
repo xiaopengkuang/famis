@@ -112,8 +112,12 @@ namespace FAMIS.DataConversion
         public const String serialType_ZC = "ZC";  //资产
 
         public const String serialType_WX = "WX";  //资产维修
-         
+
         public const String serialType_JS = "JS";  //资产减少
+
+        public const String serialType_JC = "JC";  //资产借出 
+
+        public const String serialType_GH = "GH";  //资产归还
 
         public const String serialType_BM= "BM";  //部门？ TODO：
 
@@ -132,13 +136,13 @@ namespace FAMIS.DataConversion
 
 
 
-        public const String Menu_ZCTZ = "ZCTZ";
-        public const String Menu_ZCLY = "ZCLY";
-        public const String Menu_ZCDB = "ZCDB";
-        public const String Menu_ZCWX = "ZCWX";
-        public const String Menu_ZCJS = "ZCJS";
-        public const String Menu_ZCJC = "ZCJC";
-        public const String Menu_ZCGH = "ZCGH";
+        public const String Menu_ZCTZ = "ZCTZ"; //资产台账
+        public const String Menu_ZCLY = "ZCLY"; //资产领用
+        public const String Menu_ZCDB = "ZCDB"; //资产调拨
+        public const String Menu_ZCWX = "ZCWX"; //资产维修
+        public const String Menu_ZCJS = "ZCJS"; //资产减少
+        public const String Menu_ZCJC = "ZCJC"; //资产借出
+        public const String Menu_ZCGH = "ZCGH"; //资产归还
 
 
 
@@ -146,6 +150,7 @@ namespace FAMIS.DataConversion
         public const String TB_Allocation = "Allocation";
         public const String TB_Repair = "Repair";
         public const String TB_Reduction = "Redution";
+        public const String TB_Borrow = "Borrow";
 
 
 

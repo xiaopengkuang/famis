@@ -29,7 +29,7 @@ $(function () {
 
     });
 
-    setTimeout('refresh()', 15000);
+    //setTimeout('refresh()', 15000);
 })
 function refresh() {
     //是否要判断是否存在新增标签
