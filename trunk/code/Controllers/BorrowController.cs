@@ -763,6 +763,13 @@ namespace FAMIS.Controllers
         {
             //获取当前用户
             int? userID = commonConversion.getUSERID();
+            int? roleID = commonConversion.getRoleID();
+            bool sup = commonConversion.isSuperUser(roleID);
+
+            if (sup)
+            {
+                return 1;
+            }
             if (id == null)
             {
                 return 0;
