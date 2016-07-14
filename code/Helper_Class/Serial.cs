@@ -18,6 +18,7 @@ using FAMIS.DAL;
 using System.Web.Script.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Data.SqlClient;
+ 
 namespace FAMIS.Helper_Class
 {
     public class Serial
@@ -112,6 +113,7 @@ namespace FAMIS.Helper_Class
                     {
                         var q = from o in db.tb_Asset_inventory
                                 orderby o.ID
+                                where o.flag==true
                                 select o;
                         foreach (var p in q)
                         {
@@ -125,7 +127,7 @@ namespace FAMIS.Helper_Class
                 case "ZC":
                     {
                         var q = from o in db.tb_Asset
-                                where o.serial_number.Contains("ZC")
+                                where o.serial_number.Contains("ZC")&&  o.flag==true
                                 orderby o.ID
                                 select o;
                         foreach (var p in q)
@@ -154,7 +156,7 @@ namespace FAMIS.Helper_Class
                 case "YH":
                     {
                         var q = from o in db.tb_Asset
-                                where o.serial_number.Contains("YH")
+                                where o.serial_number.Contains("YH") && o.flag == true
                                 orderby o.ID
                                 select o;
                         foreach (var p in q)
@@ -184,14 +186,38 @@ namespace FAMIS.Helper_Class
                     }
                 case "JC":
                     {
+                        var q = from o in db.tb_Asset_Borrow
+                                where o.flag == true && o.serialNum.Contains("JC")
+                                orderby o.ID 
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serialNum != null)
+                                latest_serial = p.serialNum;
 
-                        latest_serial = "JC20160707000001";//因为这些表数据库暂时还没有，所以随便初始化一个
+                        }
+
                         break;
                     }
+                case "GH":
+                    {
+                        var q = from o in db.tb_Asset_Borrow
+                                where o.flag == true && o.serialNum.Contains("GH")
+                                orderby o.ID
+                                select o;
+                        foreach (var p in q)
+                        {
+                            if (p.serialNum != null)
+                                latest_serial = p.serialNum;
 
+                        }
+
+                        break;
+                    }
                 case "DB":
                     {
                         var q = from o in db.tb_Asset_allocation
+                                where  o.flag==true
                                 orderby o.ID
                                 select o;
                         foreach (var p in q)
@@ -206,12 +232,14 @@ namespace FAMIS.Helper_Class
                 case "JS":
                     {
                         var q = from o in db.tb_Asset_Reduction
+                                where  o.flag==true
                                 orderby o.ID
                                 select o;
                         foreach (var p in q)
                         {
                             if (p.Serial_number != null)
                                 latest_serial = p.Serial_number;
+                            
 
                         }
 
@@ -221,6 +249,8 @@ namespace FAMIS.Helper_Class
             return latest_serial; 
 
         }
+
+        
         public ArrayList ReturnNewSearial(string shead,int num)
         {
             ArrayList ar = null;
