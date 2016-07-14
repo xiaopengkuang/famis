@@ -524,9 +524,9 @@ namespace FAMIS.Controllers
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
                        from ST in temp_ST.DefaultIfEmpty()
-                       where ST.name_para==SystemConfig.state_asset_loan
+                       //where ST.name_para==SystemConfig.state_asset_loan
                        join tb_borD in DB_C.tb_Asset_Borrow_detail on p.ID equals tb_borD.ID_Asset
-                       where tb_borD.flag == true && tb_borD.flag_return == false
+                       where tb_borD.flag == true
                        join tb_bor in DB_C.tb_Asset_Borrow on tb_borD.ID_borrow equals tb_bor.ID
                        where tb_bor.flag == true
                        join tb_RTD in DB_C.tb_Asset_Return_detail on p.ID equals tb_RTD.ID_Asset into temp_RTD
@@ -640,6 +640,12 @@ namespace FAMIS.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 获取根据ID_return 获取Return详细信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult Handler_Return_Get(int? id)
         {
