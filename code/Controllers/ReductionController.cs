@@ -341,6 +341,13 @@ namespace FAMIS.Controllers
         [HttpPost]
         public int RightToEdit(int? id)
         {
+            int? roleID = commonConversion.getRoleID();
+            bool sup = commonConversion.isSuperUser(roleID);
+
+            if (sup)
+            {
+                return 1;
+            }
             //获取当前用户
             int? userID = commonConversion.getUSERID();
             if (id == null)
