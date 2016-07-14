@@ -152,7 +152,7 @@ namespace FAMIS.Controllers
             //获取原始数据
             var data_ORG = (from p in DB_C.tb_Asset
                             where p.flag == true
-                            where idsRight_assetType.Contains(p.type_Asset)
+                            where idsRight_assetType.Contains(p.type_Asset) 
                             where idsRight_deparment.Contains(p.department_Using) || p.department_Using == null
                             where !selectedIDs.Contains(p.ID)
                             select p);
