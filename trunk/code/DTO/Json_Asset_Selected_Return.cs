@@ -5,7 +5,7 @@ using System.Web;
 using System.ComponentModel.DataAnnotations;
 namespace FAMIS.DTO
 {
-    public class Json_Asset_Return
+    public class Json_Asset_Selected_Return
     {
         public int ID { get; set; }
 
@@ -29,17 +29,19 @@ namespace FAMIS.DTO
 
         public double? value { get; set; }
 
-        public String addressCF { get; set; }
-        public DateTime? Time_Operated { get; set; }
-        public String serialNum_JC { get; set; }
-
         [StringLength(10)]
         public string state_asset { get; set; }
-        public String user_loan { get; set; }
-        public String user_borrow { get; set; }
-        public String department_loan { get; set; }
-        public String department_borrow { get; set; } 
 
-       
+        public DateTime? Time_Operated_JC { get; set; }
+
+        public String user_return { get; set; }
+        public String department_return { get; set; }
+        public String user_loan { get; set; }
+        public String department_loan { get; set; }
+
+        public String SerialNum_JC { get; set; }
+
+
+        
     }
 }

@@ -1931,6 +1931,9 @@
     <Content Include="Scripts\Views\Repair\Repair_edit.js" />
     <Content Include="Scripts\Views\Repair\Repair_review.js" />
     <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
+    <Content Include="Scripts\Views\Return\Return_review.js" />
+    <Content Include="Scripts\Views\Return\Return_detail.js" />
+    <Content Include="Scripts\Views\Return\Return_edit.js" />
     <Content Include="Scripts\Views\Return\Return_SelectingAsset.js" />
     <Content Include="Scripts\Views\Return\Return.js" />
     <Content Include="Scripts\Views\Return\Return_add.js" />
@@ -2007,6 +2010,10 @@
     <Content Include="Views\Return\Return.cshtml" />
     <Content Include="Views\Return\Return_add.cshtml" />
     <Content Include="Views\Return\Return_SelectingAsset.cshtml" />
+    <Content Include="Views\Return\Return_edit.cshtml" />
+    <Content Include="Views\Return\Error.cshtml" />
+    <Content Include="Views\Return\Return_detail.cshtml" />
+    <Content Include="Views\Return\Return_review.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -2060,6 +2067,7 @@
     <Compile Include="DTO\Json_allocation.cs" />
     <Compile Include="DTO\Json_allocation_add.cs" />
     <Compile Include="DTO\Json_allocation_review.cs" />
+    <Compile Include="DTO\Json_Asset_Selected_Return.cs" />
     <Compile Include="DTO\Json_Asset_Borrow_detail.cs" />
     <Compile Include="DTO\Json_asset_cattr_ad.cs" />
     <Compile Include="DTO\Json_asset_edit.cs" />
@@ -2097,6 +2105,8 @@
     <Compile Include="DTO\Json_repair_add.cs" />
     <Compile Include="DTO\Json_repair_edit.cs" />
     <Compile Include="DTO\Json_Return.cs" />
+    <Compile Include="DTO\Json_Return_add.cs" />
+    <Compile Include="DTO\Json_Return_edit.cs" />
     <Compile Include="DTO\Json_State_Update.cs" />
     <Compile Include="DTO\Json_supplier.cs" />
     <Compile Include="Global.asax.cs">
@@ -2229,7 +2239,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
+      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

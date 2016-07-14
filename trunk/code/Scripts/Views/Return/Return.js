@@ -3,7 +3,7 @@ var searchCondtiion = "";
 
 var ID_datagrid = "datagrid_return";
 var ID_targetState = null;
-var ID_Reduction = null;
+var ID_Return = null;
 
 //========================全局数据================================//
 
@@ -55,7 +55,7 @@ function LoadInitDatagrid(datagrid) {
 
 function SubmitToUser(userID)
 {
-    updateRecordState(ID_datagrid, ID_targetState, ID_Reduction, userID);
+    updateRecordState(ID_datagrid, ID_targetState, ID_Return, userID);
 }
 
 
@@ -249,7 +249,7 @@ function loadPageTool(datagrid, dataRight) {
                     $.messager.alert('提示', '一次只能查看一个单据!', 'info');
                     return;
                 }
-                var titleName = "借出明细";
+                var titleName = "归还明细";
                 var url = "/Return/Return_detail?id=" + id_;
                 openModelWindow(url, titleName);
             }
@@ -274,9 +274,9 @@ function loadPageTool(datagrid, dataRight) {
                           MessShow("只有草稿单据才能提交!")
                           return;
                       }
-                      var url = "/Common/SelectReviewer?menuName=ZCJC"
+                      var url = "/Common/SelectReviewer?menuName=ZCGH"
                       var titleName = "选择管理员";
-                      ID_Reduction = rows[0].ID;
+                      ID_Return = rows[0].ID;
                       ID_targetState = 2;
                       openModelWindow(url,titleName);
                   } else {
@@ -359,8 +359,8 @@ function updateRecordState(datagrid,id_target, id,id_reviewer)
             {
                 $('#' + datagrid).datagrid('reload');
             } else {
-                if (data == -2) {
-                    $.messager.alert('警告', "非闲置状态资产不能进行领取！", 'warning');
+                if (data<0) {
+                    $.messager.alert('警告', "非借出状态资产不能进行领取！", 'warning');
                 } else {
                     $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
                 }

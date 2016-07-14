@@ -114,7 +114,7 @@ function LoadInitData_Detail() {
             { field: 'department_loan', title: '借出部门', width: 50 },
             { field: 'user_loan', title: '借出人', width: 50 },
             { field: 'department_borrow', title: '借用部门', width: 50 },
-            { field: 'department_loan', title: '借用人', width: 50 },
+            { field: 'user_borrow', title: '借用人', width: 50 },
             { field: 'type_Asset', title: '资产类型', width: 50 },
             { field: 'specification', title: '型号规范', width: 50 },
             { field: 'unit_price', title: '单价', width: 50 },
@@ -149,10 +149,14 @@ function loadPageTool_Detail() {
                 //获取选择行
                 var rows = $('#tableList_return').datagrid('getSelections');
                 var IDS = [];
+                var array_item=new Array();
                 for (var i = 0; i < rows.length; i++) {
+                    var temp_item = new Object();
+                    temp_item.ID = rows[i].ID;//资产ID
+                    temp_item.serialNum_JC = rows[i].serialNum_JC;//借出单号
                     IDS[i] = rows[i].ID;
+                    array_item.push(temp_item);
                 }
-                //alert(IDS.toString());
                 try{
                     parent.updateCurrentList(IDS);
                     parent.$("#modalwindow").window("close");

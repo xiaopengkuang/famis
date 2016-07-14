@@ -1,7 +1,7 @@
 ﻿//========================全局数据======================================//
 var CurrentList = new Array();
-var id_return_current = -1;
 var ID_DATAGRID_TABLE = "datagrid_return";
+var id_return_current = -1;
 //========================全局数据======================================//
 
 
@@ -29,6 +29,51 @@ function myparser(s) {
 //====================================================================//
 
 //=======================初始化加载信息===================================//
+
+
+function bindData(id_return)
+{
+    id_return_current = id_return;
+    $.ajax({
+        url: "/Return/Handler_Return_Get",
+        type: 'POST',
+        data: {
+            "id": id_return
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+
+                $("#DJH_add").val(data.serialNum);
+                $("#note_Return").val(data.note_return);
+                $("#reason_Return").val(data.reason_return);
+
+
+                var date1 = dateString(data.date_Return);
+                $("#date_return").datebox("setValue", date1);
+
+                //////绑定人员
+                CurrentList = data.ids_asset;
+                LoadInitData_datagrid();
+
+
+            } else {
+                $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+            }
+
+
+        }
+    });
+}
+
+
+
+
+
+
+
+
 $(function () {
 
     loadInitData();
@@ -37,7 +82,7 @@ $(function () {
 });
 
 function loadInitData() {
-    LoadInitData_datagrid();
+    //LoadInitData_datagrid();
 }
 
 
@@ -177,7 +222,7 @@ function updateCurrentList(addList) {
 
 
 //==============================================================获取表单数据===========================================================================//
-function saveData(info) {
+function saveData(info,id_return) {
 
     var state_List;
     if (info == "1") {
@@ -188,22 +233,21 @@ function saveData(info) {
     }
     //获取页面数据
     var date_return = $('#date_return').datebox('getValue');
-
     var reason_Return = $("#reason_Return").val();
     var note_Return = $("#note_Return").val();
-
-    //封装成json格式创给后台
     var listA = getListAseet_();
+    //封装成json格式创给后台
     var collar_add = {
         "date_return": date_return,
         "reason_Return": reason_Return,
         "note_Return": note_Return,
         "state_List": state_List,
-        "assetList": listA
+        "assetList": listA,
+        "ID":id_return
     };
 
     $.ajax({
-        url: "/Return/Handler_Return_insert",
+        url: "/Return/Handler_Return_update",
         type: 'POST',
         data: {
             "data": JSON.stringify(collar_add)
@@ -214,7 +258,7 @@ function saveData(info) {
 
             if (data > 0) {
                 try {
-                    window.parent.$('#tabs').tabs('close', '添加归还单');
+                    window.parent.$('#tabs').tabs('close', '编辑归还');
                 } catch (e) {
                     $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
                 }
@@ -243,7 +287,25 @@ function getListAseet_() {
     return _list;
 }
 
+function dateString(date) {
+    var pa = /.*\((.*)\)/;
+    var unixtime = date.match(pa)[1].substring(0, 10);
+    return getTime(unixtime);
+}
 
+function getTime(/** timestamp=0 **/) {
+    var ts = arguments[0] || 0;
+    var t, y, m, d, h, i, s;
+    t = ts ? new Date(ts * 1000) : new Date();
+    y = t.getFullYear();
+    m = t.getMonth() + 1;
+    d = t.getDate();
+    h = t.getHours();
+    i = t.getMinutes();
+    s = t.getSeconds();
+    // 可根据需要在这里定义时间格式  
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+}
 
 
 function cancelData() {
@@ -251,7 +313,7 @@ function cancelData() {
     $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
         if (r) {
             try {
-                window.parent.$('#tabs').tabs('close', '添加领用单');
+                window.parent.$('#tabs').tabs('close', '编辑归还');
             } catch (e) { }
         }
     });

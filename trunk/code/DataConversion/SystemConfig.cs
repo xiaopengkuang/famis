@@ -151,6 +151,7 @@ namespace FAMIS.DataConversion
         public const String TB_Repair = "Repair";
         public const String TB_Reduction = "Redution";
         public const String TB_Borrow = "Borrow";
+        public const String TB_Return = "Return";
 
 
 

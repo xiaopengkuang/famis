@@ -1,7 +1,7 @@
 ﻿//========================全局数据======================================//
 var CurrentList = new Array();
-var id_return_current = -1;
 var ID_DATAGRID_TABLE = "datagrid_return";
+var id_return_current = -1;
 //========================全局数据======================================//
 
 
@@ -29,6 +29,57 @@ function myparser(s) {
 //====================================================================//
 
 //=======================初始化加载信息===================================//
+
+
+function bindData(id_return)
+{
+    id_return_current = id_return;
+    $.ajax({
+        url: "/Return/Handler_Return_Get",
+        type: 'POST',
+        data: {
+            "id": id_return
+        },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+
+                $("#DJH_add").val(data.serialNum);
+                $("#note_Return").val(data.note_return);
+                $("#reason_Return").val(data.reason_return);
+
+
+                var date1 = dateString(data.date_Return);
+                $("#date_return").datebox("setValue", date1);
+
+                //////绑定人员
+                CurrentList = data.ids_asset;
+                LoadInitData_datagrid();
+
+                $("#date_return").datebox('disable');
+                $('#date_return').datebox({
+                    disabled: true,
+                    editable: false
+                });
+
+
+            } else {
+                $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+            }
+
+
+        }
+    });
+}
+
+
+
+
+
+
+
+
 $(function () {
 
     loadInitData();
@@ -37,7 +88,7 @@ $(function () {
 });
 
 function loadInitData() {
-    LoadInitData_datagrid();
+    //LoadInitData_datagrid();
 }
 
 
@@ -93,39 +144,7 @@ function LoadInitData_datagrid() {
 function loadPageTool_Detail() {
     var pager = $('#' + ID_DATAGRID_TABLE).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
-        buttons: [{
-            text: '添加明细',
-            iconCls: 'icon-add',
-            height: 50,
-            handler: function () {
-                var url = "/Return/Return_SelectingAsset";
-                var titleName = "选择资产";
-                openModelWindow(url, titleName);
-            }
-        }, {
-            text: '删除明细',
-            iconCls: 'icon-remove',
-            height: 50,
-            handler: function () {
-                //获取选择行
-                var rows = $('#' + ID_DATAGRID_TABLE).datagrid('getSelections');
-                var IDS = [];
-                for (var i = 0; i < rows.length; i++) {
-                    IDS[i] = rows[i].ID;
-                }
-                //更新CurrentList
-                removeSelect(IDS);
-
-            }
-        }, {
-            text: '刷新',
-            height: 50,
-            iconCls: 'icon-reload',
-            handler: function () {
-                $('#' + ID_DATAGRID_TABLE).datagrid('reload');
-                //alert('刷新');
-            }
-        }],
+        buttons: [],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
@@ -177,59 +196,7 @@ function updateCurrentList(addList) {
 
 
 //==============================================================获取表单数据===========================================================================//
-function saveData(info) {
 
-    var state_List;
-    if (info == "1") {
-        state_List = 1;
-
-    } else {
-        return;
-    }
-    //获取页面数据
-    var date_return = $('#date_return').datebox('getValue');
-
-    var reason_Return = $("#reason_Return").val();
-    var note_Return = $("#note_Return").val();
-
-    //封装成json格式创给后台
-    var listA = getListAseet_();
-    var collar_add = {
-        "date_return": date_return,
-        "reason_Return": reason_Return,
-        "note_Return": note_Return,
-        "state_List": state_List,
-        "assetList": listA
-    };
-
-    $.ajax({
-        url: "/Return/Handler_Return_insert",
-        type: 'POST',
-        data: {
-            "data": JSON.stringify(collar_add)
-        },
-        beforeSend: ajaxLoading,
-        success: function (data) {
-            ajaxLoadEnd();
-
-            if (data > 0) {
-                try {
-                    window.parent.$('#tabs').tabs('close', '添加归还单');
-                } catch (e) {
-                    $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
-                }
-            } else {
-                if (data == -2) {
-                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为闲置状态！", 'warning');
-                } else {
-                    $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
-                }
-            }
-
-
-        }
-    });
-}
 
 function getListAseet_() {
     var _list = "";
@@ -243,20 +210,24 @@ function getListAseet_() {
     return _list;
 }
 
+function dateString(date) {
+    var pa = /.*\((.*)\)/;
+    var unixtime = date.match(pa)[1].substring(0, 10);
+    return getTime(unixtime);
+}
 
-
-
-function cancelData() {
-
-    $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
-        if (r) {
-            try {
-                window.parent.$('#tabs').tabs('close', '添加领用单');
-            } catch (e) { }
-        }
-    });
-
-
+function getTime(/** timestamp=0 **/) {
+    var ts = arguments[0] || 0;
+    var t, y, m, d, h, i, s;
+    t = ts ? new Date(ts * 1000) : new Date();
+    y = t.getFullYear();
+    m = t.getMonth() + 1;
+    d = t.getDate();
+    h = t.getHours();
+    i = t.getMinutes();
+    s = t.getSeconds();
+    // 可根据需要在这里定义时间格式  
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
 }
 
 function openModelWindow(url, titleName) {

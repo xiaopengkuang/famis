@@ -180,5 +180,22 @@ namespace FAMIS.DataConversion
             return tb;
         }
 
+
+
+        /// <summary>
+        /// date  note  reason
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public tb_Asset_Return ConverJsonToTable(Json_Return_add data)
+        {
+            tb_Asset_Return tb = new tb_Asset_Return();
+            tb.date_return = data.date_return;
+            tb.note_return = data.note_Return;
+            tb.reason_return = data.reason_Return;
+            return tb;
+ 
+        }
+
     }
 }
