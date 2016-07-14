@@ -19,6 +19,7 @@ namespace FAMIS.Models
         public int? departmentID_loan { get; set; }
 
         public bool? flag { get; set; }
-        public bool? flag_return { get; set; } 
+
+        public bool? flag_return { get; set; }
     }
 }

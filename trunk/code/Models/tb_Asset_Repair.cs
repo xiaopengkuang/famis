@@ -50,5 +50,8 @@ namespace FAMIS.Models
 
         [StringLength(200)]
         public string content_Review { get; set; }
+
+        [StringLength(200)]
+        public string content_repairState { get; set; }
     }
 }

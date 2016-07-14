@@ -90,6 +90,7 @@ namespace FAMIS.DataConversion
         public const int state_List_DSH_jsonID = 2;
         public const int state_List_YSH_jsonID = 3;
         public const int state_List_TH_jsonID = 4;
+        public const int state_List_YGH_jsonID = 5;
         public static List<int> state_List = new List<int>(){ 1, 2, 3, 4 };
 
         public static String[] state_List_CG_right = new String[] { state_List_CG, state_List_TH };
@@ -102,6 +103,7 @@ namespace FAMIS.DataConversion
         public const String state_List_DSH = "待审核"; //
         public const String state_List_YSH = "已审核";
         public const String state_List_TH = "退回";
+        public const String state_List_YGH = "已归还";
 
 
 
@@ -125,14 +127,15 @@ namespace FAMIS.DataConversion
 
 
         //用户操作
-        public const String operation_add = "add";
-        public const String operation_edit = "edit";
-        public const String operation_export = "export";
-        public const String operation_view = "view";
-        public const String operation_review = "review";
+        public const String operation_add = "add";   //用户添加
+        public const String operation_edit = "edit";  //用户编辑
+        public const String operation_export = "export";  //导出
+        public const String operation_view = "view";    //查看
+        public const String operation_review = "review";  //审核
         public const String operation_submit = "submit";  //提交至审核
-        public const String operation_delete = "delete";
-        public const String operation_print = "print";
+        public const String operation_delete = "delete";  //删除操作
+        public const String operation_return = "return"; //维修资产进行归还
+        public const String operation_print = "print";   //打印操作
 
 
 

@@ -1,0 +1,145 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>调拨-添加</title>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+
+    <script type="text/javascript" src="../../Scripts/Views/Repair/Repair_return.js"></script>
+
+    <script>
+        bindData('@ViewBag.id')
+    </script>
+
+
+
+    <!--[if lte IE 9]>
+    <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+    <div class="easyui-panel" fit="true">
+        <div style="text-align: center; padding: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('@ViewBag.id',5)">归还</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cancelForm()">取消</a>
+        </div>
+        <div id="jcsx_add" class="easyui-panel" title="基础属性" style="padding: 2px;"
+            data-options="collapsible:true">
+            <table style="width: 100%">
+                <tr>
+                    <td style="width: 100px"><span style="width: 100px">单据号:</span></td>
+                    <td>
+                        <input class="easyui-textbox" placeholder="*自动生成*" id="DJH_add" name="DJH_add" readonly="readonly" style="width: 200px;" />
+                    </td>
+                    <td style="width: 100px"><span style="width: 100px">送修日期:</span></td>
+                    <td>
+                        <input class="easyui-datebox" id="dateToP" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                    </td>
+                    <td style="width: 100px"><span style="width: 100px">预计归还日期:</span></td>
+                    <td>
+                        <input class="easyui-datebox" id="dateToR" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>维修商:</td>
+                    <td>
+                        <input class="easyui-combobox" aria-readonly="true" id="supplier_repair" name="supplier_repair" style="width: 200px;">
+                    </td>
+                    <td>地址:</td>
+                    <td>
+                        <input class="easyui-textbox" readonly="readonly" id="Address_add" name="Address_add" style="width: 200px;" />
+                    </td>
+                    <td>联系人:</td>
+                    <td>
+                        <input class="easyui-textbox" readonly="readonly" id="LinkMan_add" aria-readonly="true" name="LinkMan_add" style="width: 200px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>申请人:</td>
+                    <td>
+                        <select class="easyui-combobox" aria-readonly="true" id="UAP_add" name="UAP_add" style="width: 200px;">
+                        </select>
+                    </td>
+                    <td>批准人:</td>
+                    <td>
+                        <input class="easyui-combobox" readonly="readonly" id="UAT_add" name="UAT_add" style="width: 200px;" />
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td style="width: 100px">维修原因：</td>
+                    <td>
+                        <input class="easyui-textbox" id="reason_add" readonly="readonly" name="reason_add" style="width: 500px;" /></td>
+                </tr>
+                <tr>
+                    <td style="width: 100px">备注：</td>
+                    <td>
+                        <input class="easyui-textbox" id="note_add" readonly="readonly" name="note_add" style="width: 500px;" /></td>
+                </tr>
+                 <tr>
+                <td style="width: 100px">审核意见:</td>
+                <td>
+                    <textarea id="SHYJ_repair" rows="5" name="SHYJ_repair" class="textarea" style="width: 500px; height: 100px"></textarea>
+                </td>
+            </tr>
+            </table>
+
+
+        </div>
+        <div id="qtsx_add" class="easyui-panel" title="资产信息" style="width: auto; padding: 1px;"
+            data-options="collapsible:true" fit="true">
+            <div class="easyui-panel" style="padding: 5px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'" onclick="SelectAsset()">添加资产</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'" onclick="clearSelected()">删除资产</a>
+            </div>
+            <table fit="true">
+                <tr>
+                    <td>资产编号:</td>
+                    <td>
+                        <input class="easyui-textbox" readonly="readonly" id="serialNUM_Asset" name="serialNUM_Asset" style="width: 200px;">
+                    </td>
+                    <td>资产名称:</td>
+                    <td>
+                        <input class="easyui-textbox" readonly="readonly" id="name_Asset" name="name_Asset" style="width: 200px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>维修费用:</td>
+                    <td>
+                        <input class="easyui-numberbox" id="Cost_Repair" style="width: 200px;">
+                    </td>
+                    <td>设备名称:</td>
+                    <td>
+                        <input class="easyui-textbox" id="name_Equipment" name="name_Equipment" style="width: 200px;" />
+                    </td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                <td style="width: 100px">维修状况：</td>
+                    <td>
+                        <input class="easyui-textbox" id="repairState_add" readonly="readonly" name="repairState_add" style="width: 500px;" />
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
+    </div>
+
+
+</body>
+</html>

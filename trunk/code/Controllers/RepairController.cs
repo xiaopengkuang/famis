@@ -95,6 +95,20 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult Repair_return(int? id)
+        {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_return))
+            {
+                return View("Error");
+            }
+
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
 
         [HttpPost]
         public JsonResult LoadRepair(int? page, int? rows, String searchCondtiion)
@@ -352,6 +366,91 @@ namespace FAMIS.Controllers
            
         }
 
+        [HttpPost]
+        public int Repair_returnByID(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_State_Update Json_data = serializer.Deserialize<Json_State_Update>(data);
+            if (Json_data != null)
+            {
+                if (!rightToReturn(Json_data))
+                {
+                    return -2;
+                }
+              
+                try
+                {
+                    var data_r = from p in DB_C.tb_Asset_Repair
+                                 where p.flag == true && p.ID == Json_data.id_Item
+                                 select p;
+                    foreach (var item in data_r)
+                    {
+                        item.state_list = commonConversion.getStateListID(Json_data.id_state);
+                        item.content_repairState = Json_data.review;
+                    }
+                    DB_C.SaveChanges();
+                    //获取
+                    var data_a = from p in DB_C.tb_Asset
+                                 join tb_rep in DB_C.tb_Asset_Repair on p.ID equals tb_rep.ID_Asset
+                                 where p.flag == true && tb_rep.ID == Json_data.id_Item && tb_rep.flag == true
+                                 select p;
+
+                    foreach (var item in data_a)
+                    {
+                        item.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_using);
+                    }
+                    DB_C.SaveChanges();
+
+                }
+                catch (Exception e)
+                {
+                    var data_r = from p in DB_C.tb_Asset_Repair
+                                 where p.flag == true && p.ID == Json_data.id_Item
+                                 select p;
+                    foreach (var item in data_r)
+                    {
+                        item.state_list = commonConversion.getStateListID(SystemConfig.state_List_YGH_jsonID);
+                        item.content_repairState = null;
+                    }
+                    DB_C.SaveChanges();
+                       //还原状态
+                }
+
+
+            }
+            return 0;
+        }
+
+
+
+
+
+        public bool rightToReturn(Json_State_Update data)
+        {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_return))
+            {
+                return false;
+            }
+            if(data==null||data.id_Item==null)
+            {
+                return false;
+            }
+            if(data.id_state!=SystemConfig.state_List_YGH_jsonID)
+            {
+                return false;
+            }
+            //获取asset状态
+            var data_DB = from p in DB_C.tb_Asset_Repair
+                          where p.flag == true && p.ID == data.id_Item
+                          join tb_asset in DB_C.tb_Asset on p.ID_Asset equals tb_asset.ID
+                          join tb_ST in DB_C.tb_dataDict_para on tb_asset.state_asset equals tb_ST.ID
+                          where tb_ST.name_para == SystemConfig.state_asset_fix
+                          select p;
+
+            return data_DB.Count() > 0 ? true : false;
+
+        }
+
         public bool RightToUpdateState(int? id_json)
         {
             String operation = null;
@@ -559,6 +658,15 @@ namespace FAMIS.Controllers
         {
             //获取当前用户
             int? userID = commonConversion.getUSERID();
+            int? roleID = commonConversion.getRoleID();
+            bool sup = commonConversion.isSuperUser(roleID);
+
+            if (sup)
+            {
+                return 1;
+            }
+
+
             if (id == null)
             {
                 return 0;
