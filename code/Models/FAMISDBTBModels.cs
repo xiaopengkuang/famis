@@ -213,6 +213,10 @@ namespace FAMIS.Models
                 .Property(e => e.content_Review)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_Asset_Repair>()
+                .Property(e => e.content_repairState)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset_Return>()
                 .Property(e => e.serialNum)
                 .IsUnicode(false);
@@ -223,6 +227,10 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_Return>()
                 .Property(e => e.note_return)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_Return>()
+                .Property(e => e.content_review)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_AssetType>()

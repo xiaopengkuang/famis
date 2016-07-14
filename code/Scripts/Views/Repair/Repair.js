@@ -329,6 +329,34 @@ function loadPageTool(datagrid, dataRight) {
                    }
                }
            },{
+               text: '归还',
+               height: 50,
+               disabled: !dataRight.export_able,
+               iconCls: 'icon-save',
+               handler: function () {
+                   if (!dataRight.review_able) {
+                       return;
+                   }
+                   var rows = $('#' + datagrid).datagrid('getSelections');
+                   var id_;
+                   if (rows == null) {
+                       MessShow("请选择维修单！");
+                       return;
+                   }
+                   if (rows.length == 1) {
+                       id_ = rows[0].ID;
+                       if (rows[0].state_list != "已审核") {
+                           MessShow("只有已审核单据才能进行归还操作!")
+                           //$('#RepairDG').datagrid('reload');
+                           return;
+                       }
+                       var titleName = "审核";
+                       var url = "/Repair/Repair_return?id=" + id_;
+                       openModelWindow(url, titleName);
+                   } else {
+                   }
+               }
+           },{
                text: '导出',
                height: 50,
                disabled: !dataRight.export_able,

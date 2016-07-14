@@ -319,7 +319,11 @@ namespace FAMIS.DataConversion
             return info.ToLower() == "all" ? true : false;
         }
 
-
+        /// <summary>
+        /// 获取资产状态ID
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public int getStateIDByName(String name)
         {
             var data = from p in DB_C.tb_dataDict_para
@@ -358,7 +362,8 @@ namespace FAMIS.DataConversion
                 case SystemConfig.state_List_CG_jsonID:{stateName=SystemConfig.state_List_CG;};break;
                 case SystemConfig.state_List_DSH_jsonID:{stateName=SystemConfig.state_List_DSH;};break;
                 case SystemConfig.state_List_YSH_jsonID:{stateName=SystemConfig.state_List_YSH;};break;
-                case SystemConfig.state_List_TH_jsonID:{stateName=SystemConfig.state_List_TH;};break;
+                case SystemConfig.state_List_TH_jsonID: { stateName = SystemConfig.state_List_TH; }; break;
+                case SystemConfig.state_List_YGH_jsonID: { stateName = SystemConfig.state_List_YGH; }; break;
                 default:{stateName=SystemConfig.state_List_CG;};break;
             }
 
@@ -393,6 +398,7 @@ namespace FAMIS.DataConversion
                 case SystemConfig.state_List_DSH_jsonID: name = SystemConfig.state_List_DSH; break;
                 case SystemConfig.state_List_YSH_jsonID: name = SystemConfig.state_List_YSH; break;
                 case SystemConfig.state_List_TH_jsonID: name = SystemConfig.state_List_TH; break;
+                case SystemConfig.state_List_YGH_jsonID: name = SystemConfig.state_List_YGH; break;
                 default: name = null; break;
             }
             return name;

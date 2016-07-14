@@ -1929,6 +1929,7 @@
     <Content Include="Scripts\Views\Repair\Repair_add.js" />
     <Content Include="Scripts\Views\Repair\Repair_detail.js" />
     <Content Include="Scripts\Views\Repair\Repair_edit.js" />
+    <Content Include="Scripts\Views\Repair\Repair_return.js" />
     <Content Include="Scripts\Views\Repair\Repair_review.js" />
     <Content Include="Scripts\Views\Repair\Repair_SelectingAsset.js" />
     <Content Include="Scripts\Views\Return\Return_review.js" />
@@ -2014,6 +2015,7 @@
     <Content Include="Views\Return\Error.cshtml" />
     <Content Include="Views\Return\Return_detail.cshtml" />
     <Content Include="Views\Return\Return_review.cshtml" />
+    <Content Include="Views\Repair\Repair_return.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
