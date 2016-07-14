@@ -71,7 +71,6 @@ function bindData(id_borrow)
                 $("#department_borrow").combotree("setText", data.departmentName_borrow);
                 $("#user_borrow").combobox("setValue", data.user_borrow);
                 $("#user_borrow").combobox("setText", data.userName_borrow);
-                id_borrow = data.ID;
                 CurrentList = data.assetList;
                 LoadInitData_datagrid();
 

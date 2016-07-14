@@ -365,6 +365,7 @@ namespace FAMIS.Controllers
                 foreach(var item in db_de)
                 {
                     item.flag = false;
+                    item.flag_return = true;
                 }
                 //获取选中IDs
                 List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
@@ -447,6 +448,7 @@ namespace FAMIS.Controllers
                     item.userID_loan = item_asset.Owener;
                     item.departmentID_loan = item_asset.department_Using;
                     item.flag = true;
+                    item.flag_return = false;
                     list.Add(item);
                 }
             }
