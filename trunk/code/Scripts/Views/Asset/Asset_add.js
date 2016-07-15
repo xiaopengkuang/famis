@@ -278,7 +278,9 @@ function load_JLDW_add() {
         },
         onLoadSuccess: function () {
             var data = $('#JLDW_add').combobox('getData');
-            $('#JLDW_add').combobox('select', data[0].name_para); 
+            if (data.length > 0) {
+                $('#JLDW_add').combobox('select', data[0].name_para);
+            }
         }
     });
 }

@@ -28,7 +28,7 @@ $(function () {
  
     $(window).resize(function () {
         var win_width = $(window).width();
-        $("#TableList_0_1").datagrid('resize', { width: $(window).width() - 220 });
+        $("#TableList_0_1").datagrid('resize', { width: win_width - 220 });
     });
 
 });
