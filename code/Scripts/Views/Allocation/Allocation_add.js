@@ -40,18 +40,20 @@ function loadInitData()
     load_Department();
     load_DBRQ_add();
     load_CFDD_add();
-    load_SYRY();
+    //load_SYRY();
     LoadInitData_datagrid();
 }
-function load_SYRY() {
+function load_SYRY(id_department) {
     $("#SYRY_add").combobox({
         valueField: 'id',
         method: 'POST',
         textField: 'name',
-        url: '/Dict/load_User_add',
+        url: '/Dict/load_User_add?id_DP=' + id_department,
         onSelect: function (rec) {
             $('#SYRY_add').combobox('setValue', rec.id);
             $('#SYRY_add').combobox('setText', rec.name);
+        },onLoadSuccess: function () {
+            SelectDefaultValue_Combobox("SYRY_add");
         }
     });
 }
@@ -73,14 +75,30 @@ function load_Department() {
          editable: false,
          //选择树节点触发事件  
          onSelect: function (node) {
+             load_SYRY(node.id);
          }, //全部折叠
          onLoadSuccess: function (node, data) {
              //$('#SZBM_add').combotree('tree').tree("collapseAll");
+             SelectDefaultValue_ComboTree("LYBM_add");
          }
      });
 
 }
 
+function SelectDefaultValue_ComboTree(ID_COMBOTREE) {
+    var ctree = $('#' + ID_COMBOTREE).combotree('tree');
+    var roots = ctree.tree("getRoots");
+    if (roots.length > 0) {
+        $('#' + ID_COMBOTREE).combotree('setValue', roots[0].id);
+    }
+}
+
+function SelectDefaultValue_Combobox(ID_COMBOBOX) {
+    var data = $('#' + ID_COMBOBOX).combobox('getData');
+    if (data.length > 0) {
+        $('#' + ID_COMBOBOX).combobox('select', data[0].id);
+    }
+}
 
 function load_CFDD_add() {
       $('#CFDD_add').combotree({
@@ -100,6 +118,7 @@ function load_CFDD_add() {
         }, //全部折叠
         onLoadSuccess: function (node, data) {
             $('#CFDD_add').combotree('tree').tree("collapseAll");
+            SelectDefaultValue_ComboTree("CFDD_add");
         }
     });
 }

@@ -54,15 +54,21 @@ function loadSupplier(supplier_target, LinkMan_add, Address_add)
         { field: 'address', title: '地址', width: 99 }
         ]],
         onClickRow: function (index, row) {
-            search = false;
             $('#' + supplier_target).combogrid('hidePanel');
             $('#' + supplier_target).combogrid('setValue', row.ID);
             $('#' + supplier_target).combogrid('setText', row.name_supplier);
             $("#" + LinkMan_add).val(row.linkman);
             $("#" + Address_add).val(row.address);
-            setTimeout(function () {
-                search = true;
-            }, 1000);
+        },
+        onLoadSuccess: function () {
+            var dg = $('#' + supplier_target).combogrid('grid');
+            var rows = dg.datagrid("getRows");
+            if (rows.length > 0) {
+                $('#' + supplier_target).combogrid('setValue', rows[0].ID);
+                $('#' + supplier_target).combogrid('setText', rows[0].name_supplier);
+                $("#" + LinkMan_add).val(rows[0].linkman);
+                $("#" + Address_add).val(rows[0].address);
+            }
 
         }
     });
@@ -77,6 +83,12 @@ function load_User(comboboxID) {
         onSelect: function (rec) {
             $('#' + comboboxID).combobox('setValue', rec.id);
             $('#' + comboboxID).combobox('setText', rec.name);
+        },
+        onLoadSuccess: function () {
+            var data = $('#' + comboboxID).combobox('getData');
+            if (data.length > 0) {
+                $('#' + comboboxID).combobox('select', data[0].id);
+            }
         }
     });
 }

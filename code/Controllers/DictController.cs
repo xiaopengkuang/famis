@@ -305,9 +305,11 @@ namespace FAMIS.Controllers
             var data = from p in DB_C.tb_Asset
                        where p.flag == true
                        where p.type_Asset == assetType
+                       where p.specification!="" && p.specification!=null
                        select new { 
                        ZCXH=p.specification
                        };
+            data = data.Distinct();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             String json = jss.Serialize(data.ToList()).ToString().Replace("\\", "");
             return json;
