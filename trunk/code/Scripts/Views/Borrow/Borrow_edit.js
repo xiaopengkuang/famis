@@ -412,3 +412,42 @@ function ajaxLoadEnd() {
 }
 
 //==============================================================获取表单数据===========================================================================//
+
+function checkFormat() {
+    //基础属性
+    var check_obj_date_borrow = $('#date_borrow').datebox("getValue");
+    var check_obj_date_return = $('#date_return').datebox("getValue");
+    var check_obj_department = $('#department_borrow').combotree("getText");
+    var check_obj_user = $('#user_borrow').combobox("getValue");
+    var check_obj_reason = $('#reason_Borrow').val();
+    if (isNull(check_obj_date_borrow)) {
+        MessShow("借出日期不能为空");
+    } else if (isNull(check_obj_date_return)) {
+        MessShow("预计归还日期不能为空");
+    } else if (isNull(check_obj_department)) {
+        MessShow("借用部门不能为空");
+    } else if (isNull(check_obj_user)) {
+        MessShow("借用人不能为空");
+    } else if (isNull(check_obj_reason)) {
+        MessShow("借用原因不能为空");
+    } else {
+        saveData('1', '@ViewBag.id');
+    }
+}
+
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

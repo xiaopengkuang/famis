@@ -13,6 +13,7 @@ function loadInitData()
 {
     load_User("UAP_add");
     load_User("UAT_add");
+    load_DateReducition_add();
     load_FS();
     LoadInitData_datagrid();
 }
@@ -28,6 +29,13 @@ function load_User(comboboxID) {
             $('#' + comboboxID).combobox('setText', rec.name);
         }
     });
+}
+
+
+function load_DateReducition_add() {
+    var curr_time = new Date();
+    $('#date_reduction').datebox("setValue", myformatter(curr_time));
+
 }
 
 function load_FS() {
@@ -333,3 +341,39 @@ function ajaxLoadEnd() {
 }
 
 //====================================================================//
+
+function checkFormat() {
+    //基础属性
+    var check_obj_FS_SJ = $('#FS_SJ').combobox("getValue");
+    var check_obj_UAP_add = $('#UAP_add').combobox("getValue");
+    var check_obj_UAT_add = $('#UAT_add').combobox("getValue");
+    var check_obj_reason_add = $('#reason_add').val();
+    if (isNull(check_obj_FS_SJ)) {
+        MessShow("减少方式不能为空");
+    } else if (isNull(check_obj_UAP_add)) {
+        MessShow("申请人不能为空");
+    } else if (isNull(check_obj_UAT_add)) {
+        MessShow("批准人不能为空");
+    } else if (isNull(check_obj_reason_add)) {
+        MessShow("减少原因不能为空");
+    } else {
+        saveData("1");
+    }
+}
+
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

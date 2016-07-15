@@ -47,6 +47,7 @@ function loadInitDate() {
     load_JLDW_add();
     load_SZBM_add();
     load_ZCLB_add();
+    load_GZRQ_add();
     load_CFDD_add();
     load_Other_ZJFS_add();
 
@@ -72,7 +73,8 @@ function load_ZCLB_add() {
            update_ZDY_attr(node.id)
        }, //全部折叠
        onLoadSuccess: function (node, data) {
-           $('#ZCLB_add').combotree('tree').tree("collapseAll");
+           if (data.length > 0) {
+           }
        }
    });
 }
@@ -140,7 +142,7 @@ function initAttr(data) {
         cattr_item.type = data[i].type;
         cattr_item.type_value = data[i].type_value;
         cattr_item.type_Name = data[i].type_Name;
-
+        cattr_item.title = data[i].title;
         //判断数据类型
         if (data[i].type_Name == "字典类型") {
             //获取其数据结构类型
@@ -157,9 +159,12 @@ function initAttr(data) {
             cattr_item.InputType = 3;
         }
       
+        
        
 
         arry_CAttr.push(cattr_item);
+
+        
     }
 
 }
@@ -270,6 +275,10 @@ function load_JLDW_add() {
         onSelect: function (rec) {
             $('#JLDW_add').combobox('setValue', rec.ID);
             $('#JLDW_add').combobox('setText', rec.name_para);
+        },
+        onLoadSuccess: function () {
+            var data = $('#JLDW_add').combobox('getData');
+            $('#JLDW_add').combobox('select', data[0].name_para); 
         }
     });
 }
@@ -318,6 +327,31 @@ function load_CFDD_add() {
   });
 }
 
+function myformatter(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+}
+
+function myparser(s) {
+    if (!s) return new Date();
+    var ss = (s.split('-'));
+    var y = parseInt(ss[0], 10);
+    var m = parseInt(ss[1], 10);
+    var d = parseInt(ss[2], 10);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        return new Date(y, m - 1, d);
+    } else {
+        return new Date();
+    }
+}
+
+function load_GZRQ_add() {
+    var curr_time = new Date();
+    $("#GZRQ_add").datebox("setValue", myformatter(curr_time));
+   
+}
 
 function load_GYS_add() {
     $('#GYS_add').combogrid({
@@ -345,7 +379,12 @@ function load_GYS_add() {
             //    search = true;
             //}, 1000);
 
+        },
+        onLoadSuccess: function(){   
+            //默认选中第一行      
+            $('#GYS_add').combogrid('grid').datagrid('selectRow', 0);
         }
+      
     });
 }
 function load_ZJFS_add() {
@@ -358,6 +397,10 @@ function load_ZJFS_add() {
         onSelect: function (rec) {
             $('#ZJFS_add').combobox('setValue', rec.ID);
             $('#ZJFS_add').combobox('setText', rec.name_para);
+        },
+        onLoadSuccess: function () {
+            var data = $('#ZJFS_add').combobox('getData');
+            $('#ZJFS_add').combobox('select', data[0].name_para);
         }
     });
 }
@@ -386,6 +429,10 @@ function load_Other_ZJFS_add() {
         onSelect: function (rec) {
             $('#Other_ZJFS_add').combobox('setValue', rec.ID);
             $('#Other_ZJFS_add').combobox('setText', rec.name_para);
+        },
+        onLoadSuccess: function () {
+            var data = $('#Other_ZJFS_add').combobox('getData');
+            $('#Other_ZJFS_add').combobox('select', data[0].name_para);
         }
     });
 }
@@ -573,7 +620,94 @@ function ajaxLoadEnd() {
     $(".datagrid-mask-msg").remove();
 }
 
+function checkFormat() {
+    //基础属性
+    var check_obj_ZCLB = $("#ZCLB_add").combotree("getText");
+    var check_obj_ZCMC = $("#ZCMC_add").val();
+    var check_obj_ZCXH = $("#ZCXH_add").combobox("getValue");
+    var check_obj_CFDD = $("#CFDD_add").combotree("getText");
+    var check_obj_GYS = $("#GYS_add").combogrid("getText");
+    //其他属性
+    var check_obj_Other_SYNX = $("#Other_SYNX_add").val();
+    var check_obj_Other_JCZL = $("#Other_JCZL_add").val();
+    var check_obj_Other_ZCDJ = $("#Other_ZCDJ_add").val();
+    var check_obj_Other_ZCSL = $("#Other_ZCSL_add").val();
 
+    if (isNull(check_obj_ZCLB)) {
+        MessShow("资产类别不能为空");
+        return;
+    } else if (isNull(check_obj_ZCMC)) {
+        MessShow("资产名称不能为空");
+        return;
+    } else if (isNull(check_obj_ZCXH)) {
+        MessShow("规格型号不能为空");
+        return;
+    } else if (isNull(check_obj_CFDD)) {
+        MessShow("存放地点不能为空");
+        return;
+    } else if (isNull(check_obj_GYS)) {
+        MessShow("供应商不能为空");
+        return;
+    } else if (isNull(check_obj_Other_JCZL)) {
+        MessShow("净残值率不能为空");
+        return;
+    } else if (check_obj_Other_ZCDJ <= 0) {
+        MessShow("资产单价只能为正值");
+        return;
+    } else if (check_obj_Other_ZCSL <= 0) {
+        MessShow("资产数量只能为正值");
+        return;
+    } else if (check_obj_Other_SYNX <= 0) {
+        MessShow("使用年限只能为正值");
+        return;
+    }
+
+    //自定义属性
+    for (var i = 0; i < arry_CAttr.length; i++) {
+        var new_attr = new Object();
+        new_attr.ID_customAttr = arry_CAttr[i].id_cattr;
+        switch (arry_CAttr[i].InputType) {
+            case 1: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combotree("getValue") + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).combotree("getValue");
+                if (arry_CAttr[i].necessary == true && isNull(new_attr.value)) {
+                    MessShow(arry_CAttr[i].title + "不能为空");
+                    return;
+                }
+                //alert(new_attr.value);
+            }; break;
+            case 2: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combobox("getValue") + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).combobox("getValue");
+                if (arry_CAttr[i].necessary == true && isNull(new_attr.value)) {
+                    MessShow(arry_CAttr[i].title + "不能为空");
+                    return;
+                }
+                //alert(new_attr.value);
+            }; break;
+            case 3: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).val() + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).val();
+                if (arry_CAttr[i].necessary == true && isNull(new_attr.value)) {
+                    MessShow(arry_CAttr[i].title + "不能为空");
+                    return;
+                }
+                //alert(new_attr.value);
+            }; break;
+            default:; break;
+        }
+
+        submitForm();
+    }
+    
+  
+   
+}
+
+//判值是否为空
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
 
 function MessShow(mess) {
     $.messager.show({

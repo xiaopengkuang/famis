@@ -397,3 +397,42 @@ function ajaxLoadEnd() {
 }
 
 //====================================================================//
+
+function checkFormat() {
+    //基础属性
+    var check_obj_date_reduction = $('#date_reduction').datebox("getValue");
+    var check_obj_FS_SJ = $('#FS_SJ').combobox("getValue");
+    var check_obj_UAP_add = $('#UAP_add').combobox("getValue");
+    var check_obj_UAT_add = $('#UAT_add').combobox("getValue");
+    var check_obj_reason_add = $('#reason_add').val();
+    if (isNull(check_obj_date_reduction)) {
+        MessShow("减少日期不能为空");
+    } else if (isNull(check_obj_FS_SJ)) {
+        MessShow("减少方式不能为空");
+    } else if (isNull(check_obj_UAP_add)) {
+        MessShow("申请人不能为空");
+    } else if (isNull(check_obj_UAT_add)) {
+        MessShow("批准人不能为空");
+    } else if (isNull(check_obj_reason_add)) {
+        MessShow("减少原因不能为空");
+    } else {
+        saveData('1', '@ViewBag.id');
+    }
+}
+
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

@@ -27,6 +27,11 @@ $(function () {
         }
     });
     //setTimeout('refresh()', 15000);
+    $(window).resize(function () {
+        var win_width = $(window).width();
+        $("#datagrid_allocation").datagrid('resize', { width: $(window).width()-20 });
+    });
+
 })
 function refresh() {
     //是否要判断是否存在新增标签
@@ -63,7 +68,7 @@ function loadDataGrid(datagrid)
                 url: '/Allocation/LoadAllocation?searchCondtiion=' + searchCondtiion,
                 method: 'POST', //默认是post,不允许对静态文件访问
                 width: 'auto',
-                height: '300px',
+                height: '100%',
                 iconCls: 'icon-save',
                 dataType: "json",
                 fitColumns: true,

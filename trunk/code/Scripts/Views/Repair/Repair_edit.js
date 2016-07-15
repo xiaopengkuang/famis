@@ -362,3 +362,59 @@ function ajaxLoadEnd() {
 }
 
 //==============================================================获取表单数据===========================================================================//
+
+
+function checkFormat() {
+    //基础属性
+    var check_obj_dataToP = $('#dateToP').datebox("getValue");
+    var check_obj_dataToR = $('#dateToR').datebox("getValue");
+    var check_obj_supplier_repair = $("#supplier_repair").combobox("getText");
+    var check_obj_UAP = $("#UAP_add").combobox("getValue");
+    var check_obj_UAT = $("#UAT_add").combobox("getValue");
+    var check_obj_reason = $("#reason_add").val();
+    var check_obj_serialNUM_Asset = $("#serialNUM_Asset").val();
+    var check_obj_name_Asset = $("#name_Asset").val();
+    var check_obj_Cost_Repair = $("#Cost_Repair").numberbox("getValue");
+    var check_obj_name_Equipment = $("#name_Equipment").val();
+    if (isNull(check_obj_dataToP)) {
+        MessShow("送修日期不能为空");
+    } else if (isNull(check_obj_dataToR)) {
+        MessShow("预计归还日期不能为空");
+    } else if (isNull(check_obj_supplier_repair)) {
+        MessShow("维修商不能为空");
+    } else if (isNull(check_obj_UAP)) {
+        MessShow("申请人不能为空");
+    } else if (isNull(check_obj_UAT)) {
+        MessShow("批准人不能为空");
+    } else if (isNull(check_obj_reason)) {
+        MessShow("维修原因不能为空");
+    } else if (isNull(check_obj_serialNUM_Asset)) {
+        MessShow("资产编号不能为空");
+    } else if (isNull(check_obj_name_Asset)) {
+        MessShow("资产名称不能为空");
+    } else if (isNull(check_obj_Cost_Repair)) {
+        MessShow("维修费用不能为空");
+    } else if (isNull(check_obj_name_Equipment)) {
+        MessShow("设备名称不能为空");
+    } else {
+        saveData('1', '@ViewBag.id');
+    }
+}
+
+//判值是否为空
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

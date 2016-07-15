@@ -227,6 +227,7 @@ function initAttr(data) {
         cattr_item.type = data[i].type;
         cattr_item.type_value = data[i].type_value;
         cattr_item.type_Name = data[i].type_Name;
+        cattr_item.title = data[i].title;
 
         //获取适配的数据
         var ca_checked = getCAttrByID(data[i].ID, cattrs);
@@ -679,6 +680,99 @@ function ajaxLoadEnd() {
 }
 
 
+function checkFormat() {
+    //基础属性
+    var check_obj_ZCLB = $("#ZCLB_add").combotree("getText");
+    var check_obj_ZCMC = $("#ZCMC_add").val();
+    var check_obj_ZCXH = $("#ZCXH_add").combobox("getValue");
+    var check_obj_JLDW = $("#JLDW_add").combobox("getValue");
+    var check_obj_CFDD = $("#CFDD_add").combotree("getText");
+    var check_obj_GYS = $("#GYS_add").combogrid("getText");
+    var check_obj_GZRQ = $("#GZRQ_add").datebox("getValue");
+    //其他属性
+    var check_obj_Other_SYNX = $("#Other_SYNX_add").val();
+    var check_obj_Other_JCZL = $("#Other_JCZL_add").val();
+    var check_obj_Other_ZCDJ = $("#Other_ZCDJ_add").val();
+    var check_obj_Other_ZCSL = $("#Other_ZCSL_add").val();
+
+    if (isNull(check_obj_ZCLB)) {
+        MessShow("资产类别不能为空");
+        return;
+    } else if (isNull(check_obj_ZCMC)) {
+        MessShow("资产名称不能为空");
+        return;
+    } else if (isNull(check_obj_ZCXH)) {
+        MessShow("规格型号不能为空");
+        return;
+    } else if (isNull(check_obj_JLDW)) {
+        MessShow("计量单位不能为空");
+        return;
+    } else if (isNull(check_obj_CFDD)) {
+        MessShow("存放地点不能为空");
+        return;
+    } else if (isNull(check_obj_GYS)) {
+        MessShow("供应商不能为空");
+        return;
+    } else if (isNull(check_obj_GZRQ)) {
+        MessShow("购置日期不能为空");
+        return;
+    } else if (isNull(check_obj_Other_JCZL)) {
+        MessShow("净残值率不能为空");
+        return;
+    } else if (check_obj_Other_ZCDJ <= 0) {
+        MessShow("资产单价不能为0");
+        return;
+    } else if (check_obj_Other_ZCSL <= 0) {
+        MessShow("资产数量不能为0");
+        return;
+    } else if (check_obj_Other_SYNX <= 0) {
+        MessShow("使用年限不能为0.");
+        return;
+    }
+
+    //alert(check_obj_GZRQ);
+    //自定义属性
+    for (var i = 0; i < arry_CAttr.length; i++) {
+        var new_attr = new Object();
+        new_attr.ID_customAttr = arry_CAttr[i].id_cattr;
+        switch (arry_CAttr[i].InputType) {
+            case 1: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combotree("getValue") + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).combotree("getValue");
+                if (arry_CAttr[i].necessary == true && isNull(new_attr.value)) {
+                    MessShow(arry_CAttr[i].title + "不能为空");
+                    return;
+                }
+                //alert(new_attr.value);
+            }; break;
+            case 2: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combobox("getValue") + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).combobox("getValue");
+                if (arry_CAttr[i].necessary == true && isNull(new_attr.value)) {
+                    MessShow(arry_CAttr[i].title + "不能为空");
+                    return;
+                }
+                //alert(new_attr.value);
+            }; break;
+            case 3: {
+                //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).val() + "\t";
+                new_attr.value = $("#" + arry_CAttr[i].id).val();
+                if (arry_CAttr[i].necessary == true && isNull(new_attr.value)) {
+                    MessShow(arry_CAttr[i].title + "不能为空");
+                    return;
+                }
+            }; break;
+            default:; break;
+        }
+    }
+    submitForm('@ViewBag.id');
+
+}
+
+//判值是否为空
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
 
 function MessShow(mess) {
     $.messager.show({
