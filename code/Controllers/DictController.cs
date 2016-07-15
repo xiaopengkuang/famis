@@ -608,7 +608,7 @@ namespace FAMIS.Controllers
              //int selectID_base = (int)assetTypeID;
              //根据父节点获取相应的属性
              var data = (from a in DB_C.tb_customAttribute
-                         where ids.Contains(a.assetTypeID)
+                         where ids.Contains(a.assetTypeID) && a.assetTypeID!=assetTypeID
                          where a.flag == true
                          join b in DB_C.tb_customAttribute_Type on a.type equals b.ID into temp
                          from tt in temp.DefaultIfEmpty()
@@ -1021,6 +1021,7 @@ namespace FAMIS.Controllers
                 }
                 catch(Exception e){
                     Console.WriteLine(e.Message);
+                    return -1;
                 }
             }
             return 0;
@@ -1597,7 +1598,7 @@ namespace FAMIS.Controllers
                        join q in DB_C.tb_department on p.ID_Father_Department equals q.ID
                        where p.ID == bmbh
                        select new { 
-                       bmbh=p.ID,
+                       bmbh=p.CODE_Department,
                        bmmc=p.name_Department,
                        sjbm=p.ID_Father_Department,
                        sjbm_Name=q.name_Department
@@ -1608,7 +1609,7 @@ namespace FAMIS.Controllers
                            where p.ID == bmbh
                            select new
                            {
-                               bmbh = p.ID,
+                               bmbh = p.CODE_Department,
                                bmmc = p.name_Department,
                                sjbm = p.ID_Father_Department,
                                sjbm_Name = ""

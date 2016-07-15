@@ -3,6 +3,9 @@
 
 });
 
+function cancelForm() {
+    parent.$("#modalwindow").window("close");
+}
 
 
 
