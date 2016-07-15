@@ -69,15 +69,29 @@ function load_Department(ID_department_INPUT,ID_User_INP) {
          }, //全部折叠
          onLoadSuccess: function (node, data) {
              $('#' + ID_department_INPUT).combotree('tree').tree("collapseAll");
+             SelectDefaultValue_ComboTree(ID_department_INPUT);
          }
      });
 
 }
 
 
+function SelectDefaultValue_ComboTree(ID_COMBOTREE) {
+    var ctree = $('#' + ID_COMBOTREE).combotree('tree');
+    var roots = ctree.tree("getRoots");
+    if (roots.length > 0) {
+        $('#' + ID_COMBOTREE).combotree('setValue', roots[0].id);
+    }
+}
 
 
-
+//id
+function SelectDefaultValue_Combobox(ID_COMBOBOX) {
+    var data = $('#' + ID_COMBOBOX).combobox('getData');
+    if (data.length > 0) {
+        $('#' + ID_COMBOBOX).combobox('select', data[0].id);
+    }
+}
 
 function load_SYRY(ID_USER_INP,id_dep) {
     $("#" + ID_USER_INP).combobox({
@@ -88,6 +102,9 @@ function load_SYRY(ID_USER_INP,id_dep) {
         onSelect: function (rec) {
             $('#' + ID_USER_INP).combobox('setValue', rec.id);
             $('#' + ID_USER_INP).combobox('setText', rec.name);
+        }, //全部折叠
+        onLoadSuccess: function () {
+            SelectDefaultValue_Combobox(ID_USER_INP);
         }
     });
 }

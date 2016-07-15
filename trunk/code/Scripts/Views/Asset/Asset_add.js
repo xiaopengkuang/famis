@@ -42,6 +42,7 @@ function update_Value()
 }
  
 function loadInitDate() {
+    ajaxLoading();
     load_GYS_add();
     load_ZJFS_add();
     load_JLDW_add();
@@ -50,7 +51,7 @@ function loadInitDate() {
     load_GZRQ_add();
     load_CFDD_add();
     load_Other_ZJFS_add();
-
+    ajaxLoadEnd();
 }
 
 
@@ -73,7 +74,10 @@ function load_ZCLB_add() {
            update_ZDY_attr(node.id)
        }, //全部折叠
        onLoadSuccess: function (node, data) {
-           if (data.length > 0) {
+           var ctree = $('#ZCLB_add').combotree('tree');
+           var roots = ctree.tree("getRoots");
+           if (roots.length > 0) {
+               $('#ZCLB_add').combotree('setValue', roots[0].id);
            }
        }
    });
@@ -158,13 +162,7 @@ function initAttr(data) {
             initNumberBox(id_a);
             cattr_item.InputType = 3;
         }
-      
-        
-       
-
         arry_CAttr.push(cattr_item);
-
-        
     }
 
 }
@@ -259,6 +257,12 @@ function load_User_add(id_DP) {
         onSelect: function (rec) {
             $('#SYRY_add').combobox('setValue', rec.id);
             $('#SYRY_add').combobox('setText', rec.name);
+        },
+        onLoadSuccess: function () {
+            //var data = $('#SYRY_add').combobox('getData');
+            //if (data.length > 0) {
+            //    $('#SYRY_add').combobox('select', data[0].id);
+            //}
         }
     });
 
@@ -279,7 +283,7 @@ function load_JLDW_add() {
         onLoadSuccess: function () {
             var data = $('#JLDW_add').combobox('getData');
             if (data.length > 0) {
-                $('#JLDW_add').combobox('select', data[0].name_para);
+                $('#JLDW_add').combobox('select', data[0].ID);
             }
         }
     });
@@ -325,6 +329,11 @@ function load_CFDD_add() {
       }, //全部折叠
       onLoadSuccess: function (node, data) {
           $('#CFDD_add').combotree('tree').tree("collapseAll");
+          var ctree = $('#CFDD_add').combotree('tree');
+          var roots = ctree.tree("getRoots");
+          if (roots.length > 0) {
+              $('#CFDD_add').combotree('setValue', roots[0].id);
+          }
       }
   });
 }
@@ -377,14 +386,18 @@ function load_GYS_add() {
             $('#GYS_add').combogrid('setText', row.name_supplier);
             $("#LXR_add").val(row.linkman);
             $("#GYSDD_add").val(row.address);
-            //setTimeout(function () {
-            //    search = true;
-            //}, 1000);
-
         },
-        onLoadSuccess: function(){   
-            //默认选中第一行      
-            $('#GYS_add').combogrid('grid').datagrid('selectRow', 0);
+        onLoadSuccess: function () {
+            var dg = $('#GYS_add').combogrid('grid');
+            var rows = dg.datagrid("getRows");
+            if (rows.length > 0)
+            {
+                $('#GYS_add').combogrid('setValue', rows[0].ID);
+                $('#GYS_add').combogrid('setText', rows[0].name_supplier);
+                $("#LXR_add").val(rows[0].linkman);
+                $("#GYSDD_add").val(rows[0].address);
+            }
+            
         }
       
     });
@@ -402,7 +415,10 @@ function load_ZJFS_add() {
         },
         onLoadSuccess: function () {
             var data = $('#ZJFS_add').combobox('getData');
-            $('#ZJFS_add').combobox('select', data[0].name_para);
+            if (data.length > 0)
+            {
+                $('#ZJFS_add').combobox('select', data[0].name_para);
+            }
         }
     });
 }
@@ -417,6 +433,14 @@ function load_ZCXH_add(assetType) {
         onSelect: function (rec) {
             $('#ZCXH_add').combobox('setValue', rec.ZCXH);
             $('#ZCXH_add').combobox('setText', rec.ZCXH);
+        },
+        onLoadSuccess: function () {
+            var data = $('#ZCXH_add').combobox('getData');
+            if (data.length > 0)
+            {
+                $('#ZCXH_add').combobox('select', data[0].ZCXH);
+            }
+
         }
     });
 }
@@ -434,7 +458,9 @@ function load_Other_ZJFS_add() {
         },
         onLoadSuccess: function () {
             var data = $('#Other_ZJFS_add').combobox('getData');
-            $('#Other_ZJFS_add').combobox('select', data[0].name_para);
+            if (data.length > 0) {
+                $('#Other_ZJFS_add').combobox('select', data[0].ID);
+            }
         }
     });
 }

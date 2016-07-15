@@ -27,6 +27,12 @@ function load_User(comboboxID) {
         onSelect: function (rec) {
             $('#' + comboboxID).combobox('setValue', rec.id);
             $('#' + comboboxID).combobox('setText', rec.name);
+        },
+        onLoadSuccess: function () {
+            var data = $('#' + comboboxID).combobox('getData');
+            if (data.length > 0) {
+                $('#' + comboboxID).combobox('select', data[0].id);
+            }
         }
     });
 }
@@ -48,6 +54,12 @@ function load_FS() {
         onSelect: function (rec) {
             $('#FS_SJ').combobox('setValue', rec.ID);
             $('#FS_SJ').combobox('setText', rec.name_para);
+        },
+        onLoadSuccess: function () {
+            var data = $('#FS_SJ').combobox('getData');
+            if (data.length > 0) {
+                $('#FS_SJ').combobox('select', data[0].ID);
+            }
         }
     });
 }
