@@ -460,7 +460,52 @@ function getNowFormatDate_FileName() {
     return currentdate;
 }
 //===================初始化数据=====================================//
+function searchCond() {
 
+
+    //获取编号
+    var serialNumber = $("#DJH").val();
+    //获取资产状态
+    var stateList = $("#DJZT").combobox("getValue");
+    //获取时间
+    var begin = $("#beginDate_SC").datebox("getValue");
+    var end = $("#endDate_SC").datebox("getValue");
+
+    if (!dateCompare(begin, end)) {
+        MessShow("开始时间不能晚于结束时间！");
+        return;
+    }
+
+    var jsonSC = {
+        "serialNumber": serialNumber,
+        "stateList": stateList,
+        "begin": begin,
+        "end": end
+    }
+    searchCondtiion = JSON.stringify(jsonSC);
+    loadInitData();
+}
+function dateCompare(a, b) {
+    var arr = a.split("-");
+    var starttime = new Date(arr[0], arr[1], arr[2]);
+    var starttimes = starttime.getTime();
+    var arrs = b.split("-");
+    var lktime = new Date(arrs[0], arrs[1], arrs[2]);
+    var lktimes = lktime.getTime();
+
+    if (starttimes > lktimes) {
+        return false;
+    }
+    else
+        return true;
+
+}
+function reasetCond() {
+    searchCondtiion = null;
+    $("#DJH").val("");
+    $("#beginDate_SC").datebox("clear");
+    $("#endDate_SC").datebox("clear");
+}
 //===================操作控制数据=====================================//
 
 //===================操作控制数据=====================================//

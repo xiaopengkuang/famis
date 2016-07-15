@@ -201,6 +201,32 @@ namespace FAMIS.Controllers
             if (cond != null)
             {
                 //TODO:  条件查询  留给研一
+                //TODO:  条件查询 
+                if (cond.serialNumber != null & cond.serialNumber != "")
+                {
+                    data = from p in data
+                           where p.serialNumber.Contains(cond.serialNumber)
+                           select p;
+                }
+
+
+                if (cond.stateList != null && cond.stateList != "")
+                {
+                    //获取的ID
+                    List<String> ids_state = commonConversion.getListStateBySearchState(cond.stateList);
+                    data = from p in data
+                           where ids_state.Contains(p.state_list)
+                           select p;
+                }
+
+                //时间查询  先判断时间是否有效
+                //TODO:时间格式化  begin+00:00:00    end+23:59:59
+                if (cond.begin != null && cond.end != null)
+                {
+                    data = from p in data
+                           where p.date_ToRepair >= cond.begin && p.date_ToRepair <= cond.end
+                           select p;
+                }
             }
 
             int skipindex = ((int)page - 1) * (int)rows;

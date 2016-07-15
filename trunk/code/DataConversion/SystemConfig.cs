@@ -160,6 +160,8 @@ namespace FAMIS.DataConversion
         public const String Search_stateList_JsonName_CG = "CG";
         public const String Search_stateList_JsonName_DSH = "DSH";
         public const String Search_stateList_JsonName_YSH = "YSH";
+        public const String Search_stateList_JsonName_TH = "TH";
+        public const String Search_stateList_JsonName_YGH = "YGH"; 
 
 
 
