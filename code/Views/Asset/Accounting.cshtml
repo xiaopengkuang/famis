@@ -17,7 +17,7 @@
 
 
     <script type="text/javascript" src="../../Scripts/Views/Asset/Accounting.js"></script>
-
+    
 
     <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
@@ -25,7 +25,7 @@
     <![endif]-->
 
 </head>
-<body>
+<body style="overflow-y:hidden" data-options="fit:true">
 
     <div class="easyui-layout" style="width: 100%; height: 700px;" fit="true">
 
@@ -38,8 +38,7 @@
                 </div>
             </div>
 
-            <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true">
-            </ul>
+            <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
             <script type="text/javascript">
                 function collapseAll() {
                     $('#lefttree').tree('collapseAll');
@@ -55,7 +54,7 @@
         </div>
 
 
-        <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true" style="height: 100%">
+        <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true" style="height: 100%;width:200px">
 
             <!--查询条件-->
             <div style="width: 100%!important; border-spacing: 2px; left: 10px">
@@ -105,22 +104,14 @@
                         </td>
                         <td>
                             <input type="radio" name="table_TYPE" onchange="chanegeTableType_Radio()" value="0" />汇总
-                           <input type="radio" name="table_TYPE" onchange="chanegeTableType_Radio()" value="1" checked="checked" />明细
+                            <input type="radio" name="table_TYPE" onchange="chanegeTableType_Radio()" value="1" checked="checked" />明细
                         </td>
                     </tr>
                 </table>
             </div>
-
-            <table id="TableList_0_1" class="easyui-datagrid" style="width: auto; height: 350px" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
-               
-            </table>
-
-
-
+            <table id="TableList_0_1" class="easyui-datagrid" style="height:500px" data-options="border:false,singleSelect:true,fitcolumns:true"></table>
+            <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
         </div>
-        <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
-        <button id="pp"></button>
-    </div>
 
 </body>
 </html>

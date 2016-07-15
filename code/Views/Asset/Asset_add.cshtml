@@ -95,7 +95,7 @@
                         <tr>
                             <td>购置日期:</td>
                             <td>
-                                <input class="easyui-datebox" name="GZRQ_add" id="GZRQ_add" data-options="sharedCalendar:'#cc'" style="width: 150px;">
+                                <input class="easyui-datebox" name="GZRQ_add" id="GZRQ_add" data-options="formatter:myformatter,parser:myparser" style="width: 150px;">
                             </td>
                             <td>供应商地址:</td>
                             <td>
@@ -181,7 +181,7 @@
         </div>
     </div>
     <div style="text-align: center; padding: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">提交</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkFormat()">提交</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
     </div>
 
