@@ -817,9 +817,15 @@ namespace FAMIS.Controllers
                                 var db_item_asset_temp = from p in DB_C.tb_Asset
                                                       where p.flag==true
                                                       join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID
-                                                      where tb_ST.name_para!=SystemConfig.state_asset_loan
+                                                      where tb_ST.name_para==SystemConfig.state_asset_loan
                                                       where p.ID== item.ID_Asset
                                                       select p;
+
+                                if (db_item_asset_temp.Count() < 1)
+                                {
+                                    return -7;
+                                }
+
                                 foreach(var item_asset in db_item_asset_temp)
                                 {
                                      item_asset.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_using);
@@ -841,8 +847,6 @@ namespace FAMIS.Controllers
                                 item.flag = false;
                                 item.time_review = DateTime.Now;
                             }
-
-
                         } else if (commonConversion.is_TH(Json_data.id_state))
                         {
                             //将提醒标记为false

@@ -495,9 +495,9 @@ function openModelWindow(url, titleName) {
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,
-        width: 900,
+        width: 1080,
         height: 700,
-        top: (($(window).height() - 900) > 0 ? ($(window).height() - 900) : 200) * 0.5,
+        top: (($(window).height() - 1080) > 0 ? ($(window).height() - 1080) : 200) * 0.5,
         left: (($(window).width() - 700) > 0 ? ($(window).width() - 700) : 100) * 0.5,
         shadow: true,
         modal: true,

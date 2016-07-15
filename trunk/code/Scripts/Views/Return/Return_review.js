@@ -231,7 +231,9 @@ function submitForm(id_item, id_state) {
 
             } else {
                 if (data == -2) {
-                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为闲置状态！", 'warning');
+                    $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
+                }else if (data == -7) {
+                    $.messager.alert('警告', "请确认添加资产明细或者检查所有资产均为基础状态！", 'warning');
                 } else {
                     $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
                 }
