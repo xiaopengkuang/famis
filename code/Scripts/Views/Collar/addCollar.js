@@ -13,6 +13,7 @@ function myformatter(date) {
     var d = date.getDate();
     return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
 }
+
 function myparser(s) {
     if (!s) return new Date();
     var ss = (s.split('-'));
@@ -39,8 +40,15 @@ function loadInitData()
 {
     load_Department();
     load_CFDD_add();
+    load_LYRQ_add();
     load_SYRY();
     LoadInitData_datagrid();
+}
+
+function load_LYRQ_add() {
+    var curr_time = new Date();
+    $("#date_add").datebox("setValue", myformatter(curr_time));
+
 }
 
 function load_Department() {
@@ -243,6 +251,45 @@ function updateCurrentList(addList)
 //==================================================================================//
 
 
+function checkFormat() {
+    //基础属性
+    var check_obj_LYYY = $('#LYYY_add').val();
+    var check_obj_LYBM = $("#LYBM_add").combotree("getText");
+    var check_obj_SYRY = $("#SYRY_add").combobox("getValue");
+    var check_obj_CFDD = $("#CFDD_add").val();
+
+    if (isNull(check_obj_LYYY)) {
+        MessShow("领用原因不能为空");
+    } else if (isNull(check_obj_LYBM)) {
+        MessShow("领用部门不能为空");
+    } else if (isNull(check_obj_SYRY)) {
+        MessShow("领用人不能为空");
+    } else if (isNull(check_obj_CFDD)) {
+        MessShow("存放地点不能为空");
+    } else {
+        saveData("1");
+    }
+}
+
+//判值是否为空
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}
+
+
 //==============================================================获取表单数据===========================================================================//
 function saveData(info) {
 
@@ -372,3 +419,6 @@ function ajaxLoadEnd() {
 }
 
 //==============================================================获取表单数据===========================================================================//
+
+
+

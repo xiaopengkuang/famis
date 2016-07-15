@@ -37,10 +37,16 @@ $(function () {
 });
 
 function loadInitData() {
+    load_DateReturn_add();
     LoadInitData_datagrid();
 }
 
 
+function load_DateReturn_add() {
+    var curr_time = new Date();
+    $('#date_return').datebox("setValue", myformatter(curr_time));
+
+}
 
 function LoadInitData_datagrid() {
 
@@ -292,3 +298,30 @@ function ajaxLoadEnd() {
 }
 
 //==============================================================获取表单数据===========================================================================//
+
+function checkFormat() {
+    //基础属性
+    var check_obj_reason = $('#reason_Return').val();
+    if (isNull(check_obj_reason)) {
+        MessShow("借用原因不能为空");
+    } else {
+        saveData("1");
+    }
+}
+
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

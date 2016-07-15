@@ -38,6 +38,7 @@ $(function () {
 function loadInitData()
 {
     load_Department();
+    load_DBRQ_add();
     load_CFDD_add();
     load_SYRY();
     LoadInitData_datagrid();
@@ -53,6 +54,12 @@ function load_SYRY() {
             $('#SYRY_add').combobox('setText', rec.name);
         }
     });
+}
+
+function load_DBRQ_add() {
+    var curr_time = new Date();
+    $("#date_add").datebox("setValue", myformatter(curr_time));
+
 }
 
 function load_Department() {
@@ -369,3 +376,41 @@ function ajaxLoadEnd() {
 }
 
 //==============================================================获取表单数据===========================================================================//
+
+
+
+function checkFormat() {
+    //基础属性
+    var check_obj_DBYY = $('#DBYY_add').val();
+    var check_obj_LYBM = $('#LYBM_add').combotree("getText");
+    var check_obj_SYRY = $('#SYRY_add').combobox("getValue");
+    var check_obj_CFDD = $('#CFDD_add').val();
+    if (isNull(check_obj_DBYY)) {
+        MessShow("调拨原因不能为空");
+    } else if (isNull(check_obj_LYBM)) {
+        MessShow("调入部门不能为空");
+    } else if (isNull(check_obj_SYRY)) {
+        MessShow("申请人不能为空");
+    } else if (isNull(check_obj_CFDD)) {
+        MessShow("调入地点不能为空");
+    } else {
+        saveData("1");
+    }
+}
+
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

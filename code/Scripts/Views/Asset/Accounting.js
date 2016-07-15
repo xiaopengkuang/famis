@@ -25,7 +25,11 @@ $(function () {
 
     });
 
-
+ 
+    $(window).resize(function () {
+        var win_width = $(window).width();
+        $("#TableList_0_1").datagrid('resize', { width: $(window).width() - 220 });
+    });
 
 });
 function chanegeTableType_Radio() {
@@ -185,7 +189,7 @@ function LoadInitData_Detail() {
                 url: '/Asset/LoadAssets?tableType=1&searchCondtiion=' + searchCondtiion,
                 method: 'POST', //默认是post,不允许对静态文件访问
                 width: 'auto',
-                height: '300px',
+                height: '100%',
                 iconCls: 'icon-save',
                 dataType: "json",
                 fitColumns: true,

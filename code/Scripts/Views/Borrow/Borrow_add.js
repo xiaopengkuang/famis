@@ -38,8 +38,21 @@ $(function () {
 });
 
 function loadInitData() {
+    load_DateBorrow_add();
+    load_DateReturn_add();
     load_Department(ID_DEPARTMENT_INPUT, ID_USER_INPUT);
     LoadInitData_datagrid();
+}
+
+function load_DateBorrow_add() {
+    var curr_time = new Date();
+    $("#date_borrow").datebox("setValue", myformatter(curr_time));
+
+}
+function load_DateReturn_add() {
+    var curr_time = new Date();
+    $("#date_return").datebox("setValue", myformatter(curr_time));
+
 }
 
 function load_Department(ID_department_INPUT,ID_User_INP) {
@@ -336,3 +349,36 @@ function ajaxLoadEnd() {
 }
 
 //==============================================================获取表单数据===========================================================================//
+
+function checkFormat() {
+    //基础属性
+    var check_obj_department = $('#department_borrow').combotree("getText");
+    var check_obj_user = $('#user_borrow').combobox("getValue");
+    var check_obj_reason = $('#reason_Borrow').val();
+    if (isNull(check_obj_department)) {
+        MessShow("借用部门不能为空");
+    } else if (isNull(check_obj_user)) {
+        MessShow("借用人不能为空");
+    } else if (isNull(check_obj_reason)) {
+        MessShow("借用原因不能为空");
+    } else {
+        saveData("1");
+    }
+}
+
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

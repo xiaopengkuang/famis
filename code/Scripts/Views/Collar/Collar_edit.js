@@ -27,6 +27,8 @@ function myparser(s) {
 }
 //====================================================================//
 
+
+
 //=======================初始化加载信息===================================//
 $(function () {
     loadInitData();
@@ -420,3 +422,44 @@ function ajaxLoadEnd() {
 }
 
 //==============================================================获取表单数据===========================================================================//
+
+
+
+function checkFormat() {
+    //基础属性
+    var check_obj_date = $('#date_add').datebox("getValue");
+    var check_obj_LYYY = $('#LYYY_add').val();
+    var check_obj_LYBM = $("#LYBM_add").combotree("getText");
+    var check_obj_CFDD = $("#CFDD_add").val();
+
+    //alert(check_obj_date);
+    if (isNull(check_obj_date)) {
+        MessShow("领用日期不能为空");
+    } else if (isNull(check_obj_LYYY)) {
+        MessShow("领用原因不能为空");
+    } else if (isNull(check_obj_LYBM)) {
+        MessShow("领用部门不能为空");
+    } else if (isNull(check_obj_CFDD)) {
+        MessShow("存放地点不能为空");
+    } else {
+        saveData('1', '@ViewBag.id');
+    }
+}
+
+//判值是否为空
+function isNull(data) {
+    return (data == "" || data == undefined || data == null) ? true : false;
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}
