@@ -29,7 +29,7 @@ $(function () {
     //setTimeout('refresh()', 15000);
     $(window).resize(function () {
         var win_width = $(window).width();
-        $("#datagrid_allocation").datagrid('resize', { width: $(window).width()-20 });
+        $("#datagrid_allocation").datagrid('resize', { width: win_width - 20 });
     });
 
 })

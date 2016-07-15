@@ -31,6 +31,10 @@ $(function () {
     });
 
     //setTimeout('refresh()', 15000);
+    $(window).resize(function () {
+        var win_width = $(window).width();
+        $("#datagrid_return").datagrid('resize', { width: win_width - 20 });
+    });
 })
 function refresh() {
     //是否要判断是否存在新增标签
