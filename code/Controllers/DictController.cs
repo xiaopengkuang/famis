@@ -2312,11 +2312,11 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
-        public int isTreeType_DictData(int? id)
+        public JsonResult isTreeType_DictData(int? id)
         {
             if (id == null)
             {
-                return 0;
+                return null;
             }
 
             //从DictTable中读书数据
@@ -2326,14 +2326,19 @@ namespace FAMIS.Controllers
                        select p;
             if (data.Count() != 1)
             {
-                return 0;
+                return null;
             }
 
             foreach (var item in data)
             {
-                return item.isTree == true ? 1 : 0;
+                var result = new {
+                    isTree = item.isTree == true ? true : false,
+                    editAble = item.editAble == true ? true : false
+                };
+
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
-            return 0;
+            return null;
 
         }
 
