@@ -364,11 +364,11 @@ function ajaxLoadEnd() {
 //==============================================================获取表单数据===========================================================================//
 
 
-function checkFormat() {
+function checkFormat(id_repair) {
     //基础属性
     var check_obj_dataToP = $('#dateToP').datebox("getValue");
     var check_obj_dataToR = $('#dateToR').datebox("getValue");
-    var check_obj_supplier_repair = $("#supplier_repair").combobox("getText");
+    var check_obj_supplier_repair = $("#supplier_repair").combobox("getValue");
     var check_obj_UAP = $("#UAP_add").combobox("getValue");
     var check_obj_UAT = $("#UAT_add").combobox("getValue");
     var check_obj_reason = $("#reason_add").val();
@@ -397,7 +397,7 @@ function checkFormat() {
     } else if (isNull(check_obj_name_Equipment)) {
         MessShow("设备名称不能为空");
     } else {
-        saveData('1', '@ViewBag.id');
+        saveData('1', id_repair);
     }
 }
 

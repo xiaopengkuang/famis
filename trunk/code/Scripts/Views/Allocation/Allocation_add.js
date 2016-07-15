@@ -401,9 +401,9 @@ function ajaxLoadEnd() {
 function checkFormat() {
     //基础属性
     var check_obj_DBYY = $('#DBYY_add').val();
-    var check_obj_LYBM = $('#LYBM_add').combotree("getText");
+    var check_obj_LYBM = $('#LYBM_add').combotree("getValue");
     var check_obj_SYRY = $('#SYRY_add').combobox("getValue");
-    var check_obj_CFDD = $('#CFDD_add').val();
+    var check_obj_CFDD = $('#CFDD_add').combotree("getValue");
     if (isNull(check_obj_DBYY)) {
         MessShow("调拨原因不能为空");
     } else if (isNull(check_obj_LYBM)) {

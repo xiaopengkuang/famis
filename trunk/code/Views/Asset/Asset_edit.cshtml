@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../../Scripts/Views/Asset/Asset_edit.js"></script>
 
     <script type="text/javascript">
-        setTimeout(bindData('@ViewBag.id'),3000);
+        bindData('@ViewBag.id');
     </script>
       <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
@@ -126,7 +126,7 @@
                         <tr>
                             <td>使用年限(月):</td>
                             <td>
-                                <input class="easyui-numberspinner" value="0" id="Other_SYNX_add" name="Other_SYNX_add" data-options="increment:1,min:0" style="width: 150px;" />
+                                <input class="easyui-numberspinner" value="0" id="Other_SYNX_add" name="Other_SYNX_add" data-options="increment:1" style="width: 150px;" />
                             </td>
                             <td>折旧方式:</td>
                             <td>
@@ -185,7 +185,7 @@
         </div>
     </div>
     <div style="text-align: center; padding: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkFormat()">提交</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkFormat('@ViewBag.id')">提交</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
     </div>
 

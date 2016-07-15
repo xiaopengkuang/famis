@@ -355,7 +355,7 @@ function ajaxLoadEnd() {
 
 //==============================================================获取表单数据===========================================================================//
 
-function checkFormat() {
+function checkFormat(id_return) {
     //基础属性
     var check_obj_date_return = $('#date_return').datebox("getValue");
     var check_obj_reason = $('#reason_Return').val();
@@ -364,7 +364,7 @@ function checkFormat() {
     } else if (isNull(check_obj_reason)) {
         MessShow("借用原因不能为空");
     } else {
-        saveData('1', '@ViewBag.id');
+        saveData('1', id_return);
     }
 }
 

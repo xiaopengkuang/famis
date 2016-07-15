@@ -369,7 +369,7 @@ function ajaxLoadEnd() {
 
 function checkFormat() {
     //基础属性
-    var check_obj_department = $('#department_borrow').combotree("getText");
+    var check_obj_department = $('#department_borrow').combotree("getValue");
     var check_obj_user = $('#user_borrow').combobox("getValue");
     var check_obj_reason = $('#reason_Borrow').val();
     if (isNull(check_obj_department)) {

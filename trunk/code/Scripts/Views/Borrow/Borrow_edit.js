@@ -413,11 +413,11 @@ function ajaxLoadEnd() {
 
 //==============================================================获取表单数据===========================================================================//
 
-function checkFormat() {
+function checkFormat(id_borrow) {
     //基础属性
     var check_obj_date_borrow = $('#date_borrow').datebox("getValue");
     var check_obj_date_return = $('#date_return').datebox("getValue");
-    var check_obj_department = $('#department_borrow').combotree("getText");
+    var check_obj_department = $('#department_borrow').combotree("getValue");
     var check_obj_user = $('#user_borrow').combobox("getValue");
     var check_obj_reason = $('#reason_Borrow').val();
     if (isNull(check_obj_date_borrow)) {
@@ -431,7 +431,7 @@ function checkFormat() {
     } else if (isNull(check_obj_reason)) {
         MessShow("借用原因不能为空");
     } else {
-        saveData('1', '@ViewBag.id');
+        saveData('1', id_borrow);
     }
 }
 
