@@ -785,6 +785,13 @@ namespace FAMIS.Controllers
             ids.Add(p_id);
             return ids;
         }
+
+
+        /// <summary>
+        /// 获取父节点  包含当前节点
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public List<int?> GetParentID_AsseType(int? id)
         {
             var data = GetParents_AsseType(id);

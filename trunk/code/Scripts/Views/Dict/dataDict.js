@@ -74,7 +74,6 @@ function loadTree(treeid, url)
                 url: "/Dict/isTreeType_DictData",
                 data: {"id": node.id},
                 success: function (data) {
-
                     if (data)
                     {
                         if (data.isTree) {

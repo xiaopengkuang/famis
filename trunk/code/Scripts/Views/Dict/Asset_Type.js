@@ -26,8 +26,6 @@ function loadInitData()
 
 function loadInitTreeGrid()
 {
-
-
     $('#treegrid').treegrid({
         url: '/Dict/loadTreeGrid?name=assetType',
         //data:data,
@@ -59,7 +57,6 @@ function loadInitTreeGrid()
                 top: e.pageY
             });
         },
-
         toolbar: [{
             id: 'btnrefresh',
             text: '刷新',
@@ -132,7 +129,7 @@ function addBroNode()
 
     
     if (node == null) {
-        $.messager.alert('提示', '请选择数据!', 'error');
+        MessShow('请选择数据!');
         return;
     }
     var level = $('#treegrid').treegrid('getLevel', node.id);
@@ -146,7 +143,7 @@ function addBroNode()
         var info = "?pid=" + parentID + "&pname=" + parentName + "&level=" + level;
         addAssetType(info,"资产类别-添加同级");
     } else {
-        $.messager.alert('提示', '不能添加同级节点!', 'error');
+        MessShow('不能添加同级节点!');
         return;
     }
 }
@@ -165,9 +162,22 @@ function addchild()
 
 function editNode()
 {
+    var roots = $('#treegrid').treegrid('getRoots');
+    //var roots = ctree.tree("getRoots");
+
     var node = $('#treegrid').treegrid('getSelected');
+    for(var i = 0; i < roots.length; i++)
+    {
+        if (node.id == roots[i].id)
+        {
+            MessShow("禁止修改根节点!");
+            return;
+        }
+        
+    }
+
     if (node == null) {
-        $.messager.alert('提示', '请选择数据!', 'error');
+        MessShow('请选择数据!');
         return;
     }
 
@@ -188,7 +198,7 @@ function deletNode()
 {
     var node = $('#treegrid').treegrid('getSelected');
     if (node == null) {
-        $.messager.alert('提示', '请选择数据!', 'error');
+        MessShow('请选择数据!');
         return;
     }
 
@@ -205,7 +215,7 @@ function deletNode()
             if (data > 0) {
                 $('#treegrid').treegrid('reload');
             } else {
-                $.messager.alert('提示', '系统正忙，请稍后再试!', 'error');
+               MessShow('系统正忙，请稍后再试!');
 
             }
         }
@@ -260,3 +270,15 @@ function ajaxLoadEnd() {
     $(".datagrid-mask-msg").remove();
 }
 
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

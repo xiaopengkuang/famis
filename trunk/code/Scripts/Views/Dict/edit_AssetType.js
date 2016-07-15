@@ -12,18 +12,18 @@ function loadintiData() {
 function loadinit_JLDW() {
     $("#JLDW").combobox({
         valueField: 'ID',
-        method: 'get',
+        method: 'POST',
         textField: 'name_para',
-        url: '/Dict/load_FS_add?TypeID=2',
+        url: '/Dict/load_FS_add?nameFlag=2_JLDW',
         onSelect: function (rec) {
             $('#JLDW').combobox('setValue', rec.ID);
             $('#JLDW').combobox('setText', rec.name_para);
         },
         onLoadSuccess: function () {
-            var data = $('#JLDW').combobox('getData');
-            if (data.length > 0) {
-                $('#JLDW').combobox('select', data[0].ID);
-            }
+            //var data = $('#JLDW').combobox('getData');
+            //if (data.length > 0) {
+            //    $('#JLDW').combobox('select', data[0].ID);
+            //}
         }
     });
 }
@@ -31,18 +31,18 @@ function loadinit_JLDW() {
 function loadinit_ZJFS() {
     $("#ZJFS").combobox({
         valueField: 'ID',
-        method: 'get',
+        method: 'POST',
         textField: 'name_para',
-        url: '/Dict/load_FS_add?TypeID=10',
+        url: '/Dict/load_FS_add?nameFlag=2_ZJFS_JIU',
         onSelect: function (rec) {
             $('#ZJFS').combobox('setValue', rec.ID);
             $('#ZJFS').combobox('setText', rec.name_para);
         },
         onLoadSuccess: function () {
-            var data = $('#ZJFS').combobox('getData');
-            if (data.length > 0) {
-                $('#ZJFS').combobox('select', data[0].ID);
-            }
+            //var data = $('#ZJFS').combobox('getData');
+            //if (data.length > 0) {
+            //    $('#ZJFS').combobox('select', data[0].ID);
+            //}
         }
     });
 }
@@ -62,40 +62,22 @@ function dataBind(id)
             ajaxLoadEnd();
             if (data != null)
             {
-                //var jsd = JSON.stringify(data);
-                ////jsd = eval("(" + jsd + ")");
-                //jsd = $.parseJSON(jsd);
-                ////alert(JSON.stringify(data));
-
-                ////var js = JSON.parse(JSON.stringify(data));
-                //alert(jsd[0].id);
-                //alert(data[0].id);
-
-
+             
                 //绑定数据
                 $("#LBBH").val(data[0].lbbh);
-                //$("#ZJNX").val(data[0].zjnx);
-                //$("#JCZL").val(data[0].jczl);
                 $("#LBMC").val(data[0].lbmc);
 
-                //$("#LBBH").textbox("setValue", data[0].lbbh)//赋值
                 $("#ZJNX").numberbox("setValue", data[0].zjnx)//赋值
                 $("#JCZL").numberbox("setValue", data[0].jczl)//赋值
-                //$("#LBMC").textbox("setValue", data[0].lbmc)//赋值
-
                 if (data[0].sjlb == null || data[0].sjlb == "") {
-
                     $("#SJLB").combobox("setValue", 0);
                     $("#SJLB").combobox("setText", "");
                 } else {
                     $("#SJLB").combobox("setValue", data[0].sjlb);
                     $("#SJLB").combobox("setText", data[0].sjlb);
                 }
-
-
                 
                 $("#SJLB").combobox("disable");
-
                 $("#JLDW").combobox("select", data[0].jldw);
                 $("#ZJFS").combobox("select", data[0].zjfs);
 

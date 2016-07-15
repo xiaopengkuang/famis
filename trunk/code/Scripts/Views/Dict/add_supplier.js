@@ -2,6 +2,9 @@
 
 
 });
+function cancelForm() {
+    parent.$("#modalwindow").window("close");
+}
 
 
 function submitForm()

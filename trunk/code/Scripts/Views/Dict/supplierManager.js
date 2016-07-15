@@ -71,7 +71,7 @@ function loadPageTool(datagrid, toolbarDisable) {
             }
         },{
             text: '编辑',
-            iconCls: 'icon-remove',
+            iconCls: 'icon-edit',
             height: 50,
             disabled: toolbarDisable,
             handler: function () {
