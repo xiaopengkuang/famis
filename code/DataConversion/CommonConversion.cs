@@ -523,8 +523,45 @@ namespace FAMIS.DataConversion
 
             return list;
         }
-        
 
+
+
+        public List<String> getListStateBySearchState(String state)
+        {
+            List<String> result = new List<String>();
+            if (isALL(state))
+            {
+                var data = from p in DB_C.tb_State_List
+                           select p;
+
+                foreach (var item in data)
+                {
+                    result.Add(item.Name);
+                }
+                return result;
+            }
+
+            String stateName=null;
+            switch (state)
+            {
+                case SystemConfig.Search_stateList_JsonName_CG:{stateName=SystemConfig.state_List_CG;};break;
+                case SystemConfig.Search_stateList_JsonName_DSH:{stateName=SystemConfig.state_List_DSH;};break;
+                case SystemConfig.Search_stateList_JsonName_YSH: { stateName = SystemConfig.state_List_YSH; }; break;
+                default: return result ; break;
+            }
+            result.Add(stateName);
+
+            //var data_ = from p in DB_C.tb_State_List
+            //            where p.Name == stateName
+            //            select p;
+            //foreach (var item in data_)
+            //{
+            //    result.Add(item.Name);
+            //}
+
+            return result;
+
+        }
 
 
     }

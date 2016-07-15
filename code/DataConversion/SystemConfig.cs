@@ -157,6 +157,11 @@ namespace FAMIS.DataConversion
         public const String TB_Return = "Return";
 
 
+        public const String Search_stateList_JsonName_CG = "CG";
+        public const String Search_stateList_JsonName_DSH = "DSH";
+        public const String Search_stateList_JsonName_YSH = "YSH";
+
+
 
 
 
