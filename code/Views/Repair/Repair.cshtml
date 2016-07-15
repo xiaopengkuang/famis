@@ -21,36 +21,33 @@
     <![endif]-->
 </head>
 <body>
-    <div fit="true">
+    <div data-options="fit:true">
         <div>
             <p>
                 单据号
-                        <input class="easyui-textbox" style="margin-right: 10px" id="DJH" />
-                 单据状态
+                <input class="easyui-textbox" style="margin-right: 10px" id="DJH" />
+                单据状态
                 <select class="easyui-combobox" name="state" style="margin-right: 10px;width: 60px;" id="DJZT">
                     <option value="ALL" selected="selected">全部</option>
-                    <option value="CG" >草稿</option>
-                    <option value="DSH" >待审核</option>
-                    <option value="YSH" >已审核</option>
+                    <option value="CG">草稿</option>
+                    <option value="DSH">待审核</option>
+                    <option value="YSH">已审核</option>
                     <option value="TH">退回</option>
                     <option value="YGH">已归还</option>
                 </select>
-             &nbsp; &nbsp; 
+                &nbsp; &nbsp;
                 维修日期：
-                        <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
                 至
-                        <input class="easyui-datebox" id="endDate_SC" style="margin-right: 10px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
-                &nbsp; &nbsp; 
+                <input class="easyui-datebox" id="endDate_SC" style="margin-right: 10px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                &nbsp; &nbsp;
                 <a href="javascript:void(0);" class="easyui-linkbutton" onclick="searchCond()" style="margin-right: 10px;" data-options="iconCls:'icon-search'">查询</a>
-                &nbsp; &nbsp; 
+                &nbsp; &nbsp;
                 <a href="javascript:void(0);" class="easyui-linkbutton" onclick="reasetCond()" data-options="iconCls:'icon-reload'">重置</a>
             </p>
 
         </div>
-        <div style="width: 100%; height: 500px">
-            <table id="datagrid_Repair" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
-            </table>
-        </div>
+            <table id="datagrid_Repair" style=" height: 500px"  class="easyui-datagrid" data-options="border:false,singleSelect:true,fitColumns:true"></table>
         <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
 
 
