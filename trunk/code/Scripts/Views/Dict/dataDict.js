@@ -63,6 +63,9 @@ function loadTree(treeid, url)
             //Step 1: 先判断其是否是根节点 如果是根节点则点击无效
             if (isRootNode(tree, node))
             {
+                dataGridShow();
+                treeGridHide();
+                loadDataGrid(datagridID, 0, true, treeid, false);
                 return;
             }
             //Step 1:获取表格类型
@@ -72,16 +75,21 @@ function loadTree(treeid, url)
                 data: {"id": node.id},
                 success: function (data) {
 
-                    if (data > 0) {
-                        dataGridHide();
-                        treeGridShow();
-                        var actionURL = "/Dict/loadTreeGrid?name=dictPara&dictID=" + node.id;
-                        loadTreeGrid(actionURL, treegridID);
-                    } else {
-                        dataGridShow();
-                        treeGridHide();
-                        loadDataGrid(datagridID, node.id, false, treeid);
+                    if (data)
+                    {
+                        if (data.isTree) {
+                            dataGridHide();
+                            treeGridShow();
+                            var actionURL = "/Dict/loadTreeGrid?name=dictPara&dictID=" + node.id;
+                            loadTreeGrid(actionURL, treegridID, data.editAble);
+                        } else {
+                            dataGridShow();
+                            treeGridHide();
+                            loadDataGrid(datagridID, node.id, false, treeid, data.editAble);
+                        }
                     }
+
+                   
                 }
             });
 
@@ -89,10 +97,9 @@ function loadTree(treeid, url)
         
         onLoadSuccess: function (node, data) {
             $('#' + treeid).show();
-
             dataGridShow();
             treeGridHide();
-            loadDataGrid(datagridID, 0, true, treeid);
+            loadDataGrid(datagridID, 0, true, treeid,false);
             //$('#tree_assetType').tree('collapseAll');
         }
     });
@@ -219,48 +226,10 @@ function isRootNode(tree,node) {
 }
 
 
-//function isSysSetting(treeID)
-//{
-//    var node = $("#" + treeID).tree('getSelected');
-//    $.ajax({
-//        url: "/Dict/Check_IsSysSet",
-//        type: 'POST',
-//        data: {
-//            "table": "dataDict",
-//            "id": node.id
-//        },
-//        beforeSend: ajaxLoading,
-//        success: function (data) {
-//            ajaxLoadEnd();
-//            if (data > 0) {
-//                return true
-//            } else {
-//                return false;
-//                //deleteID(node.id);
-//            }
-//        }
-//    });
-//}
-
-
-//dataGrid操作
-
-
-
-//treeGrid操作
-
-
-
-
-
-
-
-
-
 
 
 //只显示两列  参数名称  参数描述
-function loadDataGrid(gridID,nodeID,barDisable,treeID)
+function loadDataGrid(gridID, nodeID, barDisable, treeID, editAble)
 {
     //获取选中行
 
@@ -289,12 +258,12 @@ function loadDataGrid(gridID,nodeID,barDisable,treeID)
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool(gridID, barDisable, treeID);
+    loadPageTool(gridID, barDisable, treeID, editAble);
 }
 
 
 
-function loadPageTool(datagrid, toolbarDisable,treeID) {
+function loadPageTool(datagrid, toolbarDisable, treeID, editAble) {
     //alert(toolbar)
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
@@ -302,9 +271,9 @@ function loadPageTool(datagrid, toolbarDisable,treeID) {
             text: '添加',
             iconCls: 'icon-add',
             height: 50,
-            disabled: toolbarDisable,
+            disabled: !editAble,
             handler: function () {
-                if (toolbarDisable) {
+                if (!editAble) {
                     return;
                 }
                 if (datagrid == datagridID)
@@ -319,29 +288,15 @@ function loadPageTool(datagrid, toolbarDisable,treeID) {
                             return;
                         }
                 }
-
-                //if (datagrid == "datagrid_current") {
-                //    //获取选中的树节点
-                //    var node = $('#' + treeID).tree('getSelected');
-                //    if (node != null) {
-                //        var titleName = "参数-添加";
-                //        var url = "/Dict/add_dictPara?id=" + node.id + "&name=" + node.text;
-                //        openModelWindow(url, titleName)
-
-                //    } else {
-                //        $.messager.alert('提示', '请选择数据!', 'error');
-                //        return;
-                //    }
-                //    //alert("选中的是：" + node.id);
-                //}
+               
             }
         }, {
             text: '删除',
             iconCls: 'icon-remove',
             height: 50,
-            disabled: toolbarDisable,
+            disabled: !editAble,
             handler: function () {
-                if (toolbarDisable) {
+                if (!editAble) {
                     return;
                 }
                 if (datagrid == datagridID) {
@@ -353,9 +308,9 @@ function loadPageTool(datagrid, toolbarDisable,treeID) {
             text: '刷新',
             iconCls: 'icon-reload',
             height: 50,
-            disabled: toolbarDisable,
+            disabled: !editAble,
             handler: function () {
-                if (toolbarDisable) {
+                if (!editAble) {
                     return;
                 }
                 $('#' + datagrid).datagrid('reload');
@@ -413,7 +368,7 @@ function deleteIds_DataGrid(datagrid)
 
 
 
-function loadTreeGrid(url,gridID)
+function loadTreeGrid(url, gridID, editAble)
 {
     $('#' + gridID).treegrid({
         url:url,
@@ -440,7 +395,13 @@ function loadTreeGrid(url,gridID)
             id: 'btnrefresh',
             text: '刷新',
             iconCls: 'icon-reload',
+            disabled:!editAble,
             handler: function () {
+                if (!editAble)
+                {
+                    return;
+                }
+
                 $("#" + gridID).treegrid('reload');
             }
         }, '-', {
@@ -463,29 +424,45 @@ function loadTreeGrid(url,gridID)
             id: 'btnaddBro',
             text: '新增同级',
             iconCls: 'icon-add',
+            disabled: !editAble,
             handler: function () {
+                if (!editAble) {
+                    return;
+                }
                 //获取父节点
                 addBroNode(gridID, treeDictID);
             }
         }, '-', {
             id: 'btnaddChi',
             text: '新增下级',
+            disabled: !editAble,
             iconCls: 'icon-add',
             handler: function () {
+                if (!editAble) {
+                    return;
+                }
                 addchild(gridID,treeDictID);
             }
         }, '-', {
             id: 'btnedit',
             text: '修改',
             iconCls: 'icon-edit',
+            disabled: !editAble,
             handler: function () {
+                if (!editAble) {
+                    return;
+                }
                 editNode(gridID, treeDictID);
             }
         }, '-', {
             id: 'btnremove',
             text: '删除',
             iconCls: 'icon-remove',
+            disabled: !editAble,
             handler: function () {
+                if (!editAble) {
+                    return;
+                }
                 deletNode(gridID,treeDictID);
             }
         }]
