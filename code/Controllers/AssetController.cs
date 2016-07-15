@@ -661,8 +661,15 @@ namespace FAMIS.Controllers
             }
 
             int insertNum = 0;
-            String data_f = data_cattr.Replace("\\", "");
-            data_f = data_f.Replace("\"", "");
+             String data_f = data_cattr;
+             if (data_f.Contains("\\"))
+             {
+                 data_f = data_f.Replace("\\", "");
+             }
+             if (data_f.Contains("\""))
+             {
+                 data_f = data_f.Replace("\"", "");
+             }
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_Asset_add json_data = serializer.Deserialize<Json_Asset_add>(Asset_add);
             List<Json_asset_cattr_ad>  cattr_list = serializer.Deserialize<List<Json_asset_cattr_ad>>(data_f);
