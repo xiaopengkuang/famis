@@ -127,7 +127,7 @@ namespace FAMIS.Helper_Class
                 case "ZC":
                     {
                         var q = from o in db.tb_Asset
-                                where o.serial_number.Contains("ZC")&&  o.flag==true
+                                where o.serial_number.Contains("ZC")
                                 orderby o.ID
                                 select o;
                         foreach (var p in q)
@@ -156,7 +156,7 @@ namespace FAMIS.Helper_Class
                 case "YH":
                     {
                         var q = from o in db.tb_Asset
-                                where o.serial_number.Contains("YH") && o.flag == true
+                                where o.serial_number.Contains("YH")
                                 orderby o.ID
                                 select o;
                         foreach (var p in q)
@@ -201,7 +201,7 @@ namespace FAMIS.Helper_Class
                     }
                 case "GH":
                     {
-                        var q = from o in db.tb_Asset_Borrow
+                        var q = from o in db.tb_Asset_Return
                                 where o.flag == true && o.serialNum.Contains("GH")
                                 orderby o.ID
                                 select o;
