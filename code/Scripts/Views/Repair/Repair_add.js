@@ -301,7 +301,7 @@ function checkFormat() {
     //基础属性
     var check_obj_dataToP = $('#dateToP').datebox("getValue");
     var check_obj_dataToR = $('#dateToR').datebox("getValue");
-    var check_obj_supplier_repair = $("#supplier_repair").combobox("getText");
+    var check_obj_supplier_repair = $("#supplier_repair").combobox("getValue");
     var check_obj_UAP = $("#UAP_add").combobox("getValue");
     var check_obj_UAT = $("#UAT_add").combobox("getValue");
     var check_obj_reason = $("#reason_add").val();

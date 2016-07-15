@@ -276,9 +276,9 @@ function updateCurrentList(addList)
 function checkFormat() {
     //基础属性
     var check_obj_LYYY = $('#LYYY_add').val();
-    var check_obj_LYBM = $("#LYBM_add").combotree("getText");
+    var check_obj_LYBM = $("#LYBM_add").combotree("getValue");
     var check_obj_SYRY = $("#SYRY_add").combobox("getValue");
-    var check_obj_CFDD = $("#CFDD_add").val();
+    var check_obj_CFDD = $("#CFDD_add").combotree("getValue");
 
     if (isNull(check_obj_LYYY)) {
         MessShow("领用原因不能为空");

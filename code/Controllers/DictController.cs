@@ -2018,8 +2018,27 @@ namespace FAMIS.Controllers
              return ds;
          }
 
-				
-
+         [HttpPost]
+         public JsonResult Handler_load_infoZJ(int? id_zclb)
+         {
+             if (id_zclb == null)
+             {
+                 return null;
+             }
+             var data = from p in DB_C.tb_AssetType
+                        where p.flag == true && p.ID == id_zclb
+                        select new Json_infoZJ
+                        {
+                            period_Depreciation = p.period_Depreciation,
+                            Net_residual_rate = p.Net_residual_rate
+                        };
+             if (data.Count() > 0)
+             {
+                 Json_infoZJ result = data.First();
+                 return Json(result, JsonRequestBehavior.AllowGet);
+             }
+             return null;
+         }
 
         public String GetTreeJsonByTable_Department(DataTable tabel, string idCol, string txtCol, string url, string rela, object pId)
         {

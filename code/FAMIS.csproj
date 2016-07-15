@@ -2100,6 +2100,7 @@
     <Compile Include="DTO\dto_rule_Generate.cs" />
     <Compile Include="DTO\dto_Staff.cs" />
     <Compile Include="DTO\dto_supplier.cs" />
+    <Compile Include="DTO\Json_infoZJ.cs" />
     <Compile Include="DTO\Json_operationRight.cs" />
     <Compile Include="DTO\Json_reduction.cs" />
     <Compile Include="DTO\Json_reduction_add.cs" />

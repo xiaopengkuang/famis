@@ -93,6 +93,8 @@ function bindData(id)
                 $("#GZRQ_add").datebox('setValue', date_add);
 
                 //其他属性
+                $('#Other_ZCDJ_add').numberbox('setValue', data.amount);
+                $('#Other_ZCSL_add').numberbox('setValue', data.unit_price);
                 $('#Other_SYNX_add').numberspinner('setValue', data.YearService_month);
                 $("#Other_ZJFS_add").combobox('setValue', data.Method_depreciation);
                 $("#Other_JCZL_add").val(data.Net_residual_rate);
@@ -152,6 +154,25 @@ function load_ZCLB_add() {
    });
 }
 
+function update_infoZJ(id_zclb) {
+    //获取该类别有哪些属性
+
+    $.ajax({
+        url: "/Dict/Handler_load_infoZJ?id_zclb=" + id_zclb,
+        type: 'POST',
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+                $('#Other_SYNX_add').numberspinner("setValue", data.period_Depreciation);
+                $('#Other_JCZL_add').val(data.Net_residual_rate);
+            } else {
+                $('#Other_SYNX_add').numberspinner("setValue", 0);
+                $('#Other_JCZL_add').val("0");
+            }
+        }
+    });
+}
 function update_ZDY_attr(id_zclb)
 {
     //获取该类别有哪些属性
@@ -680,14 +701,14 @@ function ajaxLoadEnd() {
 }
 
 
-function checkFormat() {
+function checkFormat(id_asset) {
     //基础属性
-    var check_obj_ZCLB = $("#ZCLB_add").combotree("getText");
+    var check_obj_ZCLB = $("#ZCLB_add").combotree("getValue");
     var check_obj_ZCMC = $("#ZCMC_add").val();
     var check_obj_ZCXH = $("#ZCXH_add").combobox("getValue");
     var check_obj_JLDW = $("#JLDW_add").combobox("getValue");
-    var check_obj_CFDD = $("#CFDD_add").combotree("getText");
-    var check_obj_GYS = $("#GYS_add").combogrid("getText");
+    var check_obj_CFDD = $("#CFDD_add").combotree("getValue");
+    var check_obj_GYS = $("#GYS_add").combogrid("getValue");
     var check_obj_GZRQ = $("#GZRQ_add").datebox("getValue");
     //其他属性
     var check_obj_Other_SYNX = $("#Other_SYNX_add").val();
@@ -765,7 +786,7 @@ function checkFormat() {
             default:; break;
         }
     }
-    submitForm('@ViewBag.id');
+    submitForm(id_asset);
 
 }
 

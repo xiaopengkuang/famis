@@ -398,7 +398,7 @@ function ajaxLoadEnd() {
 
 //====================================================================//
 
-function checkFormat() {
+function checkFormat(id_reduction) {
     //基础属性
     var check_obj_date_reduction = $('#date_reduction').datebox("getValue");
     var check_obj_FS_SJ = $('#FS_SJ').combobox("getValue");
@@ -416,7 +416,7 @@ function checkFormat() {
     } else if (isNull(check_obj_reason_add)) {
         MessShow("减少原因不能为空");
     } else {
-        saveData('1', '@ViewBag.id');
+        saveData('1', id_reduction);
     }
 }
 

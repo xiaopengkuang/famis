@@ -425,12 +425,12 @@ function ajaxLoadEnd() {
 
 
 
-function checkFormat() {
+function checkFormat(id_collar) {
     //基础属性
     var check_obj_date = $('#date_add').datebox("getValue");
     var check_obj_LYYY = $('#LYYY_add').val();
-    var check_obj_LYBM = $("#LYBM_add").combotree("getText");
-    var check_obj_CFDD = $("#CFDD_add").val();
+    var check_obj_LYBM = $("#LYBM_add").combotree("getValue");
+    var check_obj_CFDD = $("#CFDD_add").combotree("getValue");
 
     //alert(check_obj_date);
     if (isNull(check_obj_date)) {
@@ -442,7 +442,7 @@ function checkFormat() {
     } else if (isNull(check_obj_CFDD)) {
         MessShow("存放地点不能为空");
     } else {
-        saveData('1', '@ViewBag.id');
+        saveData('1', id_collar);
     }
 }
 

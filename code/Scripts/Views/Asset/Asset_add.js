@@ -69,9 +69,14 @@ function load_ZCLB_add() {
        onSelect: function (node) {
            //返回树对象  
            var tree = $(this).tree;
+           //更新资产型号
            load_ZCXH_add(node.id);
+           //更新资产性质
            updateZCXZ(tree, node);
-           update_ZDY_attr(node.id)
+           //更新资产自定义属性
+           update_ZDY_attr(node.id);
+           //更新折旧年限、折旧率
+           update_infoZJ(node.id);
        }, //全部折叠
        onLoadSuccess: function (node, data) {
            var ctree = $('#ZCLB_add').combotree('tree');
@@ -81,6 +86,27 @@ function load_ZCLB_add() {
            }
        }
    });
+}
+
+function update_infoZJ(id_zclb)
+{
+    //获取该类别有哪些属性
+
+    $.ajax({
+        url: "/Dict/Handler_load_infoZJ?id_zclb=" + id_zclb,
+        type: 'POST',
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data) {
+                $('#Other_SYNX_add').numberspinner("setValue", data.period_Depreciation);
+                $('#Other_JCZL_add').val(data.Net_residual_rate);
+            } else {
+                $('#Other_SYNX_add').numberspinner("setValue", 0);
+                $('#Other_JCZL_add').val("0");
+            }
+        }
+    });
 }
 
 function update_ZDY_attr(id_zclb)
@@ -650,11 +676,11 @@ function ajaxLoadEnd() {
 
 function checkFormat() {
     //基础属性
-    var check_obj_ZCLB = $("#ZCLB_add").combotree("getText");
+    var check_obj_ZCLB = $("#ZCLB_add").combotree("getValue");
     var check_obj_ZCMC = $("#ZCMC_add").val();
     var check_obj_ZCXH = $("#ZCXH_add").combobox("getValue");
-    var check_obj_CFDD = $("#CFDD_add").combotree("getText");
-    var check_obj_GYS = $("#GYS_add").combogrid("getText");
+    var check_obj_CFDD = $("#CFDD_add").combotree("getValue");
+    var check_obj_GYS = $("#GYS_add").combogrid("getValue");
     //其他属性
     var check_obj_Other_SYNX = $("#Other_SYNX_add").val();
     var check_obj_Other_JCZL = $("#Other_JCZL_add").val();
