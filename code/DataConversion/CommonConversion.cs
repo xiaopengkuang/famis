@@ -547,6 +547,8 @@ namespace FAMIS.DataConversion
                 case SystemConfig.Search_stateList_JsonName_CG:{stateName=SystemConfig.state_List_CG;};break;
                 case SystemConfig.Search_stateList_JsonName_DSH:{stateName=SystemConfig.state_List_DSH;};break;
                 case SystemConfig.Search_stateList_JsonName_YSH: { stateName = SystemConfig.state_List_YSH; }; break;
+                case SystemConfig.Search_stateList_JsonName_TH: { stateName = SystemConfig.state_List_TH; }; break;
+                case SystemConfig.Search_stateList_JsonName_YGH: { stateName = SystemConfig.state_List_YGH; }; break;
                 default: return result ; break;
             }
             result.Add(stateName);

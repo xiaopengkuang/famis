@@ -33,12 +33,13 @@
                     <option value="CG">草稿</option>
                     <option value="DSH">待审核</option>
                     <option value="YSH">已审核</option>
+                    <option value="TH">退回</option>
                 </select>
                 &nbsp; &nbsp; 
                 领用日期：
-                        <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                        <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',editable:false,formatter:myformatter,parser:myparser">
                 至
-                        <input class="easyui-datebox" id="endDate_SC" style="margin-right: 10px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                        <input class="easyui-datebox" id="endDate_SC" style="margin-right: 10px;" data-options="sharedCalendar:'#cc',editable:false,formatter:myformatter,parser:myparser">
                 &nbsp; &nbsp; 
                 <a href="javascript:void(0);" class="easyui-linkbutton" onclick="searchCond()" style="margin-right: 10px;" data-options="iconCls:'icon-search'">查询</a>
                 &nbsp; &nbsp; 
