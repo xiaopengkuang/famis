@@ -38,8 +38,6 @@ namespace FAMIS.Controllers
         {
             
             var checkList = (from o in db.tb_Asset
-
-                              
                              select new
                              {
                                  ID = o.ID,
