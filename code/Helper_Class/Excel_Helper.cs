@@ -7,17 +7,21 @@ using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using System.IO;
 using System.Data;
-
+using System.Web.Mvc;
+using FAMIS.Models;
+using System.Reflection;
 
 namespace FAMIS.Helper_Class
 {
+     
     public class Excel_Helper:IDisposable
     {
         private string fileName = null; //文件名
         private IWorkbook workbook = null;
         private FileStream fs = null;
         private bool disposed;
-
+        private FAMISDBTBModels db = new FAMISDBTBModels();
+       // protected internal virtual FileContentResult File(byte[] fileContents, string contentType, string fileDownloadName);
         public void ExcelHelper(string fileName)
         {
             this.fileName = fileName;
@@ -70,7 +74,51 @@ namespace FAMIS.Helper_Class
                 dt.Rows.Add(dr);
             }
             return dt;
-        }  
+        }
+        public static DataTable ToDataTable<T>(IEnumerable<T> varlist)
+        {
+            DataTable dtReturn = new DataTable();
+
+            // column names
+            PropertyInfo[] oProps = null;
+
+            if (varlist == null)
+                return dtReturn;
+
+            foreach (T rec in varlist)
+            {
+                if (oProps == null)
+                {
+                    oProps = ((Type)rec.GetType()).GetProperties();
+                    foreach (PropertyInfo pi in oProps)
+                    {
+                        Type colType = pi.PropertyType;
+
+                        if ((colType.IsGenericType) && (colType.GetGenericTypeDefinition()
+                             == typeof(Nullable<>)))
+                        {
+                            colType = colType.GetGenericArguments()[0];
+                        }
+
+                        dtReturn.Columns.Add(new DataColumn(pi.Name, colType));
+                    }
+                }
+
+                DataRow dr = dtReturn.NewRow();
+
+                foreach (PropertyInfo pi in oProps)
+                {
+                    dr[pi.Name] = pi.GetValue(rec, null) == null ? DBNull.Value : pi.GetValue
+                    (rec, null);
+                }
+
+                dtReturn.Rows.Add(dr);
+            }
+            return dtReturn;
+        }
+      //  protected  abstract FileStreamResult File(MemoryStream fileStream, string contentType, string fileDownloadName);
+     
+     
         /// <summary>
         /// 将DataTable数据导入到excel中
         /// </summary>
