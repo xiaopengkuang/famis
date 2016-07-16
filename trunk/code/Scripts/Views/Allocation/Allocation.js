@@ -318,19 +318,39 @@ function loadPageTool(datagrid, dataRight) {
                text: '导出',
                height: 50,
                iconCls: 'icon-save',
-               //disabled: !dataRight.export_able,
+               disabled: !dataRight.export_able,
                handler: function () {
-                   //if (!dataRight.export) {
-                   //    return;
-                   //}
-                   var filename = getNowFormatDate_FileName();
-                   Export(filename, $('#' + datagrid));
+                   if (!dataRight.export_able) {
+                       return;
+                   }
+                   ajaxLoading();
+                   var url = '/ExportExcel/ExportExcel_Allocation?exportFlag=true&searchCondtiion=' + searchCondtiion;
+                   //'/Collar/LoadCollars?searchCondtiion=' + searchCondtiion
+                   exportData(url);
+                   ajaxLoadEnd();
+
+                   //var filename = getNowFormatDate_FileName();
+                   //Export(filename, $('#' + datagrid));
                }
            }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
+}
+function exportData(url) {
+    var form = $("<form>");//定义一个form表单
+    form.attr("style", "display:none");
+    form.attr("target", "");
+    form.attr("method", "post");
+    form.attr("action", url);
+    var input1 = $("<input>");
+    input1.attr("type", "hidden");
+    input1.attr("name", "exportData");
+    input1.attr("value", (new Date()).getMilliseconds());
+    $("body").append(form);//将表单放置在web中
+    form.append(input1);
+    form.submit();//表单提交
 }
 
 

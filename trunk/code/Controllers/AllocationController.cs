@@ -104,7 +104,7 @@ namespace FAMIS.Controllers
 
 
         [HttpPost]
-        public ActionResult LoadAllocation(int? page, int? rows, String searchCondtiion)
+        public String LoadAllocation(int? page, int? rows, String searchCondtiion, bool? exportFlag)
         {
 
             page = page == null ? 1 : page;
@@ -115,12 +115,13 @@ namespace FAMIS.Controllers
             {
                 dto_condition = serializer.Deserialize<dto_SC_List>(searchCondtiion);
             }
-            return loadAllocationList(page, rows, dto_condition);
+            return loadAllocationList(page, rows, dto_condition, exportFlag);
         }
 
 
-        public JsonResult loadAllocationList(int? page, int? rows, dto_SC_List cond)
+        public String loadAllocationList(int? page, int? rows, dto_SC_List cond, bool? exportFlag)
         {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
             int? roleID = commonConversion.getRoleID();
@@ -128,7 +129,6 @@ namespace FAMIS.Controllers
             //获取部门ID
             List<int?> idsRight_department = commonConversion.getids_departmentByRole(roleID);
             bool isAllUser = commonConversion.isSuperUser(roleID);
-
 
 
             //获取该用户可以去审核的单据
@@ -222,6 +222,14 @@ namespace FAMIS.Controllers
                 }
             }
 
+
+
+            if (exportFlag != null && exportFlag == true)
+            {
+                String json_result = serializer.Serialize(data).ToString().Replace("\\", "");
+                return json_result;
+            }
+
             int skipindex = ((int)page - 1) * (int)rows;
             int rowsNeed = (int)rows;
             var json = new
@@ -229,7 +237,9 @@ namespace FAMIS.Controllers
                 total = data.Count(),
                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
             };
-            return Json(json, JsonRequestBehavior.AllowGet);
+            //return Json(json, JsonRequestBehavior.AllowGet);
+            String json_result_2 = serializer.Serialize(json).ToString().Replace("\\", "");
+            return json_result_2;
 
         }
         [HttpPost]
