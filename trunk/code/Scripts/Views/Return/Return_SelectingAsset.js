@@ -63,7 +63,6 @@ function LoadInitData_Detail() {
 
     var _list = "";
     try{
-    
         for (var i = 0; i < parent.CurrentList.length; i++) {
             if (i == 0) {
                 _list = parent.CurrentList[i]+"";

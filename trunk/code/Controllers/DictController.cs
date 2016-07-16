@@ -784,6 +784,12 @@ namespace FAMIS.Controllers
                      { }
                      else { continue; }
                  }
+                 else if (treeType == SystemConfig.treeType_Return)
+                 {
+                     if (SystemConfig.treeType_return_Search_Menu.Contains(item.name_flag))
+                     { }
+                     else { continue; }
+                 }
                  else
                  {
                      continue;
