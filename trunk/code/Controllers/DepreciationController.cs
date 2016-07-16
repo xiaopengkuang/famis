@@ -25,12 +25,14 @@ namespace FAMIS.Controllers
     public class DepreciationController : Controller
     {
         //
+        CommonController comController = new CommonController();
         DictController dc = new DictController();
         FAMISDBTBModels db = new FAMISDBTBModels();
         StringBuilder result_tree_SearchTree = new StringBuilder();
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         Excel_Helper excel = new Excel_Helper();
         Serial serial = new Serial();
+        
         public ActionResult depreciation()
         {
             return View();
@@ -39,7 +41,7 @@ namespace FAMIS.Controllers
         [HttpPost]
        public string Dep_JT()
         {
-            StreamWriter sw = new StreamWriter("D:\\qp0.txt", true);
+           // StreamWriter sw = new StreamWriter("D:\\qp0.txt", true);
              string ads;
             List<String> list = Get_Depreciation_Data();
             if (list.Count() != 0)
@@ -69,7 +71,7 @@ namespace FAMIS.Controllers
                         select p;
                 foreach (var p in q)
                 {
-                    p.Total_price = tatol_price;
+                    p.value = tatol_price;
                     p.depreciation_Month = month_depreciation;
                     p.depreciation_tatol = tatol_depreciation;
                     p.Net_value = net_value;
@@ -197,13 +199,21 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
-        public JsonResult Load_Asset(string JSdata)
+        public JsonResult Load_Asset( int? page, int? rows, string JSdata)
         {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
 
+            
+          
             int flagnum = int.Parse(JSdata);
             int name_flag = flagnum/1000000;
             string name_flag_string = "";
-            int item_id=flagnum%1000000;
+            int? item_id=flagnum%1000000;
+              List<int?> Depart_Asset_Type_Id=new List<int?>();
+              List<int?> AssetassettypeId = new List<int?>();
+            
+            
             IEnumerable<String> flags = from o in db.tb_dataDict
                                         where o.ID == name_flag
                                         select o.name_flag;
@@ -214,78 +224,97 @@ namespace FAMIS.Controllers
             List<tb_Asset> list = db.tb_Asset.ToList();
             if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
+                  Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
+                var data = from r in db.tb_Asset
+                           join t in db.tb_AssetType on r.type_Asset equals t.ID
+                           join D in db.tb_department on r.department_Using equals D.ID
+                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
+                          
+                           where Depart_Asset_Type_Id.Contains(r.department_Using)||item_id==0
+                           select new
+                           {
+                               ID = r.ID,
+                               department_Using = D.name_Department,
+                               serial_number = r.serial_number,
+                               name_Asset = t.name_Asset_Type,
+                               specification = r.specification,
+                               unit_price = r.unit_price,
+                               amount = r.amount,
+                               Total_price = r.value,
+                               depreciation_tatol = r.depreciation_tatol,
+                               Method_depreciation = k.name_para,
+                               YearService_month = r.YearService_month,
+                               Net_residual_rate = r.Net_residual_rate,
+                               depreciation_Month = r.depreciation_Month,
+                               Net_value = r.Net_value,
+                               Time_Purchase = r.Time_Purchase,
+                               Time_add = r.Time_add
+
+
+                           };
+                data = data.OrderByDescending(a => a.ID);
+                int skipindex = ((int)page - 1) * (int)rows;
+                int rowsNeed = (int)rows;
+
                 var json = new
-                {
-                    total = list.Count(),
-                    rows = (from r in db.tb_Asset
-                            join t in db.tb_AssetType on r.type_Asset equals t.ID
-                            join D in db.tb_department on r.department_Using equals D.ID
-                            join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
-                            where D.ID == item_id || item_id == 0
-                            select new
-                            {
-                                ID = r.ID,
-                                department_Using = D.name_Department,
-                                serial_number = r.serial_number,
-                                name_Asset = t.name_Asset_Type,
-                                specification = r.specification,
-                                unit_price = r.unit_price,
-                                amount = r.amount,
-                                Total_price = r.Total_price,
-                                depreciation_tatol = r.depreciation_tatol,
-                                Method_depreciation = k.name_para,
-                                YearService_month = r.YearService_month,
-                                Net_residual_rate = r.Net_residual_rate,
-                                depreciation_Month = r.depreciation_Month,
-                                Net_value = r.Net_value,
-                                Time_Purchase = r.Time_Purchase,
-                                Time_add = r.Time_add
-
-
-                            }).ToArray()
+                {  
+                   
+                    total = data.ToList().Count,
+                    rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                    //rows = data.ToList().ToArray()
                 };
-
-
                 return Json(json, JsonRequestBehavior.AllowGet);
+
+
+              
 
             }
             if (name_flag_string == SystemConfig.nameFlag_2_ZCLB)
             {
+                  AssetassettypeId= comController.GetSonID_AsseType(item_id);
+
+                var data = from r in db.tb_Asset
+                           join t in db.tb_AssetType on r.type_Asset equals t.ID
+                           join D in db.tb_department on r.department_Using equals D.ID
+                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
+                            
+                           where AssetassettypeId.Contains(r.type_Asset)||item_id==0
+                           select new
+                           {
+                               ID = r.ID,
+                               department_Using = D.name_Department,
+                               serial_number = r.serial_number,
+                               name_Asset = t.name_Asset_Type,
+                               specification = r.specification,
+                               unit_price = r.unit_price,
+                               amount = r.amount,
+                               Total_price = r.value,
+                               depreciation_tatol = r.depreciation_tatol,
+                               Method_depreciation = k.name_para,
+                               YearService_month = r.YearService_month,
+                               Net_residual_rate = r.Net_residual_rate,
+                               depreciation_Month = r.depreciation_Month,
+                               Net_value = r.Net_value,
+                               Time_Purchase = r.Time_Purchase,
+                               Time_add = r.Time_add
+
+
+                           };
+                 data = data.OrderByDescending(a => a.ID);
+                int skipindex = ((int)page - 1) * (int)rows;
+                int rowsNeed = (int)rows;
                 var json = new
-                {
-                    total = list.Count(),
-                    rows = (from r in db.tb_Asset
-                            join t in db.tb_AssetType on r.type_Asset equals t.ID
-                            join D in db.tb_department on r.department_Using equals D.ID
-                            join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
-                            where t.ID == item_id||item_id==0
-                            select new
-                            {
-                                ID = r.ID,
-                                department_Using = D.name_Department,
-                                serial_number = r.serial_number,
-                                name_Asset = t.name_Asset_Type,
-                                specification = r.specification,
-                                unit_price = r.unit_price,
-                                amount = r.amount,
-                                Total_price = r.Total_price,
-                                depreciation_tatol = r.depreciation_tatol,
-                                Method_depreciation = k.name_para,
-                                YearService_month = r.YearService_month,
-                                Net_residual_rate = r.Net_residual_rate,
-                                depreciation_Month = r.depreciation_Month,
-                                Net_value = r.Net_value,
-                                Time_Purchase = r.Time_Purchase,
-                                Time_add = r.Time_add
-
-
-                            }).ToArray()
+                { 
+                    total = data.ToList().Count,
+                    rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                    //rows = data.ToList().ToArray()
                 };
                 return Json(json, JsonRequestBehavior.AllowGet);
 
             }
             return Null_dataGrid();
 
+           
 
         }
         [HttpPost]
@@ -321,19 +350,23 @@ namespace FAMIS.Controllers
         public ActionResult PDdelete(string ID)
         {
 
-            var Model = db.tb_Asset_inventory.Find(int.Parse(ID));
-            db.tb_Asset_inventory.Remove(Model);
-            db.SaveChanges();
+            var Model = "";
             var pdsearail=from o in db.tb_Asset_inventory
-                          where o.ID.ToString()==ID
+                          where o.serial_number==ID
                           select o;
+
             foreach(var p in pdsearail)
             {
+                p.flag = false;
+             
                 var deatails = from o in db.tb_Asset_inventory_Details
-                               where o.serial_number == p.ID.ToString()
+                               where o.serial_number == p.serial_number
                                select o;
 
-                db.tb_Asset_inventory_Details.Remove((tb_Asset_inventory_Details)deatails);
+                foreach(var q in deatails)
+                {
+                    q.flag =false; 
+                }
             }
             db.SaveChanges();
 
@@ -378,7 +411,7 @@ namespace FAMIS.Controllers
                      property=type,
                      date_Create=DateTime.Now,
                      ps= ps,
-
+                     flag=true
 
                 };
                 db.tb_Asset_inventory.Add(rule_tb);
@@ -429,16 +462,14 @@ namespace FAMIS.Controllers
 
         }
         [HttpPost]
-        public JsonResult Load_Inventory_details(string JSdata)
+        public JsonResult Load_Inventory_details(int? page,int? rows, string JSdata)
         {
 
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
 
             List<tb_Asset_inventory_Details> list = db.tb_Asset_inventory_Details.ToList();
-            var json = new
-            {
-                total = list.Count(),
-
-                rows = (from r in db.tb_Asset_inventory_Details
+           var data=from r in db.tb_Asset_inventory_Details
                         join a in db.tb_Asset on r.serial_number_Asset equals a.serial_number
                         join t in db.tb_AssetType on a.type_Asset equals t.ID
                         join d in db.tb_dataDict_para on a.measurement equals d.ID
@@ -447,7 +478,7 @@ namespace FAMIS.Controllers
                         join u in db.tb_user on a.Owener equals u.ID
                         join s in db.tb_dataDict_para on a.state_asset equals s.ID
                         join sp in db.tb_supplier on a.supplierID equals sp.ID
-                        where r.serial_number == JSdata
+                        where r.serial_number == JSdata&&r.flag==true
                         select new
                         {
                             ID = r.ID,
@@ -463,7 +494,7 @@ namespace FAMIS.Controllers
                             measurement = d.name_para,
                             unit_price = a.unit_price,
                             amount = a.amount,
-                            Total_price = a.Total_price,
+                            Total_price = a.value,
                             department_using = p.name_Department,
                             address = j.name_para,
                             owener = u.true_Name,
@@ -471,13 +502,22 @@ namespace FAMIS.Controllers
                             supllier = sp.name_supplier
 
 
-                        }).ToArray()
-            };
+                        };
+           data = data.OrderByDescending(a => a.ID);
+           int skipindex = ((int)page - 1) * (int)rows;
+           int rowsNeed = (int)rows;
 
-            return Json(json, JsonRequestBehavior.AllowGet);
+           var json = new
+           {
+
+               total = data.ToList().Count,
+               rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+               //rows = data.ToList().ToArray()
+           };
+           return Json(json, JsonRequestBehavior.AllowGet);
 
         }
-
+       
         public void AddPDList(string pdsearial)
         {
             int? sys = 0;
@@ -626,8 +666,11 @@ namespace FAMIS.Controllers
        
        }
 
-       public JsonResult Query_By_Condition(String JSON) 
-       { 
+       public JsonResult Query_By_Condition(int? page, int ? rows,String JSON) 
+       {
+           page = page == null ? 1 : page;
+           rows = rows == null ? 1 : rows;
+
            string [] temp= JSON.Split(',');
            List<tb_Asset_inventory> list = db.tb_Asset_inventory.ToList();
            DateTime BeginDate = Convert.ToDateTime("8888-12-12"+ " 00:00:00");
@@ -654,12 +697,12 @@ namespace FAMIS.Controllers
            {
                case 0:
                    {
-                       var json = new
-                       {
-                           total = list.Count(),
+                       
+                        
+                           
 
-                           rows = (from r in db.tb_Asset_inventory
-                                    
+                           var data = from r in db.tb_Asset_inventory
+                                    where r.flag==true
                                    select new
                                    {
                                        ID = r.ID,
@@ -673,22 +716,28 @@ namespace FAMIS.Controllers
                                        state = r.state,
                                        date_Create = r.date_Create,
                                        ps = r.ps
+                                   };
+                                    
+                         data = data.OrderByDescending(a => a.ID);
+                int skipindex = ((int)page - 1) * (int)rows;
+                int rowsNeed = (int)rows;
 
-                                   }).ToArray()
-                       };
+                var json = new
+                {  
+                   
+                    total = data.ToList().Count,
+                    rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                    //rows = data.ToList().ToArray()
+                };
+                return Json(json, JsonRequestBehavior.AllowGet);
 
-                       return Json(json, JsonRequestBehavior.AllowGet);
-
+                     
 
                    }
                case 2:
                    {
-                       var json = new
-                       {
-                           total = list.Count(),
-
-                           rows = (from r in db.tb_Asset_inventory
-                                   where r.state==PDstate&&r._operator==PDperson
+                      var data=from r in db.tb_Asset_inventory
+                                   where r.state==PDstate&&r._operator==PDperson&&r.flag==true
                                    select new
                                    {
                                        ID = r.ID,
@@ -701,25 +750,32 @@ namespace FAMIS.Controllers
                                        property = r.property,
                                        state = r.state,
                                        date_Create = r.date_Create,
-                                       ps = r.ps
+                                       ps = r.ps+" "
 
-                                   }).ToArray()
-                       };
+                                   };
 
-                       return Json(json, JsonRequestBehavior.AllowGet);
+                      data = data.OrderByDescending(a => a.ID);
+                      int skipindex = ((int)page - 1) * (int)rows;
+                      int rowsNeed = (int)rows;
+
+                      var json = new
+                      {
+
+                          total = data.ToList().Count,
+                          rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                          //rows = data.ToList().ToArray()
+                      };
+                      return Json(json, JsonRequestBehavior.AllowGet);
+                      
 
 
                    }
                case 3:
                  {
-                     var json = new
-                     {
-                         total = list.Count(),
-
-                         rows = (from r in db.tb_Asset_inventory
-                                 where (r.state == PDstate && r._operator == PDperson&&BeginDate<=r.date)
-                                 ||(r.state == PDstate && r._operator == PDperson&&EndDate>=r.date)
-                                 || (r.state == PDstate && r._operator == PDperson && r.serial_number.Contains(searial))
+                    var data= from r in db.tb_Asset_inventory
+                                 where (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.flag == true)
+                                 || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && r.flag == true)
+                                 || (r.state == PDstate && r._operator == PDperson && r.serial_number.Contains(searial) && r.flag == true)
 
                                  select new
                                  {
@@ -735,23 +791,27 @@ namespace FAMIS.Controllers
                                      date_Create = r.date_Create,
                                      ps = r.ps
 
-                                 }).ToArray()
-                     };
+                                 };
+                    data = data.OrderByDescending(a => a.ID);
+                    int skipindex = ((int)page - 1) * (int)rows;
+                    int rowsNeed = (int)rows;
 
-                     return Json(json, JsonRequestBehavior.AllowGet);
-                   
+                    var json = new
+                    {
+
+                        total = data.ToList().Count,
+                        rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                        //rows = data.ToList().ToArray()
+                    };
+                    return Json(json, JsonRequestBehavior.AllowGet);
                      
                  }
                case 4:
                  {
-                     var json = new
-                     {
-                         total = list.Count(),
-
-                         rows = (from r in db.tb_Asset_inventory
-                                 where (r.state == PDstate && r._operator == PDperson && EndDate >= r.date&&r.date>=BeginDate)
-                                 || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && searial.Contains(searial))
-                                 || (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial))
+                    var data=from r in db.tb_Asset_inventory
+                                 where (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && r.date >= BeginDate && r.flag == true)
+                                 || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && searial.Contains(searial) && r.flag == true)
+                                 || (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
                                  select new
                                  {
                                      ID = r.ID,
@@ -766,22 +826,27 @@ namespace FAMIS.Controllers
                                      date_Create = r.date_Create,
                                      ps = r.ps
 
-                                 }).ToArray()
-                     };
+                                 };
+                    data = data.OrderByDescending(a => a.ID);
+                    int skipindex = ((int)page - 1) * (int)rows;
+                    int rowsNeed = (int)rows;
 
-                     return Json(json, JsonRequestBehavior.AllowGet);
+                    var json = new
+                    {
+
+                        total = data.ToList().Count,
+                        rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                        //rows = data.ToList().ToArray()
+                    };
+                    return Json(json, JsonRequestBehavior.AllowGet);
 
                 
                  
                  }
                case 5:
                  {
-                     var json = new
-                     {
-                         total = list.Count(),
-
-                         rows = (from r in db.tb_Asset_inventory
-                                 where r.serial_number.Contains(searial) && BeginDate <= r.date && r.date <= EndDate && r.state == PDstate && r._operator == PDperson
+                    var data=from r in db.tb_Asset_inventory
+                                 where r.serial_number.Contains(searial) && BeginDate <= r.date && r.date <= EndDate && r.state == PDstate && r._operator == PDperson && r.flag == true
                                  select new
                                  {
                                      ID = r.ID,
@@ -796,10 +861,19 @@ namespace FAMIS.Controllers
                                      date_Create = r.date_Create,
                                      ps = r.ps
 
-                                 }).ToArray()
-                     };
+                                 };
+                    data = data.OrderByDescending(a => a.ID);
+                    int skipindex = ((int)page - 1) * (int)rows;
+                    int rowsNeed = (int)rows;
 
-                     return Json(json, JsonRequestBehavior.AllowGet);
+                    var json = new
+                    {
+
+                        total = data.ToList().Count,
+                        rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                        //rows = data.ToList().ToArray()
+                    };
+                    return Json(json, JsonRequestBehavior.AllowGet);
 
 
 

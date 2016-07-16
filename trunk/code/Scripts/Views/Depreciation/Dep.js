@@ -1,5 +1,5 @@
 ﻿var searchCondtiion = "0";
-//alert(searchCondtiion+"88");
+//alert(searchCondtiion+"55568");
 function depreciation() {
 
     $.ajax({
@@ -11,7 +11,7 @@ function depreciation() {
 
         success: function (result) {
 
-          
+
 
         }, error: function (msg) {
             alert("折旧失败!");
@@ -112,7 +112,7 @@ function LoadTreeLeft() {
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
 
             searchCondtiion = node.id;
-            alert(searchCondtiion);
+           // alert(searchCondtiion);
             LoadInitData_Detail(searchCondtiion);
 
         },
@@ -121,25 +121,7 @@ function LoadTreeLeft() {
             $('#lefttree').tree('collapseAll');
         }
     });
-   /* $('#righttree').tree({
-        animate: true,
-        checkbox: false,
-        method: 'get', //默认是post,不允许对静态文件访问
-        url: '/SysSetting/loadATByRole?role=1',
-        onClick: function (node) {
-            var tree = $(this).tree;
-            //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
-            // alert(node.text);
-            searchCondtiion = "1" + "o" + "2_ZCLB" + "o" + node.id;
-            //  alert(searchCondtiion);
-            LoadInitData_Detail(searchCondtiion);
-
-        },
-        onLoadSuccess: function (node, data) {
-            $('#righttree').show();
-            $('#righttree').tree('collapseAll');
-        }
-    });*/
+   
 }
 
 //Left 左侧事件查询
@@ -215,6 +197,13 @@ function resetSC() {
 
 
 function LoadInitData_Detail(searchCondtiion) {
+    //获取操作权限
+    $.ajax({
+        url: '/Common/getOperationRightsByMenu?menu=ZJGL',
+        dataType: "json",
+        type: "POST",
+        traditional: true,
+        success: function (dataRight) {
     //  alert("查询条件是：---" + searchCondtiion);
     $('#TableList_0_1').datagrid({
         url: '/Depreciation/Load_Asset?JSdata=' + searchCondtiion + '', //+ , 
@@ -222,17 +211,20 @@ function LoadInitData_Detail(searchCondtiion) {
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
-        fitColumn: true,
-        // fit:true ,
+    
+         fit:true ,
         iconCls: 'icon-save',
         dataType: "json",
 
+        fitColumns: true,
         pagePosition: 'top',
         rownumbers: true, //是否加行号 
         pagination: true, //是否显式分页 
         pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
         pageNumber: 1, //默认显示第几页 
         pageList: [15, 30, 45],//分页中下拉选项的数值 
+
+       
         columns: [[
             { field: 'ID', title: '序号', width: 50 },
             { field: 'department_Using', title: '使用部门', width: 50 },
@@ -343,20 +335,57 @@ function LoadInitData_Detail(searchCondtiion) {
         checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
         fitColumns: true
     });
-    loadPageTool_Detail();
+    loadPageTool_Detail(dataRight);
+  //  alert(dataRight.export_able);
+}
+});
 }
 
-function loadPageTool_Detail() {
+function loadPageTool_Detail(dataRight) {
     var pager = $('#TableList_0_1').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '导出',
             height: 50,
             iconCls: 'icon-save',
+            disabled: !dataRight.export_able,
             handler: function () {
+                var form = $("<form>");//定义一个form表单
+                form.attr("style", "display:none");
+                form.attr("target", "");
+                form.attr("method", "post");
+                form.attr("action", "/Verify/ExportStu2");
+                var input1 = $("<input>");
+                input1.attr("type", "hidden");
+                input1.attr("name", "exportData");
+                input1.attr("value", (new Date()).getMilliseconds());
+                $("body").append(form);//将表单放置在web中
+                form.append(input1);
+                form.submit();//表单提交
+
+                // @Html.ActionLink("点击导出Excel", "ExportStu2")
+              /*  $.ajax({
+
+                    type: "POST",
+                    url: "/Verify/ExportStu2",
+
+
+                    datatype: "json",
+
+                    success: function (result) {
+
+
+
+                    }, error: function (msg) {
+                        alert("导出失败！");
+                    }
+                });*/
+               /* if (!dataRight.export_able) {
+                    return;
+                }
                 var filename = getNowFormatDate_FileName();
 
-                Export(filename, $('#TableList_0_1'));
+                Export(filename, $('#TableList_0_1'));*/
             }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  

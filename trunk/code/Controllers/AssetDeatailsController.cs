@@ -25,6 +25,7 @@ namespace FAMIS.Controllers
     public class AssetDeatailsController : Controller
     {
         // DictController dc = new DictController();
+        CommonController comController = new CommonController();
         FAMISDBTBModels db = new FAMISDBTBModels();
         StringBuilder result_tree_SearchTree = new StringBuilder();
         StringBuilder sb_tree_SearchTree = new StringBuilder();
@@ -88,7 +89,7 @@ namespace FAMIS.Controllers
                         select a.serial_number+","+t.name_Asset_Type+","+t.name_Asset_Type+","+a.name_Asset+","+a.specification+
                         ","+d.name_para+","+p.name_Department+","+u.true_Name+","+ j.name_para+","+zj.name_para+","+sp.name_supplier+
                          ","+sp.linkman+","+sp.address+","+a.Time_Purchase+","+s.name_para+","+a.Time_add+","+a.YearService_month+","+
-                        fs.name_para+","+a.Net_residual_rate+","+a.unit_price+","+a.amount+","+a.Total_price+","+a.depreciation_Month+","
+                        fs.name_para+","+a.Net_residual_rate+","+a.unit_price+","+a.amount+","+a.value+","+a.depreciation_Month+","
                         +a.depreciation_tatol+","+a.Net_value;
             
              foreach(String a in q)
@@ -125,10 +126,16 @@ namespace FAMIS.Controllers
                                            join u in db.tb_user on a.Owener equals u.ID
                                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where p.ID == item_id
+                                           where p.ID == item_id||item_id==0
                                            select a;
+                
                  foreach (tb_Asset asset in q)
                  {
+                      
+                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number).ToList();
+                     if (Deatail_List.Count > 0)
+                         continue;
+                     
                      var rule_tb = new tb_Asset_inventory_Details
                      {
                           serial_number = pdsearial,
@@ -136,8 +143,9 @@ namespace FAMIS.Controllers
                           amountOfSys=asset.amount,
                           amountOfInv=0,
                           difference=0-asset.amount,
-                          serial_number_Asset=asset.serial_number
-
+                          serial_number_Asset=asset.serial_number,
+                          
+                         flag=true
                      };
 
                      db.tb_Asset_inventory_Details.Add(rule_tb);
@@ -159,10 +167,13 @@ namespace FAMIS.Controllers
                                            join u in db.tb_user on a.Owener equals u.ID
                                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where t.orderID== item_id.ToString()
+                                           where t.orderID == item_id.ToString() || item_id == 0
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
+                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number).ToList();
+                     if (Deatail_List.Count > 0)
+                         continue;
                       
                      var rule_tb = new tb_Asset_inventory_Details
                      {
@@ -171,8 +182,8 @@ namespace FAMIS.Controllers
                          amountOfSys = asset.amount,
                          amountOfInv = 0,
                          difference = 0 - asset.amount,
-                         serial_number_Asset = asset.serial_number
-
+                         serial_number_Asset = asset.serial_number,
+                         flag=true
                      };
                      db.tb_Asset_inventory_Details.Add(rule_tb);
                     
@@ -194,10 +205,13 @@ namespace FAMIS.Controllers
                                            join u in db.tb_user on a.Owener equals u.ID
                                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where e.ID == item_id
+                                           where e.ID == item_id || item_id == 0
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
+                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number).ToList();
+                     if (Deatail_List.Count > 0)
+                         continue;
                      var rule_tb = new tb_Asset_inventory_Details
                      {
                          serial_number = pdsearial,
@@ -205,8 +219,8 @@ namespace FAMIS.Controllers
                          amountOfSys = asset.amount,
                          amountOfInv = 0,
                          difference = 0 - asset.amount,
-                         serial_number_Asset = asset.serial_number
-
+                         serial_number_Asset = asset.serial_number,
+                         flag=true
                      };
                      db.tb_Asset_inventory_Details.Add(rule_tb);
                    
@@ -296,12 +310,19 @@ namespace FAMIS.Controllers
            return json;
        }
         [HttpPost]
-        public JsonResult Load_Asset(string JSdata)
+        public JsonResult Load_Asset(int? page, int? rows, string JSdata)
         {
+           page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
+
             int flagnum = int.Parse(JSdata);
             int name_flag = flagnum /1000000;
             string name_flag_string = "";
-            int item_id = flagnum % 1000000;
+            int item_id = flagnum %1000000;
+
+            List<int?> Depart_Asset_Type_Id = new List<int?>();
+            List<int?> AssetassettypeId = new List<int?>();
+            List<int?> ZTassettypeId = new List<int?>();
             IEnumerable<String> flags = from o in db.tb_dataDict
                                         where o.ID == name_flag
                                         select o.name_flag;
@@ -312,10 +333,8 @@ namespace FAMIS.Controllers
             List<tb_Asset> list = db.tb_Asset.ToList();
             if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
-                var json = new
-                {
-                    total = list.Count(),
-                    rows = (from a in db.tb_Asset
+                Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
+                   var data= from a in db.tb_Asset
                             join t in db.tb_AssetType on a.type_Asset equals t.ID
                             join d in db.tb_dataDict_para on a.measurement equals d.ID
                             join j in db.tb_dataDict_para on a.addressCF equals j.ID
@@ -323,7 +342,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            where p.ID == item_id||item_id == 0
+                            where Depart_Asset_Type_Id.Contains(a.department_Using)||item_id == 0
                             select new
                             {
                                 ID = a.ID,
@@ -335,26 +354,38 @@ namespace FAMIS.Controllers
                                 measurement = d.name_para,
                                 unit_price = a.unit_price,
                                 amount = a.amount,
-                                Total_price = a.Total_price,
+                                Total_price = a.value,
                                 department_using = p.name_Department,
                                 address = j.name_para,
                                 owener = u.true_Name,
                                 state_asset = e.name_para,
                                 supllier = sp.name_supplier
 
-                            }).ToArray()
+                            };
+                 data = data.OrderByDescending(a => a.ID);
+                int skipindex = ((int)page - 1) * (int)rows;
+                int rowsNeed = (int)rows;
+
+                var json = new
+                {  
+                   
+                    total = data.ToList().Count,
+                    rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                    //rows = data.ToList().ToArray()
                 };
-
-
                 return Json(json, JsonRequestBehavior.AllowGet);
 
-            }
+             } 
+
+
+              
+
+           
             if (name_flag_string == SystemConfig.nameFlag_2_ZCLB)
             {
-                var json = new
-                {
-                    total = list.Count(),
-                    rows = (from a in db.tb_Asset
+
+                AssetassettypeId = comController.GetSonID_AsseType(item_id);
+                   var data =  from a in db.tb_Asset
                             join t in db.tb_AssetType on a.type_Asset equals t.ID
                             join d in db.tb_dataDict_para on a.measurement equals d.ID
                             join j in db.tb_dataDict_para on a.addressCF equals j.ID
@@ -362,7 +393,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID 
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            where t.orderID == item_id.ToString() || item_id == 0
+                            where AssetassettypeId.Contains(a.type_Asset)|| item_id == 0 
                             select new
                             {
                                 ID = a.ID,
@@ -374,24 +405,36 @@ namespace FAMIS.Controllers
                                 measurement = d.name_para,
                                 unit_price = a.unit_price,
                                 amount = a.amount,
-                                Total_price = a.Total_price,
+                                Total_price = a.value,
                                 department_using = p.name_Department,
                                 address = j.name_para,
                                 owener = u.true_Name,
                               //  state_asset = e.name_para,
                                 supllier = sp.name_supplier
 
-                            }).ToArray()
+                            };
+
+                data = data.OrderByDescending(a => a.ID);
+                int skipindex = ((int)page - 1) * (int)rows;
+                int rowsNeed = (int)rows;
+
+                var json = new
+                {  
+                   
+                    total = data.ToList().Count,
+                    rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                    //rows = data.ToList().ToArray()
                 };
                 return Json(json, JsonRequestBehavior.AllowGet);
 
-            }
+                } 
+                 
+ 
             if (name_flag_string == SystemConfig.nameFlag_2_ZCZT)
             {
-                var json = new
-                {
-                    total = list.Count(),
-                    rows = (from a in db.tb_Asset
+
+                ZTassettypeId = comController.GetSonIDs_dataDict_Para(item_id);
+                    var data =  from a in db.tb_Asset
                    
                             join t in db.tb_AssetType on a.type_Asset equals t.ID
                             join d in db.tb_dataDict_para on a.measurement equals d.ID
@@ -400,7 +443,7 @@ namespace FAMIS.Controllers
                             join u in db.tb_user on a.Owener equals u.ID
                             join sp in db.tb_supplier on a.supplierID equals sp.ID
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID
-                            where e.ID == item_id || item_id == 0
+                            where ZTassettypeId.Contains(a.state_asset) || item_id == 0
                             select new
                             {
                                 ID = a.ID,
@@ -412,7 +455,7 @@ namespace FAMIS.Controllers
                                 measurement = d.name_para,
                                 unit_price = a.unit_price,
                                 amount = a.amount,
-                                Total_price = a.Total_price,
+                                Total_price = a.value,
                                 department_using = p.name_Department,
                                 address = j.name_para,
                                 owener = u.true_Name,
@@ -420,15 +463,31 @@ namespace FAMIS.Controllers
                                 supllier = sp.name_supplier
 
 
-                            }).ToArray()
+                            }; 
+    
+                data = data.OrderByDescending(a => a.ID);
+                int skipindex = ((int)page - 1) * (int)rows;
+                int rowsNeed = (int)rows;
+
+                var json = new
+                {  
+                   
+                    total = data.ToList().Count,
+                    rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                    //rows = data.ToList().ToArray()
                 };
                 return Json(json, JsonRequestBehavior.AllowGet);
 
-            }
+
+                } 
             return Null_dataGrid();
+        }  
+
+            
+            
           
 
-        }
+       
         public JsonResult Null_dataGrid()
         {
             var json = new

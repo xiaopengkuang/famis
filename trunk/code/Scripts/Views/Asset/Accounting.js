@@ -76,10 +76,13 @@ function LoadTreeLeft() {
         method: 'POST', //默认是post,不允许对静态文件访问
         url: '/Dict/loadSearchTreeByRole?treeType=Accounting',
         onClick: function (node) {
+
             var tree = $(this).tree;
             if (isRootNode(tree, node)) {
+                alert(node.id);
                 SearchByCondition_LeftTree(node.id, "all");
             } else {
+                alert(node.id);
                 SearchByCondition_LeftTree(node.id, node.text);
             }
            
@@ -155,7 +158,7 @@ function SearchByCondition_right() {
 
 //表数据重载
 function reloadTable_Condition() {
-    //alert(searchCondtiion);
+    alert(searchCondtiion);
     //先判断类型
     var selectType = $("input[name='table_TYPE']:checked").val();
     if (selectType == "0") {
