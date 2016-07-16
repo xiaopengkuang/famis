@@ -370,8 +370,11 @@ function loadPageTool(datagrid, dataRight) {
                    if (!dataRight.export_able) {
                        return;
                    }
-                   var filename = getNowFormatDate_FileName();
-                   Export(filename, $('#' + datagrid));
+                   ajaxLoading();
+                   var url = '/ExportExcel/ExportExcel_Repair?exportFlag=true&searchCondtiion=' + searchCondtiion;
+                   //'/Collar/LoadCollars?searchCondtiion=' + searchCondtiion
+                   exportData(url);
+                   ajaxLoadEnd();
                }
            }],
         beforePageText: '第',//页数文本框前显示的汉字  
@@ -380,7 +383,20 @@ function loadPageTool(datagrid, dataRight) {
     });
 }
 
-
+function exportData(url) {
+    var form = $("<form>");//定义一个form表单
+    form.attr("style", "display:none");
+    form.attr("target", "");
+    form.attr("method", "post");
+    form.attr("action", url);
+    var input1 = $("<input>");
+    input1.attr("type", "hidden");
+    input1.attr("name", "exportData");
+    input1.attr("value", (new Date()).getMilliseconds());
+    $("body").append(form);//将表单放置在web中
+    form.append(input1);
+    form.submit();//表单提交
+}
 
 
 

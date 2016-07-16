@@ -2089,6 +2089,7 @@
     <Compile Include="DTO\dto_state_List.cs" />
     <Compile Include="DTO\Json_allocation.cs" />
     <Compile Include="DTO\Json_allocation_add.cs" />
+    <Compile Include="DTO\Json_allocation_Excel.cs" />
     <Compile Include="DTO\Json_allocation_review.cs" />
     <Compile Include="DTO\Json_Asset_Selected_Return.cs" />
     <Compile Include="DTO\Json_Asset_Borrow_detail.cs" />
@@ -2129,6 +2130,7 @@
     <Compile Include="DTO\Json_redution_edit.cs" />
     <Compile Include="DTO\Json_repair_add.cs" />
     <Compile Include="DTO\Json_repair_edit.cs" />
+    <Compile Include="DTO\Json_repair_Excel.cs" />
     <Compile Include="DTO\Json_Return.cs" />
     <Compile Include="DTO\Json_Return_add.cs" />
     <Compile Include="DTO\Json_Return_edit.cs" />

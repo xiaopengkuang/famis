@@ -29,6 +29,8 @@ namespace FAMIS.Controllers
 
         AssetController assetCont = new AssetController();
         CollarController collarCont = new CollarController();
+        AllocationController allocationCont = new AllocationController();
+        RepairController repairCont = new RepairController();
         // GET: ExportExcel
 
         public ActionResult Index()
@@ -109,6 +111,58 @@ namespace FAMIS.Controllers
             return ExportDataTable(data_TB, fileName, columeNames);
         }
 
+        public ActionResult ExportExcel_Allocation(int? page, int? rows, String searchCondtiion, bool? exportFlag) 
+        {
+            String data = allocationCont.LoadAllocation(page, rows, searchCondtiion, true);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            List<String> columeNames = new List<string>();
+            String data_f = data;
+            if (data_f.Contains("/"))
+            {
+                data_f = data_f.Replace("/", "");
+            }
+            DataTable data_TB = new DataTable();
+            String fileName = "调拨_";
+            List<Json_allocation_Excel> list = serializer.Deserialize<List<Json_allocation_Excel>>(data_f);
+            foreach (Json_allocation_Excel item in list)
+            {
+                item.date_allocation = FormatDateTime(item.date_allocation);
+                item.date_Operated = FormatDateTime(item.date_Operated);
+            }
+            data_TB = ToDataTable(list);
+            fileName += "详细_";
+            columeNames = ColumnListConf.dto_Collar;
+            string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
+            fileName += dateTime + ".xls";
+            return ExportDataTable(data_TB, fileName, columeNames);
+        }
+        public ActionResult ExportExcel_Repair(int? page, int? rows, String searchCondtiion, bool? exportFlag)
+        {
+            String data = repairCont.LoadRepair(page, rows, searchCondtiion, true);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            List<String> columeNames = new List<string>();
+            String data_f = data;
+            if (data_f.Contains("/"))
+            {
+                data_f = data_f.Replace("/", "");
+            }
+            DataTable data_TB = new DataTable();
+            String fileName = "维修_";
+            List<Json_repair_Excel> list = serializer.Deserialize<List<Json_repair_Excel>>(data_f);
+            foreach (Json_repair_Excel item in list)
+            {
+                item.date_create = FormatDateTime(item.date_create);
+                item.date_review = FormatDateTime(item.date_review);
+                item.date_ToRepair = FormatDateTime(item.date_ToRepair);
+                item.date_ToReturn = FormatDateTime(item.date_ToReturn);
+            }
+            data_TB = ToDataTable(list);
+            fileName += "详细_";
+            //columeNames = ColumnListConf.dto_Collar;
+            string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
+            fileName += dateTime + ".xls";
+            return ExportDataTable(data_TB, fileName, columeNames);
+        }
 
 
         /// <summary>

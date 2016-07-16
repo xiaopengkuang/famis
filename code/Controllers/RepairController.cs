@@ -111,7 +111,7 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
-        public JsonResult LoadRepair(int? page, int? rows, String searchCondtiion)
+        public String LoadRepair(int? page, int? rows, String searchCondtiion, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -121,10 +121,10 @@ namespace FAMIS.Controllers
             {
                 dto_condition = serializer.Deserialize<dto_SC_List>(searchCondtiion);
             }
-            return loadRepairList(page, rows, dto_condition);
+            return loadRepairList(page, rows, dto_condition, exportFlag);
         }
 
-        public JsonResult loadRepairList(int? page, int? rows, dto_SC_List cond)
+        public String loadRepairList(int? page, int? rows, dto_SC_List cond, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -163,6 +163,9 @@ namespace FAMIS.Controllers
                             userName_applying = UAP.true_Name,
                             userName_authorize = UAT.true_Name,
                             userName_create = UCT.true_Name,
+                            date_review=tb_rep.date_review,
+                            note_repair=tb_rep.note_repair,
+                            reason_ToRepair=tb_rep.reason_ToRepair
                         };
 
 
@@ -194,6 +197,9 @@ namespace FAMIS.Controllers
                            userName_applying=UAP.true_Name,
                            userName_authorize=UAT.true_Name,
                            userName_create=UCT.true_Name,
+                            date_review=p.date_review,
+                            note_repair=p.note_repair,
+                            reason_ToRepair=p.reason_ToRepair
                        };
 
             data = data.Union(data_1).OrderByDescending(a => a.date_create);
@@ -228,7 +234,12 @@ namespace FAMIS.Controllers
                            select p;
                 }
             }
-
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            if (exportFlag != null && exportFlag == true)
+            {
+                String json_result = serializer.Serialize(data).ToString().Replace("\\", "");
+                return json_result;
+            }
             int skipindex = ((int)page - 1) * (int)rows;
             int rowsNeed = (int)rows;
             var json = new
@@ -236,7 +247,9 @@ namespace FAMIS.Controllers
                 total = data.Count(),
                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
             };
-            return Json(json, JsonRequestBehavior.AllowGet);
+            String json_result_2 = serializer.Serialize(json).ToString().Replace("\\", "");
+            return json_result_2;
+            //return Json(json, JsonRequestBehavior.AllowGet);
 
         }
 
