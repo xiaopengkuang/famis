@@ -51,10 +51,10 @@ function LoadInitData_datagrid(id, datagrid) {
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
     $('#' + datagrid).datagrid('hideColumn', 'ID');
-    loadPageTool_Detail();
+    loadPageTool_Detail(datagrid);
 }
 
-function loadPageTool_Detail() {
+function loadPageTool_Detail(datagrid) {
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{

@@ -443,7 +443,7 @@ function load_ZJFS_add() {
             var data = $('#ZJFS_add').combobox('getData');
             if (data.length > 0)
             {
-                $('#ZJFS_add').combobox('select', data[0].name_para);
+                $('#ZJFS_add').combobox('select', data[0].ID);
             }
         }
     });

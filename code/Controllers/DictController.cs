@@ -778,6 +778,12 @@ namespace FAMIS.Controllers
                      { }
                      else { continue; }
                  }
+                 else if (treeType == SystemConfig.treeType_Borrow)
+                 {
+                     if (SystemConfig.treeType_borrow_Search_Menu.Contains(item.name_flag))
+                     { }
+                     else { continue; }
+                 }
                  else
                  {
                      continue;
