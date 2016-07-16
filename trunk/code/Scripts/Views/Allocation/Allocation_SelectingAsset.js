@@ -73,8 +73,8 @@ function LoadInitData_Detail() {
         }
     }catch(e){
     }
-
-    $('#tableList_collar').datagrid({
+    var tableList_allocation = "tableList_allocation_asset";
+    $('#' + tableList_allocation).datagrid({
         url: '/Common/LoadAsset_ByState?stateID=2&searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
         //url: '/Common/LoadAsset_Collor?searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
@@ -123,18 +123,18 @@ function LoadInitData_Detail() {
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool_Detail();
+    loadPageTool_Detail(tableList_allocation);
 }
 
-function loadPageTool_Detail() {
-    var pager = $('#tableList_collar').datagrid('getPager');	// get the pager of datagrid
+function loadPageTool_Detail(tableList_allocation) {
+    var pager = $('#' + tableList_allocation).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
         buttons: [{
             text: '刷新',
             height: 50,
             iconCls: 'icon-reload',
             handler: function () {
-                $('#tableList_collar').datagrid('reload');
+                $('#' + tableList_allocation).datagrid('reload');
                 //alert('刷新');
             }
         }, {
@@ -144,7 +144,7 @@ function loadPageTool_Detail() {
             handler: function () {
               //获取选择中的行数
                 //获取选择行
-                var rows = $('#tableList_collar').datagrid('getSelections');
+                var rows = $('#' + tableList_allocation).datagrid('getSelections');
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
                     IDS[i] = rows[i].ID;

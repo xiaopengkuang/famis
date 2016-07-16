@@ -93,8 +93,8 @@ function bindData(id)
                 $("#GZRQ_add").datebox('setValue', date_add);
 
                 //其他属性
-                $('#Other_ZCDJ_add').numberbox('setValue', data.amount);
-                $('#Other_ZCSL_add').numberbox('setValue', data.unit_price);
+                $('#Other_ZCDJ_add').numberbox('setValue', data.unit_price);
+                $('#Other_ZCSL_add').numberbox('setValue', data.amount);
                 $('#Other_SYNX_add').numberspinner('setValue', data.YearService_month);
                 $("#Other_ZJFS_add").combobox('setValue', data.Method_depreciation);
                 $("#Other_JCZL_add").val(data.Net_residual_rate);

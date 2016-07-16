@@ -377,7 +377,7 @@ namespace FAMIS.Controllers
                              }
                              foreach (var item_as in dataAsset)
                              {
-                                 item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_loan);
+                                 item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_fix);
                              }
                          }
                          DB_C.SaveChanges();

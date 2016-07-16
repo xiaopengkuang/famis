@@ -4,8 +4,8 @@ $(function () {
 
 
     LoadTreeLeft();
-    LoadInitData_Detail();
-
+    //LoadInitData_Detail();
+    chanegeTableType_Radio();
     $(".SC_Date_Accounting").show();
     $(".SC_Content_Accounting").hide();
     $("#Accounting_SC").combobox({
@@ -19,8 +19,6 @@ $(function () {
                 $(".SC_Date_Accounting").hide();
                 $(".SC_Content_Accounting").show();
             }
-
-
         }
 
     });
@@ -35,7 +33,6 @@ $(function () {
 function chanegeTableType_Radio() {
 
     var selectType = $("input[name='table_TYPE']:checked").val();
-
     if (selectType == "0") {
         LoadInitData_Summary();
     } else if (selectType == "1") {
