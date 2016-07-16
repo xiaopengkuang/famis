@@ -66,7 +66,7 @@ namespace FAMIS.DataConversion
         public static String[] treeType_newdeatails_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_ZCZT };
         public static String[] treeType_reduction_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_ZCZT, nameFlag_2_SYRY, nameFlag_2_CFDD };
         public static String[] treeType_borrow_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_SYRY, nameFlag_2_CFDD };
-        public static String[] treeType_return_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_SYRY, nameFlag_2_CFDD };
+        public static String[] treeType_return_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_SYRY, nameFlag_2_CFDD }; 
         public const String treeType_Accounting = "Accounting";
         public const String treeType_collarSearch = "collarSearch";
         public const String treeType_allocationSearch = "allocationSearch";
