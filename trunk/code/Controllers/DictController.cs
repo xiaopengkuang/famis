@@ -297,8 +297,6 @@ namespace FAMIS.Controllers
         }
 
 
-
-
         [HttpPost]
         public String load_ZCXH_add(int? assetType)
         {
@@ -316,7 +314,6 @@ namespace FAMIS.Controllers
         }
 
 
-       
 
         [HttpPost]
         /**

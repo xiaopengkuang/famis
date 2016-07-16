@@ -94,14 +94,14 @@ namespace FAMIS.Controllers
         }
       
         [HttpPost]
-        public JsonResult LoadAssets(int? page, int? rows,  int tableType, String searchCondtiion)
+        public String LoadAssets(int? page, int? rows, int tableType, String searchCondtiion, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
 
             int? role=commonConversion.getRoleID();
 
-            JsonResult result=new JsonResult();
+            String result = "";
              JavaScriptSerializer serializer = new JavaScriptSerializer();
             dto_SC_Asset dto_condition = null;
             if (searchCondtiion != null)
@@ -110,7 +110,7 @@ namespace FAMIS.Controllers
             }
 
             List<int> selectedIDs = new List<int>();
-            result = loadAsset_By_Type(page, rows, role, dto_condition, selectedIDs, tableType);
+            result = loadAsset_By_Type(page, rows, role, dto_condition, selectedIDs, tableType, exportFlag);
             return result;
         }
 
@@ -123,12 +123,13 @@ namespace FAMIS.Controllers
 
 
 
-        public JsonResult loadAsset_By_Type(int? page, int? rows, int? role, dto_SC_Asset dto_condition, List<int> selectedIDs,int dataType)
+        public String loadAsset_By_Type(int? page, int? rows, int? role, dto_SC_Asset dto_condition, List<int> selectedIDs, int dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
-            JsonResult json = new JsonResult();
+            String json = "";
 
+            JavaScriptSerializer jss = new JavaScriptSerializer();
            
 
             //获取部门权限
@@ -138,13 +139,13 @@ namespace FAMIS.Controllers
 
             if (dto_condition == null)
             {
-                json = json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType);
+                json = json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType, exportFlag);
             }
             else {
                 switch (dto_condition.typeFlag)
                 {
-                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType); break;
-                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType); break;
+                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType, exportFlag); break;
+                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_deparment, idsRight_assetType, selectedIDs, dataType, exportFlag); break;
                     default: ; break;
                 }
             }
@@ -153,10 +154,11 @@ namespace FAMIS.Controllers
         }
 
 
-        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs,int? dataType)
+        public String loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs, int? dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
+            JavaScriptSerializer jss = new JavaScriptSerializer();
             //获取原始数据
             var data_ORG = (from p in DB_C.tb_Asset
                             where p.flag == true
@@ -253,18 +255,18 @@ namespace FAMIS.Controllers
                                select new dto_Asset_Detail
                                {
                                    addressCF = DZ.name_para,
-                                   amount = p.amount,
-                                   department_Using = DP.name_Department,
-                                   depreciation_tatol = p.depreciation_tatol,
-                                   depreciation_Month = p.depreciation_Month,
+                                   amount = p.amount.ToString(),
+                                   department_Using = DP.name_Department.ToString(),
+                                   depreciation_tatol = p.depreciation_tatol.ToString(),
+                                   depreciation_Month = p.depreciation_Month.ToString(),
                                    ID = p.ID,
                                    //measurement = tb_MM.name_para,
                                    Method_add = MA.name_para,
                                    Method_depreciation = MDP.name_para,
                                    Method_decrease = MDC.name_para,
                                    name_Asset = p.name_Asset,
-                                   Net_residual_rate = p.Net_residual_rate,
-                                   Net_value = p.Net_value,
+                                   Net_residual_rate = p.Net_residual_rate.ToString(),
+                                   Net_value = p.Net_value.ToString(),
                                    Time_Operated = p.Time_add,
                                    //people_using = p.people_using,
                                    serial_number = p.serial_number,
@@ -273,12 +275,17 @@ namespace FAMIS.Controllers
                                    supplierID = SP.name_supplier,
                                    Time_Purchase = p.Time_Purchase,
                                    type_Asset = AT.name_Asset_Type,
-                                   unit_price = p.unit_price,
-                                   value = p.value,
-                                   YearService_month = p.YearService_month
+                                   unit_price = p.unit_price.ToString(),
+                                   value = p.value.ToString(),
+                                   YearService_month = p.YearService_month.ToString()
                                };
                     data = data.OrderByDescending(a => a.Time_Operated);
-
+                    if (exportFlag != null && exportFlag == true)
+                    {
+                        //return Json(data, JsonRequestBehavior.AllowGet);
+                        String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                        return json_result;
+                    }
                     int skipindex = ((int)page - 1) * (int)rows;
                     int rowsNeed = (int)rows;
                     var json = new{
@@ -286,7 +293,10 @@ namespace FAMIS.Controllers
                         rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                         //rows = data.ToList().ToArray()
                     };
-                    return Json(json, JsonRequestBehavior.AllowGet);
+                    String result = jss.Serialize(json).ToString().Replace("\\", "");
+                    return result;
+
+                    //return Json(json, JsonRequestBehavior.AllowGet);
                 };break;
                 case SystemConfig.tableType_summary:{
                                //在进行数据绑定
@@ -309,16 +319,22 @@ namespace FAMIS.Controllers
                         //数据分组
                        var data = (from a in data_ORG2
                                   group a by new { a.name_Asset, a.type_Asset_name, a.measurement_name, a.specification } into b
-                                  select new
+                                   select new dto_Asset_Summary
                                   {
-                                      amount = b.Sum(a => a.amount),
+                                      amount = b.Sum(a => a.amount).ToString(),
                                       AssetName = b.Key.name_Asset,
                                       AssetType = b.Key.type_Asset_name,
                                       measurement = b.Key.measurement_name,
                                       specification = b.Key.specification,
-                                      value = b.Sum(a => a.value)
+                                      value = b.Sum(a => a.value).ToString()
                                   }).Distinct();
                         data = data.OrderByDescending(a => a.AssetName);
+                        if (exportFlag != null && exportFlag == true)
+                        {
+                            //return Json(data, JsonRequestBehavior.AllowGet); 
+                            String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                            return json_result;
+                        }
                         int skipindex = ((int)page - 1) * (int)rows;
                         int rowsNeed = (int)rows;
                         var json = new
@@ -327,10 +343,13 @@ namespace FAMIS.Controllers
                             rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                             //rows = data.ToList().ToArray()
                         };
-                        return Json(json, JsonRequestBehavior.AllowGet);
+                        //return Json(json, JsonRequestBehavior.AllowGet);
+                        String result = jss.Serialize(json).ToString().Replace("\\", "");
+                        return result;
                 };break;
                 default:{
-                return NULL_dataGrid();
+                    //return NULL_dataGrid();
+                    return "";
                 };break;
             }
 
@@ -346,11 +365,11 @@ namespace FAMIS.Controllers
         /// <param name="idsRight_deparment"></param>
         /// <param name="idsRight_assetType"></param>
         /// <returns></returns>
-        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs,int? dataType)
+        public String loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs, int? dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
-
+            JavaScriptSerializer jss = new JavaScriptSerializer();
             //JsonResult json = new JsonResult();
 
             int nodeid = (int)cond.nodeID;
@@ -370,7 +389,8 @@ namespace FAMIS.Controllers
                 nameFlag = item.nameFlag;
             }
             if (nameFlag==null){
-                return NULL_dataGrid();
+                //return NULL_dataGrid();
+                return "";
             }
             //获取原始数据
             var data_ORG = (from p in DB_C.tb_Asset
@@ -467,18 +487,18 @@ namespace FAMIS.Controllers
                                select new dto_Asset_Detail
                                {
                                    addressCF = DZ.name_para,
-                                   amount = p.amount,
+                                   amount = p.amount.ToString(),
                                    department_Using = DP.name_Department,
-                                   depreciation_tatol = p.depreciation_tatol,
-                                   depreciation_Month = p.depreciation_Month,
+                                   depreciation_tatol = p.depreciation_tatol.ToString(),
+                                   depreciation_Month = p.depreciation_Month.ToString(),
                                    ID = p.ID,
                                    measurement = MM.name_para,
                                    Method_add = MA.name_para,
                                    Method_depreciation = MDP.name_para,
                                    Method_decrease = MDC.name_para,
                                    name_Asset = p.name_Asset,
-                                   Net_residual_rate = p.Net_residual_rate,
-                                   Net_value = p.Net_value,
+                                   Net_residual_rate = p.Net_residual_rate.ToString(),
+                                   Net_value = p.Net_value.ToString(),
                                    //people_using = p.people_using,
                                    serial_number = p.serial_number,
                                    specification = p.specification,
@@ -487,11 +507,19 @@ namespace FAMIS.Controllers
                                    Time_Operated=p.Time_add,
                                    Time_Purchase = p.Time_Purchase,
                                    type_Asset = AT.name_Asset_Type,
-                                   unit_price = p.unit_price,
-                                   value = p.value,
-                                   YearService_month = p.YearService_month
+                                   unit_price = p.unit_price.ToString(),
+                                   value = p.value.ToString(),
+                                   YearService_month = p.YearService_month.ToString()
                                };
                     data = data.OrderByDescending(a => a.Time_Operated);
+
+                    if (exportFlag != null && exportFlag == true)
+                    {
+                        //return Json(data, JsonRequestBehavior.AllowGet);
+                        String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                        return json_result;
+                    }
+
 
                     int skipindex = ((int)page - 1) * (int)rows;
                     int rowsNeed = (int)rows;
@@ -500,7 +528,9 @@ namespace FAMIS.Controllers
                         rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                         //rows = data.ToList().ToArray()
                     };
-                    return Json(json, JsonRequestBehavior.AllowGet);
+                    //return Json(json, JsonRequestBehavior.AllowGet);
+                    String result = jss.Serialize(json).ToString().Replace("\\", "");
+                    return result;
                 };break;
                 case SystemConfig.tableType_summary:{
                                //在进行数据绑定
@@ -523,15 +553,21 @@ namespace FAMIS.Controllers
                         //数据分组
                        var data = (from a in data_ORG2
                                   group a by new { a.name_Asset, a.type_Asset_name, a.measurement_name, a.specification } into b
-                                  select new
+                                  select new dto_Asset_Summary
                                   {
-                                      amount = b.Sum(a => a.amount),
+                                      amount = b.Sum(a => a.amount).ToString(),
                                       AssetName = b.Key.name_Asset,
                                       AssetType = b.Key.type_Asset_name,
                                       measurement = b.Key.measurement_name,
                                       specification = b.Key.specification,
-                                      value = b.Sum(a => a.value)
+                                      value = b.Sum(a => a.value).ToString()
                                   }).Distinct();
+                       if (exportFlag != null && exportFlag == true)
+                       {
+                           //return Json(data, JsonRequestBehavior.AllowGet);
+                           String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                           return json_result;
+                       }
                         data = data.OrderByDescending(a => a.AssetName);
                         int skipindex = ((int)page - 1) * (int)rows;
                         int rowsNeed = (int)rows;
@@ -541,10 +577,13 @@ namespace FAMIS.Controllers
                             rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                             //rows = data.ToList().ToArray()
                         };
-                        return Json(json, JsonRequestBehavior.AllowGet);
+                        //return Json(json, JsonRequestBehavior.AllowGet);
+                        String result = jss.Serialize(json).ToString().Replace("\\", "");
+                        return result;
                 };break;
                 default:{
-                return NULL_dataGrid();
+                    //return NULL_dataGrid();
+                    return "";
                 };break;
             }
         }
@@ -774,18 +813,18 @@ namespace FAMIS.Controllers
                        select new dto_Asset_Detail
                        {
                            addressCF = DZ.name_para,
-                           amount = p.amount,
+                           amount = p.amount.ToString(),
                            department_Using = DP.name_Department,
-                           depreciation_tatol = p.depreciation_tatol,
-                           depreciation_Month = p.depreciation_Month,
+                           depreciation_tatol = p.depreciation_tatol.ToString(),
+                           depreciation_Month = p.depreciation_Month.ToString(),
                            ID = p.ID,
                            measurement = MM.name_para,
                            Method_add = MA.name_para,
                            Method_depreciation = MDP.name_para,
                            Method_decrease = MDC.name_para,
                            name_Asset = p.name_Asset,
-                           Net_residual_rate = p.Net_residual_rate,
-                           Net_value = p.Net_value,
+                           Net_residual_rate = p.Net_residual_rate.ToString(),
+                           Net_value = p.Net_value.ToString(),
                            Time_Operated = p.Time_add,
                            serial_number = p.serial_number,
                            specification = p.specification,
@@ -793,9 +832,9 @@ namespace FAMIS.Controllers
                            supplierID = SP.name_supplier,
                            Time_Purchase = p.Time_Purchase,
                            type_Asset = AT.name_Asset_Type,
-                           unit_price = p.unit_price,
-                           value = p.value,
-                           YearService_month = p.YearService_month
+                           unit_price = p.unit_price.ToString(),
+                           value = p.value.ToString(),
+                           YearService_month = p.YearService_month.ToString()
                        };
             if (data.Count() < 1)
             {

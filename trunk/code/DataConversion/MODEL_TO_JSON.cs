@@ -81,18 +81,18 @@ namespace FAMIS.DataConversion
                        select new dto_Asset_Detail
                        {
                            addressCF = DZ.name_para,
-                           amount = p.amount,
+                           amount = p.amount.ToString(),
                            department_Using = DP.name_Department,
-                           depreciation_tatol = p.depreciation_tatol,
-                           depreciation_Month = p.depreciation_Month,
+                           depreciation_tatol = p.depreciation_tatol.ToString(),
+                           depreciation_Month = p.depreciation_Month.ToString(),
                            ID = p.ID,
                            measurement = MM.name_para,
                            Method_add = MA.name_para,
                            Method_depreciation = MDP.name_para,
                            Method_decrease = MDC.name_para,
                            name_Asset = p.name_Asset,
-                           Net_residual_rate = p.Net_residual_rate,
-                           Net_value = p.Net_value,
+                           Net_residual_rate = p.Net_residual_rate.ToString(),
+                           Net_value = p.Net_value.ToString(),
                            //people_using = p.people_using,
                            serial_number = p.serial_number,
                            specification = p.specification,
@@ -100,9 +100,9 @@ namespace FAMIS.DataConversion
                            supplierID = SP.name_supplier,
                            Time_Purchase = p.Time_Purchase,
                            type_Asset = AT.name_Asset_Type,
-                           unit_price = p.unit_price,
-                           value = p.value,
-                           YearService_month = p.YearService_month
+                           unit_price = p.unit_price.ToString(),
+                           value = p.value.ToString(),
+                           YearService_month = p.YearService_month.ToString()
                        };
 
             //int skipindex = ((int)page - 1) * (int)rows;

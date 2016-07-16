@@ -1902,6 +1902,15 @@
     <Content Include="Scripts\Views\Collar\Collar_Review.js" />
     <Content Include="Scripts\Views\Collar\Collar_SelectAsset.js" />
     <Content Include="Scripts\Views\common\common.js" />
+    <Content Include="Scripts\Views\Depreciation\De.js" />
+    <Content Include="Scripts\Views\Depreciation\Dep.js" />
+    <Content Include="Scripts\Views\Depreciation\Deps.js" />
+    <Content Include="Scripts\Views\Depreciation\Depss.js" />
+    <Content Include="Scripts\Views\Depreciation\Inventory.js" />
+    <Content Include="Scripts\Views\Depreciation\LoadAssetDeatails.js" />
+    <Content Include="Scripts\Views\Depreciation\New_Deatails.js" />
+    <Content Include="Scripts\Views\Depreciation\New_Detail.js" />
+    <Content Include="Scripts\Views\Depreciation\New_Details.js" />
     <Content Include="Scripts\Views\Dict\add_AssetType.js" />
     <Content Include="Scripts\Views\Dict\add_customAttr.js" />
     <Content Include="Scripts\Views\Dict\add_dataDict.js" />
@@ -1919,6 +1928,9 @@
     <Content Include="Scripts\Views\Dict\edit_supplier.js" />
     <Content Include="Scripts\Views\Dict\supplierManager.js" />
     <Content Include="Scripts\Views\Borrow\Borrow.js" />
+    <Content Include="Scripts\Views\Notice\InvalidatedNotice.js" />
+    <Content Include="Scripts\Views\Notice\RepairNotice.js" />
+    <Content Include="Scripts\Views\Notice\ReturnNotice.js" />
     <Content Include="Scripts\Views\Reduction\Reduction_review.js" />
     <Content Include="Scripts\Views\Reduction\Reduction_detail.js" />
     <Content Include="Scripts\Views\Reduction\Reduction_edit.js" />
@@ -2016,6 +2028,9 @@
     <Content Include="Views\Return\Return_detail.cshtml" />
     <Content Include="Views\Return\Return_review.cshtml" />
     <Content Include="Views\Repair\Repair_return.cshtml" />
+    <Content Include="Views\Notice\Invalidated.cshtml" />
+    <Content Include="Views\Notice\RepairNotice.cshtml" />
+    <Content Include="Views\Notice\ReturnNotice.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -2034,7 +2049,9 @@
     <Compile Include="Controllers\AssetController.cs" />
     <Compile Include="Controllers\CollarController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\DepreciationController.cs" />
     <Compile Include="Controllers\DictController.cs" />
+    <Compile Include="Controllers\ExportExcelController.cs" />
     <Compile Include="Controllers\FAMIS.Inforamtion_Count\ZC_ViewController.cs" />
     <Compile Include="Controllers\FAMIS.System_setup\Asset_Depart.cs" />
     <Compile Include="Controllers\FAMIS.System_setup\ClickCountModel.cs" />
@@ -2043,6 +2060,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\BorrowController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\NoticeController.cs" />
     <Compile Include="Controllers\ReductionController.cs" />
     <Compile Include="Controllers\RepairController.cs" />
     <Compile Include="Controllers\ReturnController.cs" />
@@ -2051,6 +2069,7 @@
     <Compile Include="Controllers\VerifyController.cs" />
     <Compile Include="DAL\CommonConnecting.cs" />
     <Compile Include="DAL\SQLRunner.cs" />
+    <Compile Include="DataConversion\ColumnListConf.cs" />
     <Compile Include="DataConversion\CommonConversion.cs" />
     <Compile Include="DataConversion\DTO_TO_MODEL.cs" />
     <Compile Include="DataConversion\JSON_TO_MODEL.cs" />
@@ -2059,7 +2078,9 @@
     <Compile Include="DTO\dto_allocation.cs" />
     <Compile Include="DTO\dto_Asset_CollarDetail.cs" />
     <Compile Include="DTO\dto_Asset_Detail.cs" />
+    <Compile Include="DTO\dto_Asset_Detail_Excel.cs" />
     <Compile Include="DTO\dto_Asset_Summary.cs" />
+    <Compile Include="DTO\dto_Asset_Summary_Excel.cs" />
     <Compile Include="DTO\dto_Collar.cs" />
     <Compile Include="DTO\dto_collar_detail.cs" />
     <Compile Include="DTO\dto_allocation_edit.cs" />
@@ -2078,6 +2099,7 @@
     <Compile Include="DTO\Json_Borrow_add.cs" />
     <Compile Include="DTO\Json_Borrow_edit.cs" />
     <Compile Include="DTO\Json_CAtrr.cs" />
+    <Compile Include="DTO\Json_collar_Excel.cs" />
     <Compile Include="DTO\Json_collar.cs" />
     <Compile Include="DTO\Json_collar_review.cs" />
     <Compile Include="DTO\Json_customAttr.cs" />
@@ -2115,6 +2137,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper_Class\Excel_Helper.cs" />
     <Compile Include="Helper_Class\Serial.cs" />
     <Compile Include="MidPages\export.aspx.cs">
       <DependentUpon>export.aspx</DependentUpon>
@@ -2214,6 +2237,7 @@
     <Folder Include="Content\App_LocalResources\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\Customer\" />
+    <Folder Include="Views\ExportExcel\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

@@ -6,11 +6,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FAMIS.DTO
 {
-    public class dto_Asset_Detail
+    public class dto_Asset_Detail_Excel
     {
-
-        public int ID { get; set; }
-
         [StringLength(20)]
         public string serial_number { get; set; }
 
@@ -43,9 +40,9 @@ namespace FAMIS.DTO
         [StringLength(20)]
         public string supplierID { get; set; }
 
-        public DateTime? Time_Purchase { get; set; }
+        public String Time_Purchase { get; set; }
 
-        public DateTime? Time_Operated { get; set; }
+        public String Time_Operated { get; set; }
 
         public String YearService_month { get; set; }
 
@@ -62,6 +59,5 @@ namespace FAMIS.DTO
         public String Method_add { get; set; }
 
         public String Method_decrease { get; set; }
-
     }
 }

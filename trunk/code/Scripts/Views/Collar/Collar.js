@@ -114,7 +114,8 @@ function loadDataGrid(datagrid)
                 { field: 'department', title: '领用部门', width: 50 }
                 ,
                 {
-                    field: 'date_collar', title: '领用时间', width: 100,
+                    field: 'date_collar', title: '领用时间', width: 100
+                    ,
                     formatter: function (date) {
                         if (date == null) {
                             return "";
@@ -289,30 +290,8 @@ function loadPageTool(datagrid, dataRight) {
                       ID_collar = rows[0].ID;
                       ID_targetState = 2;
                       openModelWindow(url,titleName);
-                      //选择超级管理员
-                      //$('#selectUser_Window').window('open')
 
 
-                      //id_ = rows[0].ID;
-                      //$.ajax({
-                      //    url: "/Collar/RightToEdit",
-                      //    type: 'POST',
-                      //    data: {
-                      //        "id": id_
-                      //    },
-                      //    beforeSend: ajaxLoading,
-                      //    success: function (data) {
-                      //        ajaxLoadEnd();
-                      //        if (data > 0) {
-                      //            updateRecordState(datagrid, 2, id_);
-                      //        } else {
-                      //            $.messager.alert('警告', "暂无该单据的提交权限！", 'warning');
-                      //            return;
-                      //        }
-                      //    }
-                      //});
-
-                      //$('#' + datagrid).datagrid('reload');
                   } else {
                       MessShow("请勿多选!")
                       return;
@@ -359,8 +338,22 @@ function loadPageTool(datagrid, dataRight) {
                    if (!dataRight.export_able) {
                        return;
                    }
-                   var filename = getNowFormatDate_FileName();
-                   Export(filename, $('#' + datagrid));
+                   var rows = $('#' + datagrid).datagrid('getRows');
+                   //if (rows.length < 1)
+                   //{
+                   //    MessShow("空数据禁止导出！")
+                   //    return;
+                   //}
+                   //MessShow(rows.length);
+                   //return;
+
+                   ajaxLoading();
+                   var url = '/ExportExcel/ExportExcel_Collar?exportFlag=true&searchCondtiion=' + searchCondtiion
+                   //'/Collar/LoadCollars?searchCondtiion=' + searchCondtiion
+                   exportData(url);
+                   ajaxLoadEnd();
+                   //var filename = getNowFormatDate_FileName();
+                   //Export(filename, $('#' + datagrid));
                }
            }],
         beforePageText: '第',//页数文本框前显示的汉字  
@@ -371,6 +364,20 @@ function loadPageTool(datagrid, dataRight) {
 
 
 
+function exportData(url) {
+    var form = $("<form>");//定义一个form表单
+    form.attr("style", "display:none");
+    form.attr("target", "");
+    form.attr("method", "post");
+    form.attr("action", url);
+    var input1 = $("<input>");
+    input1.attr("type", "hidden");
+    input1.attr("name", "exportData");
+    input1.attr("value", (new Date()).getMilliseconds());
+    $("body").append(form);//将表单放置在web中
+    form.append(input1);
+    form.submit();//表单提交
+}
 
 
 

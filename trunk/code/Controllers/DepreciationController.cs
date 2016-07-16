@@ -207,7 +207,7 @@ namespace FAMIS.Controllers
             
           
             int flagnum = int.Parse(JSdata);
-            int name_flag = flagnum/1000000;
+            int name_flag = flagnum/SystemConfig.ratio_dictPara;
             string name_flag_string = "";
             int? item_id=flagnum%1000000;
               List<int?> Depart_Asset_Type_Id=new List<int?>();
@@ -224,12 +224,11 @@ namespace FAMIS.Controllers
             List<tb_Asset> list = db.tb_Asset.ToList();
             if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
-                  Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
+                Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
                 var data = from r in db.tb_Asset
                            join t in db.tb_AssetType on r.type_Asset equals t.ID
                            join D in db.tb_department on r.department_Using equals D.ID
                            join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
-                          
                            where Depart_Asset_Type_Id.Contains(r.department_Using)||item_id==0
                            select new
                            {
