@@ -274,17 +274,18 @@ function LoadInitData_Detail(searchCondtiion) {
         //  url: '/SysSetting/getpageOrder?role=1&tableType=1',
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
+        height: '300px',
+        fitColumn: true,
+        // fit:true ,
         iconCls: 'icon-save',
         dataType: "json",
-        //  fitColumns: true,
-        rownumbers: true, //是否加行号
-        pagination: true, //是否显式分页
-        // onClickCell: onClickCell,
-        // onEndEdit: onEndEdit,
-        // height:500,
-        pageSize: 15, //页容量，必须和pageList对应起来，否则会报错
-        pageNumber: 1, //默认显示第几页
-        pageList: [15, 30, 45],
+
+        pagePosition: 'top',
+        rownumbers: true, //是否加行号 
+        pagination: true, //是否显式分页 
+        pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
+        pageNumber: 1, //默认显示第几页 
+        pageList: [15, 30, 45],//分页中下拉
         
          
         
@@ -330,11 +331,24 @@ function LoadInitData_Detail(searchCondtiion) {
             });
             Next_Page();
            
-        }
-        
+        },
+        singleSelect: true, //允许选择多行
+    selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+    checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+    fitColumns: false, 
     });
   
-  //  loadPageTool_Detail();
+ loadtool();
+}
+
+function loadtool() {
+    var pager = $('#TableList_0_1').datagrid('getPager');	// get the pager of datagrid
+    pager.pagination({
+
+        beforePageText: '第',//页数文本框前显示的汉字  
+        afterPageText: '页    共 {pages} 页',
+        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+    });
 }
 function Next_Page() {
     var $winADD;

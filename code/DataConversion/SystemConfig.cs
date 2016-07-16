@@ -150,7 +150,9 @@ namespace FAMIS.DataConversion
         public const String Menu_ZCJS = "ZCJS"; //资产减少
         public const String Menu_ZCJC = "ZCJC"; //资产借出
         public const String Menu_ZCGH = "ZCGH"; //资产归还
-
+        
+        //其他参数
+        public const int Days_To_Notice = 30;
 
 
         public const String TB_Collar = "Collar";
