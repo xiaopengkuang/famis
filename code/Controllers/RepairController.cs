@@ -160,6 +160,8 @@ namespace FAMIS.Controllers
                             serialNumber = tb_rep.serialNumber,
                             state_list = ST.Name,
                             supplier_Name = SP.name_supplier,
+                            supplier_address=SP.address,
+                            supplier_LinkUser=SP.linkman,
                             userName_applying = UAP.true_Name,
                             userName_authorize = UAT.true_Name,
                             userName_create = UCT.true_Name,
@@ -194,6 +196,8 @@ namespace FAMIS.Controllers
                            serialNumber=p.serialNumber,
                            state_list=ST.Name,
                            supplier_Name=SP.name_supplier,
+                           supplier_address = SP.address,
+                           supplier_LinkUser = SP.linkman,
                            userName_applying=UAP.true_Name,
                            userName_authorize=UAT.true_Name,
                            userName_create=UCT.true_Name,
@@ -288,6 +292,7 @@ namespace FAMIS.Controllers
             newItem.date_create = DateTime.Now;
             newItem.userID_create = userID;
             newItem.flag = true;
+            newItem.serialNumber = seriaNumber;
             newItem.state_list = state_list_ID;
             try
             {
