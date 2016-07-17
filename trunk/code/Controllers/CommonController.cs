@@ -847,6 +847,12 @@ namespace FAMIS.Controllers
                 right.submit_able = true;
                 right.view_able = true;
                 right.delete_able = true;
+                right.startpd_able = true;
+                right.endpd_able = true;
+                right.newDeatails_able = true;
+                right.exportdeatails_able = true;
+                right.import_able = true;
+                right.rightedit_able = true;
                 return Json(right, JsonRequestBehavior.AllowGet);
             }
             else {
@@ -875,6 +881,12 @@ namespace FAMIS.Controllers
                         case SystemConfig.operation_review: { right.review_able = item.flag; }; break;
                         case SystemConfig.operation_submit: { right.submit_able = item.flag; }; break;
                         case SystemConfig.operation_view: { right.view_able = item.flag; }; break;
+                        case SystemConfig.operation_startPD: { right.startpd_able = item.flag; }; break;
+                        case SystemConfig.operation_endPD: { right.endpd_able = item.flag; }; break;
+                        case SystemConfig.operation_newDeatails: { right.newDeatails_able = item.flag; }; break;
+                        case SystemConfig.operation_exportdeatails: { right.exportdeatails_able = item.flag; }; break;
+                        case SystemConfig.operation_importpd: { right.import_able= item.flag; }; break;
+                        case SystemConfig.operation_rightedit: { right.rightedit_able = item.flag; }; break;
                         default: { }; break;
                     }
                 }
@@ -911,7 +923,31 @@ namespace FAMIS.Controllers
                 {
                     right.view_able = false;
                 }
+                if (right.startpd_able == null)
+                {
+                    right.startpd_able = false;
+                }
+                if (right.endpd_able == null)
+                {
+                    right.endpd_able = false;
+                }
+                if (right.newDeatails_able == null)
+                {
+                    right.newDeatails_able = false;
+                }
 
+                if (right.exportdeatails_able == null)
+                {
+                    right.exportdeatails_able = false;
+                }
+                if(right.import_able==null)
+                {
+                    right.import_able= false;
+                }
+                if (right.rightedit_able == null)
+                {
+                    right.rightedit_able = false;
+                }
                 return Json(right, JsonRequestBehavior.AllowGet);
             }
 
