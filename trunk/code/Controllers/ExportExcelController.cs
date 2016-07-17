@@ -31,6 +31,7 @@ namespace FAMIS.Controllers
         CollarController collarCont = new CollarController();
         AllocationController allocationCont = new AllocationController();
         RepairController repairCont = new RepairController();
+        BorrowController borrowCont = new BorrowController();
         // GET: ExportExcel
 
         public ActionResult Index()
@@ -158,12 +159,38 @@ namespace FAMIS.Controllers
             }
             data_TB = ToDataTable(list);
             fileName += "详细_";
-            //columeNames = ColumnListConf.dto_Collar;
+            columeNames = ColumnListConf.dto_Repair;
             string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
             fileName += dateTime + ".xls";
             return ExportDataTable(data_TB, fileName, columeNames);
         }
 
+        public ActionResult ExportExcel_Borrow(int? page, int? rows, String searchCondtiion, bool? exportFlag)
+        {
+            String data = borrowCont.LoadBorrowList(page, rows, searchCondtiion, true);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            List<String> columeNames = new List<string>();
+            String data_f = data;
+            if (data_f.Contains("/"))
+            {
+                data_f = data_f.Replace("/", "");
+            }
+            DataTable data_TB = new DataTable();
+            String fileName = "借出_";
+            List<Json_borrow_Excel> list = serializer.Deserialize<List<Json_borrow_Excel>>(data_f);
+            foreach (Json_borrow_Excel item in list)
+            {
+                item.date_borrow = FormatDateTime(item.date_borrow);
+                item.date_return = FormatDateTime(item.date_return);
+                item.date_operated = FormatDateTime(item.date_operated);
+            }
+            data_TB = ToDataTable(list);
+            fileName += "详细_";
+            columeNames = ColumnListConf.dto_Borrow;
+            string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
+            fileName += dateTime + ".xls";
+            return ExportDataTable(data_TB, fileName, columeNames);
+        }
 
         /// <summary>
         /// 将泛型集合类转换成DataTable
