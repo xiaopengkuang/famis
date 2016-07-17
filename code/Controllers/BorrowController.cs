@@ -308,6 +308,12 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
+            List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
+            {
+                return -5;
+            }
+
             //TODO:获取系列编号
             String seriaNumber = commonController.getLatestOneSerialNumber(SystemConfig.serialType_JC );
 
@@ -328,7 +334,7 @@ namespace FAMIS.Controllers
                 int? id_borrow = getIDBySerialNum(newItem.serialNum);
                 //获取单据明细
                 //获取选中的Ids
-                List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+                //List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
                 List<tb_Asset_Borrow_detail> details = createBorrowDetailList(id_borrow, selectedAssets);
                 DB_C.tb_Asset_Borrow_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -371,6 +377,14 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
+
+            List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
+            {
+                return -5;
+            }
+
+
             try {
                 if (!RightToSubmit_borrow(json_data.state_List, json_data.ID))
                 {
@@ -400,7 +414,7 @@ namespace FAMIS.Controllers
                     item.flag_return = true;
                 }
                 //获取选中IDs
-                List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+                //List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
                 List<tb_Asset_Borrow_detail> details = createBorrowDetailList(json_data.ID, selectedAssets);
                 DB_C.tb_Asset_Borrow_detail.AddRange(details);
                 DB_C.SaveChanges();

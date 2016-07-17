@@ -257,6 +257,13 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
+
+
+            List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
+            {
+                return -5;
+            }
             //TODO:获取系列编号
             String seriaNumber = commonController.getLatestOneSerialNumber(SystemConfig.serialType_DB);
 
@@ -276,7 +283,7 @@ namespace FAMIS.Controllers
                 int? id_allocation = getIDBySerialNum(newItem.serial_number);
                 //获取单据明细
                 //获取选中的Ids
-                List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+                //List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
                 List<tb_Asset_allocation_detail> details = createAllocationDetailList(id_allocation, selectedAssets);
                 DB_C.tb_Asset_allocation_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -373,6 +380,12 @@ namespace FAMIS.Controllers
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_allocation_add Json_data = serializer.Deserialize<Json_allocation_add>(data);
+            List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+            if (commonController.checkAssetState_BySelectedAsset(selectedAssets,SystemConfig.state_asset_using))
+            {
+                return -5;
+            }
+
 
             if (Json_data == null || Json_data.id == null)
             {
@@ -408,7 +421,7 @@ namespace FAMIS.Controllers
                     item.flag = false;
                 }
                 //获取选中IDs
-                List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+                //List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
                 List<tb_Asset_allocation_detail> details = createAllocationDetailList(Json_data.id, selectedAssets);
                 DB_C.tb_Asset_allocation_detail.AddRange(details);
                 DB_C.SaveChanges();

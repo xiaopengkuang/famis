@@ -48,7 +48,7 @@ namespace FAMIS.Controllers
             return View();
         }
 
-
+       
         /// <summary>
         /// 当用户提交单据时  需要选择用户去审核
         ///根据类型获取有权限审核的用户
@@ -102,8 +102,32 @@ namespace FAMIS.Controllers
         }
 
 
+        /// <summary>
+        /// 判断选中的Asset状态
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public bool checkAssetState_BySelectedAsset(List<int?> ids_selected,String stateName)
+        {
 
+            if(ids_selected.Count<1)
+            {
+                return false;
+            }
 
+            var ids = from p in DB_C.tb_Asset
+                      where p.flag == true
+                      where ids_selected.Contains(p.ID)
+                      join ST in DB_C.tb_dataDict_para on p.state_asset equals ST.ID
+                      where ST.name_para==stateName
+                      select p;
+            if (ids_selected.Count == ids.Count())
+            {
+                return true;
+            }
+            return false;
+
+        }
 
 
 
