@@ -383,6 +383,12 @@ namespace FAMIS.Controllers
             newItem.flag = true;
             newItem.state_List = state_list_ID;
             newItem.date_Operated = DateTime.Now;
+            List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+            if(commonController.checkAssetState_BySelectedAsset(selectedAssets,SystemConfig.state_asset_free)){
+
+                return -5;
+            }
+
             try
             {
 
@@ -391,7 +397,6 @@ namespace FAMIS.Controllers
                 int? id_collar = getIDBySerialNum_collar(newItem.serial_number);
                 //获取单据明细
                 //获取选中的Ids
-                List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
                 List<tb_Asset_collar_detail> details = createCollarDetialList(id_collar, selectedAssets);
                 DB_C.tb_Asset_collar_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -448,6 +453,12 @@ namespace FAMIS.Controllers
             return null;
         }
 
+
+
+       
+
+
+
         [HttpPost]
         public int Handler_updateCollar(String data)
         {
@@ -457,6 +468,12 @@ namespace FAMIS.Controllers
             if (Json_data == null||Json_data.id==null)
             {
                 return 0;
+            }
+            List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
+            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_free))
+            {
+
+                return -5;
             }
             try {
 
@@ -494,7 +511,6 @@ namespace FAMIS.Controllers
                     item.flag = false;
                 }
                 //获取选中IDs
-                List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
                 List<tb_Asset_collar_detail> details = createCollarDetialList(Json_data.id, selectedAssets);
                 DB_C.tb_Asset_collar_detail.AddRange(details);
                 DB_C.SaveChanges();
