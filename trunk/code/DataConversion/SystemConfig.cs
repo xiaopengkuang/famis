@@ -63,19 +63,13 @@ namespace FAMIS.DataConversion
         public static String[] treeType_allocation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD,nameFlag_2_SYRY };
         public static String[] treeType_repair_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_CFDD, nameFlag_2_SYRY };
         public static String[] treeType_depreciation_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB };
-        public static String[] treeType_newdeatails_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_ZCZT };
-        public static String[] treeType_reduction_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_ZCZT, nameFlag_2_SYRY, nameFlag_2_CFDD };
-        public static String[] treeType_borrow_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_SYRY, nameFlag_2_CFDD };
-        public static String[] treeType_return_Search_Menu = new String[] { nameFlag_2_SYBM, nameFlag_2_ZCLB, nameFlag_2_SYRY, nameFlag_2_CFDD }; 
+        public static String[] treeType_newdeatails_Search_Menu = new String[] { nameFlag_2_SYBM,nameFlag_2_ZCLB,nameFlag_2_ZCZT};
         public const String treeType_Accounting = "Accounting";
         public const String treeType_collarSearch = "collarSearch";
         public const String treeType_allocationSearch = "allocationSearch";
         public const String treeType_repairSearch = "repairSearch";
         public const String treeType_depreciationSearch = "DepreciationSearch";
-        public const String treeType_newdeatails = "NewDeatails";
-        public const String treeType_Reduction = "ReductionSearch";
-        public const String treeType_Borrow = "BorrowSearch";
-        public const String treeType_Return = "ReturnSearch";  
+        public const String treeType_newdeatails = "NewDeatails";  
         public static String state_asset_free = "闲置";
         public static String state_asset_using = "在用";
         public static String state_asset_bad = "报废";
@@ -94,7 +88,6 @@ namespace FAMIS.DataConversion
         public const int state_List_DSH_jsonID = 2;
         public const int state_List_YSH_jsonID = 3;
         public const int state_List_TH_jsonID = 4;
-        public const int state_List_YGH_jsonID = 5;
         public static List<int> state_List = new List<int>(){ 1, 2, 3, 4 };
 
         public static String[] state_List_CG_right = new String[] { state_List_CG, state_List_TH };
@@ -107,55 +100,53 @@ namespace FAMIS.DataConversion
         public const String state_List_DSH = "待审核"; //
         public const String state_List_YSH = "已审核";
         public const String state_List_TH = "退回";
-        public const String state_List_YGH = "已归还";
 
 
 
-        public const String serialType_LY = "LY";  //资产领用
+        public const String serialType_LY = "LY";
 
-        public const String serialType_DB = "DB";  //资产调拨
+        public const String serialType_DB = "DB";
 
-        public const String serialType_ZC = "ZC";  //资产
+        public const String serialType_ZC = "ZC";
 
-        public const String serialType_WX = "WX";  //资产维修
+        public const String serialType_WC = "WC";
 
-        public const String serialType_JS = "JS";  //资产减少
-
-        public const String serialType_JC = "JC";  //资产借出 
-
-        public const String serialType_GH = "GH";  //资产归还
-
-        public const String serialType_BM= "BM";  //部门？ TODO：
+        public const String serialType_BM= "BM";
 
 
 
 
         //用户操作
-        public const String operation_add = "add";   //用户添加
-        public const String operation_edit = "edit";  //用户编辑
-        public const String operation_export = "export";  //导出
-        public const String operation_view = "view";    //查看
-        public const String operation_review = "review";  //审核
+        public const String operation_add = "add";
+        public const String operation_edit = "edit";
+        public const String operation_export = "export";
+        public const String operation_view = "view";
+        public const String operation_review = "review";
         public const String operation_submit = "submit";  //提交至审核
-        public const String operation_delete = "delete";  //删除操作
-        public const String operation_return = "return"; //维修资产进行归还
-        public const String operation_print = "print";   //打印操作
+        public const String operation_delete = "delete";
+        public const String operation_print = "print";
+        public const String operation_startPD = "startpd";
+        public const String operation_endPD = "endpd";
+        public const String operation_newDeatails = "newdetails";
+        public const String operation_exportdeatails = "export_deatails";
+        public const String operation_importpd = "import";
+        public const String operation_rightedit = "rightedit";
 
-
-
-        public const String Menu_ZCTZ = "ZCTZ"; //资产台账
-        public const String Menu_ZCLY = "ZCLY"; //资产领用
-        public const String Menu_ZCDB = "ZCDB"; //资产调拨
-        public const String Menu_ZCWX = "ZCWX"; //资产维修
-        public const String Menu_ZCJS = "ZCJS"; //资产减少
-        public const String Menu_ZCJC = "ZCJC"; //资产借出
-        public const String Menu_ZCGH = "ZCGH"; //资产归还
+        public const String Menu_ZCTZ = "ZCTZ";
+        public const String Menu_ZCLY = "ZCLY";
+        public const String Menu_ZCDB = "ZCDB";
+        public const String Menu_ZCWX = "ZCWX";
+        public const String Menu_ZCJS = "ZCJS";
+        public const String Menu_ZCJC = "ZCJC";
+        public const String Menu_ZCGH = "ZCGH";
         
         //其他参数
         public const int Days_To_Notice = 30;
-
-
-        public const String TB_Collar = "Collar";
+        public const String Export_File_Name_ZJ = "折旧详情";
+        public const String Export_File_Name_PDMain = "盘点单详情";
+        public const String Export_File_Name_PDDetails = "盘点明细详情";
+		
+         public const String TB_Collar = "Collar";
         public const String TB_Allocation = "Allocation";
         public const String TB_Repair = "Repair";
         public const String TB_Reduction = "Redution";
@@ -167,12 +158,7 @@ namespace FAMIS.DataConversion
         public const String Search_stateList_JsonName_DSH = "DSH";
         public const String Search_stateList_JsonName_YSH = "YSH";
         public const String Search_stateList_JsonName_TH = "TH";
-        public const String Search_stateList_JsonName_YGH = "YGH";
-
-
-        public const String EAN13_IMG_FOLDER = "E:\\WorkSpace_Project\\EAN13\\";
-        public const int EAN13_Length = 13;
-
+        public const String Search_stateList_JsonName_YGH = "YGH"; 
 
     }
 }
