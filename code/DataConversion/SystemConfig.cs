@@ -167,10 +167,11 @@ namespace FAMIS.DataConversion
         public const String Search_stateList_JsonName_DSH = "DSH";
         public const String Search_stateList_JsonName_YSH = "YSH";
         public const String Search_stateList_JsonName_TH = "TH";
-        public const String Search_stateList_JsonName_YGH = "YGH"; 
+        public const String Search_stateList_JsonName_YGH = "YGH";
 
 
-
+        public const String EAN13_IMG_FOLDER = "E:\\WorkSpace_Project\\EAN13\\";
+        public const int EAN13_Length = 13;
 
 
     }

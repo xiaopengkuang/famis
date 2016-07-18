@@ -24,6 +24,7 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset_collar> tb_Asset_collar { get; set; }
         public virtual DbSet<tb_Asset_collar_detail> tb_Asset_collar_detail { get; set; }
         public virtual DbSet<tb_Asset_CustomAttr> tb_Asset_CustomAttr { get; set; }
+        public virtual DbSet<tb_Asset_code128> tb_Asset_code128 { get; set; }
         public virtual DbSet<tb_Asset_inventory> tb_Asset_inventory { get; set; }
         public virtual DbSet<tb_Asset_inventory_Details> tb_Asset_inventory_Details { get; set; }
         public virtual DbSet<tb_Asset_Reduction> tb_Asset_Reduction { get; set; }
@@ -143,6 +144,14 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_CustomAttr>()
                 .Property(e => e.value)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_code128>()
+                .Property(e => e.code_ean13)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_code128>()
+                .Property(e => e.path_ean13_img)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_inventory>()
