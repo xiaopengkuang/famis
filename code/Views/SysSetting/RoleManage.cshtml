@@ -16,6 +16,12 @@
 <script type="text/javascript">
 
     $(function () {
+        $.ajax({
+            url: '/Common/getOperationRightsByMenu?menu=JSGL',
+            dataType: "json",
+            type: "POST",
+            traditional: true,
+            success: function (dataRight) {
         var datagrid; //定义全局变量datagrid
         var editRow = undefined; //定义全局变量：当前编辑的行
         datagrid = $("#dd").datagrid({
@@ -41,16 +47,16 @@
              { field: 'ID', title: '角色ID', width: 100 },
               {
                   field: 'name', title: '角色名', width: 100,
-                  editor: { type: 'validatebox', options: { required: true } }
+                  editor: { type: 'validatebox', options: { required: false } }
               },
                {
                    field: 'description', title: '描述', width: 100,
-                   editor: { type: 'validatebox', options: { required: true } }
+                   editor: { type: 'validatebox', options: { required: false } }
                }
             ]],
             queryParams: { action: 'query' }, //查询参数
             toolbar: [{
-                text: '添加', iconCls: 'icon-add', handler: function () {//添加列表的操作按钮添加，修改，删除等
+                text: '添加', iconCls: 'icon-add', disabled: !dataRight.add_able, handler: function () {//添加列表的操作按钮添加，修改，删除等
                     //添加时先判断是否有开启编辑的行，如果有则把开户编辑的那行结束编辑
                     if (editRow != undefined) {
                         datagrid.datagrid("endEdit", editRow);
@@ -77,7 +83,7 @@
                 }
             }, '-',
              {
-                 text: '删除', iconCls: 'icon-remove', handler: function () {
+                 text: '删除', iconCls: 'icon-remove', disabled: !dataRight.delete_able, handler: function () {
                      //删除时先获取选择行
                      var rows = datagrid.datagrid("getSelections");
                      //选择要删除的行
@@ -101,15 +107,15 @@
 
                                          success: function (result) {
                                              if (result == "Supper") {
-                                                 alert("伦家是超级管理员，你是奈何不了我的哦！");
+                                                 $.messager.alert("提示", "超级管理员不可删除！", "error");
+                                                
                                                  $('#dd').datagrid('reload');
 
                                              }
-                                             else
-                                                 alert("成功删除！");
+                                            
 
                                          }, error: function (msg) {
-                                             alert("删除角色失败！请先将该角色上的权限全部取消，然后尝试删除该角色。");
+                                             //alert("删除角色失败！请先将该角色上的权限全部取消，然后尝试删除该角色。");
                                              $('#List').datagrid('reload');
                                          }
 
@@ -118,7 +124,7 @@
                                  }
                                  //将选择到的行存入数组并用,分隔转换成字符串，
                                  //本例只是前台操作没有与数据库进行交互所以此处只是弹出要传入后台的id
-                                 alert(ids.join(','));
+                                 //alert(ids.join(','));
                              }
                          });
                      }
@@ -128,7 +134,7 @@
                  }
              }, '-',
              {
-                 text: '修改', iconCls: 'icon-edit', handler: function () {
+                 text: '修改', iconCls: 'icon-edit', disabled: !dataRight.edit_able, handler: function () {
                      //修改时要获取选择到的行
                      var rows = datagrid.datagrid("getSelections");
                      
@@ -148,13 +154,13 @@
                              editRow = index;
                              //当开启了当前选择行的编辑状态之后，
                              //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
-                             datagrid.datagrid("unselectAll");
+                            // datagrid.datagrid("unselectAll");
                          }
                      }
                  }
              }, '-',
              {
-                 text: '保存', iconCls: 'icon-save', handler: function () {
+                 text: '保存', iconCls: 'icon-save', disabled: !dataRight.add_able && !dataRight.add_able, handler: function () {
                      //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
                      datagrid.datagrid("endEdit", editRow);
                      var row = $('#dd').datagrid('getSelected');
@@ -166,7 +172,12 @@
                          var myname = rowdata.rows[index].name;
 
                          var des = rowdata.rows[index].description;
-                         
+                         if (myname == "" || des == null) {
+                             $.messager.alert("提示", "用户名不能为空", "error");
+                             return;
+                         }
+                         if (des == "" || des == null)
+                             des="..."
                          $.ajax({
 
                              type: "post",
@@ -177,9 +188,11 @@
                              success: function (result) {
 
                                  if (result == "Supper")
-                                     alert("伦家是超级管理员，你是奈何不了我的哦！");
+
+                                    // alert("伦家是超级管理员，你是奈何不了我的哦！");
+                                 $.messager.alert("提示", "超级管理员不可做编辑或删除！", "error");
                                  else {
-                                     alert("添加成功！");
+                                     //alert("添加成功！");
                                      $('#dd').datagrid('reload');
                                  }
                                  
@@ -190,7 +203,7 @@
                          });
 
                      }
-                     else alert("请选择您要更改的用户数据！")
+                     else  $.messager.alert("提示", "请选择您要更改的用户数据！", "error");// alert("请选择您要更改的用户数据！")
 
                     
                      //...
@@ -205,10 +218,12 @@
                  }
              }, '-', {
                  text: '权限更改',
+                 disabled: !dataRight.rightedit_able,
                  iconCls: 'icon-save',
                  height: 50,
                  handler: function () {
-
+                     if (!dataRight.rightedit_able)
+                         return;
                      var row = $('#dd').datagrid('getSelected');
                      if (row) {
                          var index = $('#dd').datagrid('getRowIndex', row);
@@ -219,8 +234,8 @@
 
                      }
                      else
-                         alert("请先选中要修改的角色！");
-
+                        // alert("请先选中要修改的角色！");
+                         $.messager.alert("提示", "请先选中要修改的角色！", "error")
 
                    //  window.open("", "", "top=300,left=800,width=550,height=500");
                  }
@@ -235,6 +250,9 @@
             },
             onDblClickRow: function (rowIndex, rowData) {
                 //双击开启编辑行
+                if (!dataRight.edit_able) {
+                    return;
+                }
                 if (editRow != undefined) {
                     datagrid.datagrid("endEdit", editRow);
                 }
@@ -242,6 +260,13 @@
                     datagrid.datagrid("beginEdit", rowIndex);
                     editRow = rowIndex;
                 }
+            },
+
+            singleSelect: true, //允许选择多行
+        selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+        checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+     
+        });
             }
         });
        

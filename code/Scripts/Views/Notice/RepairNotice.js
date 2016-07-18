@@ -100,12 +100,12 @@
                 { field: 'content_Review', title: '审核内容', width: 100 },
             
             {
-                field: 'nameqment', title: '装备名称', width: 100,
+                field: 'nameqment', title: '装备名称', width: 100
 
             },
             { field: 'costrepair', title: '维修费用', width: 100 },
              { field: 'state', title: '审核状态', width: 100 },
-               { field: 'supplier', title: '维修供应商', width: 100 },
+               { field: 'supplier', title: '维修供应商', width: 100 } 
               
         ]],
 

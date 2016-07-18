@@ -45,7 +45,7 @@
                 { field: 'address', title: '存放地址', width: 150 },
             { field: 'owener', title: '使用人', width: 150 },
             {
-                field: 'state_asset', title: '资产状态', width: 150,
+                field: 'state_asset', title: '资产状态', width: 150
 
             },
             { field: 'supllier', title: '供应商', width: 150 }

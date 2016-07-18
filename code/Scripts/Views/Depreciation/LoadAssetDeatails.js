@@ -35,8 +35,8 @@ $.ajax({
                 $('#SYR').val(SYR);
                 var CFDD = result.split(",")[8];
                 $('#CFDD').val(CFDD);
-                var ZJFS = result.split(",")[9];
-                $('#ZJFS').val(ZJFS);
+                var ADDFS = result.split(",")[17];
+                $('#ADDFS').val(ADDFS);
                 var GYS = result.split(",")[10];
                 $('#GYS').val(GYS);
                 var LXR = result.split(",")[11];
@@ -51,7 +51,7 @@ $.ajax({
                 $('#DJRQ').val(DJRQ);
                 var SYNX = result.split(",")[16];
                 $('#SYNX').val(SYNX);
-                var  ZJFS= result.split(",")[17];
+                var  ZJFS= result.split(",")[9];
                 $('#ZJFS').val(ZJFS);
                 var JCZL = result.split(",")[18];
                 $('#JCZL').val(JCZL);
@@ -61,11 +61,11 @@ $.ajax({
                 $('#ZCSL').val(ZCSL);
                 var ZCJZ = result.split(",")[21];
                 $('#ZCJZ').val(ZCJZ);
-                var YTZJ = result.split(",")[21];
+                var YTZJ = result.split(",")[22];
                 $('#YTZJ').val(YTZJ);
-                var LJZJ = result.split(",")[22];
+                var LJZJ = result.split(",")[23];
                 $('#LJZJ').val(LJZJ);
-                var JZ = result.split(",")[23];
+                var JZ = result.split(",")[24];
                 $('#JZ').val(JZ);
 
             }, error: function (msg) {

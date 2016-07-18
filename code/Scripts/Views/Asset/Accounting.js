@@ -4,8 +4,8 @@ $(function () {
 
 
     LoadTreeLeft();
-    //LoadInitData_Detail();
-    chanegeTableType_Radio();
+    LoadInitData_Detail();
+
     $(".SC_Date_Accounting").show();
     $(".SC_Content_Accounting").hide();
     $("#Accounting_SC").combobox({
@@ -19,20 +19,19 @@ $(function () {
                 $(".SC_Date_Accounting").hide();
                 $(".SC_Content_Accounting").show();
             }
+
+
         }
 
     });
 
- 
-    $(window).resize(function () {
-        var win_width = $(window).width();
-        $("#TableList_0_1").datagrid('resize', { width: win_width - 220 });
-    });
+
 
 });
 function chanegeTableType_Radio() {
 
     var selectType = $("input[name='table_TYPE']:checked").val();
+
     if (selectType == "0") {
         LoadInitData_Summary();
     } else if (selectType == "1") {
@@ -79,10 +78,10 @@ function LoadTreeLeft() {
 
             var tree = $(this).tree;
             if (isRootNode(tree, node)) {
-                alert(node.id);
+               // alert(node.id);
                 SearchByCondition_LeftTree(node.id, "all");
             } else {
-                alert(node.id);
+               // alert(node.id);
                 SearchByCondition_LeftTree(node.id, node.text);
             }
            
@@ -158,7 +157,7 @@ function SearchByCondition_right() {
 
 //表数据重载
 function reloadTable_Condition() {
-    alert(searchCondtiion);
+    //alert(searchCondtiion);
     //先判断类型
     var selectType = $("input[name='table_TYPE']:checked").val();
     if (selectType == "0") {
@@ -189,7 +188,7 @@ function LoadInitData_Detail() {
                 url: '/Asset/LoadAssets?tableType=1&searchCondtiion=' + searchCondtiion,
                 method: 'POST', //默认是post,不允许对静态文件访问
                 width: 'auto',
-                height: '100%',
+                height: '300px',
                 iconCls: 'icon-save',
                 dataType: "json",
                 fitColumns: true,
@@ -329,11 +328,10 @@ function loadPageTool_Detail(dataRight) {
                 {
                     return;
                 }
-                var url = '/ExportExcel/ExportExcel_Asset_Accounting?tableType=1&exportFlag=true&searchCondtiion=' + searchCondtiion;
-                exportData(url);
-                //var filename = getNowFormatDate_FileName();
 
-                //Export(filename, $('#TableList_0_1'));
+                var filename = getNowFormatDate_FileName();
+
+                Export(filename, $('#TableList_0_1'));
             }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
@@ -399,22 +397,6 @@ function loadPageTool_Summary(dataRight) {
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
-}
-
-function exportData(url)
-{
-    var form = $("<form>");//定义一个form表单
-    form.attr("style", "display:none");
-    form.attr("target", "");
-    form.attr("method", "post");
-    form.attr("action",url);
-    var input1 = $("<input>");
-    input1.attr("type", "hidden");
-    input1.attr("name", "exportData");
-    input1.attr("value", (new Date()).getMilliseconds());
-    $("body").append(form);//将表单放置在web中
-    form.append(input1);
-    form.submit();//表单提交
 }
 
 

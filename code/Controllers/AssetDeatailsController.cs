@@ -77,19 +77,35 @@ namespace FAMIS.Controllers
             string json="";
            IEnumerable<String>  q = from a in db.tb_Asset
                      join t in db.tb_AssetType on a.type_Asset equals t.ID
-                        join d in db.tb_dataDict_para on a.measurement equals d.ID
-                        join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                        join p in db.tb_department on a.department_Using equals p.ID
-                        join u in db.tb_user on a.Owener equals u.ID
-                        join s in db.tb_dataDict_para on a.state_asset equals s.ID
-                        join zj in db.tb_dataDict_para on a.Method_add equals zj.ID
-                        join fs in db.tb_dataDict_para on a.Method_depreciation equals fs.ID
-                        join sp in db.tb_supplier on a.supplierID equals sp.ID
+                                    join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_tt
+                                    from tt in temp_tt.DefaultIfEmpty()
+                                    join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                                    from dd in temp_d.DefaultIfEmpty()
+                                    join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+
+                                    from jj in temp_j.DefaultIfEmpty()
+                                    join s in db.tb_dataDict_para on a.state_asset equals s.ID into temp_s
+
+                                    from ss in temp_s.DefaultIfEmpty()
+                                    join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                                    from pp in temp_p.DefaultIfEmpty()
+                                    join u in db.tb_user on a.Owener equals u.ID into temp_u
+                                    from uu in temp_u.DefaultIfEmpty()
+                                    join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                                    from ssp in temp_sp.DefaultIfEmpty()
+                                    join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
+                                    from ee in temp_ee.DefaultIfEmpty()
+                                    join zj in db.tb_dataDict_para on a.Method_add equals zj.ID into temp_zj
+                                    from zzj in temp_zj.DefaultIfEmpty()
+                                    join fs in db.tb_dataDict_para on a.Method_depreciation equals fs.ID into temp_fs
+                                     from ffs in temp_fs.DefaultIfEmpty()
+                        
+
                         where a.serial_number==Json
                         select a.serial_number+","+t.name_Asset_Type+","+t.name_Asset_Type+","+a.name_Asset+","+a.specification+
-                        ","+d.name_para+","+p.name_Department+","+u.true_Name+","+ j.name_para+","+zj.name_para+","+sp.name_supplier+
-                         ","+sp.linkman+","+sp.address+","+a.Time_Purchase+","+s.name_para+","+a.Time_add+","+a.YearService_month+","+
-                        fs.name_para+","+a.Net_residual_rate+","+a.unit_price+","+a.amount+","+a.value+","+a.depreciation_Month+","
+                        ","+dd.name_para+","+pp.name_Department+","+uu.true_Name+","+ jj.name_para+","+zzj.name_para+","+ssp.name_supplier+
+                         ","+ssp.linkman+","+ssp.address+","+a.Time_Purchase+","+ss.name_para+","+a.Time_add+","+a.YearService_month+","+
+                        ffs.name_para+","+a.Net_residual_rate+","+a.unit_price+","+a.amount+","+a.value+","+a.depreciation_Month+","
                         +a.depreciation_tatol+","+a.Net_value;
             
              foreach(String a in q)
@@ -103,9 +119,14 @@ namespace FAMIS.Controllers
              string condiation = temp[0];
              string pdsearial = temp[1];
              int flagnum = int.Parse(condiation);
-             int name_flag = flagnum / 1000000;
+             int name_flag = flagnum /1000000;
              string name_flag_string = "";
              int item_id = flagnum % 1000000;
+
+             List<int?> Depart_Asset_Type_Id = new List<int?>();
+             List<int?> AssetassettypeId = new List<int?>();
+             List<int?> ZTassettypeId = new List<int?>();
+
              IEnumerable<String> flags = from o in db.tb_dataDict
                                          where o.ID == name_flag
                                          select o.name_flag;
@@ -117,22 +138,29 @@ namespace FAMIS.Controllers
              if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
              {
 
-
+                 Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
                  IEnumerable<tb_Asset> q = from a in db.tb_Asset
-                                           join t in db.tb_AssetType on a.type_Asset equals t.ID
-                                           join d in db.tb_dataDict_para on a.measurement equals d.ID
-                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                                           join p in db.tb_department on a.department_Using equals p.ID
-                                           join u in db.tb_user on a.Owener equals u.ID
-                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID
-                                           join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where p.ID == item_id||item_id==0
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_t
+                                           from tt in temp_t.DefaultIfEmpty()
+                                           join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                                           from dd in temp_d.DefaultIfEmpty()
+                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+                                           from jj in temp_j.DefaultIfEmpty()
+                                           join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                                           from pp in temp_p.DefaultIfEmpty()
+                                           join u in db.tb_user on a.Owener equals u.ID into temp_u
+                                           from uu in temp_u.DefaultIfEmpty()
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_e
+                                           from ee in temp_e.DefaultIfEmpty()
+                                           join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                                           from ssp in temp_sp.DefaultIfEmpty()
+                                           where Depart_Asset_Type_Id.Contains(a.department_Using)||item_id==0
                                            select a;
                 
                  foreach (tb_Asset asset in q)
                  {
                       
-                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number).ToList();
+                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number&&a.serial_number==pdsearial&&a.flag==true).ToList();
                      if (Deatail_List.Count > 0)
                          continue;
                      
@@ -157,21 +185,28 @@ namespace FAMIS.Controllers
             }
              if (name_flag_string == SystemConfig.nameFlag_2_ZCLB)
              {
-               
+                 AssetassettypeId=comController.GetSonID_AsseType(item_id);
 
                  IEnumerable<tb_Asset> q = from a in db.tb_Asset
-                                           join t in db.tb_AssetType on a.type_Asset equals t.ID
-                                           join d in db.tb_dataDict_para on a.measurement equals d.ID
-                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                                           join p in db.tb_department on a.department_Using equals p.ID
-                                           join u in db.tb_user on a.Owener equals u.ID
-                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID
-                                           join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where t.orderID == item_id.ToString() || item_id == 0
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_t
+                                           from tt in temp_t.DefaultIfEmpty()
+                                           join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                                           from dd in temp_d.DefaultIfEmpty()
+                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+                                           from jj in temp_j.DefaultIfEmpty()
+                                           join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                                           from pp in temp_p.DefaultIfEmpty()
+                                           join u in db.tb_user on a.Owener equals u.ID into temp_u
+                                           from uu in temp_u.DefaultIfEmpty()
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_e
+                                           from ee in temp_e.DefaultIfEmpty()
+                                           join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                                           from ssp in temp_sp.DefaultIfEmpty()
+                                           where AssetassettypeId.Contains(a.type_Asset) || item_id == 0
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
-                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number).ToList();
+                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number && a.serial_number == pdsearial && a.flag == true).ToList();
                      if (Deatail_List.Count > 0)
                          continue;
                       
@@ -197,19 +232,28 @@ namespace FAMIS.Controllers
              {
 
 
+
+                 ZTassettypeId = comController.GetSonIDs_dataDict_Para(item_id);
                  IEnumerable<tb_Asset> q = from a in db.tb_Asset
-                                           join t in db.tb_AssetType on a.type_Asset equals t.ID
-                                           join d in db.tb_dataDict_para on a.measurement equals d.ID
-                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                                           join p in db.tb_department on a.department_Using equals p.ID
-                                           join u in db.tb_user on a.Owener equals u.ID
-                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID
-                                           join sp in db.tb_supplier on a.supplierID equals sp.ID
-                                           where e.ID == item_id || item_id == 0
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_t
+                                           from tt in temp_t.DefaultIfEmpty()
+                                           join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                                           from dd in temp_d.DefaultIfEmpty()
+                                           join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+                                           from jj in temp_j.DefaultIfEmpty()
+                                           join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                                           from pp in temp_p.DefaultIfEmpty()
+                                           join u in db.tb_user on a.Owener equals u.ID into temp_u
+                                           from uu in temp_u.DefaultIfEmpty()
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_e
+                                           from ee in temp_e.DefaultIfEmpty()
+                                           join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                                           from ssp in temp_sp.DefaultIfEmpty()
+                                           where ZTassettypeId.Contains(a.state_asset)|| item_id == 0
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
-                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number).ToList();
+                     List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number && a.serial_number == pdsearial && a.flag == true).ToList();
                      if (Deatail_List.Count > 0)
                          continue;
                      var rule_tb = new tb_Asset_inventory_Details
@@ -334,32 +378,42 @@ namespace FAMIS.Controllers
             if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
                 Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
+
                    var data= from a in db.tb_Asset
-                            join t in db.tb_AssetType on a.type_Asset equals t.ID
-                            join d in db.tb_dataDict_para on a.measurement equals d.ID
-                            join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                            join p in db.tb_department on a.department_Using equals p.ID
-                            join u in db.tb_user on a.Owener equals u.ID
-                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
-                            join sp in db.tb_supplier on a.supplierID equals sp.ID
+
+                             join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_tt
+                             from tt in temp_tt.DefaultIfEmpty()
+                             join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                             from dd in temp_d.DefaultIfEmpty()
+                             join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+                             from jj in temp_j.DefaultIfEmpty()
+                             join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                             from pp in temp_p.DefaultIfEmpty()
+                             join u in db.tb_user on a.Owener equals u.ID into temp_u
+                             from uu in temp_u.DefaultIfEmpty()
+                             join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                             from ssp in temp_sp.DefaultIfEmpty()
+                             join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
+                             from ee in temp_ee.DefaultIfEmpty()
+
                             where Depart_Asset_Type_Id.Contains(a.department_Using)||item_id == 0
                             select new
                             {
                                 ID = a.ID,
                                 serial_number = a.serial_number,
                                 amountOfSys = a.amount,
-                                type_Asset = t.name_Asset_Type,
+                                type_Asset = tt.name_Asset_Type,
                                 name_Asset = a.name_Asset,
                                 specification = a.specification,
-                                measurement = d.name_para,
+                                measurement = dd.name_para,
                                 unit_price = a.unit_price,
                                 amount = a.amount,
                                 Total_price = a.value,
-                                department_using = p.name_Department,
-                                address = j.name_para,
-                                owener = u.true_Name,
-                                state_asset = e.name_para,
-                                supllier = sp.name_supplier
+                                department_using = pp.name_Department,
+                                address = jj.name_para,
+                                owener = uu.true_Name,
+                                state_asset = ee.name_para,
+                                supllier = ssp.name_supplier
 
                             };
                  data = data.OrderByDescending(a => a.ID);
@@ -386,31 +440,40 @@ namespace FAMIS.Controllers
 
                 AssetassettypeId = comController.GetSonID_AsseType(item_id);
                    var data =  from a in db.tb_Asset
-                            join t in db.tb_AssetType on a.type_Asset equals t.ID
-                            join d in db.tb_dataDict_para on a.measurement equals d.ID
-                            join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                            join p in db.tb_department on a.department_Using equals p.ID
-                            join u in db.tb_user on a.Owener equals u.ID
-                            join e in db.tb_dataDict_para on a.state_asset equals e.ID 
-                            join sp in db.tb_supplier on a.supplierID equals sp.ID
+
+                               join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_tt
+                               from tt in temp_tt.DefaultIfEmpty()
+                               join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                               from dd in temp_d.DefaultIfEmpty()
+                               join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+                               from jj in temp_j.DefaultIfEmpty()
+                               join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                               from pp in temp_p.DefaultIfEmpty()
+                               join u in db.tb_user on a.Owener equals u.ID into temp_u
+                               from uu in temp_u.DefaultIfEmpty()
+                               join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                               from ssp in temp_sp.DefaultIfEmpty()
+                               join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
+                               from ee in temp_ee.DefaultIfEmpty()
+
                             where AssetassettypeId.Contains(a.type_Asset)|| item_id == 0 
                             select new
                             {
                                 ID = a.ID,
                                 serial_number = a.serial_number,
                                 amountOfSys = a.amount,
-                                type_Asset = t.name_Asset_Type,
+                                type_Asset = tt.name_Asset_Type,
                                 name_Asset = a.name_Asset,
                                 specification = a.specification,
-                                measurement = d.name_para,
+                                measurement = dd.name_para,
                                 unit_price = a.unit_price,
                                 amount = a.amount,
                                 Total_price = a.value,
-                                department_using = p.name_Department,
-                                address = j.name_para,
-                                owener = u.true_Name,
+                                department_using = pp.name_Department,
+                                address = jj.name_para,
+                                owener = uu.true_Name,
                               //  state_asset = e.name_para,
-                                supllier = sp.name_supplier
+                                supllier = ssp.name_supplier
 
                             };
 
@@ -436,31 +499,39 @@ namespace FAMIS.Controllers
                 ZTassettypeId = comController.GetSonIDs_dataDict_Para(item_id);
                     var data =  from a in db.tb_Asset
                    
-                            join t in db.tb_AssetType on a.type_Asset equals t.ID
-                            join d in db.tb_dataDict_para on a.measurement equals d.ID
-                            join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                            join p in db.tb_department on a.department_Using equals p.ID
-                            join u in db.tb_user on a.Owener equals u.ID
-                            join sp in db.tb_supplier on a.supplierID equals sp.ID
-                            join e in db.tb_dataDict_para on a.state_asset equals e.ID
+                            join t in db.tb_AssetType on a.type_Asset equals t.ID into  temp_tt
+                            from tt in temp_tt.DefaultIfEmpty()
+                            join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                            from dd in temp_d.DefaultIfEmpty()
+                            join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+                            from jj in temp_j.DefaultIfEmpty()
+                            join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                            from pp in temp_p.DefaultIfEmpty()
+                            join u in db.tb_user on a.Owener equals u.ID into temp_u
+                            from uu in temp_u.DefaultIfEmpty()
+                            join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                            from ssp in temp_sp.DefaultIfEmpty()
+                            join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
+                            from ee in temp_ee.DefaultIfEmpty()
+
                             where ZTassettypeId.Contains(a.state_asset) || item_id == 0
                             select new
                             {
                                 ID = a.ID,
                                 serial_number = a.serial_number,
                                 amountOfSys = a.amount,
-                                type_Asset = t.name_Asset_Type,
+                                type_Asset = tt.name_Asset_Type,
                                 name_Asset = a.name_Asset,
                                 specification = a.specification,
-                                measurement = d.name_para,
+                                measurement = dd.name_para,
                                 unit_price = a.unit_price,
                                 amount = a.amount,
                                 Total_price = a.value,
-                                department_using = p.name_Department,
-                                address = j.name_para,
-                                owener = u.true_Name,
-                                state_asset = e.name_para,
-                                supllier = sp.name_supplier
+                                department_using = pp.name_Department,
+                                address = jj.name_para,
+                                owener = uu.true_Name,
+                                state_asset = ee.name_para,
+                                supllier = ssp.name_supplier
 
 
                             }; 

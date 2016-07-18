@@ -152,8 +152,12 @@ namespace FAMIS.Controllers
         //折旧计算
         public string Caculate_Depreciation_AverageYear(string unit, string amount, string year, string rate, string timepurchase, string Total_Depreciation_Amount)
         {
+
+
             if (timepurchase == null)
                 return "";
+            if (Total_Depreciation_Amount == "" || Total_Depreciation_Amount == null)
+                Total_Depreciation_Amount = "0";
             DateTime now = DateTime.Now;
             int thismonth = now.Month;
 
@@ -170,7 +174,8 @@ namespace FAMIS.Controllers
                 return "";
             else
             {
-                Total_Depreciation_Amount = (float.Parse(Total_Depreciation_Amount) + month_passed * Month_Depreciation_Amount).ToString();
+               // Total_Depreciation_Amount = (float.Parse(Total_Depreciation_Amount) + month_passed * Month_Depreciation_Amount).ToString();
+                Total_Depreciation_Amount = (month_passed * Month_Depreciation_Amount).ToString();
                 float net_value = totalprice - float.Parse(Total_Depreciation_Amount);
                 para = totalprice.ToString() + "," + Month_Depreciation_Amount.ToString() + "," + Total_Depreciation_Amount.ToString()
                     + "," + net_value.ToString();
@@ -207,7 +212,7 @@ namespace FAMIS.Controllers
             
           
             int flagnum = int.Parse(JSdata);
-            int name_flag = flagnum/SystemConfig.ratio_dictPara;
+            int name_flag = flagnum/1000000;
             string name_flag_string = "";
             int? item_id=flagnum%1000000;
               List<int?> Depart_Asset_Type_Id=new List<int?>();
@@ -224,24 +229,28 @@ namespace FAMIS.Controllers
             List<tb_Asset> list = db.tb_Asset.ToList();
             if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
-                Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
+                  Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
                 var data = from r in db.tb_Asset
-                           join t in db.tb_AssetType on r.type_Asset equals t.ID
-                           join D in db.tb_department on r.department_Using equals D.ID
-                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
+                           join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
+                           from tt in temp_t.DefaultIfEmpty()
+                           join D in db.tb_department on r.department_Using equals D.ID into temp_D
+                           from DD in temp_D.DefaultIfEmpty()
+                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID into temp_k
+                           from kk in temp_k.DefaultIfEmpty()
+                           
                            where Depart_Asset_Type_Id.Contains(r.department_Using)||item_id==0
                            select new
                            {
                                ID = r.ID,
-                               department_Using = D.name_Department,
+                               department_Using = DD.name_Department,
                                serial_number = r.serial_number,
-                               name_Asset = t.name_Asset_Type,
+                               name_Asset = tt.name_Asset_Type,
                                specification = r.specification,
                                unit_price = r.unit_price,
                                amount = r.amount,
                                Total_price = r.value,
                                depreciation_tatol = r.depreciation_tatol,
-                               Method_depreciation = k.name_para,
+                               Method_depreciation = kk.name_para,
                                YearService_month = r.YearService_month,
                                Net_residual_rate = r.Net_residual_rate,
                                depreciation_Month = r.depreciation_Month,
@@ -273,23 +282,26 @@ namespace FAMIS.Controllers
                   AssetassettypeId= comController.GetSonID_AsseType(item_id);
 
                 var data = from r in db.tb_Asset
-                           join t in db.tb_AssetType on r.type_Asset equals t.ID
-                           join D in db.tb_department on r.department_Using equals D.ID
-                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID
+                           join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
+                           from tt in temp_t.DefaultIfEmpty()
+                           join D in db.tb_department on r.department_Using equals D.ID into temp_D
+                           from DD in temp_D.DefaultIfEmpty()
+                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID into temp_k
+                           from kk in temp_k.DefaultIfEmpty()
                             
                            where AssetassettypeId.Contains(r.type_Asset)||item_id==0
                            select new
                            {
                                ID = r.ID,
-                               department_Using = D.name_Department,
+                               department_Using = DD.name_Department,
                                serial_number = r.serial_number,
-                               name_Asset = t.name_Asset_Type,
+                               name_Asset = tt.name_Asset_Type,
                                specification = r.specification,
                                unit_price = r.unit_price,
                                amount = r.amount,
                                Total_price = r.value,
                                depreciation_tatol = r.depreciation_tatol,
-                               Method_depreciation = k.name_para,
+                               Method_depreciation = kk.name_para,
                                YearService_month = r.YearService_month,
                                Net_residual_rate = r.Net_residual_rate,
                                depreciation_Month = r.depreciation_Month,
@@ -376,7 +388,7 @@ namespace FAMIS.Controllers
         public string AddDP(string JSdata)
         {
             ArrayList mysearial = serial.ReturnNewSearial("PD", 1);
-            
+            Session["Deatails_Searial"] = mysearial[0].ToString();
             int id = 0;
             try
             {
@@ -469,14 +481,25 @@ namespace FAMIS.Controllers
 
             List<tb_Asset_inventory_Details> list = db.tb_Asset_inventory_Details.ToList();
            var data=from r in db.tb_Asset_inventory_Details
-                        join a in db.tb_Asset on r.serial_number_Asset equals a.serial_number
-                        join t in db.tb_AssetType on a.type_Asset equals t.ID
-                        join d in db.tb_dataDict_para on a.measurement equals d.ID
-                        join j in db.tb_dataDict_para on a.addressCF equals j.ID
-                        join p in db.tb_department on a.department_Using equals p.ID
-                        join u in db.tb_user on a.Owener equals u.ID
-                        join s in db.tb_dataDict_para on a.state_asset equals s.ID
-                        join sp in db.tb_supplier on a.supplierID equals sp.ID
+                        join a in db.tb_Asset on r.serial_number_Asset equals a.serial_number into temp_a
+                        from aa in temp_a.DefaultIfEmpty()
+
+                        join t in db.tb_AssetType on aa.type_Asset equals t.ID into temp_t
+
+                        from tt in temp_t.DefaultIfEmpty()
+
+                        join d in db.tb_dataDict_para on aa.measurement equals d.ID into temp_d
+                        from dd in temp_d.DefaultIfEmpty()
+                        join j in db.tb_dataDict_para on aa.addressCF equals j.ID into temp_j
+                        from jj in temp_j.DefaultIfEmpty()
+                        join p in db.tb_department on aa.department_Using equals p.ID into temp_p
+                        from pp in temp_p.DefaultIfEmpty()
+                        join u in db.tb_user on aa.Owener equals u.ID into temp_u
+                        from uu in temp_u.DefaultIfEmpty()
+                        join s in db.tb_dataDict_para on aa.state_asset equals s.ID into temp_s
+                        from ss in temp_s.DefaultIfEmpty()
+                        join sp in db.tb_supplier on aa.supplierID equals sp.ID into temp_sp
+                        from ssp in temp_sp.DefaultIfEmpty()
                         where r.serial_number == JSdata&&r.flag==true
                         select new
                         {
@@ -487,18 +510,18 @@ namespace FAMIS.Controllers
                             amountOfInv = r.amountOfInv,
                             difference = r.difference,
                             serial_number_Asset = r.serial_number_Asset,
-                            type_Asset = t.name_Asset_Type,
-                            name_Asset = a.name_Asset,
-                            specification = a.specification,
-                            measurement = d.name_para,
-                            unit_price = a.unit_price,
-                            amount = a.amount,
-                            Total_price = a.value,
-                            department_using = p.name_Department,
-                            address = j.name_para,
-                            owener = u.true_Name,
-                            state_asset = s.name_para,
-                            supllier = sp.name_supplier
+                            type_Asset = tt.name_Asset_Type,
+                            name_Asset = aa.name_Asset,
+                            specification = aa.specification,
+                            measurement = dd.name_para,
+                            unit_price = aa.unit_price,
+                            amount = aa.amount,
+                            Total_price = aa.value,
+                            department_using = pp.name_Department,
+                            address = jj.name_para,
+                            owener = uu.true_Name,
+                            state_asset = ss.name_para,
+                            supllier = ssp.name_supplier
 
 
                         };

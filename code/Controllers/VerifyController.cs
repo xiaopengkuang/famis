@@ -28,24 +28,349 @@ namespace FAMIS.Controllers
         StringBuilder result_tree_SearchTree = new StringBuilder();
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         Excel_Helper excel = new Excel_Helper();
+        CommonController comController = new CommonController();
         Serial serial = new Serial();
         public ActionResult Depreciation()
         {
             return View();
         }
-        [HttpPost]
-        public ActionResult ExportStu2()
+      
+        public ActionResult Add_Inventory()
         {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ExportStu2(string JSdata)
+        {
+            int flagnum = int.Parse(JSdata);
+            int name_flag = flagnum / 1000000;
+            string name_flag_string = "";
+            int? item_id = flagnum % 1000000;
+            List<int?> Depart_Asset_Type_Id = new List<int?>();
+            List<int?> AssetassettypeId = new List<int?>();
+
+
+            IEnumerable<String> flags = from o in db.tb_dataDict
+                                        where o.ID == name_flag
+                                        select o.name_flag;
+            foreach (string p in flags)
+            {
+                name_flag_string = p;
+            }
+            List<tb_Asset> list = db.tb_Asset.ToList();
+            if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
+            {
+                Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
+                var data = from r in db.tb_Asset
+                           join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
+                           from tt in temp_t.DefaultIfEmpty()
+                           join D in db.tb_department on r.department_Using equals D.ID into temp_D
+                           from DD in temp_D.DefaultIfEmpty()
+                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID into temp_k
+                           from kk in temp_k.DefaultIfEmpty()
+
+                           where Depart_Asset_Type_Id.Contains(r.department_Using) || item_id == 0
+                           select new
+                           {
+                               序号 = r.ID,
+                               使用部门 = DD.name_Department,
+                               资产编号 = r.serial_number,
+                               资产名称 = tt.name_Asset_Type,
+                               规格型号 = r.specification,
+                               单价 = r.unit_price,
+                               数量 = r.amount,
+                               总价 = r.value,
+                               折旧总额 = r.depreciation_tatol,
+                               折旧方式 = kk.name_para,
+                               平均使用年限 = r.YearService_month,
+                               净值残率 = r.Net_residual_rate,
+                               月提折旧 = r.depreciation_Month,
+                               净值 = r.Net_value,
+                               购置日期 = r.Time_Purchase,
+                               添加日期 = r.Time_add
+
+                           };
+
+                DataTable data_table = Excel_Helper.ToDataTable(data);
+                return Excel_Exp(data_table, SystemConfig.Export_File_Name_ZJ);
+
+
+            }
+            if (name_flag_string == SystemConfig.nameFlag_2_ZCLB)
+            {
+                AssetassettypeId = comController.GetSonID_AsseType(item_id);
+
+                var data = from r in db.tb_Asset
+                           join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
+                           from tt in temp_t.DefaultIfEmpty()
+                           join D in db.tb_department on r.department_Using equals D.ID into temp_D
+                           from DD in temp_D.DefaultIfEmpty()
+                           join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID into temp_k
+                           from kk in temp_k.DefaultIfEmpty()
+
+                           where AssetassettypeId.Contains(r.type_Asset) || item_id == 0
+                           select new
+                           {
+                               序号 = r.ID,
+                               使用部门 = DD.name_Department,
+                               资产编号 = r.serial_number,
+                               资产名称 = tt.name_Asset_Type,
+                               规格型号 = r.specification,
+                               单价 = r.unit_price,
+                               数量 = r.amount,
+                               总价 = r.value,
+                               折旧总额 = r.depreciation_tatol,
+                               折旧方式 = kk.name_para,
+                               平均使用年限 = r.YearService_month,
+                                净值残率 = r.Net_residual_rate,
+                                月提折旧 = r.depreciation_Month,
+                               净值= r.Net_value,
+                               购置日期 = r.Time_Purchase,
+                               添加日期= r.Time_add
+
+
+                           };
+                DataTable data_table = Excel_Helper.ToDataTable(data);
+                return Excel_Exp(data_table, SystemConfig.Export_File_Name_ZJ);
+               
+            }
+            return View();
             
-            var checkList = (from o in db.tb_Asset
-                             select new
-                             {
-                                 ID = o.ID,
-                                 name = o.name_Asset
+          
+        }
+        [HttpPost]
+        public ActionResult ExportPD_Details(string JSON)
+        {
+            string pdsearial = JSON.Trim();
+            var data = from r in db.tb_Asset_inventory_Details
+                       join a in db.tb_Asset on r.serial_number_Asset equals a.serial_number into temp_a
+                       from aa in temp_a.DefaultIfEmpty()
 
-                           }).ToList();
+                       join t in db.tb_AssetType on aa.type_Asset equals t.ID into temp_t
 
-            DataTable data = Excel_Helper.ToDataTable(checkList);
+                       from tt in temp_t.DefaultIfEmpty()
+
+                       join d in db.tb_dataDict_para on aa.measurement equals d.ID into temp_d
+                       from dd in temp_d.DefaultIfEmpty()
+                       join j in db.tb_dataDict_para on aa.addressCF equals j.ID into temp_j
+                       from jj in temp_j.DefaultIfEmpty()
+                       join p in db.tb_department on aa.department_Using equals p.ID into temp_p
+                       from pp in temp_p.DefaultIfEmpty()
+                       join u in db.tb_user on aa.Owener equals u.ID into temp_u
+                       from uu in temp_u.DefaultIfEmpty()
+                       join s in db.tb_dataDict_para on aa.state_asset equals s.ID into temp_s
+                       from ss in temp_s.DefaultIfEmpty()
+                       join sp in db.tb_supplier on aa.supplierID equals sp.ID into temp_sp
+                       from ssp in temp_sp.DefaultIfEmpty()
+                       where r.serial_number ==pdsearial && r.flag == true
+                       select new
+                       {
+                           序号 = r.ID,
+                           盘点编号 = r.serial_number,
+                           盘点状态 = r.state,
+                           系统数量 = r.amountOfSys,
+                           盘点数量 = r.amountOfInv,
+                           差异 = r.difference,
+                           资产编号 = r.serial_number_Asset,
+                           资产类型 = tt.name_Asset_Type,
+                           资产名称 = aa.name_Asset,
+                           规格型号 = aa.specification,
+                           计量单位 = dd.name_para,
+                           单价 = aa.unit_price,
+                           数量 = aa.amount,
+                           总价 = aa.value,
+                           使用部门 = pp.name_Department,
+                           存放地址 = jj.name_para,
+                            使用人= uu.true_Name,
+                           资产状态 = ss.name_para,
+                           供应商 = ssp.name_supplier
+
+
+                       };
+
+            DataTable data_table = Excel_Helper.ToDataTable(data);
+            return Excel_Exp(data_table, SystemConfig.Export_File_Name_PDDetails);
+        }
+        [HttpPost]
+        public ActionResult ExportStuPDMain(string JSON)
+        {
+            JSON = JSON.Trim();
+
+            string[] temp = JSON.Split(',');
+            List<tb_Asset_inventory> list = db.tb_Asset_inventory.ToList();
+            DateTime BeginDate = Convert.ToDateTime("8888-12-12" + " 00:00:00");
+            DateTime EndDate = Convert.ToDateTime("0001-01-01" + " 23:59:59");
+
+            int Effective_Query_Num = 0;
+            for (int i = 0; i < temp.Length; i++)
+            {
+                if (temp[i] != SystemConfig.NullString_Replace)
+                {
+                    StreamWriter sw = new StreamWriter("D:\\zhuadaole.txt",true);
+                    sw.WriteLine(temp[i] + " = " + SystemConfig.NullString_Replace);
+                    sw.Close();
+                    Effective_Query_Num++;
+                }
+            }
+            string searial = temp[0];
+            if (temp[1] != SystemConfig.NullString_Replace)
+                BeginDate = DateTime.Parse(temp[1]);
+
+            if (temp[2] != SystemConfig.NullString_Replace)
+                EndDate = DateTime.Parse(temp[2]);
+
+            string PDstate = temp[3];
+            string PDperson = temp[4]; 
+
+           switch (Effective_Query_Num)
+           {
+               case 0:
+                   {
+
+
+
+
+                       var data = from r in db.tb_Asset_inventory
+                                  where r.flag == true
+                                  select new
+                                  {
+                                      序号 = r.ID,
+                                      盘点单号 = r.serial_number,
+                                      日期 = r.date,
+                                      盘点人 = r._operator,
+                                      系统数量 = r.amountOfSys,
+                                      盘点数量 = r.amountOfInv,
+                                      差异 = r.difference,
+                                      资产性质 = r.property,
+                                      资产状态 = r.state,
+                                      创建日期 = r.date_Create,
+                                      备注 = r.ps
+                                  };
+                       DataTable data_table = Excel_Helper.ToDataTable(data);
+                       return Excel_Exp(data_table, SystemConfig.Export_File_Name_PDMain);
+
+
+
+
+                   }
+               case 2:
+                   {
+                       var data = from r in db.tb_Asset_inventory
+                                  where r.state == PDstate && r._operator == PDperson && r.flag == true
+                                  select new
+                                  {
+
+                                      序号 = r.ID,
+                                      盘点单号 = r.serial_number,
+                                      日期 = r.date,
+                                      盘点人 = r._operator,
+                                      系统数量 = r.amountOfSys,
+                                      盘点数量 = r.amountOfInv,
+                                      差异 = r.difference,
+                                      资产性质 = r.property,
+                                      资产状态 = r.state,
+                                      创建日期 = r.date_Create,
+                                      备注 = r.ps
+                                  };
+
+                       DataTable data_table = Excel_Helper.ToDataTable(data);
+                       return Excel_Exp(data_table, SystemConfig.Export_File_Name_PDMain);
+
+
+                   }
+               case 3:
+                   {
+                       var data = from r in db.tb_Asset_inventory
+                                  where (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.flag == true)
+                                  || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && r.flag == true)
+                                  || (r.state == PDstate && r._operator == PDperson && r.serial_number.Contains(searial) && r.flag == true)
+
+                                  select new
+                                  {
+                                      序号 = r.ID,
+                                      盘点单号 = r.serial_number,
+                                      日期 = r.date,
+                                      盘点人 = r._operator,
+                                      系统数量 = r.amountOfSys,
+                                      盘点数量 = r.amountOfInv,
+                                      差异 = r.difference,
+                                      资产性质 = r.property,
+                                      资产状态 = r.state,
+                                      创建日期 = r.date_Create,
+                                      备注 = r.ps
+
+                                  };
+                       DataTable data_table = Excel_Helper.ToDataTable(data);
+                       return Excel_Exp(data_table, SystemConfig.Export_File_Name_PDMain);
+
+                   }
+               case 4:
+                   {
+                       var data = from r in db.tb_Asset_inventory
+                                  where (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && r.date >= BeginDate && r.flag == true)
+                                  || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && searial.Contains(searial) && r.flag == true)
+                                  || (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
+                                  select new
+                                  {
+
+                                      序号 = r.ID,
+                                      盘点单号 = r.serial_number,
+                                      日期 = r.date,
+                                      盘点人 = r._operator,
+                                      系统数量 = r.amountOfSys,
+                                      盘点数量 = r.amountOfInv,
+                                      差异 = r.difference,
+                                      资产性质 = r.property,
+                                      资产状态 = r.state,
+                                      创建日期 = r.date_Create,
+                                      备注 = r.ps
+
+                                  };
+                       DataTable data_table = Excel_Helper.ToDataTable(data);
+                       return Excel_Exp(data_table, SystemConfig.Export_File_Name_PDMain);
+
+
+
+                   }
+               case 5:
+                   {
+                       var data = from r in db.tb_Asset_inventory
+                                  where r.serial_number.Contains(searial) && BeginDate <= r.date && r.date <= EndDate && r.state == PDstate && r._operator == PDperson && r.flag == true
+                                  select new
+                                  {
+
+                                      序号 = r.ID,
+                                      盘点单号 = r.serial_number,
+                                      日期 = r.date,
+                                      盘点人 = r._operator,
+                                      系统数量 = r.amountOfSys,
+                                      盘点数量 = r.amountOfInv,
+                                      差异 = r.difference,
+                                      资产性质 = r.property,
+                                      资产状态 = r.state,
+                                      创建日期 = r.date_Create,
+                                      备注 = r.ps
+
+                                  };
+                       DataTable data_table = Excel_Helper.ToDataTable(data);
+                       return Excel_Exp(data_table,SystemConfig.Export_File_Name_PDMain);
+
+
+
+                   }
+
+                  
+
+
+           }
+
+           return View();
+
+        }
+        public ActionResult Excel_Exp(DataTable data,string name_file)
+        {
+
+            
             //创建Excel文件的对象
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
             //添加一个sheet
@@ -57,9 +382,9 @@ namespace FAMIS.Controllers
             int count = 0;
             try
             {
-                 
 
-                if ( true) //写入DataTable的列名
+
+                if (true) //写入DataTable的列名
                 {
                     IRow row = sheet.CreateRow(0);
                     for (int j = 0; j < data.Columns.Count; ++j)
@@ -68,7 +393,7 @@ namespace FAMIS.Controllers
                     }
                     count = 1;
                 }
-               
+
 
                 for (int i = 0; i < data.Rows.Count; ++i)
                 {
@@ -79,12 +404,12 @@ namespace FAMIS.Controllers
                     }
                     ++count;
                 }
-              
+
             }
             catch (Exception ex)
             {
                 ;
-                
+
             }
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
@@ -92,8 +417,9 @@ namespace FAMIS.Controllers
             ms.Seek(0, SeekOrigin.Begin);
             DateTime dt = DateTime.Now;
             string dateTime = dt.ToString("yyMMddHHmmssfff");
-            string fileName = "查询结果" + dateTime + ".xls";
+            string fileName = name_file + dateTime + ".xls";
             return File(ms, "application/vnd.ms-excel", fileName);
+        
         }
         public ActionResult Inventory()
         {

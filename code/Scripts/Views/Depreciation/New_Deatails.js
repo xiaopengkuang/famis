@@ -145,7 +145,7 @@ function LoadTreeLeft() {
             
           //  var nodes = $('#mtree').tree('getChecked');
             searchCondtiion = node.id;
-             alert(searchCondtiion);
+             //alert(searchCondtiion);
             LoadInitData_Detail(String(searchCondtiion));
 
         },
@@ -169,7 +169,7 @@ function Add_Invention_Deatails()
         success: function (result) {
            
             deatails = searchCondtiion + "o" + result;
-           // alert(deatails);
+            alert(deatails);
             $.ajax({
 
                 type: "post",
@@ -275,7 +275,7 @@ function LoadInitData_Detail(searchCondtiion) {
         method: 'post', //默认是post,不允许对静态文件访问
         width: 'auto',
         height: '300px',
-        fitColumn: true,
+        // fitColumn: true,
         // fit:true ,
         iconCls: 'icon-save',
         dataType: "json",
@@ -285,7 +285,7 @@ function LoadInitData_Detail(searchCondtiion) {
         pagination: true, //是否显式分页 
         pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
         pageNumber: 1, //默认显示第几页 
-        pageList: [15, 30, 45],//分页中下拉
+        pageList: [15, 30, 45],//分页中下拉选项的数值 
         
          
         
@@ -335,7 +335,7 @@ function LoadInitData_Detail(searchCondtiion) {
         singleSelect: true, //允许选择多行
     selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
     checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
-    fitColumns: false, 
+    fitColumns: false
     });
   
  loadtool();
