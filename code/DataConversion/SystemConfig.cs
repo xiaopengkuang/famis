@@ -131,21 +131,21 @@ namespace FAMIS.DataConversion
 
 
         //用户操作
-        public const String operation_add = "add";
-        public const String operation_edit = "edit";
-        public const String operation_export = "export";
-        public const String operation_view = "view";
-        public const String operation_review = "review";
+        public const String operation_add = "add";   //用户添加
+        public const String operation_edit = "edit";  //用户编辑
+        public const String operation_export = "export";  //导出
+        public const String operation_view = "view";    //查看
+        public const String operation_review = "review";  //审核
         public const String operation_submit = "submit";  //提交至审核
-        public const String operation_delete = "delete";
-        public const String operation_print = "print";
-        public const String operation_startPD = "startpd";
+        public const String operation_delete = "delete";  //删除操作
+        public const String operation_return = "return"; //维修资产进行归还
+        public const String operation_print = "print";   //打印操作
+         public const String operation_startPD = "startpd";
         public const String operation_endPD = "endpd";
         public const String operation_newDeatails = "newdetails";
         public const String operation_exportdeatails = "export_deatails";
         public const String operation_importpd = "import";
         public const String operation_rightedit = "rightedit";
-
 
 
         public const String Menu_ZCTZ = "ZCTZ"; //资产台账
@@ -157,7 +157,7 @@ namespace FAMIS.DataConversion
         public const String Menu_ZCGH = "ZCGH"; //资产归还
         
         //其他参数
-        public const int Days_To_Notice = 30;
+         public const int Days_To_Notice = 30;
           public const String Export_File_Name_ZJ = "折旧详情";
         public const String Export_File_Name_PDMain = "盘点单详情";
         public const String Export_File_Name_PDDetails = "盘点明细详情";
@@ -178,6 +178,7 @@ namespace FAMIS.DataConversion
         
          public const String EAN13_IMG_FOLDER = "E:\\WorkSpace_Project\\EAN13\\";
         public const int EAN13_Length = 13;
+
 
 
 
