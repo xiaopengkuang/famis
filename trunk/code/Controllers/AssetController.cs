@@ -774,6 +774,24 @@ namespace FAMIS.Controllers
         }
 
 
+
+        [HttpPost]
+        public JsonResult getAssetBybarCode(String barcode)
+        {
+
+            int? id=-1;
+            var data = from p in DB_C.tb_Asset_code128
+                       where p.code_ean13 == barcode
+                       select p;
+            foreach (var item in data)
+            {
+                id = item.ID_Asset;
+            }
+            return getAssetByID(id);
+        }
+
+
+
         /// <summary>
         /// 根据单个ID获取详细信息学
         /// </summary>

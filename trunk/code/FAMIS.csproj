@@ -2047,8 +2047,10 @@
     <Compile Include="ControllerSQLs\UserActionSQL.cs" />
     <Compile Include="Controllers\AllocationController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Controllers\BarCodeController.cs" />
     <Compile Include="Controllers\CollarController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\DataConversion.cs" />
     <Compile Include="Controllers\DepreciationController.cs" />
     <Compile Include="Controllers\DictController.cs" />
     <Compile Include="Controllers\ExportExcelController.cs" />
@@ -2072,6 +2074,7 @@
     <Compile Include="DataConversion\ColumnListConf.cs" />
     <Compile Include="DataConversion\CommonConversion.cs" />
     <Compile Include="DataConversion\DTO_TO_MODEL.cs" />
+    <Compile Include="DataConversion\BarCode.cs" />
     <Compile Include="DataConversion\JSON_TO_MODEL.cs" />
     <Compile Include="DataConversion\MODEL_TO_JSON.cs" />
     <Compile Include="DataConversion\SystemConfig.cs" />
@@ -2161,6 +2164,7 @@
     <Compile Include="Models\tb_Asset_collar.cs" />
     <Compile Include="Models\tb_Asset_collar_detail.cs" />
     <Compile Include="Models\tb_Asset_CustomAttr.cs" />
+    <Compile Include="Models\tb_Asset_ean13.cs" />
     <Compile Include="Models\tb_Asset_inventory.cs" />
     <Compile Include="Models\tb_Asset_inventory_Details.cs" />
     <Compile Include="Models\tb_Asset_Reduction.cs" />
@@ -2239,6 +2243,7 @@
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
     <Folder Include="ViewModel\" />
+    <Folder Include="Views\BarCode\" />
     <Folder Include="Views\Customer\" />
     <Folder Include="Views\ExportExcel\" />
   </ItemGroup>
@@ -2269,7 +2274,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
+      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
