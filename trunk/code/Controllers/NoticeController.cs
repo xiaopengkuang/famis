@@ -109,153 +109,192 @@ namespace FAMIS.Controllers
         
         }
         [HttpPost]
-        public JsonResult Invalidate_Notice()
+        public JsonResult Invalidate_Notice(int? page,int? rows)
         {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
             List<tb_Asset> asset = new List<tb_Asset>();
+
+            var data = from r in db.tb_Asset
+
+                       join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
+                       from tt in temp_t.DefaultIfEmpty()
+                       join d in db.tb_dataDict_para on r.measurement equals d.ID into temp_d
+                       from dd in temp_d.DefaultIfEmpty()
+                       join j in db.tb_dataDict_para on r.addressCF equals j.ID into temp_j
+                       from jj in temp_j.DefaultIfEmpty()
+                       join p in db.tb_department on r.department_Using equals p.ID into temp_p
+                       from pp in temp_p.DefaultIfEmpty()
+                       join u in db.tb_user on r.Owener equals u.ID into temp_u
+                       from uu in temp_u.DefaultIfEmpty()
+                       join s in db.tb_dataDict_para on r.state_asset equals s.ID into temp_s
+                       from ss in temp_s.DefaultIfEmpty()
+                       join sp in db.tb_supplier on r.supplierID equals sp.ID into temp_sp
+                       from ssp in temp_sp.DefaultIfEmpty()
+                       where DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month <= SystemConfig.Days_To_Notice
+                       select new
+                       {
+
+                           ID = r.ID,
+                           DaysNotice = DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month,
+                           serial_number = r.serial_number,
+
+                           type_Asset = tt.name_Asset_Type,
+                           name_Asset = r.name_Asset,
+                           specification = r.specification,
+                           measurement = dd.name_para,
+                           unit_price = r.unit_price,
+                           amount = r.amount,
+                           Total_price = r.value,
+                           department_using = pp.name_Department,
+                           address = jj.name_para,
+                           owener = uu.true_Name,
+                           state_asset = ss.name_para,
+                           supllier = ssp.name_supplier
+
+
+
+                       };
+            data = data.OrderByDescending(a => a.ID);
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
 
             var json = new
             {
-                total = asset.Count(),
-                rows = (from r in db.tb_Asset
-                         
-                        join t in db.tb_AssetType on r.type_Asset equals t.ID
-                        join d in db.tb_dataDict_para on r.measurement equals d.ID
-                        join j in db.tb_dataDict_para on r.addressCF equals j.ID
-                        join p in db.tb_department on r.department_Using equals p.ID
-                        join u in db.tb_user on r.Owener equals u.ID
-                        join s in db.tb_dataDict_para on r.state_asset equals s.ID
-                        join sp in db.tb_supplier on r.supplierID equals sp.ID
-                        where DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month<=SystemConfig.Days_To_Notice
-                        select new
-                        {
 
-                            ID = r.ID,
-                            DaysNotice = DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month,
-                            serial_number = r.serial_number,
-                          
-                            
-                            
-                            
-                            type_Asset = t.name_Asset_Type,
-                            name_Asset = r.name_Asset,
-                            specification = r.specification,
-                            measurement = d.name_para,
-                            unit_price = r.unit_price,
-                            amount = r.amount,
-                            Total_price = r.value,
-                            department_using = p.name_Department,
-                            address = j.name_para,
-                            owener = u.true_Name,
-                            state_asset = s.name_para,
-                            supllier = sp.name_supplier
-
-
-
-                        }).ToArray()
+                total = data.ToList().Count,
+                rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                //rows = data.ToList().ToArray()
             };
-
             return Json(json, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult Repair_Notice()
+        public JsonResult Repair_Notice(int? page, int? rows)
         {
             List<tb_Asset_Repair> repair = new List<tb_Asset_Repair>();
-
-            var json = new
-            {
-                total = repair.Count(),
-                rows = (from r in db.tb_Asset_Repair
-                        join s in db.tb_State_List on r.state_list equals s.id
-                        join spl in db.tb_supplier on r.supplierID_Torepair equals spl.ID
-                        join ass in db.tb_Asset on r.ID_Asset equals ass.ID
-                        join uapp in db.tb_user on r.userID_applying equals uapp.ID
-                        join uaut in db.tb_user on r.userID_authorize equals uaut.ID
-                        join ucreat in db.tb_user on r.userID_create equals ucreat.ID
-                        join uview in db.tb_user on r.userID_review equals uview.ID
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
+            var data = from r in db.tb_Asset_Repair
+                        join s in db.tb_State_List on r.state_list equals s.id into temp_s
+                        from ss in temp_s.DefaultIfEmpty()
+                        join spl in db.tb_supplier on r.supplierID_Torepair equals spl.ID into temp_spl
+                        from sspl in temp_spl.DefaultIfEmpty()
+                        join ass in db.tb_Asset on r.ID_Asset equals ass.ID into temp_ass
+                        from aass in temp_ass.DefaultIfEmpty()
+                        join uapp in db.tb_user on r.userID_applying equals uapp.ID into temp_uapp
+                        from uuapp in temp_uapp.DefaultIfEmpty()
+                        join uaut in db.tb_user on r.userID_authorize equals uaut.ID into temp_uaut
+                        from uuaut in temp_uaut.DefaultIfEmpty()
+                        join ucreat in db.tb_user on r.userID_create equals ucreat.ID into temp_ucreat
+                        from uucreat in temp_ucreat.DefaultIfEmpty()
+                        join uview in db.tb_user on r.userID_review equals uview.ID into temp_uview
+                        from uuview in temp_uview.DefaultIfEmpty()
+                        
                         where DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn) <= SystemConfig.Days_To_Notice&&r.flag==true
                         select new
                         {
 
                             ID = r.ID,
                             DaysNotice = DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn),
-                           serial= r.serialNumber,
+                            serial= r.serialNumber,
                             RepairDate=r.date_ToRepair,
                             Returndate=r.date_ToReturn,
                             Reason=r.reason_ToRepair,
                             RepairNote=r.note_repair,
-                            uapp=uapp.true_Name,
-                            uaut=uaut.true_Name,
-                            uview =uview.true_Name,
+                            uapp=uuapp.true_Name,
+                            uaut=uuaut.true_Name,
+                            uview =uuview.true_Name,
                             dateview=r.date_review,
-                            usercreat=ucreat.true_Name,
+                            usercreat=uucreat.true_Name,
                             nameqment=r.Name_equipment,
                             costrepair=r.CostToRepair,
                             createdate=r.date_create,
                             content_Review=r.content_Review,
                             serial_number = r.serialNumber,
-                            state=s.Name,
+                            state=ss.Name,
                              
-                            supplier = spl.name_supplier,
-                            assetname=ass.name_Asset,
+                            supplier = sspl.name_supplier,
+                            assetname=aass.name_Asset,
                             
 
 
 
-                        }).ToArray()
-            };
+                        };
+            data = data.OrderByDescending(a => a.ID);
+           int skipindex = ((int)page - 1) * (int)rows;
+           int rowsNeed = (int)rows;
 
-            return Json(json, JsonRequestBehavior.AllowGet);
+           var json = new
+           {
+
+               total = data.ToList().Count,
+               rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+               //rows = data.ToList().ToArray()
+           };
+           return Json(json, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult Return_Notice()
+        public JsonResult Return_Notice(int? page, int? rows)
         {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 1 : rows;
             List<tb_Asset_Borrow> repair = new List<tb_Asset_Borrow>();
 
-            var json = new
-            {
-                total = repair.Count(),
-                rows = (from r in db.tb_Asset_Borrow
-                        join s in db.tb_State_List on r.state_list equals s.id
-                        
-                        join dp in db.tb_department on r.department_borrow equals dp.ID
-                        join ub in db.tb_user on r.userID_borrow equals ub.ID
-                        join uo in db.tb_user on r.userID_operated equals uo.ID
-                        join ur in db.tb_user on r.userID_review equals ur.ID
-                        
-                        where DbFunctions.DiffDays(DateTime.Now, r.date_return) <= SystemConfig.Days_To_Notice && r.flag == true
-                        select new
-                        {
+            var data = from r in db.tb_Asset_Borrow
+                       join s in db.tb_State_List on r.state_list equals s.id into temp_s
+                       from ss in temp_s.DefaultIfEmpty()
+                       join dp in db.tb_department on r.department_borrow equals dp.ID into temp_dp
+                       from ddp in temp_dp.DefaultIfEmpty()
+                       join ub in db.tb_user on r.userID_borrow equals ub.ID into temp_ub
+                       from uub in temp_ub.DefaultIfEmpty()
+                       join uo in db.tb_user on r.userID_operated equals uo.ID into temp_uo
+                       from uuo in temp_uo.DefaultIfEmpty()
+                       join ur in db.tb_user on r.userID_review equals ur.ID into temp_ur
+                       from uur in temp_ur.DefaultIfEmpty()
 
-                            ID = r.ID,
-                            DaysNotice = DbFunctions.DiffDays(DateTime.Now, r.date_return),
-                            serial = r.serialNum,
-                            RepairDate = r.date_borrow,
-                            Returndate = r.date_return,
-                            Reason = r.reason_borrow,
-                            RepairNote = r.note_borrow,
-                            Borrow_Depart=dp.name_Department,
-                            uapp = ub.true_Name,
-                            uaut = uo.true_Name,
-                            uview = ub.true_Name,
-                            
-                           
-                            
-                           
-                            content_Review = r.content_review,
-                            datecreat=r.date_operated,
-                            state = s.Name
+                       where DbFunctions.DiffDays(DateTime.Now, r.date_return) <= SystemConfig.Days_To_Notice && r.flag == true
+                       select new
+                       {
 
-                            
-                           
+                           ID = r.ID,
+                           DaysNotice = DbFunctions.DiffDays(DateTime.Now, r.date_return),
+                           serial = r.serialNum,
+                           RepairDate = r.date_borrow,
+                           Returndate = r.date_return,
+                           Reason = r.reason_borrow,
+                           RepairNote = r.note_borrow,
+                           Borrow_Depart = ddp.name_Department,
+                           uapp = uub.true_Name,
+                           uaut = uuo.true_Name,
+                           uview = uub.true_Name,
 
 
 
 
-                        }).ToArray()
-            };
+                           content_Review = r.content_review,
+                           datecreat = r.date_operated,
+                           state = ss.Name
 
-            return Json(json, JsonRequestBehavior.AllowGet);
+
+
+
+
+
+
+                       };
+            data = data.OrderByDescending(a => a.ID);
+           int skipindex = ((int)page - 1) * (int)rows;
+           int rowsNeed = (int)rows;
+
+           var json = new
+           {
+
+               total = data.ToList().Count,
+               rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+               //rows = data.ToList().ToArray()
+           };
+           return Json(json, JsonRequestBehavior.AllowGet);
         }
 
 	}

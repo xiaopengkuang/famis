@@ -22,6 +22,18 @@ function depreciation() {
     $('#p').show();
     start();
 }
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}
 function start() {
 
 
@@ -36,8 +48,7 @@ function start() {
     }
     if (value == 100) {
 
-
-        alert("折旧完成！");
+        MessShow("折旧完成！");
         $('#p').hide();
         $('#p').progressbar('setValue', 0);
         LoadInitData_Detail(searchCondtiion);
@@ -272,7 +283,8 @@ function LoadInitData_Detail(searchCondtiion) {
             {
                 field: 'depreciation_Month', title: '月提折旧', width: 50,
                 formatter: function (money) {
-
+                    if (money == null)
+                        return "0¥";
                     if (String(money).split(".").length < 2)
                         return money + "¥";
                     else {
@@ -285,7 +297,8 @@ function LoadInitData_Detail(searchCondtiion) {
              {
                  field: 'depreciation_tatol', title: '累计折旧', width: 50,
                  formatter: function (money) {
-
+                     if (money == null)
+                         return "0¥";
                      if (String(money).split(".").length < 2)
                          return money + "¥";
                      else {
@@ -298,7 +311,8 @@ function LoadInitData_Detail(searchCondtiion) {
              {
                  field: 'Net_value', title: '净值', width: 50,
                  formatter: function (money) {
-
+                     if (money == null)
+                         return "0¥";
                      if (String(money).split(".").length < 2)
                          return money + "¥";
                      else {
@@ -350,11 +364,15 @@ function loadPageTool_Detail(dataRight) {
             iconCls: 'icon-save',
             disabled: !dataRight.export_able,
             handler: function () {
+                if (!dataRight.export_able) {
+                    return;
+                }
+
                 var form = $("<form>");//定义一个form表单
                 form.attr("style", "display:none");
                 form.attr("target", "");
                 form.attr("method", "post");
-                form.attr("action", "/Verify/ExportStu2");
+                form.attr("action", "/Verify/ExportStu2?JSdata= "+ searchCondtiion +"");
                 var input1 = $("<input>");
                 input1.attr("type", "hidden");
                 input1.attr("name", "exportData");

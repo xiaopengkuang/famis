@@ -74,7 +74,7 @@
           { field: 'Reason', title: '借出原因', width: 100 },
            
             {
-                field: ' Borrow_Depart', title: '借出部门', width: 100,
+                field: 'Borrow_Depart', title: '借出部门', width: 100
 
             },
           { field: 'RepairNote', title: '借出小计', width: 100 },
@@ -101,7 +101,7 @@
                 { field: 'content_Review', title: '审核内容', width: 100 },
            
              
-             { field: 'state', title: '审核状态', width: 100 },
+             { field: 'state', title: '审核状态', width: 100 }
             
 
         ]],

@@ -179,7 +179,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -210,7 +210,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -224,6 +224,19 @@
         });
     </script>
     <script type="text/javascript" language="javascript">
+        function MessShow(mess) {
+            $.messager.show({
+                title: '提示',
+                msg: mess,
+                showType: 'slide',
+                style: {
+                    right: '',
+                    top: document.body.scrollTop + document.documentElement.scrollTop,
+                    bottom: ''
+                }
+            });
+        }
+
         $(document).ready(function () {
             //多选框
 
@@ -237,7 +250,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial); 
                         var serial = result.YH_serial;
 
 
@@ -265,7 +278,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -292,7 +305,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -319,7 +332,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -346,7 +359,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -373,7 +386,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -401,7 +414,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -428,7 +441,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -455,7 +468,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 
@@ -483,7 +496,7 @@
                     datatype: "json",//数据类型
 
                     success: function (result) {
-                        alert(result.YH_serial);
+                        MessShow(result.YH_serial);
                         var serial = result.YH_serial;
 
 

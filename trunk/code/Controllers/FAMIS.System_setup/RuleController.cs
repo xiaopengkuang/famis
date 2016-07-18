@@ -402,13 +402,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             {
                 rid = roids;
             }
-            IEnumerable<int> de = from o in mydb.tb_department
-                     where o.name_Department ==deptemp
-                     select o.ID;
-            foreach (int d in de)
-            {
-                did = d;
-            }
+            did = int.Parse(deptemp);
             /* var q = from p in mydb.tb_Menu
               where p.Role_ID == Roleid
               select p;*/
