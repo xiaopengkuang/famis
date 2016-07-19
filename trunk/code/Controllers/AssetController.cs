@@ -791,7 +791,6 @@ namespace FAMIS.Controllers
         public ActionResult getAssetBybarCode(String barcode)
         {
 
-            int? id=-1;
             var data = from p in DB_C.tb_Asset_code128
                        where p.code_ean13 == barcode
                        select p;
