@@ -12,6 +12,9 @@ var arry_CAttr = new Array();
 
 $(function () {
 
+    $('#tabs_add').tabs('disableTab', "附件设备");
+    $('#tabs_add').tabs('disableTab', "附属文件");
+    $('#tabs_add').tabs('disableTab', "附属图片");
     loadInitDate();
     $("#Num_PLTJ_add").hide();
     $("#LABEL_PL").hide();
@@ -29,8 +32,7 @@ $(function () {
         }
     });
     update_Value();
-
-
+    
 });
 
 function update_Value()
