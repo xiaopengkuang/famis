@@ -788,7 +788,7 @@ namespace FAMIS.Controllers
 
 
 
-        public ActionResult getAssetBybarCode(String barcode)
+        public JsonResult getAssetBybarCode(String barcode)
         {
 
             var data = from p in DB_C.tb_Asset_code128
@@ -799,14 +799,12 @@ namespace FAMIS.Controllers
             {
                 foreach (var item in data)
                 {
-                    ViewBag.id = item.ID_Asset;
+                    return getAssetByID(item.ID_Asset);
                 }
 
-                return View("Asset_detail");
             }
 
-            return View("Error");
-           
+            return null;
 
         }
 
