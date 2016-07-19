@@ -2049,6 +2049,7 @@
     <Compile Include="ControllerSQLs\UserActionSQL.cs" />
     <Compile Include="Controllers\AllocationController.cs" />
     <Compile Include="Controllers\AssetController.cs" />
+    <Compile Include="Controllers\AssetDeatailsController.cs" />
     <Compile Include="Controllers\BarCodeController.cs" />
     <Compile Include="Controllers\CollarController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
@@ -2248,6 +2249,9 @@
     <Folder Include="App_Data\" />
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
+    <Folder Include="images_Asset_sub_document\" />
+    <Folder Include="images_Asset_sub_pic\" />
+    <Folder Include="images_barcode\" />
     <Folder Include="ViewModel\" />
     <Folder Include="Views\BarCode\" />
     <Folder Include="Views\Customer\" />
@@ -2280,7 +2284,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
+      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
