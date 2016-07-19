@@ -65,7 +65,6 @@ namespace FAMIS.Controllers
 
         public ActionResult Asset_detail(int? id)
         {
-            id = 200;
             if (id == null)
             {
                 return View("Error");
@@ -877,6 +876,7 @@ namespace FAMIS.Controllers
                 return null;
             }
             dto_Asset_Detail result = data.First();
+            HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
