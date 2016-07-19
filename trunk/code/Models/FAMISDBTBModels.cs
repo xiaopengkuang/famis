@@ -21,10 +21,10 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset_allocation_detail> tb_Asset_allocation_detail { get; set; }
         public virtual DbSet<tb_Asset_Borrow> tb_Asset_Borrow { get; set; }
         public virtual DbSet<tb_Asset_Borrow_detail> tb_Asset_Borrow_detail { get; set; }
+        public virtual DbSet<tb_Asset_code128> tb_Asset_code128 { get; set; }
         public virtual DbSet<tb_Asset_collar> tb_Asset_collar { get; set; }
         public virtual DbSet<tb_Asset_collar_detail> tb_Asset_collar_detail { get; set; }
         public virtual DbSet<tb_Asset_CustomAttr> tb_Asset_CustomAttr { get; set; }
-        public virtual DbSet<tb_Asset_code128> tb_Asset_code128 { get; set; }
         public virtual DbSet<tb_Asset_inventory> tb_Asset_inventory { get; set; }
         public virtual DbSet<tb_Asset_inventory_Details> tb_Asset_inventory_Details { get; set; }
         public virtual DbSet<tb_Asset_Reduction> tb_Asset_Reduction { get; set; }
@@ -32,6 +32,9 @@ namespace FAMIS.Models
         public virtual DbSet<tb_Asset_Repair> tb_Asset_Repair { get; set; }
         public virtual DbSet<tb_Asset_Return> tb_Asset_Return { get; set; }
         public virtual DbSet<tb_Asset_Return_detail> tb_Asset_Return_detail { get; set; }
+        public virtual DbSet<tb_Asset_sub_document> tb_Asset_sub_document { get; set; }
+        public virtual DbSet<tb_Asset_sub_equiment> tb_Asset_sub_equiment { get; set; }
+        public virtual DbSet<tb_Asset_sub_picture> tb_Asset_sub_picture { get; set; }
         public virtual DbSet<tb_AssetType> tb_AssetType { get; set; }
         public virtual DbSet<tb_dataDict> tb_dataDict { get; set; }
         public virtual DbSet<tb_department> tb_department { get; set; }
@@ -126,6 +129,14 @@ namespace FAMIS.Models
                 .Property(e => e.content_review)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_Asset_code128>()
+                .Property(e => e.code_ean13)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_code128>()
+                .Property(e => e.path_ean13_img)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset_collar>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);
@@ -144,14 +155,6 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_CustomAttr>()
                 .Property(e => e.value)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_code128>()
-                .Property(e => e.code_ean13)
-                .IsUnicode(false);
-
-            modelBuilder.Entity<tb_Asset_code128>()
-                .Property(e => e.path_ean13_img)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_inventory>()
@@ -240,6 +243,46 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_Asset_Return>()
                 .Property(e => e.content_review)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_document>()
+                .Property(e => e.fileName)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_document>()
+                .Property(e => e._abstract)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_document>()
+                .Property(e => e.note)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_document>()
+                .Property(e => e.path_file)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_equiment>()
+                .Property(e => e.serialCode)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_equiment>()
+                .Property(e => e.name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_equiment>()
+                .Property(e => e.ggxh)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_equiment>()
+                .Property(e => e.note)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_picture>()
+                .Property(e => e.Name_picture)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_Asset_sub_picture>()
+                .Property(e => e.path_file)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_AssetType>()

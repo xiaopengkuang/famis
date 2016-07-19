@@ -9,7 +9,7 @@ namespace FAMIS.Models
     public partial class tb_Asset_inventory_Details
     {
         public int ID { get; set; }
-        public bool? flag { get; set; }
+
         [StringLength(20)]
         public string serial_number { get; set; }
 
@@ -25,5 +25,6 @@ namespace FAMIS.Models
         [StringLength(20)]
         public string serial_number_Asset { get; set; }
 
+        public bool? flag { get; set; }
     }
 }

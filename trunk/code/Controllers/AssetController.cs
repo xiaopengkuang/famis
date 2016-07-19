@@ -60,6 +60,19 @@ namespace FAMIS.Controllers
             ViewBag.id = id;
             return View();
         }
+
+
+
+        public ActionResult Asset_detail(int? id)
+        {
+            id = 200;
+            if (id == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
       
         //===============================================================View  Area===================================================================================//
         //===============================================================Action  Area===================================================================================//
@@ -971,6 +984,82 @@ namespace FAMIS.Controllers
                 return null;
             }
         }
+
+
+
+        /// <summary>
+        /// 根据资产ＩＤ获取
+        /// </summary>
+        /// <param name="id_asset"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult load_sub_documents(int? page, int? rows,int? id_asset)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+            var data = from p in DB_C.tb_Asset_sub_document
+                       where p.ID_Asset == id_asset
+                       join tb_us in DB_C.tb_user on p.userID_add equals tb_us.ID into temp_us
+                       from us in temp_us.DefaultIfEmpty()
+                       orderby p.date_add descending
+                       select new Json_Asset_sub_document
+                       {
+                           ID=p.ID,
+                           abstractinfo=p._abstract,
+                           date_add=p.date_add,
+                           id_download=p.ID,
+                           fileNmae=p.fileName,
+                           noteinfo=p.note,
+                           user_add=us.true_Name
+                       };
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
+            var json = new
+            {
+                 total = data.ToList().Count,
+                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+             };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        [HttpPost]
+        public ActionResult downloadSubFileBydocID(int? id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+
+            var data = from p in DB_C.tb_Asset_sub_document
+                       where p.ID == id
+                       select p;
+            if (data.Count() < 1)
+            {
+                return null;
+            }
+            tb_Asset_sub_document file = data.First();
+
+
+            if (file.path_file != null && file.path_file != "")
+            {
+                return downloadFileByURL(file.path_file);
+            }
+
+            return null;
+
+
+        }
+
+
+        public ActionResult downloadFileByURL(String url)
+        {
+            var path = Server.MapPath(url);
+            return File(path, "application/x-zip-compressed");
+        }
+
+
 
         public JsonResult NULL_dataGrid()
         {

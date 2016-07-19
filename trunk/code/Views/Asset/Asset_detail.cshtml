@@ -17,7 +17,7 @@
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
 
-    <script type="text/javascript" src="../../Scripts/Views/Asset/Asset_edit.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/Asset/Asset_detail.js"></script>
 
     <script type="text/javascript">
         bindData('@ViewBag.id');
@@ -184,10 +184,7 @@
             <table id="TableList_TP" class="easyui-datagrid" style="height:500px" data-options="border:false,singleSelect:true,fitcolumns:true"></table>
         </div>
     </div>
-    <div style="text-align: center; padding: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkFormat('@ViewBag.id')">提交</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
-    </div>
+   
 
 </body>
 </html>

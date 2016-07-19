@@ -24,7 +24,10 @@ $(function () {
         }
 
     });
-
+    $(window).resize(function () {
+        var win_width = $(window).width();
+        $("#TableList_0_1").datagrid('resize', { width: win_width - 220 });
+    });
 
 
 });
@@ -329,9 +332,9 @@ function loadPageTool_Detail(dataRight) {
                     return;
                 }
 
-                var filename = getNowFormatDate_FileName();
+                //var filename = getNowFormatDate_FileName();
 
-                Export(filename, $('#TableList_0_1'));
+                //Export(filename, $('#TableList_0_1'));
             }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
@@ -388,9 +391,9 @@ function loadPageTool_Summary(dataRight) {
                     return;
                 }
 
-                //将要选择的数据导出到Excel
-                var filename = getNowFormatDate_FileName();
-                Export(filename, $('#TableList_0_1'));
+                ////将要选择的数据导出到Excel
+                //var filename = getNowFormatDate_FileName();
+                //Export(filename, $('#TableList_0_1'));
             }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
