@@ -788,19 +788,27 @@ namespace FAMIS.Controllers
 
 
 
-        [HttpPost]
-        public JsonResult getAssetBybarCode(String barcode)
+        public ActionResult getAssetBybarCode(String barcode)
         {
 
             int? id=-1;
             var data = from p in DB_C.tb_Asset_code128
                        where p.code_ean13 == barcode
                        select p;
-            foreach (var item in data)
+
+            if (data.Count() > 0)
             {
-                id = item.ID_Asset;
+                foreach (var item in data)
+                {
+                    ViewBag.id = item.ID_Asset;
+                }
+
+                return View("Asset_detail");
             }
-            return getAssetByID(id);
+
+            return View("Error");
+           
+
         }
 
 
