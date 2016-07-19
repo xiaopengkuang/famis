@@ -35,7 +35,7 @@ namespace FAMIS.Controllers
                 System.Drawing.Bitmap imgTemp = _Code.GetCodeImage(data, Code.BarCode.Code128.Encode.Code128A);
                 //imgTemp.Save(System.AppDomain.CurrentDomain.BaseDirectory + "\\" + "BarCode.gif", System.Drawing.Imaging.ImageFormat.Gif);
 
-                filePath = SystemConfig.EAN13_IMG_FOLDER + "EAN_13-" + data + ".jpg";
+                filePath =System.AppDomain.CurrentDomain.BaseDirectory+ SystemConfig.FOLEDER_BARCODE_IMAGE + "code128-" + data + ".jpg";
                 imgTemp.Save(filePath, System.Drawing.Imaging.ImageFormat.Jpeg);
             }
             catch(Exception e) {
