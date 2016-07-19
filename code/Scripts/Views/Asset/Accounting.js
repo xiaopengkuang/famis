@@ -24,6 +24,7 @@ $(function () {
         }
 
     });
+
     $(window).resize(function () {
         var win_width = $(window).width();
         $("#TableList_0_1").datagrid('resize', { width: win_width - 220 });
@@ -331,7 +332,11 @@ function loadPageTool_Detail(dataRight) {
                 {
                     return;
                 }
-
+                ajaxLoading();
+                var url = '/ExportExcel/ExportExcel_Asset_Accounting?exportFlag=true&tableType=1&searchCondtiion=' + searchCondtiion;
+                //'/Collar/LoadCollars?searchCondtiion=' + searchCondtiion
+                exportData(url);
+                ajaxLoadEnd();
                 //var filename = getNowFormatDate_FileName();
 
                 //Export(filename, $('#TableList_0_1'));
@@ -342,7 +347,20 @@ function loadPageTool_Detail(dataRight) {
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
-
+function exportData(url) {
+    var form = $("<form>");//定义一个form表单
+    form.attr("style", "display:none");
+    form.attr("target", "");
+    form.attr("method", "post");
+    form.attr("action", url);
+    var input1 = $("<input>");
+    input1.attr("type", "hidden");
+    input1.attr("name", "exportData");
+    input1.attr("value", (new Date()).getMilliseconds());
+    $("body").append(form);//将表单放置在web中
+    form.append(input1);
+    form.submit();//表单提交
+}
 function getNowFormatDate_FileName() {
     var date = new Date();
     var seperator1 = "";
@@ -390,7 +408,11 @@ function loadPageTool_Summary(dataRight) {
                 {
                     return;
                 }
-
+                ajaxLoading();
+                var url = '/ExportExcel/ExportExcel_Asset_Accounting?exportFlag=true&tableType=0&searchCondtiion=' + searchCondtiion;
+                //'/Collar/LoadCollars?searchCondtiion=' + searchCondtiion
+                exportData(url);
+                ajaxLoadEnd();
                 ////将要选择的数据导出到Excel
                 //var filename = getNowFormatDate_FileName();
                 //Export(filename, $('#TableList_0_1'));

@@ -581,14 +581,14 @@ function load_sub_documents(datagrid,id_asset)
             //{
             //    field: 'date_add', title: '登记时间', width: 100,
             //    formatter: function (date) {
-            //        if (date) {
+            //        if (date!=null) {
             //            return "";
             //        }
             //        var pa = /.*\((.*)\)/;
             //        var unixtime = date.match(pa)[1].substring(0, 10);
             //        return getTime(unixtime);
             //    }
-            //}
+            //},
             {
                 field: 'id_download', title: '附件', width: 50,
                 formatter: function (date) {
@@ -610,7 +610,24 @@ function load_sub_documents(datagrid,id_asset)
 
 function downloadFile(id)
 {
-    alert(id);
+    var url = "/Asset/downloadSubFileBydocID?id=" + id;
+    exportData(url);
+
+}
+
+function exportData(url) {
+    var form = $("<form>");//定义一个form表单
+    form.attr("style", "display:none");
+    form.attr("target", "");
+    form.attr("method", "post");
+    form.attr("action", url);
+    var input1 = $("<input>");
+    input1.attr("type", "hidden");
+    input1.attr("name", "exportData");
+    input1.attr("value", (new Date()).getMilliseconds());
+    $("body").append(form);//将表单放置在web中
+    form.append(input1);
+    form.submit();//表单提交
 }
 
 
@@ -623,6 +640,8 @@ function loadPageTool(datagrid) {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
+                //新增图片
+
             }
         }
         , {
