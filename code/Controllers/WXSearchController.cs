@@ -85,7 +85,7 @@ namespace FAMIS.Controllers
 
 
 
-        public JsonResult LoadAssets(int? page, int? rows, String searchCondtiion)
+        public String LoadAssets(int? page, int? rows, String searchCondtiion)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             dto_SC_Asset dto_condition = null;
@@ -96,7 +96,7 @@ namespace FAMIS.Controllers
             return loadAsset_By_Type(page, rows,dto_condition );
         }
 
-        private JsonResult loadAsset_By_Type(int? page, int? rows, dto_SC_Asset cond)
+        private String loadAsset_By_Type(int? page, int? rows, dto_SC_Asset cond)
         {
 
             page = page == null ? 1 : page;
@@ -220,9 +220,11 @@ namespace FAMIS.Controllers
             {
                 total = data.ToList().Count,
                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
-                //rows = data.ToList().ToArray()
             };
-            return Json(json,JsonRequestBehavior.AllowGet);
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            String result = serializer.Serialize(json).ToString().Replace("\\", "");
+            return result;
+            //return Json(json,JsonRequestBehavior.AllowGet);
         }
 
     }
