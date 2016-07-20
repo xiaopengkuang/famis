@@ -2072,6 +2072,7 @@
     <Compile Include="Controllers\SysSettingController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VerifyController.cs" />
+    <Compile Include="Controllers\WXSearchController.cs" />
     <Compile Include="DAL\CommonConnecting.cs" />
     <Compile Include="DAL\SQLRunner.cs" />
     <Compile Include="DataConversion\ColumnListConf.cs" />
@@ -2144,6 +2145,7 @@
     <Compile Include="DTO\Json_Return_edit.cs" />
     <Compile Include="DTO\Json_State_Update.cs" />
     <Compile Include="DTO\Json_supplier.cs" />
+    <Compile Include="DTO\Json_WXSearch_detail.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2238,6 +2240,7 @@
     <Content Include="Views\ZC_View\ZC_View.cshtml" />
     <Content Include="Views\ZC_View\AddRight.cshtml" />
     <Content Include="Views\Repair\Repair_add.cshtml" />
+    <Content Include="Views\WXSearch\WX_detail.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2284,7 +2287,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
+      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
