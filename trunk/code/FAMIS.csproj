@@ -2146,6 +2146,7 @@
     <Compile Include="DTO\Json_Return_edit.cs" />
     <Compile Include="DTO\Json_State_Update.cs" />
     <Compile Include="DTO\Json_supplier.cs" />
+    <Compile Include="DTO\Json_WXSearch_AssetList.cs" />
     <Compile Include="DTO\Json_WXSearch_detail.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

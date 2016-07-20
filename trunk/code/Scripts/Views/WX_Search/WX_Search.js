@@ -52,7 +52,7 @@ function SearchByCondition_right() {
     var jsonSC;
 
     //获取资产类型
-    var TypeAsset = $("#Accounting_SC_ZCTY").combobox("getValue");
+    //var TypeAsset = $("#Accounting_SC_ZCTY").combobox("getValue");
 
     //获取查询类型：时间还是其他调价
     var valueSC = $("#Accounting_SC").combobox("getValue");
@@ -66,7 +66,7 @@ function SearchByCondition_right() {
             "begin": beginDate,
             "dataName": valueSC,
             "end": endDate,
-            "TypeAsset": TypeAsset
+            "TypeAsset": "all"
         }
     } else {
         //获取查询内容
@@ -76,12 +76,11 @@ function SearchByCondition_right() {
             "DataType": "content",
             "dataName": valueSC,
             "contentSC": contentSC,
-            "TypeAsset": TypeAsset
+            "TypeAsset": "all"
         }
     }
-
-
     searchCondtiion = JSON.stringify(jsonSC);
+    alert(searchCondtiion.toString());
     LoadInitData_Detail();
 }
 function resetSC() {
@@ -91,7 +90,7 @@ function resetSC() {
 }
 
 function LoadInitData_Detail() {
-             $('#TableList_0_1').datagrid({
+ $('#TableList_0_1').datagrid({
               url: '/WXSearch/LoadAssets?searchCondtiion=' + searchCondtiion,
               method: 'POST', //默认是post,不允许对静态文件访问
                 width: 'auto',
