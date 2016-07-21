@@ -1194,6 +1194,11 @@ namespace FAMIS.Controllers
 
         public ActionResult downloadFileByURL(String path)
         {
+            if (!System.IO.File.Exists(path))
+            {
+                return null;
+            }
+
             //var path = Server.MapPath(url);
             if (!path.Contains(Server.MapPath("")))
             {
@@ -1348,7 +1353,7 @@ namespace FAMIS.Controllers
             }
             if (fileSavedPath==name)
             {
-                fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + name;
+                fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
                 //保存数据
                 tb_Asset_sub_document newItem = new tb_Asset_sub_document();
                 newItem._abstract = abstractInfo;
@@ -1393,11 +1398,11 @@ namespace FAMIS.Controllers
              }
              if (FileCollect.Count > 0)
              {
-                 fileSavedPath = upSingleFile(FileCollect[0], name);
+                 fileSavedPath = upSinglePicture(FileCollect[0], name);
              }
              if (fileSavedPath == name)
              {
-                 fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + name;
+                 fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
                  //保存数据
                  tb_Asset_sub_picture newItem = new tb_Asset_sub_picture();
                  newItem.date_add = DateTime.Now;
@@ -1494,7 +1499,7 @@ namespace FAMIS.Controllers
                         }
                         else
                         {
-                            file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + theFileName);
+                            file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + fileName);
                             infos = theFileName;
                         }
                 }
@@ -1540,7 +1545,7 @@ namespace FAMIS.Controllers
                     }
                     else
                     {
-                        file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + theFileName);
+                        file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + fileName);
                         infos = theFileName;
                     }
                 }
