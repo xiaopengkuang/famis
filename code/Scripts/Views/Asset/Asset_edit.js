@@ -563,7 +563,7 @@ function load_sub_picture(datagrid, id_asset) {
             {
                 field: 'id_download', title: '附件', width: 50,
                 formatter: function (date) {
-                    var btn = "<a  onclick='downloadFile(" + date + ")' href='javascript:void(0)'>下载</a>";
+                    var btn = "<a  onclick='downloadFile_TP(" + date + ")' href='javascript:void(0)'>下载</a>";
                     return btn;
                 }
             }
@@ -840,10 +840,10 @@ function openModelWindow(url, titleName) {
     var $winADD;
     $winADD = $('#modalwindow2').window({
         title: titleName,
-        width: 1028,
-        height: 650,
-        top: (($(window).height() - 650) > 0 ? ($(window).height() - 650) : 200) * 0.5,
-        left: (($(window).width() - 1028) > 0 ? ($(window).width() - 1028) : 100) * 0.5,
+        width: 500,
+        height: 450,
+        top: (($(window).height() - 450) > 0 ? ($(window).height() - 450) : 200) * 0.5,
+        left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
         shadow: true,
         modal: true,
         iconCls: 'icon-add',
