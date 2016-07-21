@@ -130,11 +130,11 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_code128>()
-                .Property(e => e.code_ean13)
+                .Property(e => e.code128)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_code128>()
-                .Property(e => e.path_ean13_img)
+                .Property(e => e.path_code128_img)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_collar>()
@@ -270,7 +270,7 @@ namespace FAMIS.Models
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_sub_equiment>()
-                .Property(e => e.ggxh)
+                .Property(e => e.specification)
                 .IsUnicode(false);
 
             modelBuilder.Entity<tb_Asset_sub_equiment>()

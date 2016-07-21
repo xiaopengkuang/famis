@@ -21,5 +21,6 @@ namespace FAMIS.Models
 
         [StringLength(200)]
         public string path_file { get; set; }
+        public bool? flag { get; set; }
     }
 }

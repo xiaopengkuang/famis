@@ -25,7 +25,7 @@ namespace FAMIS.Models
         public int? supplyID { get; set; }
 
         [StringLength(20)]
-        public string ggxh { get; set; }
+        public string specification { get; set; }
 
         [StringLength(200)]
         public string note { get; set; }
@@ -33,5 +33,7 @@ namespace FAMIS.Models
         public DateTime? date_add { get; set; }
 
         public int? userID_add { get; set; }
+        public bool? flag { get; set; }
+
     }
 }

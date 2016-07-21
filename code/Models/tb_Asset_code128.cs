@@ -13,9 +13,9 @@ namespace FAMIS.Models
         public int? ID_Asset { get; set; }
 
         [StringLength(20)]
-        public string code_ean13 { get; set; }
+        public string code128 { get; set; }
 
         [StringLength(200)]
-        public string path_ean13_img { get; set; }
+        public string path_code128_img { get; set; }
     }
 }

@@ -182,6 +182,10 @@ namespace FAMIS.DataConversion
         public const int EAN13_Length = 13;
 
 
+        public const String SUB_TYPE_equipment = "SB";
+        public const String SUB_TYPE_document = "WJ";
+        public const String SUB_TYPE_picture = "TP";
+
 
 
     }
