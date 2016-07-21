@@ -69,7 +69,7 @@ namespace FAMIS.Controllers
                        where p.flag == true
                        join tb_ean13 in DB_C.tb_Asset_code128 on p.ID equals tb_ean13.ID_Asset into temp_ean13
                        from ean13 in temp_ean13.DefaultIfEmpty()
-                       where ean13.code_ean13==null || rebuilt==true
+                       where ean13.code128==null || rebuilt==true
                        select p;
             List<String> createCodeCurrent = new List<String>();
             List<String> filePathList = new List<string>();
@@ -90,15 +90,15 @@ namespace FAMIS.Controllers
                     {
                         foreach (var item_1 in data_1)
                         {
-                            item_1.path_ean13_img = filePath_item;
-                            item_1.code_ean13 = str_ean13;
+                            item_1.path_code128_img = filePath_item;
+                            item_1.code128 = str_ean13;
                         }
                     }
                     else { //不存在数据
                         tb_Asset_code128 newItem_13 = new tb_Asset_code128();
-                        newItem_13.code_ean13 = str_ean13;
+                        newItem_13.code128 = str_ean13;
                         newItem_13.ID_Asset = item.ID;
-                        newItem_13.path_ean13_img = filePath_item;
+                        newItem_13.path_code128_img = filePath_item;
                         DB_C.tb_Asset_code128.Add(newItem_13);
                     }
                 }
@@ -158,7 +158,7 @@ namespace FAMIS.Controllers
                     continue;
                 }
                 var data_flag = from p in data
-                                where p.code_ean13 == dataStr
+                                where p.code128 == dataStr
                                 select p;
                 
                 if (data_flag.Count() < 1)

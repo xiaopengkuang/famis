@@ -119,7 +119,8 @@ function bindData(id)
                 cattrs = data.cattrs;
                 update_ZDY_attr(data.type_Asset);
                 load_sub_documents(datagrid_document, ID_Asset_Current)
-
+                load_sub_picture(datagrid_picture, ID_Asset_Current);
+                load_sub_equiment(datagrid_equipment,ID_Asset_Current);
                 //延迟加载
 
             } else {
@@ -127,10 +128,6 @@ function bindData(id)
         }
     });
 }
-
-
-
-
 
 function load_ZCLB_add() {
     $('#ZCLB_add').combotree
@@ -238,18 +235,6 @@ function initAttr(data) {
     }
     table.appendChild(tbody);
     panelDIV.appendChild(table);
-   
-
-    //cattrs
-
-    //if (cattrs) {
-    //    alert(cattrs.length);
-    //} else {
-    //    alert("kong");
-    //}
-
-
-
     for (var i = 0; i < data.length; i++) {
         var id_a = "CAttr_INPUT_" + data[i].ID;
         var cattr_item = new Object();
@@ -556,7 +541,80 @@ function load_Other_ZJFS_add() {
 }
 
 
-
+function load_sub_picture(datagrid, id_asset) {
+    $('#' + datagrid).datagrid({
+        url: '/Asset/load_sub_pictures?id_asset=' + id_asset,
+        method: 'POST', //默认是post,不允许对静态文件访问
+        width: 'auto',
+        height: '300px',
+        iconCls: 'icon-save',
+        dataType: "json",
+        fitColumns: true,
+        pagePosition: 'top',
+        rownumbers: true, //是否加行号 
+        pagination: true, //是否显式分页 
+        pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
+        pageNumber: 1, //默认显示第几页 
+        pageList: [15, 30, 45],//分页中下拉选项的数值 
+        columns: [[
+            { field: 'ID', checkbox: true, width: 50 },
+            { field: 'fileNmae', title: '文件名', width: 50 },
+            { field: 'user_add', title: '登记人', width: 50 },
+            {
+                field: 'id_download', title: '附件', width: 50,
+                formatter: function (date) {
+                    var btn = "<a  onclick='downloadFile(" + date + ")' href='javascript:void(0)'>下载</a>";
+                    return btn;
+                }
+            }
+        ]],
+        singleSelect: true, //允许选择多行
+        selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+        checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+    });
+    loadPageTool_Picture(datagrid);
+}
+function loadPageTool_Picture(datagrid) {
+    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
+    pager.pagination({
+        buttons: [
+            {
+                text: '添加',
+                iconCls: 'icon-add',
+                height: 50,
+                handler: function () {
+                    var url = "/Asset/Asset_SubPicture_add?id_asset=" + ID_Asset_Current;
+                    var titleName = "新增图片";
+                    openModelWindow(url, titleName);
+                }
+            }
+        , {
+            text: '删除',
+            height: 50,
+            iconCls: 'icon-save',
+            handler: function () {
+                //获取选择行
+                var rows = $('#' + datagrid).datagrid('getSelections');
+                if (rows.length != 1) {
+                    MessShow("请选择1项数据！");
+                    return;
+                }
+                //获取选择行
+                var rows = $('#' + datagrid).datagrid('getSelections');
+                if (rows.length != 1) {
+                    MessShow("请选择1项数据！");
+                    return;
+                }
+                var id_delete = rows[0].ID;
+                deteteItem("TP", id_delete, datagrid);
+            }
+        }
+        ],
+        beforePageText: '第',//页数文本框前显示的汉字  
+        afterPageText: '页    共 {pages} 页',
+        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+    });
+}
 
 function load_sub_documents(datagrid,id_asset)
 {
@@ -578,17 +636,6 @@ function load_sub_documents(datagrid,id_asset)
             { field: 'ID', checkbox: true, width: 50 },
             { field: 'fileNmae', title: '文件名', width: 50 },
             { field: 'user_add', title: '登记人', width: 50 },
-            //{
-            //    field: 'date_add', title: '登记时间', width: 100,
-            //    formatter: function (date) {
-            //        if (date!=null) {
-            //            return "";
-            //        }
-            //        var pa = /.*\((.*)\)/;
-            //        var unixtime = date.match(pa)[1].substring(0, 10);
-            //        return getTime(unixtime);
-            //    }
-            //},
             {
                 field: 'id_download', title: '附件', width: 50,
                 formatter: function (date) {
@@ -604,13 +651,159 @@ function load_sub_documents(datagrid,id_asset)
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
-    loadPageTool(datagrid);
+    loadPageTool_document(datagrid);
+}
+function loadPageTool_document(datagrid) {
+    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
+    pager.pagination({
+        buttons: [
+            {
+                text: '添加',
+                iconCls: 'icon-add',
+                height: 50,
+                handler: function () {
+                    var url = "/Asset/Asset_Subdocument_add?id_asset="+ID_Asset_Current;
+                    var titleName = "新增附件名称";
+                    openModelWindow(url,titleName);
+                    
+                }
+            }
+        , {
+            text: '删除',
+            height: 50,
+            iconCls: 'icon-save',
+            handler: function () {
+                //获取选择行
+                var rows = $('#' + datagrid).datagrid('getSelections');
+                if (rows.length != 1) {
+                    MessShow("请选择1项数据！");
+                    return;
+                }
+                //获取选择行
+                var rows = $('#' + datagrid).datagrid('getSelections');
+                if (rows.length != 1) {
+                    MessShow("请选择1项数据！");
+                    return;
+                }
+                var id_delete = rows[0].ID;
+                deteteItem("WJ", id_delete, datagrid);
+            }
+        }
+        ],
+        beforePageText: '第',//页数文本框前显示的汉字  
+        afterPageText: '页    共 {pages} 页',
+        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+    });
+}
+function load_sub_equiment(datagrid, id_asset) {
+    $('#' + datagrid).datagrid({
+        url: '/Asset/load_sub_equipment?id_asset=' + id_asset,
+        method: 'POST', //默认是post,不允许对静态文件访问
+        width: 'auto',
+        height: '300px',
+        iconCls: 'icon-save',
+        dataType: "json",
+        fitColumns: true,
+        pagePosition: 'top',
+        rownumbers: true, //是否加行号 
+        pagination: true, //是否显式分页 
+        pageSize: 15, //页容量，必须和pageList对应起来，否则会报错 
+        pageNumber: 1, //默认显示第几页 
+        pageList: [15, 30, 45],//分页中下拉选项的数值 
+        columns: [[
+            { field: 'ID', checkbox: true, width: 50 },
+            { field: 'serialNum', title: '资产编号', width: 50 },
+            { field: 'name', title: '资产名称', width: 50 },
+            {
+                field: 'date_add', title: '登记时间', width: 100,
+                formatter: function (date) {
+                    if (date==null) {
+                        return "";
+                    }
+                    var pa = /.*\((.*)\)/;
+                    var unixtime = date.match(pa)[1].substring(0, 10);
+                    return getTime(unixtime);
+                }
+            },
+            {
+                field: 'specification', title: '资产类型', width: 50
+            },
+            { field: 'measurement', title: '计量单位', width: 50 },
+            { field: 'supplier', title: '供应商', width: 50 }
+
+        ]],
+        singleSelect: true, //允许选择多行
+        selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
+        checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+    });
+    loadPageTool_equiment(datagrid);
+}
+function loadPageTool_equiment(datagrid) {
+    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
+    pager.pagination({
+        buttons: [
+            {
+                text: '添加',
+                iconCls: 'icon-add',
+                height: 50,
+                handler: function () {
+                    var url = "/Asset/Asset_SubEquiment_add?id_asset=" + ID_Asset_Current;
+                    var titleName = "新增附属设备";
+                    openModelWindow(url, titleName);
+
+                }
+            }
+        , {
+            text: '删除',
+            height: 50,
+            iconCls: 'icon-save',
+            handler: function () {
+                //获取选择行
+                var rows = $('#' + datagrid).datagrid('getSelections');
+                if (rows.length != 1) {
+                    MessShow("请选择1项数据！");
+                    return;
+                }
+                var id_delete = rows[0].ID;
+                deteteItem("SB", id_delete, datagrid);
+            }
+        }
+        ],
+        beforePageText: '第',//页数文本框前显示的汉字  
+        afterPageText: '页    共 {pages} 页',
+        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+    });
+}
+
+
+function deteteItem(type,id,datagrid)
+{
+    //将数据传入后台
+    $.ajax({
+        url: '/Asset/delete_Sub_item',
+        data: { "type": type,"id":id },
+        dataType: "json",
+        type: "POST",
+        traditional: true,
+        success: function (data) {
+            if (data > 0)
+            {
+                $('#' + datagrid).datagrid('reload');
+            }
+        }
+    });
 }
 
 
 function downloadFile(id)
 {
     var url = "/Asset/downloadSubFileBydocID?id=" + id;
+    exportData(url);
+
+}
+
+function downloadFile_TP(id) {
+    var url = "/Asset/downloadSubPictureBydocID?id=" + id;
     exportData(url);
 
 }
@@ -631,32 +824,6 @@ function exportData(url) {
 }
 
 
-function loadPageTool(datagrid) {
-    var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
-    pager.pagination({
-        buttons: [
-            {
-            text: '添加',
-            iconCls: 'icon-add',
-            height: 50,
-            handler: function () {
-                //新增图片
-
-            }
-        }
-        , {
-            text: '删除',
-               height: 50,
-               iconCls: 'icon-save',
-               handler: function () {
-               }
-        }
-        ],
-        beforePageText: '第',//页数文本框前显示的汉字  
-        afterPageText: '页    共 {pages} 页',
-        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
-    });
-}
 
 
 function showAreaNum_PLTJ_add() {
@@ -665,7 +832,31 @@ function showAreaNum_PLTJ_add() {
 
 }
 
+function openModelWindow(url, titleName) {
 
+    try {
+        $("#modalwindow2").window("close");
+    } catch (e) { }
+    var $winADD;
+    $winADD = $('#modalwindow2').window({
+        title: titleName,
+        width: 1028,
+        height: 650,
+        top: (($(window).height() - 650) > 0 ? ($(window).height() - 650) : 200) * 0.5,
+        left: (($(window).width() - 1028) > 0 ? ($(window).width() - 1028) : 100) * 0.5,
+        shadow: true,
+        modal: true,
+        iconCls: 'icon-add',
+        closed: true,
+        minimizable: false,
+        maximizable: false,
+        collapsible: false,
+        onClose: function () {
+        }
+    });
+    $("#modalwindow2").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
+    $winADD.window('open');
+}
 
 
 

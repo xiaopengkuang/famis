@@ -1891,6 +1891,9 @@
     <Content Include="Scripts\Views\Allocation\Allocation_review.js" />
     <Content Include="Scripts\Views\Allocation\Allocation_SelectingAsset.js" />
     <Content Include="Scripts\Views\Asset\Asset_detail.js" />
+    <Content Include="Scripts\Views\Asset\Asset_SubPicture_add.js" />
+    <Content Include="Scripts\Views\Asset\Asset_Subdocument_add.js" />
+    <Content Include="Scripts\Views\Asset\Asset_SubEquiment_add.js" />
     <Content Include="Scripts\Views\Borrow\Borrow_review.js" />
     <Content Include="Scripts\Views\Borrow\Borrow_detail.js" />
     <Content Include="Scripts\Views\Borrow\Borrow_edit.js" />
@@ -1903,6 +1906,7 @@
     <Content Include="Scripts\Views\Collar\Collar_Review.js" />
     <Content Include="Scripts\Views\Collar\Collar_SelectAsset.js" />
     <Content Include="Scripts\Views\common\common.js" />
+    <Content Include="Scripts\Views\common\jquery-form.js" />
     <Content Include="Scripts\Views\Depreciation\De.js" />
     <Content Include="Scripts\Views\Depreciation\Dep.js" />
     <Content Include="Scripts\Views\Depreciation\Deps.js" />
@@ -2034,6 +2038,9 @@
     <Content Include="Views\Notice\RepairNotice.cshtml" />
     <Content Include="Views\Notice\ReturnNotice.cshtml" />
     <Content Include="Views\Asset\Asset_detail.cshtml" />
+    <Content Include="Views\Asset\Asset_SubEquiment_add.cshtml" />
+    <Content Include="Views\Asset\Asset_Subdocument_add.cshtml" />
+    <Content Include="Views\Asset\Asset_SubPicture_add.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -2104,7 +2111,10 @@
     <Compile Include="DTO\Json_asset_cattr_ad.cs" />
     <Compile Include="DTO\Json_asset_edit.cs" />
     <Compile Include="DTO\Json_Asset_Return.cs" />
+    <Compile Include="DTO\Json_Asset_subEquipment_add.cs" />
+    <Compile Include="DTO\Json_Asset_sub_equipment.cs" />
     <Compile Include="DTO\Json_Asset_sub_document.cs" />
+    <Compile Include="DTO\Json_Asset_sub_picture.cs" />
     <Compile Include="DTO\Json_borrow.cs" />
     <Compile Include="DTO\Json_Borrow_add.cs" />
     <Compile Include="DTO\Json_Borrow_edit.cs" />
@@ -2244,6 +2254,10 @@
     <Content Include="Views\Repair\Repair_add.cshtml" />
     <Content Include="Views\WXSearch\WX_detail.cshtml" />
     <Content Include="Views\WXSearch\WX_Search.cshtml" />
+    <Content Include="Views\Verify\AddExcel.cshtml" />
+    <Content Include="Views\Verify\Add_Inventory.cshtml" />
+    <Content Include="Views\Verify\Deatails_View.cshtml" />
+    <Content Include="Views\Verify\New_Deatails.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -17,6 +17,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
 using FAMIS.DataConversion;
+using System.IO;
 namespace FAMIS.Controllers
 {
     public class AssetController : Controller
@@ -47,6 +48,38 @@ namespace FAMIS.Controllers
         }
 
 
+        
+        public ActionResult Asset_SubEquiment_add(int? id_asset)
+        {
+            if (id_asset == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id_asset = id_asset;
+            return View();
+         }
+        public ActionResult Asset_SubPicture_add(int? id_asset)
+        {
+            if (id_asset == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id_asset = id_asset;
+            return View();
+        }
+
+
+
+        public ActionResult Asset_Subdocument_add(int? id_asset) 
+        {
+            //id_asset = 224;
+            if (id_asset == null)
+            {
+                return View("Error");
+            }
+            ViewBag.id_asset = id_asset;
+            return View();
+         }
         public ActionResult Asset_edit(int? id)
         {
             if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_edit))
@@ -791,7 +824,7 @@ namespace FAMIS.Controllers
         {
 
             var data = from p in DB_C.tb_Asset_code128
-                       where p.code_ean13 == barcode
+                       where p.code128 == barcode
                        select p;
 
             if (data.Count() > 0)
@@ -1004,6 +1037,7 @@ namespace FAMIS.Controllers
             rows = rows == null ? 15 : rows;
             var data = from p in DB_C.tb_Asset_sub_document
                        where p.ID_Asset == id_asset
+                       where p.flag==true
                        join tb_us in DB_C.tb_user on p.userID_add equals tb_us.ID into temp_us
                        from us in temp_us.DefaultIfEmpty()
                        orderby p.date_add descending
@@ -1026,8 +1060,84 @@ namespace FAMIS.Controllers
              };
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 获取图片列表
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="id_asset"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult load_sub_pictures(int? page, int? rows, int? id_asset)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+            var data = from p in DB_C.tb_Asset_sub_picture
+                       where p.ID_Asset == id_asset
+                       where p.flag == true
+                       join tb_us in DB_C.tb_user on p.userID_add equals tb_us.ID into temp_us
+                       from us in temp_us.DefaultIfEmpty()
+                       orderby p.date_add descending
+                       select new Json_Asset_sub_picture
+                       {
+                           ID = p.ID,
+                           date_add = p.date_add,
+                           id_download = p.ID,
+                           filePath=p.path_file,
+                           fileNmae = p.Name_picture,
+                           user_add = us.true_Name
+                       };
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
+            var json = new
+            {
+                total = data.ToList().Count,
+                rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
 
 
+         /// <summary>
+        /// 根据资产ＩＤ获取附属设备
+        /// </summary>
+        /// <param name="id_asset"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult load_sub_equipment(int? page, int? rows, int? id_asset)
+        {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
+            var data = from p in DB_C.tb_Asset_sub_equiment
+                       where p.ID_Asset == id_asset
+                       where p.flag==true
+                       join tb_us in DB_C.tb_user on p.userID_add equals tb_us.ID into temp_us
+                       from us in temp_us.DefaultIfEmpty()
+                       join tb_MM in DB_C.tb_dataDict_para on p.measurement equals tb_MM.ID into temp_MM
+                       from MM in temp_MM.DefaultIfEmpty()
+                       join tb_SP in DB_C.tb_supplier on p.supplyID equals tb_SP.ID into temp_SP
+                       from SP in temp_SP.DefaultIfEmpty()
+                       orderby p.date_add descending
+                       select new Json_Asset_sub_equipment
+                       {
+                           ID=p.ID,
+                           date_add=p.date_add,
+                           measurement=MM.name_para,
+                           name=p.name,
+                           serialNum=p.serialCode,
+                           specification=p.specification,
+                           supplier=SP.name_supplier
+                       };
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
+            var json = new
+            {
+                 total = data.ToList().Count,
+                 rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+             };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+        
 
         [HttpPost]
         public ActionResult downloadSubFileBydocID(int? id)
@@ -1046,6 +1156,31 @@ namespace FAMIS.Controllers
             }
             tb_Asset_sub_document file = data.First();
 
+            if (file.path_file != null && file.path_file != "")
+            {
+                return downloadFileByURL(file.path_file);
+            }
+            return null;
+
+        }
+
+        [HttpPost]
+        public ActionResult downloadSubPictureBydocID(int? id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+
+            var data = from p in DB_C.tb_Asset_sub_picture
+                       where p.ID == id
+                       select p;
+            if (data.Count() < 1)
+            {
+                return null;
+            }
+            tb_Asset_sub_picture file = data.First();
+
 
             if (file.path_file != null && file.path_file != "")
             {
@@ -1057,14 +1192,241 @@ namespace FAMIS.Controllers
 
         }
 
-
-        public ActionResult downloadFileByURL(String url)
+        public ActionResult downloadFileByURL(String path)
         {
-            var path = Server.MapPath(url);
+            //var path = Server.MapPath(url);
+            if (!path.Contains(Server.MapPath("")))
+            {
+            }
+            string filePath = path;//路径
+            string filename = System.IO.Path.GetFileName(filePath);//文件名  “Default.aspx”
+            //以字符流的形式下载文件
+            FileStream fs = new FileStream(filePath, FileMode.Open);
+            byte[] bytes = new byte[(int)fs.Length];
+            fs.Read(bytes, 0, bytes.Length);
+            fs.Close();
+            Response.ContentType = "application/octet-stream";
+            //通知浏览器下载文件而不是打开
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(filename, System.Text.Encoding.UTF8));
+            Response.BinaryWrite(bytes);
+            Response.Flush();
+            Response.End();
             return File(path, "application/x-zip-compressed");
         }
 
+        [HttpPost]
+        public int Handler_add_subEquiment(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_Asset_subEquipment_add json_data = serializer.Deserialize<Json_Asset_subEquipment_add>(data);
+            if (json_data == null||json_data.id_asset==null)
+            {
+                return -1;
+            }
 
+            tb_Asset_sub_equiment newItem = new tb_Asset_sub_equiment();
+            newItem.flag = true;
+            newItem.date_add = DateTime.Now;
+            newItem.ID_Asset = json_data.id_asset;
+            newItem.measurement = json_data.measurement;
+            newItem.name = json_data.name;
+            newItem.note = json_data.note;
+            newItem.serialCode = json_data.serialNum;
+            newItem.specification = json_data.specification;
+            newItem.supplyID = json_data.supplier;
+            newItem.userID_add = commonConversion.getUSERID();
+            newItem.value = json_data.value;
+
+            try {
+                DB_C.tb_Asset_sub_equiment.Add(newItem);
+                DB_C.SaveChanges();
+                return 1;
+            
+            }catch(Exception e){
+                return -2;
+            }
+
+
+        }
+
+        [HttpPost]
+        public int delete_Sub_item(String type,int? id)
+        {
+            int result = -1;
+            switch (type)
+            {
+                case SystemConfig.SUB_TYPE_picture:result=delete_sub_TP(id);break;
+                case SystemConfig.SUB_TYPE_equipment:result=delete_sub_SB(id);break;
+                case SystemConfig.SUB_TYPE_document:result=delete_sub_WJ(id);break;
+                default :;break;
+            }
+            return result;
+        }
+
+
+        public int delete_sub_SB(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_sub_equiment
+                       where p.flag == true
+                       where p.ID == id
+                       select p;
+            try{
+                foreach(var item in data)
+                {
+                    item.flag=false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+
+            }catch(Exception e){
+            return -1;
+            }
+        }
+        public int delete_sub_WJ(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_sub_document
+                       where p.flag == true
+                       where p.ID == id
+                       select p;
+            try
+            {
+                foreach (var item in data)
+                {
+                    item.flag = false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+        public int delete_sub_TP(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_sub_picture
+                       where p.flag == true
+                       where p.ID == id
+                       select p;
+            try
+            {
+                foreach (var item in data)
+                {
+                    item.flag = false;
+                }
+                DB_C.SaveChanges();
+                return 1;
+
+            }
+            catch (Exception e)
+            {
+                return -1;
+            }
+        }
+
+         [HttpPost]
+        public void uploadDocument()
+        {
+            HttpRequest request = System.Web.HttpContext.Current.Request;
+            HttpFileCollection FileCollect = System.Web.HttpContext.Current.Request.Files;
+            string name = request["name"].ToString();
+            string noteInfo = request["noteInfo"].ToString();
+            int id_asset = request["id_asset"] == null ? -1 : int.Parse(request["id_asset"].ToString());
+            string abstractInfo = request["abstractInfo"].ToString();
+            string resultInfo = "";
+            string fileSavedPath = null;
+            if (id_asset == -1)
+            {
+                resultInfo = "<script>alert('no asset!')</script>";
+                return;
+            }
+            if (FileCollect.Count > 0)
+            {
+                fileSavedPath = upSingleFile(FileCollect[0], name);
+            }
+            if (fileSavedPath==name)
+            {
+                fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + name;
+                //保存数据
+                tb_Asset_sub_document newItem = new tb_Asset_sub_document();
+                newItem._abstract = abstractInfo;
+                newItem.date_add = DateTime.Now;
+                newItem.fileName = name;
+                newItem.flag = true;
+                newItem.ID_Asset = id_asset;
+                newItem.note = noteInfo;
+                newItem.path_file = fileSavedPath;
+                newItem.userID_add = commonConversion.getUSERID();
+                try {
+                    DB_C.tb_Asset_sub_document.Add(newItem);
+                    DB_C.SaveChanges();
+                    resultInfo = "<script>alert('上传成功');</script>";
+                }
+                catch (Exception e)
+                {
+                    resultInfo = "<script>alert('save failed')</script>";
+                }
+
+
+            }
+            else {
+                resultInfo = "<script>alert('no file!')</script>";
+            }
+            Response.Write(resultInfo);
+
+        }
+         [HttpPost]
+         public void uploadPicture()
+         {
+             HttpRequest request = System.Web.HttpContext.Current.Request;
+             HttpFileCollection FileCollect = System.Web.HttpContext.Current.Request.Files;
+             string name = request["name"].ToString();
+             int id_asset = request["id_asset"] == null ? -1 : int.Parse(request["id_asset"].ToString());
+             string resultInfo = "";
+             string fileSavedPath = null;
+             if (id_asset == -1)
+             {
+                 resultInfo = "<script>alert('no asset!')</script>";
+                 return;
+             }
+             if (FileCollect.Count > 0)
+             {
+                 fileSavedPath = upSingleFile(FileCollect[0], name);
+             }
+             if (fileSavedPath == name)
+             {
+                 fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + name;
+                 //保存数据
+                 tb_Asset_sub_picture newItem = new tb_Asset_sub_picture();
+                 newItem.date_add = DateTime.Now;
+                 newItem.flag = true;
+                 newItem.ID_Asset = id_asset;
+                 newItem.path_file = fileSavedPath;
+                 newItem.userID_add = commonConversion.getUSERID();
+                 newItem.Name_picture = name;
+                 try
+                 {
+                     DB_C.tb_Asset_sub_picture.Add(newItem);
+                     DB_C.SaveChanges();
+                     resultInfo = "<script>alert('上传成功');</script>";
+                 }
+                 catch (Exception e)
+                 {
+                     resultInfo = "<script>alert('save failed')</script>";
+                 }
+
+
+             }
+             else
+             {
+                 resultInfo = "<script>alert('no file!')</script>";
+             }
+
+             Response.Write(resultInfo);
+
+         }
 
         public JsonResult NULL_dataGrid()
         {
@@ -1097,6 +1459,100 @@ namespace FAMIS.Controllers
             }
 
         }
+
+
+
+
+
+        private string upSingleFile(HttpPostedFile file, String theFileName)
+        {
+            string infos = "";
+            bool fileOK = false;
+            string fileName, fileExtension ;
+            fileName = System.IO.Path.GetFileName(file.FileName);
+            if (fileName != "")
+            {
+                if (file.ContentLength >= 1024 * 1024 * 4)
+                {
+                 infos = "上传文件太大，目前仅支持4M以内的图片上传！";
+                }
+                else
+                {
+                     fileExtension = System.IO.Path.GetExtension(fileName).ToLower();
+                    String[] allowedExtensions = { ".jpg", ".jpeg", ".gif", ".bmp", ".png", ".icon",".doc",".docx",".pdf",".xls",".txt",".ppt",".pptx"};
+                        for (int i = 0; i < allowedExtensions.Length; i++)
+                        {
+                            if (fileExtension == allowedExtensions[i])
+                            {
+                            fileOK = true;
+                            break;
+                            }
+                        }
+                        if (!fileOK)
+                        {
+                            infos = "不支持上传此类型文件！目前支持的图片格式有：jpg|jpeg|gif|bmp|png|icon|doc|docx|pdf|xls|txt|ppt|pptx";
+                        }
+                        else
+                        {
+                            file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + theFileName);
+                            infos = theFileName;
+                        }
+                }
+            }
+            else
+            {
+            infos = "没有读取到文件！";
+            }
+            return infos;
+        }
+
+
+
+
+
+        private string upSinglePicture(HttpPostedFile file, String theFileName)
+        {
+            string infos = "";
+            bool fileOK = false;
+            string fileName, fileExtension;
+            fileName = System.IO.Path.GetFileName(file.FileName);
+            if (fileName != "")
+            {
+                if (file.ContentLength >= 1024 * 1024 * 4)
+                {
+                    infos = "上传文件太大，目前仅支持4M以内的图片上传！";
+                }
+                else
+                {
+                    fileExtension = System.IO.Path.GetExtension(fileName).ToLower();
+                    String[] allowedExtensions = { ".jpg", ".jpeg", ".gif", ".bmp", ".png", ".icon"};
+                    for (int i = 0; i < allowedExtensions.Length; i++)
+                    {
+                        if (fileExtension == allowedExtensions[i])
+                        {
+                            fileOK = true;
+                            break;
+                        }
+                    }
+                    if (!fileOK)
+                    {
+                        infos = "不支持上传此类型文件！目前支持的图片格式有：jpg|jpeg|gif|bmp|png|icon";
+                    }
+                    else
+                    {
+                        file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + theFileName);
+                        infos = theFileName;
+                    }
+                }
+            }
+            else
+            {
+                infos = "没有读取到文件！";
+            }
+            return infos;
+        }
+
+
     }
 
     

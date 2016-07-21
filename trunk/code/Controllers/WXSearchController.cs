@@ -47,8 +47,8 @@ namespace FAMIS.Controllers
 
         public Json_WXSearch_detail getAssetByBH(String code)
         {
-            var data=from tb_code in DB_C.tb_Asset_code128 
-                     where tb_code.code_ean13==code
+            var data=from tb_code in DB_C.tb_Asset_code128
+                     where tb_code.code128 == code
                      join p in DB_C.tb_Asset on tb_code.ID_Asset equals p.ID
                      join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
                      from ST in temp_ST.DefaultIfEmpty()
