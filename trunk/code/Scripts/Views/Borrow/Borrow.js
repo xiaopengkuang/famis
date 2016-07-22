@@ -30,8 +30,6 @@ $(function () {
 
     });
 
-    //setTimeout('refresh()', 15000);
-
     $(window).resize(function () {
         var win_width = $(window).width();
         $("#datagrid_borrow").datagrid('resize', { width: win_width - 20 });

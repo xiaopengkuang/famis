@@ -621,6 +621,12 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
+            List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+            if (!commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_loan))
+            {
+                return -5;
+            }
+
             //TODO:获取系列编号
             String seriaNumber = commonController.getLatestOneSerialNumber(SystemConfig.serialType_GH);
 
@@ -637,7 +643,6 @@ namespace FAMIS.Controllers
                 DB_C.tb_Asset_Return.Add(newItem);
                 DB_C.SaveChanges();
                 int? id_return = getIDBySerialNum(newItem.serialNum);
-                List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
                 List<tb_Asset_Return_detail> details = createReturnDetailList(id_return,selectedAssets);
                 DB_C.tb_Asset_Return_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -715,6 +720,13 @@ namespace FAMIS.Controllers
             }
             try
             {
+                List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
+                if (!commonController.checkAssetState_BySelectedAsset(selectedAssets,SystemConfig.state_asset_loan))
+                {
+                    return -5;
+                }
+
+
                 if (!RightToSubmit_return(json_data.state_List, json_data.ID))
                 {
                     return -2;
@@ -741,7 +753,6 @@ namespace FAMIS.Controllers
                     item.flag = false;
                 }
                 //获取选中IDs
-                List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
                 List<tb_Asset_Return_detail> details = createReturnDetailList(json_data.ID, selectedAssets);
                 DB_C.tb_Asset_Return_detail.AddRange(details);
                 DB_C.SaveChanges();
@@ -753,6 +764,9 @@ namespace FAMIS.Controllers
                 return 0;
             }
         }
+
+
+
 
         [HttpPost]
         public int updateReturnStateByID(String data)

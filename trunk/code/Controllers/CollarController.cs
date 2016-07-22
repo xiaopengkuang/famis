@@ -384,7 +384,7 @@ namespace FAMIS.Controllers
             newItem.state_List = state_list_ID;
             newItem.date_Operated = DateTime.Now;
             List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
-            if(commonController.checkAssetState_BySelectedAsset(selectedAssets,SystemConfig.state_asset_free)){
+            if(!commonController.checkAssetState_BySelectedAsset(selectedAssets,SystemConfig.state_asset_free)){
 
                 return -5;
             }
@@ -470,7 +470,7 @@ namespace FAMIS.Controllers
                 return 0;
             }
             List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
-            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_free))
+            if (!commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_free))
             {
 
                 return -5;
