@@ -47,5 +47,7 @@ namespace FAMIS.DTO
         public String Name_asset { get; set; }
 
         public String serial_asset { get; set; }
+        public String content_review { get; set; } 
+        
     }
 }

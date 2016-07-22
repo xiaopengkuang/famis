@@ -64,7 +64,7 @@ function bindData(id)
                     $("#supplier_repair").combogrid("setText", data.supplierName_Torepair);
                     $("#Address_add").val(data.Address_supplier);
                     $("#LinkMan_add").val(data.linkMan_supplier);
-
+                    $("#SHYJ_repair").val(data.content_review);
                     $("#supplier_repair").combotree('disable');
                     $("#Cost_Repair").numberbox('disable');
                     $("#UAP_add").combobox('disable');
