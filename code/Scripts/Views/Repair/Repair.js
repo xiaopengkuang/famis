@@ -1,5 +1,8 @@
 ﻿//========================全局数据================================//
 var searchCondtiion = "";
+var ID_datagrid = "datagrid_Repair";
+var ID_repair = null;
+var ID_targetState = null;
 //========================全局数据================================//
 
 
@@ -278,25 +281,33 @@ function loadPageTool(datagrid, dataRight) {
                           MessShow("只有草稿单据才能提交!")
                           return;
                       }
-                      id_ = rows[0].ID;
 
-                      $.ajax({
-                          url: "/Repair/RightToEdit",
-                          type: 'POST',
-                          data: {
-                              "id": id_
-                          },
-                          beforeSend: ajaxLoading,
-                          success: function (data) {
-                              ajaxLoadEnd();
-                              if (data > 0) {
-                                  updateRecordState(datagrid, 2, id_);
-                              } else {
-                                  $.messager.alert('警告', "暂无该单据的提交权限！", 'warning');
-                                  return;
-                              }
-                          }
-                      });
+
+                      var url = "/Common/SelectReviewer?menuName=ZCWX"
+                      var titleName = "选择管理员";
+                      ID_repair = rows[0].ID;
+                      ID_targetState = 2;
+                      openModelWindow(url, titleName);
+
+                      //id_ = rows[0].ID;
+
+                      //$.ajax({
+                      //    url: "/Repair/RightToEdit",
+                      //    type: 'POST',
+                      //    data: {
+                      //        "id": id_
+                      //    },
+                      //    beforeSend: ajaxLoading,
+                      //    success: function (data) {
+                      //        ajaxLoadEnd();
+                      //        if (data > 0) {
+                      //            updateRecordState(datagrid, 2, id_);
+                      //        } else {
+                      //            $.messager.alert('警告', "暂无该单据的提交权限！", 'warning');
+                      //            return;
+                      //        }
+                      //    }
+                      //});
 
                       //$('#' + datagrid).datagrid('reload');
                   } else {
@@ -399,13 +410,16 @@ function exportData(url) {
 }
 
 
-
+function SubmitToUser(userID) {
+    updateRecordState(ID_datagrid, ID_targetState, ID_repair, userID);
+}
 
 //根据单据ID更新单据状态
-function updateRecordState(datagrid,id_target, id)
+function updateRecordState(datagrid, id_target, id, id_reviewer)
 {
     var data = {
         "id_item": id,
+        "id_reviewer": id_reviewer,  //用户提交订单时候显示  用户ID
         "id_state": id_target
     }
     //将数据传入后台

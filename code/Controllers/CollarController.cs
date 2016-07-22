@@ -703,13 +703,19 @@ namespace FAMIS.Controllers
                         foreach (var item in db_data)
                         {
                             item.state_List = id_state_target;
-                            item.userID_reView = userID;
+                            //item.userID_reView = userID;
                             item.date_Operated = DateTime.Now;
-                            item.info_review = Json_data.review;
+                            //item.info_review = Json_data.review;
                         }
 
                         if (commonConversion.is_YSH(Json_data.id_state))
                         {
+                            foreach(var item in db_data)
+                            {
+                                item.userID_reView = userID;
+                                item.info_review = Json_data.review;
+                                item.date_review = DateTime.Now;
+                            }
 
                             //修改
                             List<int?> ids_asset = getAssetIdsByCollarID(Json_data.id_Item);
@@ -756,6 +762,12 @@ namespace FAMIS.Controllers
                             DB_C.tb_ReviewReminding.Add(tb);
                         }else if(commonConversion.is_TH(Json_data.id_state))
                         {
+                            foreach (var item in db_data)
+                            {
+                                item.userID_reView = userID;
+                                item.info_review = Json_data.review;
+                                item.date_review = DateTime.Now;
+                            }
                             //将提醒标记为false
                             var data_rem = from p in DB_C.tb_ReviewReminding
                                            where p.flag == true

@@ -337,7 +337,8 @@ namespace FAMIS.Controllers
                            supplierID_Torepair=p.supplierID_Torepair,
                            supplierName_Torepair=SP.name_supplier,
                            userID_applying=p.userID_applying,
-                           userID_authorize=p.userID_authorize
+                           userID_authorize=p.userID_authorize,
+                           content_review=p.content_Review
                        };
             Json_repair_edit result = data.First();
             return Json(result, JsonRequestBehavior.AllowGet);
