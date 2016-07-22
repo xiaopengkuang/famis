@@ -376,7 +376,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             return this.Json(model);
         }
         [HttpPost]
-        public ActionResult AddUser(string JSdata)
+        public string AddUser(string JSdata)
         {
             GetRule model = new GetRule();
            
@@ -395,6 +395,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             string name = JSdata.Split(',')[1];
             string pwd = JSdata.Split(',')[2];
             string tname = JSdata.Split(',')[3];
+            string isText =JSdata.Split(',')[6];
             IEnumerable<int> ri = from o in mydb.tb_role
                      where o.name == ridtemp
                      select o.ID;
@@ -402,16 +403,32 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             {
                 rid = roids;
             }
-            did = int.Parse(deptemp);
-            /* var q = from p in mydb.tb_Menu
-              where p.Role_ID == Roleid
-              select p;*/
+
+            if (isText == "True")
+            {
+                var z = from o in mydb.tb_department
+                        where o.name_Department == deptemp
+                        select o.ID;
+                foreach (int a in z)
+                {
+                    did = a;
+                }
+            }
+            else
+            {
+                did = int.Parse(deptemp);
+            }
             var q = from o in mydb.tb_user
                                           where o.ID == id
                                           select o;
 
             if (q.Count() == 0)
             {
+                var validate = from o in mydb.tb_user
+                               where o.name_User == name
+                               select o;
+                if (validate.Count() > 0)
+                    return "name_exist";
                 var rule_tb = new tb_user
                 {
                     name_User = name,
@@ -440,7 +457,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
 
 
             //return View();
-            return this.Json(model);
+            return "";
         }
        
         [HttpPost]
@@ -472,6 +489,11 @@ namespace FAMIS.Controllers.FAMIS.System_setup
 
             if (q.Count() == 0)
             {
+                var hasexist = from o in mydb.tb_role
+                               where o.name == name
+                               select o;
+                if (hasexist.Count() > 0)
+                    return "has_exist";
                 var rule_tb = new tb_role
                 {
                     name = name,

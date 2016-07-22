@@ -209,13 +209,10 @@ namespace FAMIS.Controllers
 
 
             // List<tb_role> list = db.tb_role.OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
-
-            List<tb_user> list = db.tb_user.ToList();
-            //List<tb_user> list = DB_Connecting.tb_user.ToList();
-            var json = new
-            {
-                total = list.Count(),
-                rows = (from u in db.tb_user
+ 
+            
+                
+                var data = from u in db.tb_user
                         join r in db.tb_role on u.roleID_User equals r.ID
                         join d in db.tb_department on u.ID_DepartMent equals d.ID
                         select new  
@@ -226,36 +223,59 @@ namespace FAMIS.Controllers
                             true_Name=u.true_Name,
                             roleID_User = r.name,
                             ID_DepartMent=d.name_Department
-                        }).ToArray()
+                        };
+
+            data = data.OrderByDescending(a => a.ID);
+            int skipindex = ((int)page - 1) * (int)rows;
+            int rowsNeed = (int)rows;
+
+            var json = new
+            {
+
+                total = data.ToList().Count,
+                rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                //rows = data.ToList().ToArray()
             };
+
+            
             return Json(json, JsonRequestBehavior.AllowGet);
 
         }
        [HttpPost]
-        public JsonResult getpageOrder(int? page, int? rows, int? role, int? tableType)
+        public JsonResult getpageOrder(int? page, int? rows)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
 
 
 
-           // List<tb_role> list = db.tb_role.OrderBy(a => a.ID).Skip((Convert.ToInt32(page) - 1) * Convert.ToInt32(rows)).Take(Convert.ToInt32(rows)).ToList();
+           
 
-            List<tb_role> list = db.tb_role.ToList();
-            //List<tb_user> list = DB_Connecting.tb_user.ToList();
-            var json = new
-            {
-                total = list.Count(),
-                rows = (from r in list
+           
+           
+            
+                var data =  from r in db.tb_role
                         where r.flag==true
-                        select new tb_role()
+                        select new  
                         {
                             ID = r.ID,
                             name = r.name,
                             description = r.description
                             
-                        }).ToArray()
-            };
+                        };
+                data = data.OrderByDescending(a => a.ID);
+                int skipindex = ((int)page - 1) * (int)rows;
+                int rowsNeed = (int)rows;
+
+                var json = new
+                {
+
+                    total = data.ToList().Count,
+                    rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                    //rows = data.ToList().ToArray()
+                };
+
+           
             return Json(json, JsonRequestBehavior.AllowGet);
 
         }

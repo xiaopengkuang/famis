@@ -1,60 +1,8 @@
 ﻿var searchCondtiion = "1";
 
 //alert("asd");
-function depreciation() {
-
-    $.ajax({
-
-        type: "post",
-        url: "/AssetDeatails/LoadAsset",
-
-        datatype: "json",//数据类型
-
-        success: function (result) {
-
-
-            alert("折旧开始执行！");
-
-
-        }, error: function (msg) {
-            alert("折旧失败!");
-        }
-    });
-
-
-    $('#p').show();
-    start();
-}
-function test() {
-
-    $.ajax({
-
-        type: "post",
-        url: "/Depreciation/ReadExcel?path=D:\\test.xlsx",
-
-        datatype: "json",//数据类型
-
-        success: function (result) {
-            // excel = eval('(' + result + ')');
-            var buffer = result.split("*");
-            for (var i = 0; i < buffer.length; i++) {
-                excel = eval('(' + buffer[i] + ')');
-                $.each(excel, function (name, value) {
-
-                    alert(name + " ---> " + value);
-
-                });
-            }
-
-        }, error: function (msg) {
-            alert("折旧失败!");
-        }
-    });
-
-
-    $('#p').show();
-    start();
-}
+ 
+ 
 function start() {
 
 
@@ -169,7 +117,7 @@ function Add_Invention_Deatails()
         success: function (result) {
            
             deatails = searchCondtiion + "o" + result;
-            alert(deatails);
+            $.messager.alert("提示", "添加明细成功！", "info");
             $.ajax({
 
                 type: "post",
@@ -179,7 +127,8 @@ function Add_Invention_Deatails()
 
                 success: function (result) {
 
-                    alert("添加明细成功！");
+                   // alert("添加明细成功！");
+                   
                     window.parent.$('#modalwindow').window('close');
                     
 

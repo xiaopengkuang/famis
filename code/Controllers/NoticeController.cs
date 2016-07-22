@@ -190,7 +190,8 @@ namespace FAMIS.Controllers
                         join uview in db.tb_user on r.userID_review equals uview.ID into temp_uview
                         from uuview in temp_uview.DefaultIfEmpty()
                         
-                        where DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn) <= SystemConfig.Days_To_Notice&&r.flag==true
+                        where DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn) <= SystemConfig.Days_To_Notice&&r.flag==true&&ss.Name==SystemConfig.state_List_YSH
+                        //&& ss.Name!=SystemConfig.state_List_TH
                         select new
                         {
 
@@ -253,7 +254,7 @@ namespace FAMIS.Controllers
                        join ur in db.tb_user on r.userID_review equals ur.ID into temp_ur
                        from uur in temp_ur.DefaultIfEmpty()
 
-                       where DbFunctions.DiffDays(DateTime.Now, r.date_return) <= SystemConfig.Days_To_Notice && r.flag == true
+                       where DbFunctions.DiffDays(DateTime.Now, r.date_return) <= SystemConfig.Days_To_Notice && r.flag == true && ss.Name == SystemConfig.state_List_YSH
                        select new
                        {
 

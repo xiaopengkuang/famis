@@ -3,7 +3,7 @@
 }
 
 
-<<link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
 <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
 
@@ -27,7 +27,7 @@
         datagrid = $("#dd").datagrid({
 
 
-            url: '/SysSetting/getpageOrder?role=1&tableType=1',
+            url: '/SysSetting/getpageOrder',
             method: 'post', //默认是post,不允许对静态文件访问
             width: 'auto',
             iconCls: 'icon-save',
@@ -133,30 +133,39 @@
                      }
                  }
              }, '-',
+              
              {
                  text: '修改', iconCls: 'icon-edit', disabled: !dataRight.edit_able, handler: function () {
-                     //修改时要获取选择到的行
-                     var rows = datagrid.datagrid("getSelections");
                      
-                     //如果只选择了一行则可以进行修改，否则不操作
-                     if (rows.length == 1) {
-                         //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
-                         if (editRow != undefined) {
-                             datagrid.datagrid("endEdit", editRow);
+
+                         var rows = datagrid.datagrid("getSelections");
+                         var index = datagrid.datagrid("getRowIndex", rows[0]);
+                         $("#dd").datagrid('selectRow', index);
+                         //如果只选择了一行则可以进行修改，否则不操作
+                         if (rows.length == 1) {
+                             //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
+                             if (editRow != undefined) {
+                                 datagrid.datagrid("endEdit", editRow);
+                                 var index = datagrid.datagrid("getRowIndex", rows[0]);
+                                 $("#dd").datagrid('selectRow', index);
+                             }
+                             //当无编辑行时
+                             if (editRow == undefined) {
+                                 //获取到当前选择行的下标
+                                 var index = datagrid.datagrid("getRowIndex", rows[0]);
+
+                                 //开启编辑
+                                 datagrid.datagrid("beginEdit", index);
+                                 //把当前开启编辑的行赋值给全局变量editRow
+                                 editRow = index;
+                                 //当开启了当前选择行的编辑状态之后，
+                                 //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
+                                 //  datagrid.datagrid("unselectAll");
+
+                             }
                          }
-                         //当无编辑行时
-                         if (editRow == undefined) {
-                             //获取到当前选择行的下标
-                             var index = datagrid.datagrid("getRowIndex", rows[0]);
-                             //开启编辑
-                             datagrid.datagrid("beginEdit", index);
-                             //把当前开启编辑的行赋值给全局变量editRow
-                             editRow = index;
-                             //当开启了当前选择行的编辑状态之后，
-                             //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
-                            // datagrid.datagrid("unselectAll");
-                         }
-                     }
+                     
+                     
                  }
              }, '-',
              {
@@ -172,8 +181,36 @@
                          var myname = rowdata.rows[index].name;
 
                          var des = rowdata.rows[index].description;
-                         if (myname == "" || des == null) {
-                             $.messager.alert("提示", "用户名不能为空", "error");
+
+                       //  alert(id + "," + myname + "," + des);
+                         if (myname == "" || myname == null) {
+                             $.messager.alert("提示", "角色名不能为空", "error");
+                             var rows = datagrid.datagrid("getSelections");
+                             var index = datagrid.datagrid("getRowIndex", rows[0]);
+                             $("#dd").datagrid('selectRow', index);
+                             //如果只选择了一行则可以进行修改，否则不操作
+                             if (rows.length == 1) {
+                                 //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
+                                 if (editRow != undefined) {
+                                     datagrid.datagrid("endEdit", editRow);
+                                     var index = datagrid.datagrid("getRowIndex", rows[0]);
+                                     $("#dd").datagrid('selectRow', index);
+                                 }
+                                 //当无编辑行时
+                                 if (editRow == undefined) {
+                                     //获取到当前选择行的下标
+                                     var index = datagrid.datagrid("getRowIndex", rows[0]);
+
+                                     //开启编辑
+                                     datagrid.datagrid("beginEdit", index);
+                                     //把当前开启编辑的行赋值给全局变量editRow
+                                     editRow = index;
+                                     //当开启了当前选择行的编辑状态之后，
+                                     //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
+                                     //  datagrid.datagrid("unselectAll");
+
+                                 }
+                             }
                              return;
                          }
                          if (des == "" || des == null)
@@ -186,7 +223,12 @@
                              datatype: "json",//数据类型
 
                              success: function (result) {
-
+                                 if (result == "has_exist")
+                                 {
+                                     $.messager.alert("提示", "该角色名已存在！", "error");
+                                     $('#dd').datagrid('reload');
+                                     return;
+                                 }
                                  if (result == "Supper")
 
                                     // alert("伦家是超级管理员，你是奈何不了我的哦！");
@@ -241,8 +283,17 @@
                  }
              }
             ],
-
-
+            onClickRow: function (index, data) {
+               // alert(index);
+                if (editRow != undefined) {
+                    datagrid.datagrid("endEdit", editRow);
+                }
+            },
+            onCheck: function (index, data) {
+                if (editRow != undefined) {
+                    datagrid.datagrid("endEdit", editRow);
+                }
+            },
             onAfterEdit: function (rowIndex, rowData, changes) {
                 //endEdit该方法触发此事件
                 console.info(rowData);
@@ -262,7 +313,8 @@
                 }
             },
 
-            singleSelect: true, //允许选择多行
+
+         singleSelect: true, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
      
@@ -271,7 +323,36 @@
         });
        
     });
- 
+    function Edit(datagrid, editRow) {
+
+        //修改时要获取选择到的行
+        var rows = datagrid.datagrid("getSelections");
+        var index = datagrid.datagrid("getRowIndex", rows[0]);
+        $("#dd").datagrid('selectRow', index);
+        //如果只选择了一行则可以进行修改，否则不操作
+        if (rows.length == 1) {
+            //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
+            if (editRow != undefined) {
+                datagrid.datagrid("endEdit", editRow);
+                var index = datagrid.datagrid("getRowIndex", rows[0]);
+                $("#dd").datagrid('selectRow', index);
+            }
+            //当无编辑行时
+            if (editRow == undefined) {
+                //获取到当前选择行的下标
+                var index = datagrid.datagrid("getRowIndex", rows[0]);
+
+                //开启编辑
+                datagrid.datagrid("beginEdit", index);
+                //把当前开启编辑的行赋值给全局变量editRow
+                editRow = index;
+                //当开启了当前选择行的编辑状态之后，
+                //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
+                //  datagrid.datagrid("unselectAll");
+
+            }
+        }
+    }
     function loadPageTool_Detail(EdTID) {
        
         var $winADD;

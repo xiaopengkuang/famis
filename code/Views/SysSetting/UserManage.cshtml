@@ -15,7 +15,7 @@
 <script type="text/javascript">
     var myDate = new Date();
     var date = myDate.toLocaleDateString();
-    var dptid="";
+    var dptid="o";
     function tt() {
        
         $.ajax({
@@ -122,7 +122,7 @@
                      field: 'roleID_User', title: '角色', width: 100,
                      editor: {
                          type: 'combobox', options: {
-                             valueField: 'name', textField: 'name', url: '/Rule/GetRoleID',
+                             valueField: 'name', textField: 'name', editable: false,url: '/Rule/GetRoleID',
                              onSelect: function (rec) {
                                  try {
                                      combobox('setValue', rec.name);
@@ -131,7 +131,7 @@
                                  catch (e)
                                  { }
 
-                             }, required: true
+                             }, required: false
                          }
                      }
                  },
@@ -139,11 +139,11 @@
                       field: 'ID_DepartMent', title: '部门', width: 100,
                       editor: {
                           type: 'combotree', options: {
-                              valueField: 'id', textField: 'nameText', method: 'POST', editable: false, url: '/Dict/load_SZBM',
+                              valueField: 'nameText', textField: 'nameText', method: 'POST', editable: false, url: '/Dict/load_SZBM',
                               onSelect: function (node) {
                                   try {
-                                      dptid =node.id;
-
+                                      dptid =node.text;
+                                      
                                       combotree('getValue');
                                       
                                   }
@@ -222,7 +222,7 @@
                                  }
                                  //将选择到的行存入数组并用,分隔转换成字符串，
                                  //本例只是前台操作没有与数据库进行交互所以此处只是弹出要传入后台的id
-                                // alert(ids.join(','));
+                                 // alert(ids.join(','));
                              }
                          });
                      }
@@ -256,7 +256,7 @@
                              editRow = index;
                              //当开启了当前选择行的编辑状态之后，
                              //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
-                           //  datagrid.datagrid("unselectAll");
+                             //  datagrid.datagrid("unselectAll");
 
                          }
                      }
@@ -277,36 +277,76 @@
                          var pwd = rowdata.rows[index].password_User;
                          var truename = rowdata.rows[index].true_Name;
                          var rid = rowdata.rows[index].roleID_User;
-                        // var depid = rowdata.rows[index].ID_DepartMent;
-                         data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + dptid;
-                       //  alert(data);
-                         //
+                         
+                         var dp = rowdata.rows[index].ID_DepartMent;
+                         //alert(dp);
+                         if (dptid != "o")
+
+                             data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + dp+","+"False";
+                         else
+                             data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + dp + "," + "True";
+                      
                          if (myname == "" || myname == null) {
                              
                              $.messager.alert("提示", "用户名不能为空！", "error");
+                             edit();
                              return;
                          }
                          if (pwd == "" || pwd== null) {
 
                              $.messager.alert("提示", "密码不能为空！", "error");
+                             edit();
                              return;
                          }
                          if (truename == "" || truename == null) {
 
                              $.messager.alert("提示", "真实姓名不能为空！", "error");
+                             edit();
                              return;
                          }
                          if (rid == "" || rid == null) {
 
                              $.messager.alert("提示", "所属角色不能为空！", "error");
+                             edit();
                              return;
                          }
                          if (dptid == "" || dptid == null) {
 
                              $.messager.alert("提示", "所属部门不能为空！", "error");
+                             edit();
                              return;
                          }
-                        // alert(data);
+                         function edit()
+                         {
+
+                             var rows = datagrid.datagrid("getSelections");
+                             var index = datagrid.datagrid("getRowIndex", rows[0]);
+                             $("#dd").datagrid('selectRow', index);
+                             //如果只选择了一行则可以进行修改，否则不操作
+                             if (rows.length == 1) {
+                                 //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
+                                 if (editRow != undefined) {
+                                     datagrid.datagrid("endEdit", editRow);
+                                     var index = datagrid.datagrid("getRowIndex", rows[0]);
+                                     $("#dd").datagrid('selectRow', index);
+                                 }
+                                 //当无编辑行时
+                                 if (editRow == undefined) {
+                                     //获取到当前选择行的下标
+                                     var index = datagrid.datagrid("getRowIndex", rows[0]);
+
+                                     //开启编辑
+                                     datagrid.datagrid("beginEdit", index);
+                                     //把当前开启编辑的行赋值给全局变量editRow
+                                     editRow = index;
+                                     //当开启了当前选择行的编辑状态之后，
+                                     //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
+                                     //  datagrid.datagrid("unselectAll");
+
+                                 }
+                             }
+                         }
+                         // alert(data);
                          $.ajax({
 
                              type: "post",
@@ -316,8 +356,13 @@
 
                              success: function (result) {
 
-
-                               //  alert("添加成功！");
+                                 if (result == "name_exist")
+                                 {
+                                     $.messager.alert("提示", "该用户已存在，不可重复添加！", "error");
+                                     $('#dd').datagrid('reload');
+                                     return;
+                                 }
+                                 //  alert("添加成功！");
                                  $('#dd').datagrid('reload');
 
                              }, error: function (msg) {
@@ -344,9 +389,19 @@
                      datagrid.datagrid("unselectAll");
                  }
              }, '-',
-             ],
+            ],
 
-
+            onClickRow: function (index, data) {
+                // alert(index);
+                if (editRow != undefined) {
+                    datagrid.datagrid("endEdit", editRow);
+                }
+            },
+            onCheck: function (index, data) {
+                if (editRow != undefined) {
+                    datagrid.datagrid("endEdit", editRow);
+                }
+            },
             onAfterEdit: function (rowIndex, rowData, changes) {
                 //endEdit该方法触发此事件
                 console.info(rowData);
@@ -366,7 +421,7 @@
                     editRow = rowIndex;
                 }
             },
-
+            
         singleSelect: true, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
@@ -375,6 +430,7 @@
             }
         });
     });
+    
 </script>
 
 <html>

@@ -16,13 +16,33 @@ $(document).ready(function () {
     //多选框
     extend();
     loadOperator();
+   // setPDserail(PDsearial);
    // LoadInitData_Detail(PDsearial)
     LoadInitData(searchCondtiion);
-  
+    
   //  LoadTreeLeft();
   
 
 });
+function setPDserail(PDsearial)
+{
+    $.ajax({
+
+        type: "post",
+        url: "/Depreciation/SetPDsearialSession",
+        data: { Json: PDsearial },
+        datatype: "json",//数据类型
+
+        success: function (result) {
+
+
+        }, error: function (msg) {
+
+            alert("盘点单号传递失败！");
+        }
+    });
+
+}
 function extend()
 {
     $.extend($.fn.datagrid.defaults.editors, {
@@ -519,21 +539,7 @@ function LoadInitData(searchCondtiion) {
                     sysamount = sys;
                     PDsearial = searial;
 
-                    $.ajax({
-
-                        type: "post",
-                        url: "/Depreciation/SetPDsearialSession",
-                        data: { Json: PDsearial },
-                        datatype: "json",//数据类型
-
-                        success: function (result) {
-
-
-                        }, error: function (msg) {
-
-                            alert("盘点单号传递失败！");
-                        }
-                    });
+                    setPDserail(PDsearial);
 
                     $.ajax({
 
