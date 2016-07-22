@@ -115,6 +115,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CODE_ASSI\63\images\background.gif" />
+    <Content Include="CODE_ASSI\63\images\slide-button-active.gif" />
+    <Content Include="CODE_ASSI\63\images\slide-button.gif" />
+    <Content Include="CODE_ASSI\63\index.html" />
+    <Content Include="CODE_ASSI\63\js\effects.js" />
+    <Content Include="CODE_ASSI\63\js\prototype.js" />
+    <Content Include="CODE_ASSI\63\js\side-bar.js" />
+    <Content Include="CODE_ASSI\63\logo.gif" />
+    <Content Include="CODE_ASSI\63\说明文件.html" />
     <Content Include="CODE_ASSI\bootStrap-addTabs\index.html" />
     <Content Include="CODE_ASSI\bootStrap-addTabs\theme\css\bootstrap-addtabs.css" />
     <Content Include="CODE_ASSI\bootStrap-addTabs\theme\css\bootstrap.min.css" />
@@ -426,6 +435,9 @@
     <Content Include="images\dtree\date.png" />
     <Content Include="images\treeMenu\glyphicons-halflings.png" />
     <Content Include="images\dtree\user.png" />
+    <Content Include="images\Views\Index\background.gif" />
+    <Content Include="images\Views\Index\slide-button-active.gif" />
+    <Content Include="images\Views\Index\slide-button.gif" />
     <Content Include="LIB\icons\add-appointment.png" />
     <Content Include="LIB\icons\add-green-button.png" />
     <Content Include="LIB\icons\add-to-favorite.png" />
@@ -1906,6 +1918,7 @@
     <Content Include="Scripts\Views\Collar\Collar_Review.js" />
     <Content Include="Scripts\Views\Collar\Collar_SelectAsset.js" />
     <Content Include="Scripts\Views\common\common.js" />
+    <Content Include="Scripts\Views\common\echarts.js" />
     <Content Include="Scripts\Views\common\jquery-form.js" />
     <Content Include="Scripts\Views\Depreciation\De.js" />
     <Content Include="Scripts\Views\Depreciation\Dep.js" />
@@ -1933,6 +1946,8 @@
     <Content Include="Scripts\Views\Dict\edit_supplier.js" />
     <Content Include="Scripts\Views\Dict\supplierManager.js" />
     <Content Include="Scripts\Views\Borrow\Borrow.js" />
+    <Content Include="Scripts\Views\Index\myReminder.js" />
+    <Content Include="Scripts\Views\Index\Statistics.js" />
     <Content Include="Scripts\Views\Notice\InvalidatedNotice.js" />
     <Content Include="Scripts\Views\Notice\RepairNotice.js" />
     <Content Include="Scripts\Views\Notice\ReturnNotice.js" />
@@ -2041,6 +2056,9 @@
     <Content Include="Views\Asset\Asset_SubEquiment_add.cshtml" />
     <Content Include="Views\Asset\Asset_Subdocument_add.cshtml" />
     <Content Include="Views\Asset\Asset_SubPicture_add.cshtml" />
+    <Content Include="Views\Index\myReminder.cshtml" />
+    <Content Include="Views\Index\Statistics.cshtml" />
+    <Content Include="Views\Index\AssetReminder.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <None Include="Views\User\Index.cshtml" />
@@ -2072,6 +2090,7 @@
     <Compile Include="Controllers\FAMIS.System_setup\TestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\BorrowController.cs" />
+    <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\NoticeController.cs" />
     <Compile Include="Controllers\ReductionController.cs" />
@@ -2144,7 +2163,9 @@
     <Compile Include="DTO\dto_Staff.cs" />
     <Compile Include="DTO\dto_supplier.cs" />
     <Compile Include="DTO\Json_infoZJ.cs" />
+    <Compile Include="DTO\Json_MyReminder_list.cs" />
     <Compile Include="DTO\Json_operationRight.cs" />
+    <Compile Include="DTO\Json_Pie_info.cs" />
     <Compile Include="DTO\Json_reduction.cs" />
     <Compile Include="DTO\Json_reduction_add.cs" />
     <Compile Include="DTO\Json_redution_edit.cs" />
@@ -2154,6 +2175,7 @@
     <Compile Include="DTO\Json_Return.cs" />
     <Compile Include="DTO\Json_Return_add.cs" />
     <Compile Include="DTO\Json_Return_edit.cs" />
+    <Compile Include="DTO\Json_SC_index_pie.cs" />
     <Compile Include="DTO\Json_State_Update.cs" />
     <Compile Include="DTO\Json_supplier.cs" />
     <Compile Include="DTO\Json_WXSearch_AssetList.cs" />
@@ -2269,6 +2291,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="CODE_ASSI\bootStrap_treeView\" />
     <Folder Include="Content\App_LocalResources\" />
+    <Folder Include="CSS\Views\" />
     <Folder Include="images_Asset_sub_document\" />
     <Folder Include="images_Asset_sub_pic\" />
     <Folder Include="images_barcode\" />
@@ -2304,7 +2327,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
+      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
