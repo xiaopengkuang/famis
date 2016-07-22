@@ -1,0 +1,42 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="../../LIB/UIlib/css/default.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/icon.css" />
+    <script type="text/javascript" src="../../LIB/UIlib/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../../LIB/UIlib/js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+    <div class="easyui-panel">
+        显示类别：
+        <select id="searchType" name="searchType" onchange="updateData()">
+            <option value="ZCZT">资产状态</option>
+            <option value="SYBM">使用部门</option>
+            <option value="ZCLB">资产类别</option>
+        </select>
+        资产属性：
+        <select id="Attr_asset" name="Attr_asset" onchange="updateData()">
+            <option value="GDZC">固定资产</option>
+            <option value="DZYH">低值易耗品</option>
+        </select>
+        <input type="radio" name="value_Type" onclick="updateData()" value="amount" checked="checked" />按数量
+        <input type="radio" name="value_Type" onclick="updateData()" value="value" />按价值
+
+    </div>
+    <div class="easyui-panel">
+        <div id="contanis" style="width: 800px; height: 800px" fit="true"></div>
+        <script type="text/javascript" src="../../Scripts/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="../../Scripts/Views/common/echarts.js"></script>
+        <script type="text/javascript" src="../../Scripts/Views/Index/Statistics.js"></script>
+    </div>
+
+</body>
+</html>

@@ -803,6 +803,21 @@ namespace FAMIS.Controllers
             ids.Add(p_id);
             return ids;
         }
+
+        public List<int?> GetSonID_AsseTypeByName(String name)
+        {
+            int? p_id=null;
+            var data_id = from p in DB_C.tb_AssetType
+                          where p.flag == true
+                          where p.name_Asset_Type == name
+                          select p;
+            if (data_id.Count()==1)
+            {
+                p_id = data_id.First().ID;
+            }
+            return GetSonID_AsseType(p_id);
+        }
+
         public List<int?> GetParentID_AsseType(int? id)
         {
             var data = GetParents_AsseType(id);

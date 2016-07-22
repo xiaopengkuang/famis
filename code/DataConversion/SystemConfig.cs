@@ -188,5 +188,29 @@ namespace FAMIS.DataConversion
 
 
 
+
+
+        //==============Index Pie====================//   
+        //饼图查询条件
+        public const String Index_SearchType_ZCZT = "ZCZT";
+        public const String Index_SearchType_SYBM = "SYBM"; 
+        public const String Index_SearchType_ZCLB = "ZCLB";
+
+        public const String Index_AssetAttr_GDZC = "GDZC";
+        public const String Index_AssetAttr_DZYH = "DZYH";
+        public const String Index_AssetAttr_GDZC_name = "固定资产";
+        public const String Index_AssetAttr_DZYH_name = "低值易耗品";
+
+
+        public const String Index_ValueType_amount = "amount";
+        public const String Index_ValueType_value = "value";
+
+
+
+
+        //==============Index Pie====================//
+
+
+
     }
 }
