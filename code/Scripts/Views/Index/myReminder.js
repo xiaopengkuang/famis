@@ -1,10 +1,9 @@
 ﻿$(function () {
-
-    $(window).resize(function () {
-        var win_width = $(window).width();
-        $("#dataGrid_myReminder").datagrid('resize', { width: win_width - 20 });
-    });
     loadInitData();
+    //$(window).resize(function () {
+    //    var win_width = $(window).width();
+    //    $("#dataGrid_myReminder").datagrid('resize', { width: win_width - 20 });
+    //});
 
 });
 
