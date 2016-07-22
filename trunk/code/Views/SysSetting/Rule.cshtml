@@ -483,9 +483,83 @@
     </script>
 
     <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
+        var previous_head = "";
+        var head="";
+        function SetHead(hd)
+        {
+            previous_head = head;
+            SetPrevious_Value("", previous_head);
 
+            var reg = "";
+            head = hd;
+            
+            $('#' + head + '_serial').keyup(function () {
+               
+                reg = "/[^" + head + "yyMMDD]/";
+              //  alert(reg);
+              reg=  eval('(' + reg+ ')');
+                
+                this.value = this.value.replace(reg, '');
+
+            });
+            SetPrevious_Value(head,"");
+            
+        }
+        function SetPrevious_Value(head,previous_head)
+        {
+            if (head != "" ) {
+
+                $('#' + head + '_serial').mouseleave(function () {
+                    var val = this.value;
+                    if (val.split('D').length > 1) {
+                        // alert("我先走了啊！");
+
+                        $('#' + head + '_serial').val(head + "yyMMDD");
+
+                        return;
+                    }
+                    else if (val.split('M').length > 1) {
+                        $('#' + head + '_serial').val(head + "yyMM");
+                    }
+                    else if (val.split('y').length > 1) {
+                        $('#' + head + '_serial').val(head + "yy");
+                    }
+                    else if (val.split('Z').length > 1 || val.split('C').length > 1) {
+                        $('#' + head + '_serial').val(head);
+                    }
+                });
+            }
+            if (previous_head != "")
+            {
+               
+                    var val = $('#' + previous_head + '_serial').val();
+                    if (val.split('D').length > 1) {
+                        // alert("我先走了啊！");
+
+                        $('#' + previous_head + '_serial').val(previous_head + "yyMMDD");
+
+                        return;
+                    }
+                    else if (val.split('M').length > 1) {
+                        $('#' + previous_head + '_serial').val(previous_head + "yyMM");
+                    }
+                    else if (val.split('y').length > 1) {
+                        $('#' + previous_head + '_serial').val(previous_head + "yy");
+                    }
+                    else if (val.split('Z').length > 1 || val.split('C').length > 1) {
+                        $('#' + previous_head + '_serial').val(previous_head);
+                    }
+              
+
+            }
+        }
+        
+        $(document).ready(function (head) {
+            //多选框
+             
+                
+               
+            
             //为登录按钮注册单击事件
             $('#PD_serial_btn').click(function () {
                 $.ajax({
@@ -509,7 +583,7 @@
             });
         });
     </script>
-
+    
     <title>规则设置</title>
 </head>
 
@@ -529,7 +603,7 @@
         <div title="资产编号生成规则" data-options="iconCls:'icon-ok'" style="overflow:auto;padding:10px;">
             <div>
 
-                <label for="ZC_serial">固定资产：<input id="ZC_serial" name="ZC_serial" type="text"/></label>
+                <label for="ZC_serial">固定资产：<input id="ZC_serial" name="serial" onclick="SetHead('ZC')" type="text" /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="ZC_Bits" name="ZC_Bits">
@@ -550,7 +624,7 @@
 
             </div>
             <div>
-                <label for="YH_serial">低值易耗：<input id="YH_serial" name="YH_serial" value="YHyyMMDD" type="text" /></label>
+                <label for="YH_serial">低值易耗：<input id="YH_serial" name="serial" onclick="SetHead('YH')" value="YHyyMMDD" type="text" /></label>
                 <label for="YH">
                     流水号位数：
                     <select id="YH_Bits" name="YH_Bits">
@@ -858,7 +932,7 @@
         </div>
         <div title="单据生成规则" data-options="iconCls:'icon-ok'" style="padding:10px;">
             <div>
-                <label for="LY_serial">领用单号：<input id="LY_serial" name="LY_serial" type="text" value="LYyyMMDD" /></label>
+                <label for="LY_serial">领用单号：<input id="LY_serial" name="LY_serial" type="text" onclick="SetHead('LY')"  /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="LY_Bits">
@@ -876,7 +950,7 @@
                 <button id="LY_serial_btn" name="LY_serial_btn" type="submit" class="btn btn-default">预览</button>
             </div>
             <div>
-                <label for="DB_serial">调拨单号：<input id="DB_serial" name="DB_serial" type="text" value="DByyMMDD" /></label>
+                <label for="DB_serial">调拨单号：<input id="DB_serial" name="DB_serial" type="text" onclick="SetHead('DB')" /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="DB_Bits" name="DB_Bits">
@@ -894,7 +968,7 @@
                 <button id="DB_serial_btn" name="DB_serial_btn" type="submit" class="btn btn-default">预览</button>
             </div>
             <div>
-                <label for="WX_serial">维修单号：<input id="WX_serial" name="WX_serial" type="text" value="WXyyMMDD" /></label>
+                <label for="WX_serial">维修单号：<input id="WX_serial" name="WX_serial" type="text" onclick="SetHead('WX')" /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="WX_Bits">
@@ -912,7 +986,7 @@
                 <button id="WX_serial_btn" name="WX_serial_btn" type="submit" class="btn btn-default">预览</button>
             </div>
             <div>
-                <label for="JC_serial">借出单号：<input id="JC_serial" name="JC_serial" type="text" value="JCyyMMDD" /></label>
+                <label for="JC_serial">借出单号：<input id="JC_serial" name="JC_serial" type="text" onclick="SetHead('JC')" /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="JC_Bits">
@@ -930,7 +1004,7 @@
                 <button id="JC_serial_btn" name="JC_serial_btn" type="submit" class="btn btn-default">预览</button>
             </div>
             <div>
-                <label for="GH_serial">归还单号：<input id="GH_serial" name="GH_serial" type="text" value="GHyyMMDD" /></label>
+                <label for="GH_serial">归还单号：<input id="GH_serial" name="GH_serial" type="text" onclick="SetHead('GH')" /></label>
                 <label for="GH">
                     流水号位数：
                     <select id="GH_Bits">
@@ -948,7 +1022,7 @@
                 <button id="GH_serial_btn" name="GH_serial_btn" type="submit" class="btn btn-default">预览</button>
             </div>
             <div>
-                <label for="JS_serial">减少单号：<input id="JS_serial" name="JC_serial" type="text" value="JSyyMMDD" /></label>
+                <label for="JS_serial">减少单号：<input id="JS_serial" name="JC_serial" type="text" onclick="SetHead('JS')" /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="JS_Bits">
@@ -966,7 +1040,7 @@
                 <button id="JS_serial_btn" name="JS_serial_btn" type="submit" class="btn btn-default">预览</button>
             </div>
             <div>
-                <label for="QL_serial">清理单号：<input id="QL_serial" name="QL_serial" type="text" value="QLyyMMDD" /></label>
+                <label for="QL_serial">清理单号：<input id="QL_serial" name="QL_serial" type="text" onclick="SetHead('QL')" /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="QL_Bits">
@@ -984,7 +1058,7 @@
                 <button id="QL_serial_btn" name="QL_serial_btn" type="submit" class="btn btn-default">预览</button>
             </div>
             <div>
-                <label for="PD_serial">盘点单号：<input id="PD_serial" name="PD_serial" type="text" value="PDyyMMDD" /></label>
+                <label for="PD_serial">盘点单号：<input id="PD_serial" name="PD_serial" type="text" onclick="SetHead('PD')" /></label>
                 <label for="ZC">
                     流水号位数：
                     <select id="PD_Bits">
@@ -1005,7 +1079,10 @@
         </div>
         <div title="使用说明" data-options="iconCls:'icon-help'" style="padding:10px;">
             <ul>
-                <li>  格式形如： <font style="color:#0099FF;"> {yyyy}{MM}{DD}-{NO}</font>==>20151101-00001 </li>
+                <li>
+                    关于编号规则设置：有日DD就必须有月MM、年yy,有月MM就必须有年yy
+                </li>
+                <li>  格式形如： <font style="color:#0099FF;"> yyMMDD+位数(例如：选择的位数为5)</font>==>201670100001 </li>
 
                 <li>   格式符	输出                    说明</li>
                 <li>
@@ -1032,57 +1109,7 @@
                 <li>
                     HH	15		24小时制表示的当前小时数，不足位补“0”
                 <li>
-                <li>
-                    hh	15		24小时制表示的当前小时数，不补“0”
-                </li>
-                <li>
-                    GG	03		12小时制表示的当前小时数，不足位补“0”
-                </li>
-                <li>
-                    gg	3 		12小时制表示的当前小时数，不补“0”
-                </li>
-                <li>
-                    MI	5 		不足位补“0”的分钟数
-                </li>
-                <li>
-                    mi	05 		不补“0”的分钟数
-                </li>
-                <li>
-                    SS	08 		不足位补“0”的秒数
-                </li>
-                <li>
-                    ss	8 		不补“0”的秒数
-                </li>
-                <li>
-                    SSS	023		不足位补“0”的毫秒数
-                </li>
-                <li>
-                    sss	23 		不补“0”的毫秒数
-                </li>
-                <li>
-                    FF	January		当前月份的完整拼写
-                </li>
-                <li>
-                    ff	Jan		当前月份的缩写，前三个字母
-                </li>
-                <li>
-                    WW	Wednesday	当前星期的完整拼写
-                </li>
-                <li>
-                    ww	Wed		当前星期的缩写，前三个字母
-                </li>
-                <li>
-                    YW	52		一年之中的周数，两位数字（00～53）
-                </li>
-                <li>
-                    WD	00 		 一周之中的天数（0～6）（周日为0, 周六为6）
-                </li>
-                <li>
-                    AA	PM		大写的“AM”和“PM”
-                </li>
-                <li>
-                    aa	pm		小写的“am”和“pm”
-                </li>
+                 
                 <li>   NO	00001		 流水号</li>
             </ul>
         </div>

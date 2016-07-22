@@ -36,6 +36,6 @@ namespace FAMIS.Models
         [StringLength(200)]
         public string ps { get; set; }
 
-        public bool? flag { get; set; }
+       
     }
 }

@@ -50,6 +50,7 @@ function start() {
 
         MessShow("折旧完成！");
         $('#p').hide();
+        
         $('#p').progressbar('setValue', 0);
         LoadInitData_Detail(searchCondtiion);
         return null;
@@ -372,7 +373,8 @@ function loadPageTool_Detail(dataRight) {
                 form.attr("style", "display:none");
                 form.attr("target", "");
                 form.attr("method", "post");
-                form.attr("action", "/Verify/ExportStu2?JSdata= "+ searchCondtiion +"");
+                form.attr("action", "/Verify/ExportStu2?JSdata= " + searchCondtiion + "");
+              //  form.attr("multipart","multypart/form-data")
                 var input1 = $("<input>");
                 input1.attr("type", "hidden");
                 input1.attr("name", "exportData");

@@ -388,7 +388,7 @@ namespace FAMIS.Controllers
         public string AddDP(string JSdata)
         {
             ArrayList mysearial = serial.ReturnNewSearial("PD", 1);
-            Session["Deatails_Searial"] = mysearial[0].ToString();
+            Session["CurrentRow"] = 0;
             int id = 0;
             try
             {
@@ -568,16 +568,37 @@ namespace FAMIS.Controllers
 
 
         }
-        public void Upadate_Inventory_Deatails(string serial, string Asset_serial, string inventory_amount)
+        public bool Upadate_Inventory_Deatails(string serial, string para1, string para2)
         {
             string searailnum=Session["Deatails_Searial"].ToString();
+            string Asset_serial = "";
+            string inventory_amount = "";
+            if (para1.Contains("ZC") || para2.Contains("YH"))
+            {
+                Asset_serial = para1;
+                inventory_amount = para2;
+
+            }
+            else
+            {
+                Asset_serial = para2;
+                inventory_amount = para1;
+            }
             var q = from p in db.tb_Asset_inventory_Details
                     where p.serial_number == serial && p.serial_number_Asset == Asset_serial
                     select p;
             foreach (var p in q)
             {
-                p.amountOfInv = int.Parse(inventory_amount);
-                p.difference = int.Parse(inventory_amount) - p.amountOfSys;
+                try
+                {
+                    p.amountOfInv = int.Parse(inventory_amount);
+                    p.difference = int.Parse(inventory_amount) - p.amountOfSys;
+                }
+                catch  
+                {
+                    return false;
+                  
+                }
                 if (int.Parse(inventory_amount) - p.amountOfSys < 0)
                     p.state = "盘亏";
                 if (int.Parse(inventory_amount) - p.amountOfSys > 0)
@@ -589,6 +610,7 @@ namespace FAMIS.Controllers
             
             db.SaveChanges();
             AddPDList(searailnum);
+            return true;
 
         }
         [HttpPost]
@@ -636,10 +658,24 @@ namespace FAMIS.Controllers
                         string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
                         string imgPath = "/" + imgName + FileSave.FileName;     //通过此对象获取文件名
                         string AbsolutePath = Server.MapPath(imgPath);
+                        if (!AbsolutePath.Contains(".xls"))
+                        {
+                            Session["ErrorFile"] = "wrongfile";
+                            Response.Redirect("/Verify/AddExcel");
+                            return "no";
+                        }
                         FileSave.SaveAs(AbsolutePath);
                         //将上传的东西保存
-                        ReadExcel(Session["Deatails_Searial"].ToString(), AbsolutePath);
-                        Response.Redirect("/Verify/AddExcel");
+                        bool is_right=ReadExcel(Session["Deatails_Searial"].ToString(), AbsolutePath);
+                        if (is_right)
+
+                            Response.Redirect("/Verify/AddExcel");
+                        else
+                        {
+                            Session["ErrorFile"] = "wrongcode";
+                            Response.Redirect("/Verify/AddExcel");
+                            return "no";
+                        }
                         
                     }
                    
@@ -650,7 +686,7 @@ namespace FAMIS.Controllers
             return "盘点数据提交成功！";
         }
         
-        public void ReadExcel(string pd,string path)
+        public bool ReadExcel(string pd,string path)
         {
            
             
@@ -668,13 +704,18 @@ namespace FAMIS.Controllers
                     if (j != dt.Columns.Count-1)
                     temp = dt.Rows[i][j].ToString();
                     else
-                    Upadate_Inventory_Deatails(pd, temp, dt.Rows[i][j].ToString());
+                    {
+                        bool is_right_uploaded = Upadate_Inventory_Deatails(pd, temp, dt.Rows[i][j].ToString());
+                        if (!is_right_uploaded)
+                        
+                            return false;
+                    };
 
                 } 
                
             }
-           
-          
+
+             return true;
         }
        public JsonResult Null_dataGrid()
        {
