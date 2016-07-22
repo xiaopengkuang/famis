@@ -309,7 +309,7 @@ namespace FAMIS.Controllers
                 return 0;
             }
             List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
-            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
+            if (!commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
             {
                 return -5;
             }
@@ -379,7 +379,7 @@ namespace FAMIS.Controllers
             }
 
             List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
-            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
+            if (!commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
             {
                 return -5;
             }

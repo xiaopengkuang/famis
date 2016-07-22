@@ -260,7 +260,7 @@ namespace FAMIS.Controllers
 
 
             List<int?> selectedAssets = commonConversion.StringToIntList(json_data.assetList);
-            if (commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
+            if (!commonController.checkAssetState_BySelectedAsset(selectedAssets, SystemConfig.state_asset_using))
             {
                 return -5;
             }
@@ -381,7 +381,7 @@ namespace FAMIS.Controllers
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_allocation_add Json_data = serializer.Deserialize<Json_allocation_add>(data);
             List<int?> selectedAssets = commonConversion.StringToIntList(Json_data.assetList);
-            if (commonController.checkAssetState_BySelectedAsset(selectedAssets,SystemConfig.state_asset_using))
+            if (!commonController.checkAssetState_BySelectedAsset(selectedAssets,SystemConfig.state_asset_using))
             {
                 return -5;
             }

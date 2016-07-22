@@ -935,7 +935,6 @@ namespace FAMIS.Controllers
                 {
                     right.newDeatails_able = false;
                 }
-
                 if (right.exportdeatails_able == null)
                 {
                     right.exportdeatails_able = false;
@@ -957,8 +956,15 @@ namespace FAMIS.Controllers
 
         public bool isRightToOperate(String menu,String operation)
         {
+
             int? roleID = commonConversion.getRoleID();
-              var data = from p in DB_C.tb_Menu
+
+            bool superU = commonConversion.isSuperUser(roleID);
+            if (superU)
+            {
+                return true;
+            }
+            var data = from p in DB_C.tb_Menu
                            where p.father_Menu == menu
                            where p.operation==operation
                            join tb_at in DB_C.tb_role_authorization on p.ID equals tb_at.Right_ID 
