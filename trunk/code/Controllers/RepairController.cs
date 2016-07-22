@@ -445,6 +445,7 @@ namespace FAMIS.Controllers
                         item.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_using);
                     }
                     DB_C.SaveChanges();
+                    return 1;
 
                 }
                 catch (Exception e)
