@@ -16,8 +16,136 @@
 <html>
 <head>
     <script type="text/javascript" language="javascript">
+
+    var previous_head = "";
+    var head = "";
+    function SetHead(hd) {
+        previous_head = head;
+        SetPrevious_Value("", previous_head);
+
+        var reg = "";
+        head = hd;
+
+        $('#' + head + '_serial').keyup(function () {
+
+            reg = "/[^" + head + "yyMMDD]/";
+            //  alert(reg);
+            reg = eval('(' + reg + ')');
+
+            this.value = this.value.replace(reg, '');
+
+        });
+        SetPrevious_Value(head, "");
+
+    }
+    function SetHeadRule(previous_head)
+    {
+        var val = $('#' + previous_head + '_serial').val();
+        if (val.split('D').length > 1) {
+            // alert("我先走了啊！");
+
+            $('#' + previous_head + '_serial').val(previous_head + "yyMMDD");
+
+            return;
+        }
+        else if (val.split('M').length > 1) {
+            $('#' + previous_head + '_serial').val(previous_head + "yyMM");
+        }
+        else if (val.split('y').length > 1) {
+            $('#' + previous_head + '_serial').val(previous_head + "yy");
+        }
+        else if (val.split(previous_head).length > 1 || val.split(previous_head).length > 1) {
+            $('#' + previous_head + '_serial').val(previous_head);
+        }
+        else if (previous_head.split(val).length > 1 || previous_head == "" || previous_head == null) {
+            $('#' + previous_head + '_serial').val(previous_head);
+        }
+    }
+    function SetPrevious_Value(head, previous_head) {
+        if (head != "") {
+
+            $('#' + head + '_serial').mouseleave(function () {
+                var val = this.value;
+                if (val.split('D').length > 1) {
+                    // alert("我先走了啊！");
+
+                    $('#' + head + '_serial').val(head + "yyMMDD");
+
+                    return;
+                }
+                else if (val.split('M').length > 1) {
+                    $('#' + head + '_serial').val(head + "yyMM");
+                }
+                else if (val.split('y').length > 1) {
+                    $('#' + head + '_serial').val(head + "yy");
+                }
+                else if (val.split(head).length > 1 || val.split(head).length > 1) {
+                    $('#' + head + '_serial').val(head);
+                }
+                else if (head.split(val).length > 1 || head == "" || head == null) {
+                    $('#' + head + '_serial').val(head);
+                }
+            });
+        }
+        if (previous_head != "") {
+
+            var val = $('#' + previous_head + '_serial').val();
+            if (val.split('D').length > 1) {
+                // alert("我先走了啊！");
+
+                $('#' + previous_head + '_serial').val(previous_head + "yyMMDD");
+
+                return;
+            }
+            else if (val.split('M').length > 1) {
+                $('#' + previous_head + '_serial').val(previous_head + "yyMM");
+            }
+            else if (val.split('y').length > 1) {
+                $('#' + previous_head + '_serial').val(previous_head + "yy");
+            }
+            else if (val.split(previous_head).length > 1 || val.split(previous_head).length > 1) {
+                $('#' + previous_head + '_serial').val(previous_head);
+            }
+            else if (previous_head.split(val).length > 1 || previous_head == "" || previous_head == null) {
+                $('#' + previous_head + '_serial').val(previous_head);
+            }
+
+        }
+    }
+        function MessShow(mess) {
+            $.messager.show({
+                title: '提示',
+                msg: mess,
+                showType: 'slide',
+                style: {
+                    right: '',
+                    top: document.body.scrollTop + document.documentElement.scrollTop,
+                    bottom: ''
+                }
+            });
+        }
+    function ViewSerial(para) {
+        //为登录按钮注册单击事件
        
-       
+        $.ajax({
+
+            type: "post",
+            url: "/Rule/Index",
+            data: { serial: $('#' + para + '_serial').val(), bit: $('#' + para + '_Bits').val() },
+            datatype: "json",//数据类型
+
+            success: function (result) {
+                MessShow(result.YH_serial);
+                
+               // alert(result.YH_serial);
+
+
+            }, error: function (msg) {
+                alert("Error");
+            }
+        });
+
+    }
       
         function myrefresh() {
            
@@ -127,9 +255,16 @@
         $(document).ready(function () {
             //多选框
             LoadRule();
+            $('#Add_Rule_btn').mouseover(function () {
+
+               // alert(head);
+                SetHeadRule(head);
+
+            });
         
             //为登录按钮注册单击事件
             $('#Add_Rule_btn').click(function () {
+               
                 var zc = "ZC" + "," + $("#ZC_serial").val() + "," + $("#ZC_Bits").val();
                 var yh = "YH" + "," + $("#YH_serial").val() + "," + $("#YH_Bits").val();
                 var ly = "LY" + "," + $("#LY_serial").val() + "," + $("#DB_Bits").val();
@@ -160,428 +295,33 @@
                 });
 
             });
-        });
 
+           
 
-    </script>
 
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
 
-            //为登录按钮注册单击事件
-            $('#ZC_serial_btn').click(function () {
-                $.ajax({
 
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#ZC_serial").val(), bit: $("#ZC_Bits").val() },
-                    datatype: "json",//数据类型
+            //这个地方好像有时候有点问题，标注一下留作以后排查bug.
 
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
 
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-
-
-    </script>
-
-    <script type="text/javascript" language="javascript">
-        //这个地方好像有时候有点问题，标注一下留作以后排查bug.
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#YH_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#YH_serial").val(), bit: $("#YH_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-    <script type="text/javascript" language="javascript">
-        function MessShow(mess) {
-            $.messager.show({
-                title: '提示',
-                msg: mess,
-                showType: 'slide',
-                style: {
-                    right: '',
-                    top: document.body.scrollTop + document.documentElement.scrollTop,
-                    bottom: ''
-                }
-            });
-        }
-
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#LY_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#LY_serial").val(), bit: $("#LY_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial); 
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#DB_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#DB_serial").val(), bit: $("#DB_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#WX_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#WX_serial").val(), bit: $("#WX_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#JC_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#JC_serial").val(), bit: $("#JC_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#GH_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#GH_serial").val(), bit: $("#GH_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#GH_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#GH_serial").val(), bit: $("#GH_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#JS_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#JS_serial").val(), bit: $("#JS_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#JS_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#JS_serial").val(), bit: $("#JS_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-    <script type="text/javascript" language="javascript">
-        $(document).ready(function () {
-            //多选框
-
-            //为登录按钮注册单击事件
-            $('#QL_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#QL_serial").val(), bit: $("#QL_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
-
-
-
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
-
-            });
-        });
-    </script>
-
-    <script type="text/javascript" language="javascript">
-        var previous_head = "";
-        var head="";
-        function SetHead(hd)
-        {
-            previous_head = head;
-            SetPrevious_Value("", previous_head);
-
-            var reg = "";
-            head = hd;
-            
-            $('#' + head + '_serial').keyup(function () {
-               
-                reg = "/[^" + head + "yyMMDD]/";
-              //  alert(reg);
-              reg=  eval('(' + reg+ ')');
-                
-                this.value = this.value.replace(reg, '');
-
-            });
-            SetPrevious_Value(head,"");
-            
-        }
-        function SetPrevious_Value(head,previous_head)
-        {
-            if (head != "" ) {
-
-                $('#' + head + '_serial').mouseleave(function () {
-                    var val = this.value;
-                    if (val.split('D').length > 1) {
-                        // alert("我先走了啊！");
-
-                        $('#' + head + '_serial').val(head + "yyMMDD");
-
-                        return;
-                    }
-                    else if (val.split('M').length > 1) {
-                        $('#' + head + '_serial').val(head + "yyMM");
-                    }
-                    else if (val.split('y').length > 1) {
-                        $('#' + head + '_serial').val(head + "yy");
-                    }
-                    else if (val.split('Z').length > 1 || val.split('C').length > 1) {
-                        $('#' + head + '_serial').val(head);
-                    }
-                });
-            }
-            if (previous_head != "")
-            {
-               
-                    var val = $('#' + previous_head + '_serial').val();
-                    if (val.split('D').length > 1) {
-                        // alert("我先走了啊！");
-
-                        $('#' + previous_head + '_serial').val(previous_head + "yyMMDD");
-
-                        return;
-                    }
-                    else if (val.split('M').length > 1) {
-                        $('#' + previous_head + '_serial').val(previous_head + "yyMM");
-                    }
-                    else if (val.split('y').length > 1) {
-                        $('#' + previous_head + '_serial').val(previous_head + "yy");
-                    }
-                    else if (val.split('Z').length > 1 || val.split('C').length > 1) {
-                        $('#' + previous_head + '_serial').val(previous_head);
-                    }
-              
-
-            }
-        }
         
-        $(document).ready(function (head) {
-            //多选框
-             
-                
-               
-            
-            //为登录按钮注册单击事件
-            $('#PD_serial_btn').click(function () {
-                $.ajax({
-
-                    type: "post",
-                    url: "/Rule/Index",
-                    data: { serial: $("#PD_serial").val(), bit: $("#PD_Bits").val() },
-                    datatype: "json",//数据类型
-
-                    success: function (result) {
-                        MessShow(result.YH_serial);
-                        var serial = result.YH_serial;
 
 
 
-                    }, error: function (msg) {
-                        alert("Error");
-                    }
-                });
 
-            });
+
+
+
+           
         });
+
+
+   
+ 
+       
+            //多选框
+           
+        
     </script>
     
     <title>规则设置</title>
@@ -620,7 +360,7 @@
                 </label>
 
 
-                <button id="ZC_serial_btn" name="ZC_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="ZC_serial_btn" name="ZC_serial_btn" type="submit" onclick="ViewSerial('ZC')" class="btn btn-default">预览</button>
 
             </div>
             <div>
@@ -639,7 +379,7 @@
 
                     </select>
                 </label>
-                <button id="YH_serial_btn" name="YH_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="YH_serial_btn" name="YH_serial_btn" type="submit" onclick="ViewSerial('YH')" class=" btn btn-default">预览</button>
             </div>
 
         </div>
@@ -785,7 +525,7 @@
                 </select>
             </label>
             <p></p>
-            <a href="#" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'" id="ZC_serial_btn">预览</a>
+            <a href="#" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'"  id="ZC_serial_btn">预览</a>
             <p>低值易耗品：</p>
             <label>
                 一级位数：
@@ -947,7 +687,7 @@
 
                     </select>
                 </label>
-                <button id="LY_serial_btn" name="LY_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="LY_serial_btn" name="LY_serial_btn" type="submit" onclick="ViewSerial('LY')" class="btn btn-default">预览</button>
             </div>
             <div>
                 <label for="DB_serial">调拨单号：<input id="DB_serial" name="DB_serial" type="text" onclick="SetHead('DB')" /></label>
@@ -965,7 +705,7 @@
 
                     </select>
                 </label>
-                <button id="DB_serial_btn" name="DB_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="DB_serial_btn" name="DB_serial_btn" type="submit" onclick="ViewSerial('DB')" class="btn btn-default">预览</button>
             </div>
             <div>
                 <label for="WX_serial">维修单号：<input id="WX_serial" name="WX_serial" type="text" onclick="SetHead('WX')" /></label>
@@ -983,7 +723,7 @@
 
                     </select>
                 </label>
-                <button id="WX_serial_btn" name="WX_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="WX_serial_btn" name="WX_serial_btn" type="submit" onclick="ViewSerial('WX')" class="btn btn-default">预览</button>
             </div>
             <div>
                 <label for="JC_serial">借出单号：<input id="JC_serial" name="JC_serial" type="text" onclick="SetHead('JC')" /></label>
@@ -1001,7 +741,7 @@
 
                     </select>
                 </label>
-                <button id="JC_serial_btn" name="JC_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="JC_serial_btn" name="JC_serial_btn" type="submit" onclick="ViewSerial('JC')" class="btn btn-default">预览</button>
             </div>
             <div>
                 <label for="GH_serial">归还单号：<input id="GH_serial" name="GH_serial" type="text" onclick="SetHead('GH')" /></label>
@@ -1019,7 +759,7 @@
 
                     </select>
                 </label>
-                <button id="GH_serial_btn" name="GH_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="GH_serial_btn" name="GH_serial_btn" type="submit" onclick="ViewSerial('GH')" class="btn btn-default">预览</button>
             </div>
             <div>
                 <label for="JS_serial">减少单号：<input id="JS_serial" name="JC_serial" type="text" onclick="SetHead('JS')" /></label>
@@ -1037,7 +777,7 @@
 
                     </select>
                 </label>
-                <button id="JS_serial_btn" name="JS_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="JS_serial_btn" name="JS_serial_btn" type="submit" onclick="ViewSerial('JS')" class="btn btn-default">预览</button>
             </div>
             <div>
                 <label for="QL_serial">清理单号：<input id="QL_serial" name="QL_serial" type="text" onclick="SetHead('QL')" /></label>
@@ -1055,7 +795,7 @@
 
                     </select>
                 </label>
-                <button id="QL_serial_btn" name="QL_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="QL_serial_btn" name="QL_serial_btn" type="submit" onclick="ViewSerial('QL')" class="btn btn-default">预览</button>
             </div>
             <div>
                 <label for="PD_serial">盘点单号：<input id="PD_serial" name="PD_serial" type="text" onclick="SetHead('PD')" /></label>
@@ -1073,7 +813,7 @@
 
                     </select>
                 </label>
-                <button id="PD_serial_btn" name="PD_serial_btn" type="submit" class="btn btn-default">预览</button>
+                <button id="PD_serial_btn" name="PD_serial_btn" type="submit" onclick="ViewSerial('PD')" class="btn btn-default">预览</button>
             </div>
 
         </div>
