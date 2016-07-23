@@ -396,6 +396,14 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             string pwd = JSdata.Split(',')[2];
             string tname = JSdata.Split(',')[3];
             string isText =JSdata.Split(',')[6];
+            var validate = from o in mydb.tb_user
+                           where o.name_User == name
+                           select o;
+            foreach(var v in validate)
+            {
+             if (v.ID!=id)
+                return "name_exist";
+            }
             IEnumerable<int> ri = from o in mydb.tb_role
                      where o.name == ridtemp
                      select o.ID;
@@ -424,11 +432,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
 
             if (q.Count() == 0)
             {
-                var validate = from o in mydb.tb_user
-                               where o.name_User == name
-                               select o;
-                if (validate.Count() > 0)
-                    return "name_exist";
+                
                 var rule_tb = new tb_user
                 {
                     name_User = name,
@@ -477,8 +481,15 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             }
             string name = JSdata.Split(',')[1];
             string des = JSdata.Split(',')[2];
-             
-            
+            var hasexist = from o in mydb.tb_role
+                           where o.name == name
+                           select o;
+            foreach (var v in hasexist)
+            {
+                if (v.ID != id)
+                    return "name_exist";
+            }
+           
 
             /* var q = from p in mydb.tb_Menu
               where p.Role_ID == Roleid
@@ -489,11 +500,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
 
             if (q.Count() == 0)
             {
-                var hasexist = from o in mydb.tb_role
-                               where o.name == name
-                               select o;
-                if (hasexist.Count() > 0)
-                    return "has_exist";
+             
                 var rule_tb = new tb_role
                 {
                     name = name,
@@ -656,8 +663,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         [HttpPost]
         public ActionResult Index(string serial,string bit)
         {
-            StreamWriter sw = new StreamWriter("D:\\1.txt",true);
-            sw.WriteLine(serial + " asdsad " + bit);
+            
             GetRule model = new GetRule();
             Serial srl = new Serial();
             ArrayList al;
@@ -667,8 +673,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             foreach (string c in al)
             {
                 
-                sw.Write(c);
-                sw.Close();
+                
                serial = c;
                model.YH_serial = c;
                 

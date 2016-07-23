@@ -19,6 +19,7 @@ using NPOI.POIFS.FileSystem;
 using NPOI.SS.UserModel;
 using FAMIS.Helper_Class;
 using System.Collections;
+using System.Data.Entity;
 namespace FAMIS.Controllers
 {
     public class VerifyController : Controller
@@ -138,6 +139,161 @@ namespace FAMIS.Controllers
             
           
         }
+        [HttpPost]
+        public ActionResult ExportRT_Notice()
+        {
+
+            var data = from r in db.tb_Asset_Borrow
+                       join s in db.tb_State_List on r.state_list equals s.id into temp_s
+                       from ss in temp_s.DefaultIfEmpty()
+                       join dp in db.tb_department on r.department_borrow equals dp.ID into temp_dp
+                       from ddp in temp_dp.DefaultIfEmpty()
+                       join ub in db.tb_user on r.userID_borrow equals ub.ID into temp_ub
+                       from uub in temp_ub.DefaultIfEmpty()
+                       join uo in db.tb_user on r.userID_operated equals uo.ID into temp_uo
+                       from uuo in temp_uo.DefaultIfEmpty()
+                       join ur in db.tb_user on r.userID_review equals ur.ID into temp_ur
+                       from uur in temp_ur.DefaultIfEmpty()
+
+                       where DbFunctions.DiffDays(DateTime.Now, r.date_return) <= SystemConfig.Days_To_Notice && r.flag == true && ss.Name == SystemConfig.state_List_YSH
+                       select new
+                       {
+
+                           序号 = r.ID,
+                           剩余日期 = DbFunctions.DiffDays(DateTime.Now, r.date_return),
+                           借出单号 = r.serialNum,
+                           借出日期 = r.date_borrow,
+                           归还日期 = r.date_return,
+                           借出原因 = r.reason_borrow,
+                           借出小计 = r.note_borrow,
+                           借出部门 = ddp.name_Department,
+                           申请人 = uub.true_Name,
+                           授权人 = uuo.true_Name,
+                           审核人 = uub.true_Name,
+
+
+
+
+                           审核内容= r.content_review,
+                           创建日期 = r.date_operated,
+                           状态 = ss.Name
+
+
+
+
+
+
+
+                       };
+            DataTable data_table = Excel_Helper.ToDataTable(data);
+            return Excel_Exp(data_table, SystemConfig.Export_File_Name_GH);
+        }
+
+     
+        [HttpPost]
+        public ActionResult ExportIV_Notice()
+        {
+
+            var data = from r in db.tb_Asset
+
+                       join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
+                       from tt in temp_t.DefaultIfEmpty()
+                       join d in db.tb_dataDict_para on r.measurement equals d.ID into temp_d
+                       from dd in temp_d.DefaultIfEmpty()
+                       join j in db.tb_dataDict_para on r.addressCF equals j.ID into temp_j
+                       from jj in temp_j.DefaultIfEmpty()
+                       join p in db.tb_department on r.department_Using equals p.ID into temp_p
+                       from pp in temp_p.DefaultIfEmpty()
+                       join u in db.tb_user on r.Owener equals u.ID into temp_u
+                       from uu in temp_u.DefaultIfEmpty()
+                       join s in db.tb_dataDict_para on r.state_asset equals s.ID into temp_s
+                       from ss in temp_s.DefaultIfEmpty()
+                       join sp in db.tb_supplier on r.supplierID equals sp.ID into temp_sp
+                       from ssp in temp_sp.DefaultIfEmpty()
+                       where DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month <= SystemConfig.Days_To_Notice
+                       select new
+                       {
+
+                           序号 = r.ID,
+                           剩余日期 = DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month,
+                           资产编号 = r.serial_number,
+
+                           资产类别 = tt.name_Asset_Type,
+                           资产名称 = r.name_Asset,
+                           规格型号 = r.specification,
+                           计量单位 = dd.name_para,
+                           单价 = r.unit_price,
+                           数量 = r.amount,
+                           总价 = r.value,
+                           使用部门 = pp.name_Department,
+                           存放地址 = jj.name_para,
+                           使用人 = uu.true_Name,
+                           资产状态 = ss.name_para,
+                           供应商 = ssp.name_supplier
+
+
+
+                       };
+            DataTable data_table = Excel_Helper.ToDataTable(data);
+            return Excel_Exp(data_table, SystemConfig.Export_File_Name_BF);
+        }
+
+        [HttpPost]
+        public ActionResult ExportRP_Notice()
+        {
+
+            var data = from r in db.tb_Asset_Repair
+                       join s in db.tb_State_List on r.state_list equals s.id into temp_s
+                       from ss in temp_s.DefaultIfEmpty()
+                       join spl in db.tb_supplier on r.supplierID_Torepair equals spl.ID into temp_spl
+                       from sspl in temp_spl.DefaultIfEmpty()
+                       join ass in db.tb_Asset on r.ID_Asset equals ass.ID into temp_ass
+                       from aass in temp_ass.DefaultIfEmpty()
+                       join uapp in db.tb_user on r.userID_applying equals uapp.ID into temp_uapp
+                       from uuapp in temp_uapp.DefaultIfEmpty()
+                       join uaut in db.tb_user on r.userID_authorize equals uaut.ID into temp_uaut
+                       from uuaut in temp_uaut.DefaultIfEmpty()
+                       join ucreat in db.tb_user on r.userID_create equals ucreat.ID into temp_ucreat
+                       from uucreat in temp_ucreat.DefaultIfEmpty()
+                       join uview in db.tb_user on r.userID_review equals uview.ID into temp_uview
+                       from uuview in temp_uview.DefaultIfEmpty()
+
+                       where DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn) <= SystemConfig.Days_To_Notice && r.flag == true && ss.Name == SystemConfig.state_List_YSH
+                       //&& ss.Name!=SystemConfig.state_List_TH
+                       select new
+                       {
+
+                           序号 = r.ID,
+                           剩余日期 = DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn),
+                           维修单号 = r.serialNumber,
+                           维修日期 = r.date_ToRepair,
+                           归还日期 = r.date_ToReturn,
+                           维修原因 = r.reason_ToRepair,
+                           维修小计 = r.note_repair,
+                           申请人 = uuapp.true_Name,
+                           授权人 = uuaut.true_Name,
+                           审核人 = uuview.true_Name,
+                           审核日期 = r.date_review,
+                           创建人 = uucreat.true_Name,
+                           装备名称 = r.Name_equipment,
+                           维修费用 = r.CostToRepair,
+                           创建日期 = r.date_create,
+                           审核内容 = r.content_Review,
+                           
+                           状态 = ss.Name,
+
+                           维修供应商 = sspl.name_supplier,
+                           资产名称 = aass.name_Asset,
+
+
+
+
+                       };
+
+            DataTable data_table = Excel_Helper.ToDataTable(data);
+            return Excel_Exp(data_table, SystemConfig.Export_File_Name_WX);
+        }
+
         [HttpPost]
         public ActionResult ExportPD_Details(string JSON)
         {
