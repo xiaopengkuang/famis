@@ -1,8 +1,7 @@
 ﻿$(function () {
     var datagrid; //定义全局变量datagrid
-    var editRow = undefined; //定义全局变量：当前编辑的行
-    datagrid = $("#dd").datagrid({
-
+    
+    datagrid = $("#Return_dd").datagrid({
 
         url: '/Notice/Return_Notice',
         method: 'post', //默认是post,不允许对静态文件访问
@@ -15,6 +14,7 @@
         // onClickCell: onClickCell,
         // onEndEdit: onEndEdit,
         // height:500,
+        pagePosition: 'top',
         pageSize: 15, //页容量，必须和pageList对应起来，否则会报错
         pageNumber: 1, //默认显示第几页
         pageList: [15, 30, 45],
@@ -104,27 +104,45 @@
              { field: 'state', title: '审核状态', width: 100 }
             
 
-        ]],
+        ]]
 
 
-        onAfterEdit: function (rowIndex, rowData, changes) {
-            //endEdit该方法触发此事件
-            console.info(rowData);
-            editRow = undefined;
-        },
-        onDblClickRow: function (rowIndex, rowData) {
-            //双击开启编辑行
-            if (editRow != undefined) {
-                datagrid.datagrid("endEdit", editRow);
-            }
-            if (editRow == undefined) {
-                datagrid.datagrid("beginEdit", rowIndex);
-                editRow = rowIndex;
-            }
-        }
+     
     });
+    loadPage_Detail();
 
 });
+
+function loadPage_Detail() {
+   
+    var pager = $('#Return_dd').datagrid('getPager');	// get the pager of datagrid
+    pager.pagination({
+        buttons: [{
+            text: '导出',  
+            height: 50,
+            iconCls: 'icon-save',
+            handler: function () {
+                var form = $("<form>");//定义一个form表单
+                form.attr("style", "display:none");
+                form.attr("target", "");
+                form.attr("method", "post");
+                form.attr("action", "/Verify/ExportRT_Notice");
+                var input1 = $("<input>");
+                input1.attr("type", "hidden");
+                input1.attr("name", "exportData");
+                input1.attr("value", (new Date()).getMilliseconds());
+                $("body").append(form);//将表单放置在web中
+                form.append(input1);
+                form.submit();//表单提交
+            }
+
+
+        }],
+        beforePageText: '第',//页数文本框前显示的汉字  
+        afterPageText: '页    共 {pages} 页',
+        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+    });
+}
 function getTime(/** timestamp=0 **/) {
     var ts = arguments[0] || 0;
     var t, y, m, d, h, i, s;
