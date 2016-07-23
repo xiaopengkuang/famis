@@ -161,6 +161,9 @@ namespace FAMIS.DataConversion
           public const String Export_File_Name_ZJ = "折旧详情";
         public const String Export_File_Name_PDMain = "盘点单详情";
         public const String Export_File_Name_PDDetails = "盘点明细详情";
+        public const String Export_File_Name_WX = "维修提醒明细详情";
+        public const String Export_File_Name_GH = "归还提醒明细详情";
+        public const String Export_File_Name_BF = "报废提醒明细详情";
 
         public const String TB_Collar = "Collar";
         public const String TB_Allocation = "Allocation";
