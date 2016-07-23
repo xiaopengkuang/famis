@@ -387,7 +387,7 @@ namespace FAMIS.Controllers
         [HttpPost]
         public string AddDP(string JSdata)
         {
-            ArrayList mysearial = serial.ReturnNewSearial("PD", 1);
+            ArrayList mysearial = serial.ReturnNewSearial("ZC", 1);
             Session["CurrentRow"] = 0;
             int id = 0;
             try
@@ -658,7 +658,7 @@ namespace FAMIS.Controllers
                         string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
                         string imgPath = "/" + imgName + FileSave.FileName;     //通过此对象获取文件名
                         string AbsolutePath = Server.MapPath(imgPath);
-                        if (!AbsolutePath.Contains(".xls"))
+                        if (!AbsolutePath.Contains(".xls") && !AbsolutePath.Contains("csv"))
                         {
                             Session["ErrorFile"] = "wrongfile";
                             Response.Redirect("/Verify/AddExcel");
@@ -754,8 +754,29 @@ namespace FAMIS.Controllers
                  EndDate = DateTime.Parse(temp[2]);
            
            string PDstate = temp[3];
-           string PDperson = temp[4]; 
-           
+           string PDperson = temp[4];
+           switch (PDstate)
+           {
+               case "WPD":
+                   {
+                       
+                       PDstate = "未盘点";
+                       break;
+                   }
+               case "PDZ":
+                   {
+
+                       PDstate = "盘点中";
+                       break;
+                   }
+               case "YPD":
+                   {
+
+                       PDstate = "已盘点";
+                       break;
+                   }
+           }
+
            switch(Effective_Query_Num)
            {
                case 0:
@@ -800,7 +821,10 @@ namespace FAMIS.Controllers
                case 2:
                    {
                       var data=from r in db.tb_Asset_inventory
-                                   where r.state==PDstate&&r._operator==PDperson&&r.flag==true
+                               join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                               from pp in temp_p.DefaultIfEmpty()
+                               
+                                   where r.state==PDstate&&pp.ID.ToString()==PDperson&&r.flag==true
                                    select new
                                    {
                                        ID = r.ID,
@@ -836,9 +860,11 @@ namespace FAMIS.Controllers
                case 3:
                  {
                     var data= from r in db.tb_Asset_inventory
-                                 where (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.flag == true)
-                                 || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && r.flag == true)
-                                 || (r.state == PDstate && r._operator == PDperson && r.serial_number.Contains(searial) && r.flag == true)
+                              join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                              from pp in temp_p.DefaultIfEmpty()
+                              where (r.state == PDstate && pp.ID.ToString() == PDperson && BeginDate <= r.date && r.flag == true)
+                                 || (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && r.flag == true)
+                                 || (r.state == PDstate && pp.ID.ToString() == PDperson && r.serial_number.Contains(searial) && r.flag == true)
 
                                  select new
                                  {
@@ -872,9 +898,11 @@ namespace FAMIS.Controllers
                case 4:
                  {
                     var data=from r in db.tb_Asset_inventory
-                                 where (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && r.date >= BeginDate && r.flag == true)
-                                 || (r.state == PDstate && r._operator == PDperson && EndDate >= r.date && searial.Contains(searial) && r.flag == true)
-                                 || (r.state == PDstate && r._operator == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
+                             join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                             from pp in temp_p.DefaultIfEmpty()
+                             where (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && r.date >= BeginDate && r.flag == true)
+                                 || (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && searial.Contains(searial) && r.flag == true)
+                                 || (r.state == PDstate && pp.ID.ToString() == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
                                  select new
                                  {
                                      ID = r.ID,
@@ -909,7 +937,9 @@ namespace FAMIS.Controllers
                case 5:
                  {
                     var data=from r in db.tb_Asset_inventory
-                                 where r.serial_number.Contains(searial) && BeginDate <= r.date && r.date <= EndDate && r.state == PDstate && r._operator == PDperson && r.flag == true
+                             join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                             from pp in temp_p.DefaultIfEmpty()
+                             where r.serial_number.Contains(searial) && BeginDate <= r.date && r.date <= EndDate && r.state == PDstate && pp.ID.ToString() == PDperson && r.flag == true
                                  select new
                                  {
                                      ID = r.ID,
