@@ -33,11 +33,8 @@ namespace FAMIS.Models
         public string content_review { get; set; }
         public int? state_list { get; set; }
 
-        public int? userID_review { get; set; }
-
-        [StringLength(200)]
-        public string content_review { get; set; }
-
-        public DateTime? date_review { get; set; }
+       
+        
+       
     }
 }
