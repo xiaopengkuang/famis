@@ -375,7 +375,7 @@ namespace FAMIS.Helper_Class
                     }
                 }
                 else
-                    if (rule.Contains("yyyy"))
+                    if (rule.Contains("yy"))
                     {
                         temp = this.GetSerialNumber("0", bits, shead, true, false, false);
 
