@@ -308,6 +308,20 @@ namespace FAMIS.Controllers
 
         }
 
+
+        public tb_Asset_Repair getRepairTBByID(int? id)
+        {
+
+            var data = from p in DB_C.tb_Asset_Repair
+                       where p.ID == id
+                       select p;
+            if (data.Count() > 0)
+            {
+                return data.First();
+            }
+            return null;
+        }
+
         [HttpPost]
         public JsonResult getRepairByID(int? id)
         {
@@ -363,6 +377,8 @@ namespace FAMIS.Controllers
                         return -2;
                      }
                      int id_state_target = commonConversion.getStateListID(Json_data.id_state);
+                     tb_Asset_Repair tb_rep = getRepairTBByID(Json_data.id_Item); 
+
                      try {
                          //获取用户ID
                          int? userID = commonConversion.getUSERID();
@@ -397,6 +413,51 @@ namespace FAMIS.Controllers
                              foreach (var item_as in dataAsset)
                              {
                                  item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_fix);
+                             }
+                             //将提醒标记为false
+                             var data_rem = from p in DB_C.tb_ReviewReminding
+                                            where p.flag == true
+                                            where p.Type_Review_TB == SystemConfig.TB_Repair
+                                            where p.ID_review_TB == tb_rep.ID
+                                            select p;
+
+                             foreach (var item in data_rem)
+                             {
+                                 item.flag = false;
+                                 item.time_review = DateTime.Now;
+                             }
+                         }
+                         else if (commonConversion.is_DSH(Json_data.id_state))
+                         {
+
+                             //往提醒表里面添加
+                             tb_ReviewReminding tb = new tb_ReviewReminding();
+                             tb.flag = true;
+                             tb.Type_Review_TB = SystemConfig.TB_Repair;
+                             tb.ID_review_TB = tb_rep.ID;
+                             tb.ID_reviewer = Json_data.id_reviewer;
+                             tb.time_add = DateTime.Now;
+                             DB_C.tb_ReviewReminding.Add(tb);
+                         }
+                         else if (commonConversion.is_TH(Json_data.id_state))
+                         {
+                             foreach (var item in db_data)
+                             {
+                                 item.userID_review = userID;
+                                 item.content_Review = Json_data.review;
+                                 item.date_review = DateTime.Now;
+                             }
+                             //将提醒标记为false
+                             var data_rem = from p in DB_C.tb_ReviewReminding
+                                            where p.flag == true
+                                            where p.Type_Review_TB == SystemConfig.TB_Repair
+                                            where p.ID_review_TB == tb_rep.ID
+                                            select p;
+
+                             foreach (var item in data_rem)
+                             {
+                                 item.flag = false;
+                                 item.time_review = DateTime.Now;
                              }
                          }
                          DB_C.SaveChanges();
