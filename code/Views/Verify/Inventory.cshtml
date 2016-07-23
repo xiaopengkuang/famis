@@ -2,20 +2,16 @@
     Layout = null;
 }
 
-
 <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
 <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
 
 <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
 <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="../../Scripts/Views/Depreciation/Inventory.js"></script>
-<script src="../../Scripts/ExcelJS/export.js" type="text/javascript"></script>
 <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
-<meta name="viewport" content="width=device-width" />
-<script type="text/javascript">
+<script src="../../Scripts/ExcelJS/export.js" type="text/javascript"></script>
 
-</script>
+<script type="text/javascript" src="../../Scripts/Views/Depreciation/Inventory.js"></script>
 <html>
 <head>
     <title>资产盘点</title>
@@ -49,15 +45,15 @@
                         <td>盘点状态</td>
                         <td>
                             <select class="easyui-combobox" id="Invention_State"  name="Invention_State" style="width: 150px;" >
-                                <option value="未盘点">未盘点</option>
-                                <option value="盘点中">盘点中</option>
-                                <option value="已盘点">已盘点</option>
+                                <option value="WPD">未盘点</option>
+                                <option value="PDZ">盘点中</option>
+                                <option value="YPD">已盘点</option>
                             </select>
                         </td>
                         <td>盘点人</td>
                         <td> <select class="easyui-combobox" id="operator" name="operator" style="width: 150px;"></select></td>
 
-                        <td> <a href="#" onclick=" LoadBYSearchCondition()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'">查询</a></td>
+                        <td> <a href="#" onclick="LoadBYSearchCondition()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'">查询</a></td>
                         <td>
                             <a href="#" onclick="ReSetSeachCondition()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-back'">重置</a>
                         </td>
