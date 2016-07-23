@@ -85,7 +85,7 @@ function loadOperator() {
             $("#operator").combobox('select', data[0].true_Name);
         },
         onSelect: function (rec) {
-            $('#operator').combobox('setValue', rec.true_Name);
+            $('#operator').combobox('setValue', rec.ID);
             $('#operator').combobox('setText', rec.true_Name);
         }
     });
@@ -93,6 +93,7 @@ function loadOperator() {
 }
 function LoadBYSearchCondition()
 {
+   
     var searial="o";
     var begin="o";
     var end="o";
@@ -109,13 +110,15 @@ function LoadBYSearchCondition()
         end = $('#EndDate_SC').datebox('getValue');
 
     if ($('#Invention_State').combobox('getValue')!="");
-    state = $('#Invention_State').combobox('getValue')
+    state = $('#Invention_State').combobox('getValue');
 
     if ($('#operator').combobox('getValue') != "");
-    person = $('#operator').combobox('getValue')
+    person = $('#operator').combobox('getValue');
 
+   
     searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
-   // alert(searchCondtiion);
+    // alert(searchCondtiion);
+    
     LoadInitData(searchCondtiion);
 
 }
@@ -596,7 +599,8 @@ function LoadInitData(searchCondtiion) {
             });
             $('#TableList_0_1').datagrid({
                 onLoadSuccess: function (data) {
-                    if (flag != "0") {
+                    $('#TableList_0_1').datagrid('selectRow', 0);
+                  /*  if (flag != "0") {
                         $.ajax({
 
                             type: "post",
@@ -605,7 +609,7 @@ function LoadInitData(searchCondtiion) {
                             datatype: "json",//数据类型
 
                             success: function (result) {
-                                $('#TableList_0_1').datagrid('selectRow', result);
+                                $('#TableList_0_1').datagrid('selectRow', 0);
 
                             }, error: function (msg) {
 
@@ -613,7 +617,7 @@ function LoadInitData(searchCondtiion) {
                             }
                         });
                     }
-                    flag = "1";
+                    flag = "1";*/
 
                 }
             });

@@ -1,7 +1,8 @@
-﻿$(function () {
+﻿//alert("111112222222222");
+$(function () {
     var datagrid; //定义全局变量datagrid
-    var editRow = undefined; //定义全局变量：当前编辑的行
-    datagrid = $("#dd").datagrid({
+    
+    datagrid = $("#Repair_dd").datagrid({
 
 
         url: '/Notice/Repair_Notice',
@@ -15,6 +16,7 @@
         // onClickCell: onClickCell,
         // onEndEdit: onEndEdit,
         // height:500,
+        pagePosition: 'top',
         pageSize: 15, //页容量，必须和pageList对应起来，否则会报错
         pageNumber: 1, //默认显示第几页
         pageList: [15, 30, 45],
@@ -107,27 +109,49 @@
              { field: 'state', title: '审核状态', width: 100 },
                { field: 'supplier', title: '维修供应商', width: 100 } 
               
-        ]],
+        ]]
 
+ 
+        
 
-        onAfterEdit: function (rowIndex, rowData, changes) {
-            //endEdit该方法触发此事件
-            console.info(rowData);
-            editRow = undefined;
-        },
-        onDblClickRow: function (rowIndex, rowData) {
-            //双击开启编辑行
-            if (editRow != undefined) {
-                datagrid.datagrid("endEdit", editRow);
-            }
-            if (editRow == undefined) {
-                datagrid.datagrid("beginEdit", rowIndex);
-                editRow = rowIndex;
-            }
-        }
     });
+     
+    loadPageTool_Detail();
 
 });
+
+function loadPageTool_Detail() {
+     
+    var pager = $('#Repair_dd').datagrid('getPager');	// get the pager of datagrid
+    pager.pagination({
+        buttons: [{
+          text: '导出',
+          height: 50,
+          iconCls: 'icon-save',
+          handler: function () {
+              var form = $("<form>");//定义一个form表单
+              form.attr("style", "display:none");
+              form.attr("target", "");
+              form.attr("method", "post");
+              form.attr("action", "/Verify/ExportRP_Notice");
+              var input1 = $("<input>");
+              input1.attr("type", "hidden");
+              input1.attr("name", "exportData");
+              input1.attr("value", (new Date()).getMilliseconds());
+              $("body").append(form);//将表单放置在web中
+              form.append(input1);
+              form.submit();//表单提交
+          }
+
+
+      }],
+        beforePageText: '第',//页数文本框前显示的汉字  
+        afterPageText: '页    共 {pages} 页',
+        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
+    });
+}
+
+
 function getTime(/** timestamp=0 **/) {
     var ts = arguments[0] || 0;
     var t, y, m, d, h, i, s;
@@ -140,28 +164,4 @@ function getTime(/** timestamp=0 **/) {
     s = t.getSeconds();
     // 可根据需要在这里定义时间格式  
     return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' ' + (h < 10 ? '0' + h : h) + ':' + (i < 10 ? '0' + i : i) + ':' + (s < 10 ? '0' + s : s);
-}
-function loadPageTool_Detail(EdTID) {
-
-    var $winADD;
-    $winADD = $('#modalwindow').window({
-        title: '更改权限',
-        width: 860,
-        height: 540,
-        top: (($(window).height() - 800) > 0 ? ($(window).height() - 800) : 200) * 0.5,
-        left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
-        shadow: true,
-        modal: true,
-        iconCls: 'icon-add',
-        closed: true,
-        minimizable: false,
-        maximizable: false,
-        collapsible: false,
-        onClose: function () {
-
-
-        }
-    });
-    $("#modalwindow").html("<iframe width='100%' height='99%' scrolling='yes' name='ghrzFrame' frameborder='0' src='/SysSetting/RightManage?" + EdTID + "'></iframe>");
-    $winADD.window('open');
 }
