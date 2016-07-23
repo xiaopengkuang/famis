@@ -408,7 +408,7 @@ namespace FAMIS.Controllers
         /// <param name="selectedIDs"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult LoadAsset_ByState(int? page, int? rows, String searchCondtiion, String selectedIDs,int? stateID)
+        public JsonResult LoadAsset_ByState(int? page, int? rows, String searchCondtiion, String selectedIDs,String stateID)
         {
             List<int?> ids_Gone = commonConversion.StringToIntList(selectedIDs);
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -420,24 +420,27 @@ namespace FAMIS.Controllers
             //获取部门权限
             List<int?> idsRight_deparment = commonConversion.getids_departmentByRole(role);
 
-            String stateName_asset = commonConversion.getAssetStateNameByJsonID(stateID);
+            //String stateName_asset = commonConversion.getAssetStateNameByJsonID(stateID);
+            List<int?> ids_stateList = commonConversion.StringToIntList(stateID);
+            List<String> stateNameList = commonConversion.getAssetStateNameListByJsonID(ids_stateList);
+
             if (dto_condition == null)
             {
-                json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset);
+                json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateNameList);
             }
             else
             {
                 switch (dto_condition.typeFlag)
                 {
-                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset); break;
-                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset); break;
+                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateNameList); break;
+                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateNameList); break;
                     default: ; break;
                 }
             }
             return json;
         }
 
-        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, String stateName_asset)
+        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -449,7 +452,7 @@ namespace FAMIS.Controllers
                            where !selectedIDs.Contains(p.ID)
                            join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
                            from ST in temp_ST.DefaultIfEmpty()
-                           where ST.name_para == stateName_asset
+                           where stateName_asset.Contains(ST.name_para)
                            select p;
             if (data_ORG == null)
             {
@@ -585,7 +588,7 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, String stateName_asset)
+        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -596,7 +599,7 @@ namespace FAMIS.Controllers
                            where !selectedIDs.Contains(p.ID)
                            join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
                            from ST in temp_ST.DefaultIfEmpty()
-                           where ST.name_para == stateName_asset
+                           where  stateName_asset.Contains(ST.name_para)
                            select p;
             if (data_ORG == null)
             {
