@@ -27,9 +27,13 @@ namespace FAMIS.Controllers
                 LoginOut();
             }
 
+            ViewBag.LoginUser = Session["userName"] == null ? "未知用户" : Session["userName"].ToString();
 
             return View();
         }
+
+
+
 
         public ActionResult actions()
         {
@@ -60,7 +64,7 @@ namespace FAMIS.Controllers
                 {
 
                     Session["Logined"] = "OK";
-                    ViewBag.LoginUser = "欢迎您：" + userList[0].name_User;
+                    ViewBag.LoginUser = userList[0].true_Name;
                     //往Session里面保存用户信息
                     //用户名
                     Session["userName"] = userList[0].name_User;
@@ -122,9 +126,73 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult EditPassWord()
+        {
+            //if (!IsUserLogined())
+            //{
+            //    LoginOut();
+            //}
+            return View();
+        }
+
+        public int redefinePWD(String pwd_old, String pwd_new)
+        {
+            if (pwd_new == null || pwd_old == null || pwd_new == "" || pwd_old == "")
+            {
+                return -1;
+            }
+            //判断密码是否正确
+            if (isPasswordRight(pwd_old) < 1)
+            {
+                return -2;
+            }
+            //修改
+            int? userID = commonConversion.getUSERID();
+            var data = from p in DBConnecting.tb_user
+                       where p.flag == true
+                       where p.ID == userID
+                       select p;
+            if (data.Count() < 1)
+            {
+                return -3;
+            }
+            bool flagRemove = false;
+            try {
+                foreach (var item in data)
+                {
+                    item.password_User = pwd_new;
+                }
+                DBConnecting.SaveChanges();
+                flagRemove = true;
+            }
+            catch (Exception e) {
+                return -4;
+            }
+            if (flagRemove)
+            {
+                ViewBag.LoginUser = "";
+                Session.RemoveAll();
+                return 1;
+            }
+            return -5;
 
 
 
+            
+
+        }
+
+        public int isPasswordRight(String pwd)
+        {
+
+            int? userID = commonConversion.getUSERID();
+            String userName = commonConversion.getOperatorName();
+            var data = from p in DBConnecting.tb_user
+                       where p.flag == true
+                       where p.ID == userID && p.name_User == userName && p.password_User == pwd
+                       select p;
+            return data.Count();
+        }
 
 
 
