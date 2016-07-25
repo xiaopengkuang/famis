@@ -15,6 +15,7 @@
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="../../Scripts/Views/User/LoadMenubyRoless.js"></script>
     <script type="text/javascript" src="../../Scripts/Views/User/Index.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/Index/Index_EditPassWord.js"></script>
 
 
 </head>
@@ -34,7 +35,7 @@
     </div>
 
     <div region="north" split="true" border="false" style="overflow: hidden; height: 30px; background: url(../../LIB/UIlib/images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%; line-height: 20px; color: #fff; font-family: Verdana, 微软雅黑,黑体">
-        <span style="float: right; padding-right: 20px;" class="head">欢迎 BYRD <a href="#" id="editpass">修改密码</a> <a href="#" id="loginOut" onclick="signOut()">安全退出</a></span>
+        <span style="float: right; padding-right: 20px;" class="head">欢迎您 @ViewBag.LoginUser <a href="javascript:void(0)" id="editpass" onclick="openWindow_EditPass()">修改密码</a> <a href="#" id="loginOut" onclick="signOut()">安全退出</a></span>
         <span style="padding-left: 10px; font-size: 16px;">
             <img src="../../LIB/UIlib/images/blocks.gif" width="20" height="20" align="absmiddle" />
             固定资产管理系统</span>
@@ -51,20 +52,19 @@
     </div>
     <div id="mainPanle" region="center" style="background: #eee; overflow-y: hidden">
         <div id="tabs" class="easyui-tabs" fit="true" border="false">
-            <div title="首页"  style="padding: 1px; overflow: hidden; color: red;" fit="true">
-                <div class="easyui-tabs"  id="sy_index"data-options="fit:true,border:false,plain:true" fit="true">
+            <div title="首页" style="padding: 1px; overflow: hidden; color: red;" fit="true">
+                <div class="easyui-tabs" id="sy_index" data-options="fit:true,border:false,plain:true" fit="true">
                     <div title="资产一览" data-options="fit=true" style="padding: 1px" fit="true">
                         <iframe scrolling="auto" frameborder="0" src="/Index/Statistics" style="width: 100%; height: 100%;"></iframe>
                     </div>
                     <div title="我的提醒" data-options="fit=true" style="padding: 1px">
                         <iframe scrolling="auto" frameborder="0" src="/Index/myReminder" style="width: 100%; height: 100%;"></iframe>
                     </div>
-                   <!-- <div title="过期提醒" data-options="fit=true" style="padding: 1px">
+                    <!-- <div title="过期提醒" data-options="fit=true" style="padding: 1px">
                         <iframe scrolling="auto" frameborder="0" src="/Index/AssetReminder" style="width: 100%; height: 100%;"></iframe>
                     </div>-->
                 </div>
             </div>
-             
         </div>
     </div>
     <div id="mm" class="easyui-menu" style="width: 150px;">
@@ -79,6 +79,7 @@
         <div class="menu-sep"></div>
         <div id="exit">退出</div>
     </div>
+    <div id="modalwindow_editPassword" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
 
 
 </body>
