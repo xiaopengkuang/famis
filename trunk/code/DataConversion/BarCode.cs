@@ -281,6 +281,7 @@ namespace Code
                 {
                     _Width += Int32.Parse(_Value[i].ToString()) * (m_Magnify + 1);
                 }
+                //设置宽度
                 Bitmap _CodeImage = new Bitmap(_Width, (int)m_Height);
                 Graphics _Garphics = Graphics.FromImage(_CodeImage);
                 //Pen _Pen;

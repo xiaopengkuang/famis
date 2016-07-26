@@ -31,12 +31,14 @@ namespace FAMIS.Controllers
                 //filePath = System.AppDomain.CurrentDomain.BaseDirectory + "\\EAN_13-" + data + ".jpg";
 
                 Code.BarCode.Code128 _Code = new Code.BarCode.Code128();
-                _Code.ValueFont = new Font("宋体", 20);
+                _Code.ValueFont = new Font("宋体", 15);
                 System.Drawing.Bitmap imgTemp = _Code.GetCodeImage(data, Code.BarCode.Code128.Encode.Code128A);
                 //imgTemp.Save(System.AppDomain.CurrentDomain.BaseDirectory + "\\" + "BarCode.gif", System.Drawing.Imaging.ImageFormat.Gif);
 
                 filePath =System.AppDomain.CurrentDomain.BaseDirectory+ SystemConfig.FOLEDER_BARCODE_IMAGE + "code128-" + data + ".jpg";
                 imgTemp.Save(filePath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                //设置文件为相对路径
+                //filePath = SystemConfig.FOLEDER_BARCODE_IMAGE + "code128-" + data + ".jpg";
             }
             catch(Exception e) {
                 filePath = null;
@@ -67,6 +69,7 @@ namespace FAMIS.Controllers
         {
             var data = from p in DB_C.tb_Asset
                        where p.flag == true
+                       where ids.Contains(p.ID)
                        join tb_ean13 in DB_C.tb_Asset_code128 on p.ID equals tb_ean13.ID_Asset into temp_ean13
                        from ean13 in temp_ean13.DefaultIfEmpty()
                        where ean13.code128==null || rebuilt==true

@@ -24,7 +24,13 @@ namespace FAMIS.Controllers
         {
             return View();
         }
-        
+
+        public ActionResult BarcodeCreating()
+        {
+            return View();
+        }
+
+
 
         [HttpPost]
         
