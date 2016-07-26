@@ -386,19 +386,21 @@ function loadPageTool_Summary(dataRight) {
 
     var pager = $('#TableList_0_1').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
-        buttons: [{
-            text: '批量修改',
-            iconCls: 'icon-edit',
-            height: 50,
-            disabled: !dataRight.edit_able,
-            handler: function () {
-                if (!dataright.edit_able)
-                {
-                    return;
-                }
-                //选择的的资产改名
-            }
-        }, {
+        buttons: [
+        //    {
+        //    text: '批量修改',
+        //    iconCls: 'icon-edit',
+        //    height: 50,
+        //    disabled: !dataRight.edit_able,
+        //    handler: function () {
+        //        if (!dataright.edit_able)
+        //        {
+        //            return;
+        //        }
+        //        //选择的的资产改名
+        //    }
+        //},
+        {
             text: '导出',
             iconCls: 'icon-save',
             height: 50,

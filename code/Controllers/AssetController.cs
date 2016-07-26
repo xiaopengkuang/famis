@@ -297,6 +297,8 @@ namespace FAMIS.Controllers
                                from MDC in temp_MDC.DefaultIfEmpty()
                                join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
                                from MA in temp_MA.DefaultIfEmpty()
+                               join tb_BC in DB_C.tb_Asset_code128 on p.ID equals tb_BC.ID_Asset into temp_BC
+                               from BC in temp_BC.DefaultIfEmpty()
                                select new dto_Asset_Detail
                                {
                                    addressCF = DZ.name_para,
@@ -322,7 +324,8 @@ namespace FAMIS.Controllers
                                    type_Asset = AT.name_Asset_Type,
                                    unit_price = p.unit_price.ToString(),
                                    value = p.value.ToString(),
-                                   YearService_month = p.YearService_month.ToString()
+                                   YearService_month = p.YearService_month.ToString(),
+                                   barcode=BC.code128
                                };
                     data = data.OrderByDescending(a => a.Time_Operated);
                     if (exportFlag != null && exportFlag == true)
@@ -529,6 +532,8 @@ namespace FAMIS.Controllers
                                from MDC in temp_MDC.DefaultIfEmpty()
                                join tb_MA in DB_C.tb_dataDict_para on p.Method_add equals tb_MA.ID into temp_MA
                                from MA in temp_MA.DefaultIfEmpty()
+                               join tb_BC in DB_C.tb_Asset_code128 on p.ID equals tb_BC.ID_Asset into temp_BC
+                               from BC in temp_BC.DefaultIfEmpty()
                                select new dto_Asset_Detail
                                {
                                    addressCF = DZ.name_para,
@@ -554,7 +559,8 @@ namespace FAMIS.Controllers
                                    type_Asset = AT.name_Asset_Type,
                                    unit_price = p.unit_price.ToString(),
                                    value = p.value.ToString(),
-                                   YearService_month = p.YearService_month.ToString()
+                                   YearService_month = p.YearService_month.ToString(),
+                                   barcode=BC.code128
                                };
                     data = data.OrderByDescending(a => a.Time_Operated);
 

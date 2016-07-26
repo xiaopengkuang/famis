@@ -160,6 +160,8 @@ namespace FAMIS.Controllers
 
         public JsonResult load_myreminder(int? page,int? rows)
         {
+            page = page == null ? 1 : page;
+            rows = rows == null ? 15 : rows;
             int? userID = commonConversion.getUSERID();
 
             int? roleID = commonConversion.getRoleID();
