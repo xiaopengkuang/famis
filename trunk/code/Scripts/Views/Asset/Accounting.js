@@ -133,6 +133,19 @@ function SearchByCondition_right() {
         //获取日期
         var beginDate = $('#beginDate_SC').datebox('getValue');
         var endDate = $('#endDate_SC').datebox('getValue');
+
+        if (beginDate == null || beginDate == "" || endDate == null || endDate == "") {
+            MessShow("请输入查询时间！");
+            return;
+        }
+        //将字符串转换为日期
+        var begin = new Date(beginDate.replace(/-/g, "/"));
+        var end = new Date(endDate.replace(/-/g, "/"));
+        //js判断日期
+        if (begin - end > 0) {
+            MessShow("开始日期要在截止日期之前!");
+            return;
+        }
         jsonSC = {
             "typeFlag": "right",
             "DataType": "Date",

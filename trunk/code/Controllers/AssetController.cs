@@ -215,6 +215,27 @@ namespace FAMIS.Controllers
             {
 
             }else{
+                //获取子节点
+
+                switch (cond.TypeAsset)
+                {
+                    case SystemConfig.Index_AssetAttr_GDZC: {
+                        //获取其子节点
+                        List<int?> ids_type = comController.GetSonID_AsseTypeByName(SystemConfig.Index_AssetAttr_GDZC_name);
+                        data_ORG = from p in data_ORG
+                                   where ids_type.Contains(p.type_Asset)
+                                   select p;
+                    }; break;
+                    case SystemConfig.Index_AssetAttr_DZYH: {
+                        List<int?> ids_type = comController.GetSonID_AsseTypeByName(SystemConfig.Index_AssetAttr_GDZC_name);
+                        data_ORG = from p in data_ORG
+                                   where ids_type.Contains(p.type_Asset)
+                                   select p;
+                    }; break;
+                    default: ; break;
+                }
+
+
                 switch (cond.DataType)
                 {
                     case SystemConfig.searchCondition_Date:
@@ -397,7 +418,7 @@ namespace FAMIS.Controllers
                 };break;
                 default:{
                     //return NULL_dataGrid();
-                    return "";
+                    return NULL_dataGridSTring();
                 };break;
             }
 
@@ -438,7 +459,7 @@ namespace FAMIS.Controllers
             }
             if (nameFlag==null){
                 //return NULL_dataGrid();
-                return "";
+                return NULL_dataGridSTring();
             }
             //获取原始数据
             var data_ORG = (from p in DB_C.tb_Asset
@@ -634,7 +655,7 @@ namespace FAMIS.Controllers
                 };break;
                 default:{
                     //return NULL_dataGrid();
-                    return "";
+                    return NULL_dataGridSTring(); ;
                 };break;
             }
         }
@@ -1447,6 +1468,18 @@ namespace FAMIS.Controllers
                 rows = ""
             };
             return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public String NULL_dataGridSTring()
+        {
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            var json = new
+            {
+                total = 0,
+                rows = ""
+            };
+            String result = jss.Serialize(json).ToString().Replace("\\", "");
+            return result;
         }
 
         protected override void HandleUnknownAction(string actionName)
