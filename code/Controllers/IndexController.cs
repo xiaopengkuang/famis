@@ -77,7 +77,7 @@ namespace FAMIS.Controllers
                                  group a by new {DP.name_Department} into b
                                  select new Json_Pie_info
                                  {
-                                    name = b.Key.name_Department == null ? "未有使用部门" : b.Key.name_Department,
+                                     name = b.Key.name_Department == null ? "未有使用部门" + ":[" + b.Sum(a => a.amount) + "]" : b.Key.name_Department + ":[" + b.Sum(a => a.amount) + "]",
                                     value=b.Sum(a=>a.amount)
                                  };
                         return Json(data, JsonRequestBehavior.AllowGet);
@@ -90,7 +90,7 @@ namespace FAMIS.Controllers
                                    group a by new { DP.name_Department } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_Department==null?"未有使用部门":b.Key.name_Department,
+                                       name = b.Key.name_Department == null ? "未有使用部门" + ":[" + b.Sum(a => a.value) + "]" : b.Key.name_Department + ":[" + b.Sum(a => a.value) + "]",
                                        value = b.Sum(a => a.value)
                                    };
                         return Json(data, JsonRequestBehavior.AllowGet);
@@ -105,7 +105,7 @@ namespace FAMIS.Controllers
                                    group a by new { LB.name_Asset_Type } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别" : b.Key.name_Asset_Type,
+                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别" + ":[" + b.Sum(a => a.amount) + "]" : b.Key.name_Asset_Type + ":[" + b.Sum(a => a.amount) + "]",
                                        value = b.Sum(a => a.amount)
                                    };
                         return Json(data, JsonRequestBehavior.AllowGet);
@@ -118,7 +118,7 @@ namespace FAMIS.Controllers
                                    group a by new { LB.name_Asset_Type } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别" : b.Key.name_Asset_Type,
+                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别" + ":[" + b.Sum(a => a.value) + "]" : b.Key.name_Asset_Type + ":[" + b.Sum(a => a.value) + "]",
                                        value = b.Sum(a => a.value)
                                    };
                         return Json(data, JsonRequestBehavior.AllowGet);
@@ -134,7 +134,7 @@ namespace FAMIS.Controllers
                                    group a by new { ST.name_para } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_para == null ? "非系统规定状态" : b.Key.name_para,
+                                       name = b.Key.name_para == null ? "非系统规定状态" + ":[" + b.Sum(a => a.amount) + "]" : b.Key.name_para + ":[" + b.Sum(a => a.amount) + "]",
                                        value = b.Sum(a => a.amount)
                                    };
                         return Json(data, JsonRequestBehavior.AllowGet);
@@ -147,7 +147,7 @@ namespace FAMIS.Controllers
                                    group a by new { ST.name_para } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_para == null ? "非系统规定状态" : b.Key.name_para,
+                                       name = b.Key.name_para == null ? "非系统规定状态" + ":[" + b.Sum(a => a.value) + "]" : b.Key.name_para + ":[" + b.Sum(a => a.value) + "]",
                                        value = b.Sum(a => a.value)
                                    };
                         return Json(data, JsonRequestBehavior.AllowGet);
