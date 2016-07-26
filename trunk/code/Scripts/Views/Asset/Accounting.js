@@ -514,7 +514,7 @@ function openModelWindow(url, titleName) {
         title: titleName,
         width: 1028,
         height: 650,
-        top: (($(window).height() - 650) > 0 ? ($(window).height() - 1028) : 650) * 0.5,
+        top: (($(window).height() - 650) > 0 ? ($(window).height() - 650) : 650) * 0.5,
         left: (($(window).width() - 1028) > 0 ? ($(window).width() - 1028) : 100) * 0.5,
         shadow: true,
         modal: true,
