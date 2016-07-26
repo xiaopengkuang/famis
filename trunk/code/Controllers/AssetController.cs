@@ -227,7 +227,7 @@ namespace FAMIS.Controllers
                                    select p;
                     }; break;
                     case SystemConfig.Index_AssetAttr_DZYH: {
-                        List<int?> ids_type = comController.GetSonID_AsseTypeByName(SystemConfig.Index_AssetAttr_GDZC_name);
+                        List<int?> ids_type = comController.GetSonID_AsseTypeByName(SystemConfig.Index_AssetAttr_DZYH_name);
                         data_ORG = from p in data_ORG
                                    where ids_type.Contains(p.type_Asset)
                                    select p;

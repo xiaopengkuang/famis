@@ -545,24 +545,6 @@ function openModelWindow(url, titleName) {
     $winADD.window('open');
 }
 
-function buildEAN13()
-{
-    $.ajax({
-        url: "/BarCode/rebuiltarCode",
-        type: 'POST',
-        beforeSend: ajaxLoading,
-        success: function (data) {
-            ajaxLoadEnd();
-            if (data > 0) {
-            } else {
-                result = "系统正忙，请稍后继续！";
-                $.messager.alert('警告', result, 'warning');
-            }
-
-
-        }
-    });
-}
 
 
 //采用jquery easyui loading css效果
