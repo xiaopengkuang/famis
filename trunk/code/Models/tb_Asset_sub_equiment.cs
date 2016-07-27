@@ -33,7 +33,7 @@ namespace FAMIS.Models
         public DateTime? date_add { get; set; }
 
         public int? userID_add { get; set; }
-        public bool? flag { get; set; }
 
+        public bool? flag { get; set; }
     }
 }

@@ -17,5 +17,8 @@ namespace FAMIS.Models
 
         [StringLength(200)]
         public string path_code128_img { get; set; }
+
+        [StringLength(200)]
+        public string path_qrcode_img { get; set; }
     }
 }

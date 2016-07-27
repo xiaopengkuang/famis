@@ -20,7 +20,7 @@ namespace Code
             /// 是否显示可见号码 如果为NULL不显示号码
             /// </summary>
             public Font ValueFont { get { return m_ValueFont; } set { m_ValueFont = value; } }
-            private byte m_Magnify = 0;
+            private byte m_Magnify = 4;
             /// <summary>
             /// 放大倍数
             /// </summary>

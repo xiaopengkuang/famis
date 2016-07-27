@@ -76,6 +76,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq">
       <Private>True</Private>
     </Reference>
@@ -89,6 +90,9 @@
     </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="ThoughtWorks.QRCode">
+      <HintPath>D:\MOVIE\qrcode二维码\qrcode\Bin\ThoughtWorks.QRCode.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Web.Razor">
@@ -1917,9 +1921,13 @@
     <Content Include="Scripts\Views\Collar\Collar_edit.js" />
     <Content Include="Scripts\Views\Collar\Collar_Review.js" />
     <Content Include="Scripts\Views\Collar\Collar_SelectAsset.js" />
+    <Content Include="Scripts\Views\common\CLodopPrint_Setup_for_Win32NT.exe" />
     <Content Include="Scripts\Views\common\common.js" />
     <Content Include="Scripts\Views\common\echarts.js" />
+    <Content Include="Scripts\Views\common\install_lodop32.exe" />
+    <Content Include="Scripts\Views\common\install_lodop64.exe" />
     <Content Include="Scripts\Views\common\jquery-form.js" />
+    <Content Include="Scripts\Views\common\LodopFuncs.js" />
     <Content Include="Scripts\Views\Depreciation\De.js" />
     <Content Include="Scripts\Views\Depreciation\Dep.js" />
     <Content Include="Scripts\Views\Depreciation\Deps.js" />
@@ -1972,6 +1980,7 @@
     <Content Include="Scripts\Views\Return\Return.js" />
     <Content Include="Scripts\Views\Return\Return_add.js" />
     <Content Include="Scripts\Views\SysSetting\BarcodeCreating.js" />
+    <Content Include="Scripts\Views\SysSetting\LodopFuncs.js" />
     <Content Include="Scripts\Views\User\User_EditPassWord.js" />
     <Content Include="Scripts\Views\WX_Search\WX_Search.js" />
     <Content Include="Views\Dict\edit_supplier.cshtml" />
@@ -2098,6 +2107,7 @@
     <Compile Include="Controllers\IndexController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\NoticeController.cs" />
+    <Compile Include="Controllers\QrCodeController.cs" />
     <Compile Include="Controllers\ReductionController.cs" />
     <Compile Include="Controllers\RepairController.cs" />
     <Compile Include="Controllers\ReturnController.cs" />
@@ -2189,6 +2199,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper_Class\Excel_Helper.cs" />
+    <Compile Include="Helper_Class\Print_Helper.cs" />
     <Compile Include="Helper_Class\Serial.cs" />
     <Compile Include="MidPages\export.aspx.cs">
       <DependentUpon>export.aspx</DependentUpon>
@@ -2212,6 +2223,7 @@
     <Compile Include="Models\tb_Asset_code128.cs" />
     <Compile Include="Models\tb_Asset_inventory.cs" />
     <Compile Include="Models\tb_Asset_inventory_Details.cs" />
+    <Compile Include="Models\tb_asset_qrcode.cs" />
     <Compile Include="Models\tb_Asset_Reduction.cs" />
     <Compile Include="Models\tb_Asset_Reduction_detail.cs" />
     <Compile Include="Models\tb_Asset_Repair.cs" />
@@ -2304,6 +2316,7 @@
     <Folder Include="Views\BarCode\" />
     <Folder Include="Views\Customer\" />
     <Folder Include="Views\ExportExcel\" />
+    <Folder Include="Views\QrCode\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
@@ -2332,7 +2345,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
+      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

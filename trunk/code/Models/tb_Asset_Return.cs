@@ -9,7 +9,6 @@ namespace FAMIS.Models
     public partial class tb_Asset_Return
     {
         public int ID { get; set; }
-        public int? userID_review { get; set; }
 
         [StringLength(20)]
         public string serialNum { get; set; }
@@ -26,15 +25,15 @@ namespace FAMIS.Models
 
         public DateTime? date_operated { get; set; }
 
-        public DateTime? date_review { get; set; }
-       
         public bool? flag { get; set; }
-        [StringLength(200)]
-        public string content_review { get; set; }
+
         public int? state_list { get; set; }
 
-       
-        
-       
+        public int? userID_review { get; set; }
+
+        [StringLength(200)]
+        public string content_review { get; set; }
+
+        public DateTime? date_review { get; set; }
     }
 }

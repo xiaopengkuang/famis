@@ -23,7 +23,6 @@ namespace FAMIS.Models
         public int? _operator { get; set; }
 
         public DateTime? date_Operated { get; set; }
-        public DateTime? date_review { get; set; }
 
         public int? state_List { get; set; }
 
@@ -42,5 +41,6 @@ namespace FAMIS.Models
 
         public int? user_collar { get; set; }
 
+        public DateTime? date_review { get; set; }
     }
 }
