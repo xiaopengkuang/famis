@@ -7,7 +7,7 @@ using FAMIS.ViewCommon;
 using FAMIS.DAL;
 using FAMIS.Models;
 using System.IO;
-
+using FAMIS.Helper_Class;
 namespace FAMIS.Controllers
 {
     public class SysSettingController : Controller
@@ -15,7 +15,7 @@ namespace FAMIS.Controllers
         // GET: SysSetting
       
         private FAMISDBTBModels db = new FAMISDBTBModels();
-       
+        Print_Helper print = new Print_Helper("test");
         public ActionResult RoleManage()
         {
             return View();
@@ -82,6 +82,13 @@ namespace FAMIS.Controllers
         }
         return rule_Json;
         
+        }
+
+       
+        [HttpPost]
+        public string Getbase64()
+        {
+            return print.Base_64("D:\\test3.png");
         }
         //[HttpPost]
         //public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
