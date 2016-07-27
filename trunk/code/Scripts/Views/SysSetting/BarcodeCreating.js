@@ -181,7 +181,7 @@ function LoadInitData_Detail() {
             { field: 'barcode', title: '条码编号', width: 50 },
             { field: 'supplierID', title: '供应商', width: 50 }
         ]],
-        singleSelect: true, //允许选择多行
+        singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
         checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
     });
@@ -198,12 +198,15 @@ function loadPageTool_Detail() {
             iconCls: 'icon-add',
             height: 50,
             handler: function () {
+               
                 //获取选中项
-                var rows = $('#TableList_0_1').datagrid('getSelections');
+              var rows = $('#TableList_0_1').datagrid('getSelections');
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
-                    IDS[i] = rows[i].ID;
-                }
+                   // alert(rows[i].ID);
+                    myPreview3(rows[i].ID);
+                } 
+
                 ////将数据传入后台
                 //$.ajax({
                 //    url: '/SysSetting/printBarcode',
