@@ -117,7 +117,10 @@ namespace FAMIS.Controllers
              string[] temp = Json.Split('o');
              string condiation = temp[0];
              string pdsearial = temp[1];
+
              int flagnum = int.Parse(condiation);
+             if (flagnum == 0)
+                 flagnum = 11000000;
              int name_flag = flagnum /1000000;
              string name_flag_string = "";
              int item_id = flagnum % 1000000;
@@ -357,8 +360,10 @@ namespace FAMIS.Controllers
         {
            page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
-
+            
             int flagnum = int.Parse(JSdata);
+            if (flagnum == 0)
+                flagnum = 11000000;
             int name_flag = flagnum /1000000;
             string name_flag_string = "";
             int item_id = flagnum %1000000;
