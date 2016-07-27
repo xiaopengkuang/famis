@@ -137,6 +137,10 @@ namespace FAMIS.Models
                 .Property(e => e.path_code128_img)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_Asset_code128>()
+                .Property(e => e.path_qrcode_img)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset_collar>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);

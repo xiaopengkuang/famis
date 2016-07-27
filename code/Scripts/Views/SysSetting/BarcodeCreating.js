@@ -201,11 +201,21 @@ function loadPageTool_Detail() {
                
                 //获取选中项
               var rows = $('#TableList_0_1').datagrid('getSelections');
+                if (rows.length != 1)
+                {
+                    MessShow("请选择1项数据！暂不支持多选");
+                    return;
+                }
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
                    // alert(rows[i].ID);
                     myPreview3(rows[i].ID);
                 } 
+
+                var id = rows[0].ID;
+
+
+
 
                 ////将数据传入后台
                 //$.ajax({
@@ -262,7 +272,24 @@ function buildEAN13() {
 
         }
     });
-} 
+}
+
+function buildQRCode() {
+    $.ajax({
+        url: "/QrCode/rebuiltQRCODE",
+        type: 'POST',
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data > 0) {
+            } else {
+                MessShow("服务器中已存在所有数据，无须重新生成！");
+            }
+
+
+        }
+    });
+}
 
 //采用jquery easyui loading css效果
 function ajaxLoading() {
