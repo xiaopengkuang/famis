@@ -32,7 +32,7 @@ namespace FAMIS.Controllers
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         Excel_Helper excel = new Excel_Helper();
         Serial serial = new Serial();
-        
+        Print_Helper print=new Print_Helper("asd");
         public ActionResult depreciation()
         {
             return View();
@@ -212,6 +212,8 @@ namespace FAMIS.Controllers
             
           
             int flagnum = int.Parse(JSdata);
+            if (flagnum == 0)
+                flagnum = 11000000;
             int name_flag = flagnum/1000000;
             string name_flag_string = "";
             int? item_id=flagnum%1000000;
@@ -229,8 +231,8 @@ namespace FAMIS.Controllers
             List<tb_Asset> list = db.tb_Asset.ToList();
             if (name_flag_string == SystemConfig.nameFlag_2_SYBM)
             {
-                  Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
-                var data = from r in db.tb_Asset
+                   Depart_Asset_Type_Id = comController.GetSonIDs_Department(item_id);
+                   var data = from r in db.tb_Asset
                            join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
                            from tt in temp_t.DefaultIfEmpty()
                            join D in db.tb_department on r.department_Using equals D.ID into temp_D
@@ -383,11 +385,16 @@ namespace FAMIS.Controllers
 
             return this.Json(Model);
         }
-
+        [HttpPost]
+        public string Getbase64()
+        {
+            return print.Base_64("D:\test.jpg");
+        }
+        //[HttpPost]
         [HttpPost]
         public string AddDP(string JSdata)
         {
-            ArrayList mysearial = serial.ReturnNewSearial("ZC", 1);
+            ArrayList mysearial = serial.ReturnNewSearial("PD", 1);
             Session["CurrentRow"] = 0;
             int id = 0;
             try
@@ -656,8 +663,9 @@ namespace FAMIS.Controllers
                     {
                         Session["ErrorFile"] = "FileUploaded";
                         string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
-                        string imgPath = "/" + imgName + FileSave.FileName;     //通过此对象获取文件名
+                        string imgPath = "/Tempory_Files"+"/" + imgName + FileSave.FileName;     //通过此对象获取文件名
                         string AbsolutePath = Server.MapPath(imgPath);
+                      
                         if (!AbsolutePath.Contains(".xls") && !AbsolutePath.Contains("csv"))
                         {
                             Session["ErrorFile"] = "wrongfile";
