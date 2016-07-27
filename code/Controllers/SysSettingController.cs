@@ -86,9 +86,9 @@ namespace FAMIS.Controllers
 
        
         [HttpPost]
-        public string Getbase64()
+        public string Getbase64(string Asset_ID)
         {
-            return print.Base_64("D:\\test3.png");
+            return print.Base_64(Asset_ID);
         }
         //[HttpPost]
         //public ActionResult AddStaff([Bind(Include = "ID_Staff,code_Departmen,sex,entry_Time,phoneNumber,email,effective_Flag,create_TIME,invalid_TIME,_operator,name")] tb_staff staff)
