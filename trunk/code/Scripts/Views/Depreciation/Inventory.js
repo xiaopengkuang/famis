@@ -1,4 +1,4 @@
-﻿ 
+﻿//alert("sadasd");
 var searchCondtiion = "o,o,o,o,o";
 //alert(searchCondtiion);
 var datagrid; //定义全局变量datagrid
@@ -9,9 +9,7 @@ var Address = [{ "value": "1", "text": "固定资产" }, { "value": "3", "text":
 var CurrentRow = "0";
 var flag = "0";
 var sysamount=0;
-//alert("互相伤害啊！");
-//alert("asd");
-//alert("dsd");
+ 
 
 //printExcel('D:/test.csv');
 
@@ -106,7 +104,7 @@ function loadOperator() {
             $("#operator").combobox('select', data[0].true_Name);
         },
         onSelect: function (rec) {
-            $('#operator').combobox('setValue', rec.true_Name);
+            $('#operator').combobox('setValue', rec.ID);
             $('#operator').combobox('setText', rec.true_Name);
         }
     });
@@ -241,10 +239,10 @@ function LoadInitData(searchCondtiion) {
                          field: '_operator', title: '操作人',  width: 150,
                          editor: {
                              type: 'combobox', options: {
-                                 valueField: 'true_Name', editable: false, textField: 'true_Name', url: '/Rule/GetUserID',
+                                 valueField: 'ID', editable: false, textField: 'true_Name', url: '/Rule/GetUserID',
                                  onSelect: function (rec) {
                                      try {
-                                         combobox('setValue', rec.true_Name);
+                                         combobox('setValue', rec.ID);
                                          combobox('setText', rec.true_Name);
                                      }
                                      catch (e)
