@@ -20,6 +20,7 @@ using NPOI.SS.UserModel;
 using FAMIS.Helper_Class;
 using System.Collections;
 using System.Data.Entity;
+ 
 namespace FAMIS.Controllers
 {
     public class VerifyController : Controller
@@ -31,6 +32,7 @@ namespace FAMIS.Controllers
         Excel_Helper excel = new Excel_Helper();
         CommonController comController = new CommonController();
         Serial serial = new Serial();
+        Print_Helper print = new Print_Helper("test");
         public ActionResult Depreciation()
         {
             return View();
@@ -44,6 +46,8 @@ namespace FAMIS.Controllers
         public ActionResult ExportStu2(string JSdata)
         {
             int flagnum = int.Parse(JSdata);
+            if (flagnum == 0)
+                flagnum = 11000000;
             int name_flag = flagnum / 1000000;
             string name_flag_string = "";
             int? item_id = flagnum % 1000000;
@@ -574,6 +578,8 @@ namespace FAMIS.Controllers
             DateTime dt = DateTime.Now;
             string dateTime = dt.ToString("yyMMddHHmmssfff");
             string fileName = name_file + dateTime + ".xls";
+            
+           // print.Print(Encoding.UTF8.GetBytes(ms.ToArray()));
             return File(ms, "application/vnd.ms-excel", fileName);
         
         }
