@@ -223,7 +223,7 @@
                              datatype: "json",//数据类型
 
                              success: function (result) {
-                                 if (result == "has_exist")
+                                 if (result == "name_exist")
                                  {
                                      $.messager.alert("提示", "该角色名已存在！", "error");
                                      $('#dd').datagrid('reload');
