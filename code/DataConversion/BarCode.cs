@@ -10,7 +10,7 @@ namespace Code
         public class Code128
         {
             private DataTable m_Code128 = new DataTable();
-            private uint m_Height = 40;
+            private uint m_Height = 56;
             /// <summary>
             /// 高度
             /// </summary>
@@ -159,9 +159,10 @@ namespace Code
             /// <param name="p_Text">文字</param>
             /// <param name="p_Code">编码</param>   
             /// <returns>图形</returns>
-            public Bitmap GetCodeImage(string p_Text, Encode p_Code)
+            public Bitmap GetCodeImage(string p_Text, Encode p_Code,String info_asset)
             {
-                string _ViewText = p_Text;
+                //string _ViewText = p_Text;
+                string _ViewText = info_asset;
                 string _Text = "";
                 IList<int> _TextNumb = new List<int>();
                 int _Examine = 0; //首位
@@ -282,6 +283,7 @@ namespace Code
                     _Width += Int32.Parse(_Value[i].ToString()) * (m_Magnify + 1);
                 }
                 //设置宽度
+
                 Bitmap _CodeImage = new Bitmap(_Width, (int)m_Height);
                 Graphics _Garphics = Graphics.FromImage(_CodeImage);
                 //Pen _Pen;

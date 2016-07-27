@@ -253,8 +253,7 @@ function buildEAN13() {
             ajaxLoadEnd();
             if (data > 0) {
             } else {
-                result = "系统正忙，请稍后继续！";
-                $.messager.alert('警告', result, 'warning');
+                MessShow("服务器中已存在所有数据，无须重新生成！");
             }
 
 
@@ -270,4 +269,17 @@ function ajaxLoading() {
 function ajaxLoadEnd() {
     $(".datagrid-mask").remove();
     $(".datagrid-mask-msg").remove();
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
 }
