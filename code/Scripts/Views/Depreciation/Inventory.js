@@ -12,6 +12,27 @@ var sysamount=0;
 //alert("互相伤害啊！");
 //alert("asd");
 //alert("dsd");
+
+//printExcel('D:/test.csv');
+
+function printExcel(obj) {
+    alert(obj);
+    var xlsApp = null;
+    try {
+        xlsApp = new ActiveXObject('Excel.Application');
+    } catch (e) {
+        alert(e + ', 原因分析: 浏览器安全级别较高导致不能创建Excel对象或者客户端没有安装Excel软件');
+        return;
+    }
+    //var xlBook = xlsApp.Workbooks.Open('http://'+window.location.host+obj.value);  
+    var xlBook = xlsApp.Workbooks.Open(obj);
+    var xlsheet = xlBook.Worksheets(1);
+    xlsApp.Application.Visible = false;
+    xlsApp.visible = false;
+    xlsheet.Printout;
+    xlsApp.Quit();
+    xlsApp = null;
+}
 $(document).ready(function () {
     //多选框
     extend();
@@ -85,7 +106,7 @@ function loadOperator() {
             $("#operator").combobox('select', data[0].true_Name);
         },
         onSelect: function (rec) {
-            $('#operator').combobox('setValue', rec.ID);
+            $('#operator').combobox('setValue', rec.true_Name);
             $('#operator').combobox('setText', rec.true_Name);
         }
     });
@@ -118,7 +139,7 @@ function LoadBYSearchCondition()
    
     searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
     // alert(searchCondtiion);
-    
+    flag = 1;
     LoadInitData(searchCondtiion);
 
 }
@@ -281,6 +302,7 @@ function LoadInitData(searchCondtiion) {
                  {
                      text: '删除', iconCls: 'icon-remove', disabled: !dataRight.delete_able, handler: function () {
                          //删除时先获取选择行
+                         flag = 1;
                          var rows = datagrid.datagrid("getSelections");
                          //选择要删除的行
                          if (rows.length > 0) {
@@ -371,7 +393,8 @@ function LoadInitData(searchCondtiion) {
                               var pddate = rowdata.rows[index].date;
                            //  var ed = $('#TableList_0_1').datagrid('getEditor', { index: index, field: 'date' });
                           //   var date_PD = $(ed.target).datebox('getValue');
-                             alert(ID + "," + operator + "," + ps + "," + pddate + "," + zctype);
+                          //   alert(ID + "," + operator + "," + ps + "," + pddate + "," + zctype);
+                            
                              //var value = $(ed.target).combobox('getValue');
 
                              var ps = rowdata.rows[index].ps;
@@ -599,8 +622,8 @@ function LoadInitData(searchCondtiion) {
             });
             $('#TableList_0_1').datagrid({
                 onLoadSuccess: function (data) {
-                    $('#TableList_0_1').datagrid('selectRow', 0);
-                  /*  if (flag != "0") {
+                  
+                    if (flag == "0") {
                         $.ajax({
 
                             type: "post",
@@ -609,16 +632,22 @@ function LoadInitData(searchCondtiion) {
                             datatype: "json",//数据类型
 
                             success: function (result) {
-                                $('#TableList_0_1').datagrid('selectRow', 0);
+                               // alert(result);
+                                $('#TableList_0_1').datagrid('selectRow', result);
 
                             }, error: function (msg) {
 
                                 alert("盘点单索引传递失败！");
                             }
                         });
-                    }
-                    flag = "1";*/
 
+                    }
+
+                    else {
+                        $('#TableList_0_1').datagrid('selectRow', 0);
+                       
+                    }
+                    
                 }
             });
         }
