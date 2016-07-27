@@ -31,7 +31,7 @@ namespace FAMIS.Controllers
                 //filePath = System.AppDomain.CurrentDomain.BaseDirectory + "\\EAN_13-" + data + ".jpg";
 
                 Code.BarCode.Code128 _Code = new Code.BarCode.Code128();
-                _Code.ValueFont = new Font("宋体", 8);
+                _Code.ValueFont = new Font("宋体", 9);
                 System.Drawing.Bitmap imgTemp = _Code.GetCodeImage(data, Code.BarCode.Code128.Encode.Code128A,info_Asset);
                 //imgTemp.Save(System.AppDomain.CurrentDomain.BaseDirectory + "\\" + "BarCode.gif", System.Drawing.Imaging.ImageFormat.Gif);
 
