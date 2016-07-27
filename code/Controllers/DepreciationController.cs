@@ -409,6 +409,14 @@ namespace FAMIS.Controllers
             string ps = JSdata.Split(',')[2];
             DateTime pddate = DateTime.Parse(JSdata.Split(',')[3].ToString());
             string type = JSdata.Split(',')[4];
+            IEnumerable<String> tt = from o in db.tb_user
+                     where o.ID.ToString() == oper
+                     select o.true_Name;
+            foreach(String pq in tt )
+            {
+                oper = pq;
+            }
+           
 
 
             /* var q = from p in mydb.tb_Menu
