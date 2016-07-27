@@ -34,6 +34,18 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        public ActionResult mytest2()
+        {
+            return View();
+        }
+        public ActionResult test3()
+        {
+            return View();
+        }
+        public ActionResult ttt()
+        {
+            return View();
+        }
         public ActionResult Test()
         {
             return View();
