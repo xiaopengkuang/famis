@@ -1,4 +1,4 @@
-﻿var searchCondtiion = "1";
+﻿var searchCondtiion = "0";
 
 //alert("asd");
  
