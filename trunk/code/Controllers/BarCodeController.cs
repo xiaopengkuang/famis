@@ -123,30 +123,6 @@ namespace FAMIS.Controllers
                         filePathList.Add(filePath_item);
                     }
                 }
-
-              
-                //if (filePath_item != null)
-                //{
-                //    filePathList.Add(filePath_item);
-                //    //生成成功 添加到数据库中
-                 
-                //    //存在数据
-                //    if (data_1.Count() > 0)
-                //    {
-                //        foreach (var item_1 in data_1)
-                //        {
-                //            item_1.path_code128_img = filePath_item;
-                //            item_1.code128 = str_ean13;
-                //        }
-                //    }
-                //    //else { //不存在数据
-                //    //    tb_Asset_code128 newItem_13 = new tb_Asset_code128();
-                //    //    newItem_13.code128 = str_ean13;
-                //    //    newItem_13.ID_Asset = item.ID;
-                //    //    newItem_13.path_code128_img = filePath_item;
-                //    //    DB_C.tb_Asset_code128.Add(newItem_13);
-                //    //}
-                //}
             }
 
             DB_C.SaveChanges();
@@ -217,15 +193,70 @@ namespace FAMIS.Controllers
 
 
 
-        ///// <summary>
-        ///// 根据id获取URL
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //public String getBarCodeImgPathByAssetID(int? id)
-        //{
-             
-        //}
+        /// <summary>
+        /// 根据id获取URL
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public String getBarCodeImgPathByAssetID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_code128
+                       where p.ID_Asset == id
+                       join tb_AS in DB_C.tb_Asset on p.ID_Asset equals tb_AS.ID
+                       select p;
+
+            if (data.Count() > 0)
+            {
+                tb_Asset_code128 item=data.First();
+                if (System.IO.File.Exists(item.path_code128_img))
+                {
+                    return item.path_code128_img;
+                }
+                return "";
+            }
+            return "";
+        }
+
+
+        /// <summary>
+        /// 根据ID生成相应的bitmap
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Bitmap getBitMapByAssetID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_code128
+                       where p.ID_Asset == id
+                       join tb_AS in DB_C.tb_Asset on p.ID_Asset equals tb_AS.ID
+                       select new { 
+                       serialNum=tb_AS.serial_number,
+                       assetName=tb_AS.name_Asset,
+                       specif=tb_AS.specification,
+                       code128=p.code128,
+                       path_img=p.path_code128_img
+                       };
+
+            if (data.Count() > 0)
+            {
+               foreach(var item in data)
+               {
+                   if (item.code128!=null&&item.code128!="")
+                   {
+                       //return item.path_img;
+
+                       String info_Asset = "资产名称：" + item.assetName + "\r\n" + "资产编号：" + item.serialNum + "\r\n资产型号：" + item.specif;
+                       Code.BarCode.Code128 _Code = new Code.BarCode.Code128();
+                       _Code.ValueFont = new Font("宋体", 8);
+                       System.Drawing.Bitmap imgTemp = _Code.GetCodeImage(item.code128, Code.BarCode.Code128.Encode.Code128A, info_Asset);
+                       return imgTemp;
+                   }
+
+                   return null;
+               }
+                
+            }
+            return null;
+        }
 
     }
 }
