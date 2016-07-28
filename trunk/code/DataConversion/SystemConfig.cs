@@ -183,6 +183,7 @@ namespace FAMIS.DataConversion
         public const String FOLEDER_QRCODE_IMAGE = "\\images_qrcode\\";
         public const String FOLDER_IMAGE_ASSET_SUB = "\\images_Asset_sub_pic\\";
         public const String FOLDER_DOCU_ASSET_SUB = "\\images_Asset_sub_document\\";
+        public const String FOLDER_Download_TEMP = "\\Download_TEMP\\";
 
         
         public const int EAN13_Length = 13;

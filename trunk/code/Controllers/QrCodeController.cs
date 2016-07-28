@@ -53,7 +53,7 @@ namespace FAMIS.Controllers
   
 
                 //画二维码
-                System.Drawing.Image bitmap_qrcode = CreateQRCode(codeInfo,QRCodeEncoder.ENCODE_MODE.ALPHA_NUMERIC,QRCodeEncoder.ERROR_CORRECTION.H,8,7,295,15);
+                System.Drawing.Image bitmap_qrcode = CreateQRCode(codeInfo, QRCodeEncoder.ENCODE_MODE.BYTE, QRCodeEncoder.ERROR_CORRECTION.H, 8, 7, 295, 15);
                 //在指定位置并且按指定大小绘制原图片的指定部分  
                 g.DrawImage(bitmap_qrcode,new Rectangle(0,0,bitmap_qrcode.Width,bitmap_qrcode.Height));
               
@@ -62,7 +62,7 @@ namespace FAMIS.Controllers
                 // GraphicsUnit.Pixel);
 
                 //画文字图片
-                g.DrawString(info_asset, font_text, Brushes.Black, new PointF(295, 20));
+                g.DrawString(info_asset, font_text, Brushes.Black, new PointF(295, 30));
                 //Bitmap bmp = new Bitmap(100, 100);
                 //Graphics g_font = Graphics.FromImage(bmp);
                 //g_font.FillRectangle(Brushes.White, new Rectangle() { X = 0, Y = 0, Height = 100, Width = 100 });
@@ -414,7 +414,7 @@ namespace FAMIS.Controllers
                            serial_number = p.serial_number,
                            specification = p.specification,
                            department = DP.name_Department == null ? "" : DP.name_Department,
-                           measurment = DW.name_para == null ? "" : DW.name_para
+                           measurment = DW.name_para == null ? "" : DW.name_para,
                            code128=ean13.code128,
                            path_qrcode=ean13.path_qrcode_img
                        };
@@ -454,7 +454,7 @@ namespace FAMIS.Controllers
 
 
             //画二维码
-            System.Drawing.Image bitmap_qrcode = CreateQRCode(data, QRCodeEncoder.ENCODE_MODE.ALPHA_NUMERIC, QRCodeEncoder.ERROR_CORRECTION.H, 8, 7, 295, 15);
+            System.Drawing.Image bitmap_qrcode = CreateQRCode(data, QRCodeEncoder.ENCODE_MODE.BYTE, QRCodeEncoder.ERROR_CORRECTION.H, 8, 7, 295, 15);
             //在指定位置并且按指定大小绘制原图片的指定部分  
             g.DrawImage(bitmap_qrcode, new Rectangle(0, 0, bitmap_qrcode.Width, bitmap_qrcode.Height));
 
@@ -463,7 +463,7 @@ namespace FAMIS.Controllers
             // GraphicsUnit.Pixel);
 
             //画文字图片
-            g.DrawString(infoAsset, font_text, Brushes.Black, new PointF(295, 20));
+            g.DrawString(infoAsset, font_text, Brushes.Black, new PointF(295, 30));
             return bitmap_back;
         }
 

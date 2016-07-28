@@ -17,7 +17,15 @@ namespace FAMIS.DataConversion
 
 
 
-       
+        public List<int?> intTointQ(List<int> ids)
+        {
+            List<int?> data = new List<int?>();
+            foreach (int item in ids)
+            {
+                data.Add(item);
+            }
+            return data;
+        }
 
 
       
