@@ -230,12 +230,58 @@ function loadPageTool_Detail() {
                 //    }
                 //});
             }
+        },{
+            text: '下载二维码（ZIP）',
+            iconCls: 'icon-add',
+            height: 50,
+            handler: function () {
+               
+                //获取选中项
+              var rows = $('#TableList_0_1').datagrid('getSelections');
+                if (rows.length <1)
+                {
+                    MessShow("请选择1项数据！");
+                    return;
+                }
+                var IDS = [];
+                var idsStr = "";
+                for (var i = 0; i < rows.length; i++) {
+                    IDS[i] = rows[i].ID;
+                    if (i == 0) {
+                        idsStr = rows[i].ID;
+                    } else {
+                        idsStr =idsStr+"_"+ rows[i].ID;
+
+                    }
+                } 
+                var id = rows[0].ID;
+                exportData(idsStr);
+            }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
+
+
+function exportData(ids)
+{
+    var url = "/Download/download_qrcodes_zip?ids=" + ids;
+    var form = $("<form>");//定义一个form表单
+    form.attr("style", "display:none");
+    form.attr("target", "hidden_frame");
+    form.attr("method", "post");
+    form.attr("action", url);
+    var input1 = $("<input>");
+    input1.attr("type", "hidden");
+    input1.attr("name", "exportData");
+    input1.attr("value", (new Date()).getMilliseconds());
+    $("body").append(form);//将表单放置在web中
+    form.append(input1);
+    form.submit();//表单提交
+}
+
 
 function myformatter(date) {
     var y = date.getFullYear();
@@ -257,22 +303,22 @@ function myparser(s) {
 }
 
 
-function buildEAN13() {
-    $.ajax({
-        url: "/BarCode/rebuiltarCode",
-        type: 'POST',
-        beforeSend: ajaxLoading,
-        success: function (data) {
-            ajaxLoadEnd();
-            if (data > 0) {
-            } else {
-                MessShow("服务器中已存在所有数据，无须重新生成！");
-            }
+//function buildEAN13() {
+//    $.ajax({
+//        url: "/BarCode/rebuiltarCode",
+//        type: 'POST',
+//        beforeSend: ajaxLoading,
+//        success: function (data) {
+//            ajaxLoadEnd();
+//            if (data > 0) {
+//            } else {
+//                MessShow("服务器中已存在所有数据，无须重新生成！");
+//            }
 
 
-        }
-    });
-}
+//        }
+//    });
+//}
 
 function buildQRCode() {
     $.ajax({
