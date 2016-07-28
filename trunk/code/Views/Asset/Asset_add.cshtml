@@ -24,6 +24,10 @@
     <![endif]-->
 </head>
 <body>
+     <div style="text-align:left; padding: 5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkFormat()">提交</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+    </div>
     <div class="easyui-tabs" id="tabs_add" style="height: 600px">
         <div title="基础资料" data-options="iconCls:'icon-edit',closable:false" fit="true" style="height: 600px">
             <div class="easyui-panel" style="height: 600px;" fit="true">
@@ -180,10 +184,7 @@
             <table id="TableList_TP" class="easyui-datagrid" style="height: 500px" data-options="border:false,singleSelect:true,fitcolumns:true"></table>
         </div>
     </div>
-    <div style="text-align: center; padding: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkFormat()">提交</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
-    </div>
+   
 
 </body>
 </html>
