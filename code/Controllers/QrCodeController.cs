@@ -367,6 +367,108 @@ namespace FAMIS.Controllers
         }
 
 
+        /// <summary>
+        /// 获取二维码在服务器上的路径
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public String getQrcodePathByAssetID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_code128
+                       where p.ID_Asset == id
+                       join tb_AS in DB_C.tb_Asset on p.ID_Asset equals tb_AS.ID
+                       select p;
+
+            if (data.Count() > 0)
+            {
+                tb_Asset_code128 item = data.First();
+                if (System.IO.File.Exists(item.path_qrcode_img))
+                {
+                    return item.path_qrcode_img;
+                }
+                return "";
+            }
+            return "";
+        }
+
+        /// <summary>
+        /// 根据ID生成相应的bitmap
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Bitmap getBitMapByAssetID(int? id)
+        {
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true
+                       where p.ID==id
+                       join tb_ean13 in DB_C.tb_Asset_code128 on p.ID equals tb_ean13.ID_Asset into temp_ean13
+                       from ean13 in temp_ean13.DefaultIfEmpty()
+                       join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID into temp_DP
+                       from DP in temp_DP.DefaultIfEmpty()
+                       join tb_DW in DB_C.tb_dataDict_para on p.measurement equals tb_DW.ID into  temp_DW
+                       from DW in temp_DW.DefaultIfEmpty()
+                       select new
+                       {
+                           ID = p.ID,
+                           name_Asset = p.name_Asset,
+                           serial_number = p.serial_number,
+                           specification = p.specification,
+                           department = DP.name_Department == null ? "" : DP.name_Department,
+                           measurment = DW.name_para == null ? "" : DW.name_para
+                           code128=ean13.code128,
+                           path_qrcode=ean13.path_qrcode_img
+                       };
+
+            if (data.Count() > 0)
+            {
+                foreach (var item in data)
+                {
+                    if (item.code128 != null && item.code128 != "")
+                    {
+                        String str_ean13 = item.code128;
+                        String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification+"\r\n使用部门："+item.department+"\r\n计量单位："+item.measurment;
+                        return createBitmapQrcode(str_ean13,info_Asset);
+                      
+                    }
+                    return null;
+                }
+
+            }
+            return null;
+        }
+
+        public Bitmap createBitmapQrcode(String data,String infoAsset)
+        {
+            int towidth = 925;
+            int toheight = 295;
+            Font font_text = new Font("黑体", 30);
+            System.Drawing.Bitmap bitmap_back = new System.Drawing.Bitmap(towidth, toheight);
+            //新建一个画板  
+            Graphics g = System.Drawing.Graphics.FromImage(bitmap_back);
+            //设置高质量插值法  
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+            //设置高质量,低速度呈现平滑程度  
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            //清空画布并以白色背景色填充  
+            g.Clear(Color.White);
+
+
+            //画二维码
+            System.Drawing.Image bitmap_qrcode = CreateQRCode(data, QRCodeEncoder.ENCODE_MODE.ALPHA_NUMERIC, QRCodeEncoder.ERROR_CORRECTION.H, 8, 7, 295, 15);
+            //在指定位置并且按指定大小绘制原图片的指定部分  
+            g.DrawImage(bitmap_qrcode, new Rectangle(0, 0, bitmap_qrcode.Width, bitmap_qrcode.Height));
+
+            //g.DrawImage(bitmap_qrcode, new Rectangle(0, 10, 215, 215),
+            // new Rectangle(0, 0, 925, 295),
+            // GraphicsUnit.Pixel);
+
+            //画文字图片
+            g.DrawString(infoAsset, font_text, Brushes.Black, new PointF(295, 20));
+            return bitmap_back;
+        }
+
+
+
 
     }
 }
