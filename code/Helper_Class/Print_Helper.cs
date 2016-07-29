@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
+using ThoughtWorks.QRCode.Codec;
 using System.Runtime.InteropServices;
 using FAMIS.Models;
 namespace FAMIS.Helper_Class
@@ -54,18 +55,27 @@ namespace FAMIS.Helper_Class
                 return null;
             }
         }
-        public Bitmap getBitMapByAssetID(int? id)
+       public Bitmap getBitMapByAssetID(int? id)
         {
-            var data = from p in DB_C.tb_Asset_code128
-                       where p.ID_Asset == id
-                       join tb_AS in DB_C.tb_Asset on p.ID_Asset equals tb_AS.ID
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true
+                       where p.ID==id
+                       join tb_ean13 in DB_C.tb_Asset_code128 on p.ID equals tb_ean13.ID_Asset into temp_ean13
+                       from ean13 in temp_ean13.DefaultIfEmpty()
+                       join tb_DP in DB_C.tb_department on p.department_Using equals tb_DP.ID into temp_DP
+                       from DP in temp_DP.DefaultIfEmpty()
+                       join tb_DW in DB_C.tb_dataDict_para on p.measurement equals tb_DW.ID into  temp_DW
+                       from DW in temp_DW.DefaultIfEmpty()
                        select new
                        {
-                           serialNum = tb_AS.serial_number,
-                           assetName = tb_AS.name_Asset,
-                           specif = tb_AS.specification,
-                           code128 = p.code128,
-                           path_img = p.path_code128_img
+                           ID = p.ID,
+                           name_Asset = p.name_Asset,
+                           serial_number = p.serial_number,
+                           specification = p.specification,
+                           department = DP.name_Department == null ? "" : DP.name_Department,
+                           measurment = DW.name_para == null ? "" : DW.name_para,
+                           code128=ean13.code128,
+                           path_qrcode=ean13.path_qrcode_img
                        };
 
             if (data.Count() > 0)
@@ -74,21 +84,147 @@ namespace FAMIS.Helper_Class
                 {
                     if (item.code128 != null && item.code128 != "")
                     {
-                        //return item.path_img;
-
-                        String info_Asset = "资产名称：" + item.assetName + "\r\n" + "资产编号：" + item.serialNum + "\r\n资产型号：" + item.specif;
-                        Code.BarCode.Code128 _Code = new Code.BarCode.Code128();
-                        _Code.ValueFont = new Font("宋体", 8);
-                        System.Drawing.Bitmap imgTemp = _Code.GetCodeImage(item.code128, Code.BarCode.Code128.Encode.Code128A, info_Asset);
-                        return imgTemp;
+                        String str_ean13 = item.code128;
+                        String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification+"\r\n使用部门："+item.department+"\r\n计量单位："+item.measurment;
+                        return createBitmapQrcode(str_ean13,info_Asset);
+                      
                     }
-
                     return null;
                 }
 
             }
             return null;
         }
+       public System.Drawing.Image CreateQRCode(string Content, QRCodeEncoder.ENCODE_MODE QRCodeEncodeMode, QRCodeEncoder.ERROR_CORRECTION QRCodeErrorCorrect, int QRCodeVersion, int QRCodeScale, int size, int border)
+       {
+           QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
+           qrCodeEncoder.QRCodeEncodeMode = QRCodeEncodeMode;
+           qrCodeEncoder.QRCodeErrorCorrect = QRCodeErrorCorrect;
+           qrCodeEncoder.QRCodeScale = QRCodeScale;
+           qrCodeEncoder.QRCodeVersion = QRCodeVersion;
+           System.Drawing.Image image = qrCodeEncoder.Encode(Content);
+
+           #region 根据设定的目标图片尺寸调整二维码QRCodeScale设置，并添加边框
+           if (size > 0)
+           {
+               //当设定目标图片尺寸大于生成的尺寸时，逐步增大方格尺寸
+               #region 当设定目标图片尺寸大于生成的尺寸时，逐步增大方格尺寸
+               while (image.Width < size)
+               {
+                   qrCodeEncoder.QRCodeScale++;
+                   System.Drawing.Image imageNew = qrCodeEncoder.Encode(Content);
+                   if (imageNew.Width < size)
+                   {
+                       image = new System.Drawing.Bitmap(imageNew);
+                       imageNew.Dispose();
+                       imageNew = null;
+                   }
+                   else
+                   {
+                       qrCodeEncoder.QRCodeScale--; //新尺寸未采用，恢复最终使用的尺寸
+                       imageNew.Dispose();
+                       imageNew = null;
+                       break;
+                   }
+               }
+               #endregion
+
+               //当设定目标图片尺寸小于生成的尺寸时，逐步减小方格尺寸
+               #region 当设定目标图片尺寸小于生成的尺寸时，逐步减小方格尺寸
+               while (image.Width > size && qrCodeEncoder.QRCodeScale > 1)
+               {
+                   qrCodeEncoder.QRCodeScale--;
+                   System.Drawing.Image imageNew = qrCodeEncoder.Encode(Content);
+                   image = new System.Drawing.Bitmap(imageNew);
+                   imageNew.Dispose();
+                   imageNew = null;
+                   if (image.Width < size)
+                   {
+                       break;
+                   }
+               }
+               #endregion
+
+               //如果目标尺寸大于生成的图片尺寸，则为图片增加白边
+               #region 如果目标尺寸大于生成的图片尺寸，则为图片增加白边
+               if (image.Width <= size)
+               {
+                   //根据参数设置二维码图片白边的最小宽度
+                   #region 根据参数设置二维码图片白边的最小宽度
+                   if (border > 0)
+                   {
+                       while (image.Width <= size && size - image.Width < border * 2 && qrCodeEncoder.QRCodeScale > 1)
+                       {
+                           qrCodeEncoder.QRCodeScale--;
+                           System.Drawing.Image imageNew = qrCodeEncoder.Encode(Content);
+                           image = new System.Drawing.Bitmap(imageNew);
+                           imageNew.Dispose();
+                           imageNew = null;
+                       }
+                   }
+                   #endregion
+
+                   //当目标图片尺寸大于二维码尺寸时，将二维码绘制在目标尺寸白色画布的中心位置
+                   if (image.Width < size)
+                   {
+                       //新建空白绘图
+                       System.Drawing.Bitmap panel = new System.Drawing.Bitmap(size, size);
+                       System.Drawing.Graphics graphic0 = System.Drawing.Graphics.FromImage(panel);
+                       int p_left = 0;
+                       int p_top = 0;
+                       if (image.Width <= size) //如果原图比目标形状宽
+                       {
+                           p_left = (size - image.Width) / 2;
+                       }
+                       if (image.Height <= size)
+                       {
+                           p_top = (size - image.Height) / 2;
+                       }
+
+                       //将生成的二维码图像粘贴至绘图的中心位置
+                       graphic0.DrawImage(image, p_left, p_top, image.Width, image.Height);
+                       image = new System.Drawing.Bitmap(panel);
+                       panel.Dispose();
+                       panel = null;
+                       graphic0.Dispose();
+                       graphic0 = null;
+                   }
+               }
+               #endregion
+           }
+           #endregion
+           return image;
+       }
+
+       public Bitmap createBitmapQrcode(String data, String infoAsset)
+       {
+           int towidth = 925;
+           int toheight = 295;
+           Font font_text = new Font("黑体", 30);
+           System.Drawing.Bitmap bitmap_back = new System.Drawing.Bitmap(towidth, toheight);
+           //新建一个画板  
+           Graphics g = System.Drawing.Graphics.FromImage(bitmap_back);
+           //设置高质量插值法  
+           g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
+           //设置高质量,低速度呈现平滑程度  
+           g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+           //清空画布并以白色背景色填充  
+           g.Clear(Color.White);
+
+
+           //画二维码
+           System.Drawing.Image bitmap_qrcode = CreateQRCode(data, QRCodeEncoder.ENCODE_MODE.ALPHA_NUMERIC, QRCodeEncoder.ERROR_CORRECTION.H, 8, 7, 295, 15);
+           //在指定位置并且按指定大小绘制原图片的指定部分  
+           g.DrawImage(bitmap_qrcode, new Rectangle(0, 0, bitmap_qrcode.Width, bitmap_qrcode.Height));
+
+           //g.DrawImage(bitmap_qrcode, new Rectangle(0, 10, 215, 215),
+           // new Rectangle(0, 0, 925, 295),
+           // GraphicsUnit.Pixel);
+
+           //画文字图片
+           g.DrawString(infoAsset, font_text, Brushes.Black, new PointF(295, 20));
+           return bitmap_back;
+       }
         public string Base_64(string ID)
         {
                int id = int.Parse(ID);
