@@ -78,6 +78,9 @@ namespace FAMIS.Controllers
                 String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
                 String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
                 //23.ToString().PadLeft(6, '0');
+
+
+
                 ViewBag.CodeAssetType = h + m + s;
 
                 return View();

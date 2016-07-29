@@ -78,6 +78,15 @@ namespace FAMIS.Controllers
         }
         
 
+
+        /// <summary>
+        /// 获取借用单据数据列表入口
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="searchCondtiion"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         [HttpPost]
         public String LoadBorrowList(int? page, int? rows, String searchCondtiion, bool? exportFlag)
         {
@@ -88,7 +97,14 @@ namespace FAMIS.Controllers
             return loadList_Borrow(page, rows, dto_condition,exportFlag);
         }
 
-
+        /// <summary>
+        /// 获取借用单据方法
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="cond"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         public String loadList_Borrow(int? page, int? rows, dto_SC_List cond, bool? exportFlag)
         {
             page = page == null ? 1 : page;
@@ -227,6 +243,15 @@ namespace FAMIS.Controllers
             return getAssetsByIDs(page, rows, ids_selected,id_borrow);
         }
 
+
+        /// <summary>
+        /// 根据ＩＤ获取资产
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="ids_selected"></param>
+        /// <param name="id_borrow"></param>
+        /// <returns></returns>
         public JsonResult getAssetsByIDs(int? page, int? rows, List<int?> ids_selected, int? id_borrow)
         {
             page = page == null ? 1 : page;
@@ -284,6 +309,11 @@ namespace FAMIS.Controllers
             };
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 自定义空数据
+        /// </summary>
+        /// <returns></returns>
         public JsonResult NULL_dataGrid()
         {
             var json = new
@@ -295,6 +325,12 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 添加新的借用单据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_Borrow_insert(String data)
         {
@@ -363,7 +399,11 @@ namespace FAMIS.Controllers
 
         }
 
-
+        /// <summary>
+        /// 更新借用单据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_Borrow_Update(String data)
         {
@@ -471,6 +511,14 @@ namespace FAMIS.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// 创建明细单据
+        /// </summary>
+        /// <param name="id_borrow"></param>
+        /// <param name="ids_asset"></param>
+        /// <returns></returns>
         public List<tb_Asset_Borrow_detail> createBorrowDetailList(int? id_borrow, List<int?> ids_asset)
         {
             List<tb_Asset_Borrow_detail> list = new List<tb_Asset_Borrow_detail>();
@@ -506,6 +554,12 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 获取单据信息  拥有编辑 数据绑定
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult Handler_Borrow_Get(int? id)
         {
@@ -543,6 +597,12 @@ namespace FAMIS.Controllers
 
         }
 
+
+        /// <summary>
+        /// 根据单据ID获取相应的资产ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public List<int> getAssetIdsByBorrowID(int? id)
         {
             var data = from p in DB_C.tb_Asset_Borrow_detail
@@ -558,7 +618,11 @@ namespace FAMIS.Controllers
             return ids;
         }
 
-
+        /// <summary>
+        /// 根据单据编号获取ID
+        /// </summary>
+        /// <param name="serialNum"></param>
+        /// <returns></returns>
         public int? getIDBySerialNum(String serialNum)
         {
             if (serialNum == null)
@@ -582,7 +646,7 @@ namespace FAMIS.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 更新单据状态
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -707,6 +771,13 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+
+
+        /// <summary>
+        /// 判断是否有权限
+        /// </summary>
+        /// <param name="id_json"></param>
+        /// <returns></returns>
         public bool RightToUpdateState(int? id_json)
         {
             String operation = null;
@@ -741,6 +812,13 @@ namespace FAMIS.Controllers
 
         }
 
+
+        /// <summary>
+        /// 权限判断  单据逻辑判断
+        /// </summary>
+        /// <param name="id_stateTarget"></param>
+        /// <param name="id_borrow"></param>
+        /// <returns></returns>
         public bool isOkToReview_borrow(int? id_stateTarget, int? id_borrow)
         {
             if (id_borrow == null || id_stateTarget == null || !SystemConfig.state_List.Contains((int)id_stateTarget))
