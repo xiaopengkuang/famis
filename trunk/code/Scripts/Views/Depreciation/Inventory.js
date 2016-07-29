@@ -121,7 +121,7 @@ function extend()
     $.extend($.fn.datagrid.defaults.editors, {
         datetimebox: {// datetimebox就是你要自定义editor的名称
             init: function (container, options) {
-                var input = $('<input class="easyuidatetimebox">').appendTo(container);
+                var input = $('<input class="easyuidatetimebox" data-options="editable: false">').appendTo(container);
                 return input.datetimebox({
                     formatter: function (date) {
                         return new Date(date).format("yyyy-MM-dd hh:mm:ss");
@@ -398,7 +398,7 @@ function LoadInitData(searchCondtiion) {
                  {
                      text: '修改', iconCls: 'icon-edit', disabled: !dataRight.edit_able, handler: function () {
                          if (AssetState == "已盘点")
-                             alert("该盘点单已盘点，不可修改！");
+                             $.messager.alert("提示", "该盘点单已盘点，不可修改！");
                          else {
                              //修改时要获取选择到的行
                              var rows = datagrid.datagrid("getSelections");
@@ -419,7 +419,7 @@ function LoadInitData(searchCondtiion) {
                                      editRow = index;
                                      //当开启了当前选择行的编辑状态之后，
                                      //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
-                                     datagrid.datagrid("unselectAll");
+                                     //datagrid.datagrid("unselectAll");
                                  }
                              }
 
@@ -488,17 +488,17 @@ function LoadInitData(searchCondtiion) {
 
 
                          if (AssetState != "未盘点" && AssetState == "盘点中") {
-                             alert("当前盘点单已开始盘点！");
+                             $.messager.alert("提示", "当前盘点单已开始盘点！");
                          }
                          else if (AssetState != "未盘点" && AssetState == "已盘点") {
-                             alert("该盘点单已盘点完成！");
+                             $.messager.alert("提示", "该盘点单已盘点完成！");
                          }
                          else {
 
                              if (sysamount == null)
-                                 alert("请先选择您要盘点资产的明细！");
+                                 $.messager.alert("提示", "请先选择您要盘点资产的明细！");
                              else {
-                                 alert("请在盘点明细列表导入盘点数据的Excel");
+                                 $.messager.alert("提示", "请在盘点明细列表导入盘点数据的Excel");
                                  //  alert(PDsearial);
                                  $.ajax({
 
@@ -526,12 +526,12 @@ function LoadInitData(searchCondtiion) {
                          //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
 
                          if (AssetState == "未盘点") {
-                             alert("该盘点单尚未开始盘点，请核对。");
+                             $.messager.alert("提示", "该盘点单尚未开始盘点，请核对。");
                          }
                          else if (AssetState == "已盘点")
-                             alert("该盘点单已完成盘点，不能对其修改，您可以新建盘点单，重新盘点。");
+                             $.messager.alert("提示", "该盘点单已完成盘点，不能对其修改，您可以新建盘点单，重新盘点。");
                          else {
-                             alert("盘点数据已保存");
+                             $.messager.alert("提示", "盘点数据已保存");
 
                              $.ajax({
 
@@ -648,7 +648,7 @@ function LoadInitData(searchCondtiion) {
                     }
                     //双击开启编辑行
                     if (AssetState == "已盘点") {
-                        alert("该盘点单已盘点，不可修改！");
+                        $.messager.alert("提示","该盘点单已盘点，不可修改！");
                     }
                     else {
                         if (editRow != undefined) {
