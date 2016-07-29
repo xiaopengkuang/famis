@@ -351,6 +351,21 @@ namespace FAMIS.Controllers
             Session["Deatails_Searial"] = Json;
             return "";
         }
+          [HttpPost]
+         public string SetIsQueryied(string Json)
+        {
+            Session["IsQueried"] = Json;
+            return "";
+        }
+          [HttpPost]
+          public string GetIsQueryied(string Json)
+          {
+              if (Session["IsQueried"] == null)
+                  return "false";
+             return Session["IsQueried"].ToString();
+              
+          }
+       
          [HttpPost]
           public string SetCurrentRow(string Json)
         {
@@ -385,6 +400,7 @@ namespace FAMIS.Controllers
 
             return this.Json(Model);
         }
+
         [HttpPost]
         public string Getbase64()
         {
@@ -409,6 +425,7 @@ namespace FAMIS.Controllers
             string ps = JSdata.Split(',')[2];
             DateTime pddate = DateTime.Parse(JSdata.Split(',')[3].ToString());
             string type = JSdata.Split(',')[4];
+
             IEnumerable<String> tt = from o in db.tb_user
                      where o.ID.ToString() == oper
                      select o.true_Name;
