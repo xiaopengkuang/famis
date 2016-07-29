@@ -15,13 +15,25 @@
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="../../Scripts/Views/common/LodopFuncs.js"></script>
+   
+     <script type="text/javascript" src="../../Scripts/UI/LodopFuncs.js"></script>
+    <script type="text/javascript" src="../../Scripts/UI/Print_Helper.js"></script>
+
     <script type="text/javascript" src="../../Scripts/Views/SysSetting/BarcodeCreating.js"></script>
 
 
 </head>
 <body>
-    <div class="easyui-layout" style="width: 100%; height: 700px;" fit="true">
+    <object id="LODOP_OB" classid="clsid:2105C259-1E0C-4534-8141-A753534CB4CA" width="0"
+            height="0">
+
+        <embed id="LODOP_EM" type="application/x-print-lodop" width="0" height="0" pluginspage="install_lodop32.exe"></embed>
+
+    </object>
+    <div style="text-align: center;display:none" id="insert">
+    </div>
+ <div class="easyui-layout" style="width: 100%; height: 700px;" fit="true">
+      
         <div data-options="region:'west',split:true" title="查询条件" style="width: 210px; height: 100%" id="LEFTSEARCHDIV">
             <div style="margin: 5px 0;" data-options="border:true,region:'west'">
                 <div class="easyui-panel" style="padding: 5px;">
@@ -30,6 +42,7 @@
                     <a href="javascript:void(0);" class="easyui-linkbutton" onclick="expandAll()">展开</a>
                 </div>
             </div>
+
             <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
             <script type="text/javascript">
                 function collapseAll() {
@@ -42,8 +55,12 @@
                     $('#lefttree').tree("reload");
                 }
             </script>
+
         </div>
+
+
         <div data-options="region:'center',title:'资产基本信息',iconCls:'icon-ok',border:true" style="height: 100%; width: 200px">
+
             <!--查询条件-->
             <div style="width: 100%!important; border-spacing: 2px; left: 10px">
                 <div style="float: left; border-spacing: 2px">
@@ -89,11 +106,8 @@
                         <td>
                             <a href="javascript:void(0);" class="easyui-linkbutton" onclick="resetSC()" data-options="iconCls:'icon-reload'">重置</a>
                         </td>
-                        <!--<td>
-                            <a href="#" class="easyui-linkbutton" onclick="buildEAN13()" data-options="iconCls:'icon-add'">全部重新生成（条形码）</a>
-                        </td>-->
                         <td>
-                            <a href="#" class="easyui-linkbutton" onclick="buildQRCode()" data-options="iconCls:'icon-add'">全部生成（二维码）</a>
+                            <a href="#" class="easyui-linkbutton" onclick="buildEAN13()" data-options="iconCls:'icon-add'">全部重新生成（测试）</a>
                         </td>
                     </tr>
                 </table>
@@ -101,9 +115,6 @@
             <table id="TableList_0_1" class="easyui-datagrid" style="height: 500px" data-options="border:false,singleSelect:true,fitcolumns:true" fit="true"></table>
             <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
         </div>
-    </div>
-
-    <iframe name='hidden_frame' id="hidden_frame" style='width:150px; height:50px; display:none;'> </iframe>
-
+     </div>
 </body>
 </html>
