@@ -80,6 +80,13 @@ namespace FAMIS.Controllers
         {
             List<int?> ids_asset = ccv.StringToIntList(ids);
             List<string> fileLists = getQRCODEFileListByAssetID(ids_asset);
+            
+            //清空目录下临时文件  不存在文件则创建
+            DeleteFiles(Server.MapPath(SystemConfig.FOLDER_Download_TEMP));
+            if (!Directory.Exists(Server.MapPath(SystemConfig.FOLDER_Download_TEMP)))
+            {
+                Directory.CreateDirectory(Server.MapPath(SystemConfig.FOLDER_Download_TEMP));
+            }
             //临时文件目录
             String TimeName = DateTime.Now.Ticks.ToString();
             String User_proFix =ccv.getOperatorName() + "_";
@@ -91,6 +98,50 @@ namespace FAMIS.Controllers
             ZipFileMain(fileLists,tempFileName,9);
             //创建了临时文件
             return downloadFileByURL(tempFileName);
+
+        }
+
+
+
+        public bool DeleteFiles(string path)
+        {
+            if (Directory.Exists(path) == false)
+            {
+                //MessageBox.Show("Path is not Existed!");
+                return false;
+            }
+            DirectoryInfo dir = new DirectoryInfo(path);
+            FileInfo[] files = dir.GetFiles();
+            try
+            {
+                foreach (var item in files)
+                {
+                    System.IO.File.Delete(item.FullName);
+                }
+                if (dir.GetDirectories().Length != 0)
+                {
+                    foreach (var item in dir.GetDirectories())
+                    {
+                        if (!item.ToString().Contains("$") && (!item.ToString().Contains("Boot")))
+                        {
+                            // Console.WriteLine(item);
+
+                            DeleteFiles(dir.ToString() + "\\" + item.ToString());
+                        }
+                    }
+                }
+                Directory.Delete(path);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                //MessageBox.Show("Delete Failed!");
+                return false;
+
+            }
+
+
 
         }
 
