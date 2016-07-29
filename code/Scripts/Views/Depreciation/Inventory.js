@@ -1,4 +1,4 @@
-﻿//alert("sadasd");
+﻿ 
 var searchCondtiion = "o,o,o,o,o";
 //alert(searchCondtiion);
 var datagrid; //定义全局变量datagrid
@@ -9,12 +9,64 @@ var Address = [{ "value": "1", "text": "固定资产" }, { "value": "3", "text":
 var CurrentRow = "0";
 var flag = "0";
 var sysamount=0;
- 
-
+var isQ = "";
+try {
+   window.onbeforeunload = onclose;
+}
+catch (e)
+{ };
+function onclose() {
+   // alert("close!");
+    try{
+        if (searchCondtiion.split('o,o,o').length > 1)
+          SetIsQueryied("true");
+        else
+            SetIsQueried("false");
+}
+    catch (e)
+    {
+    }
+   
+}
 //printExcel('D:/test.csv');
+function SetIsQueryied(obj) {
+    //alert(obj);
+    $.ajax({
 
+        type: "post",
+        url: "/Depreciation/SetIsQueryied",
+        data: { Json: obj },
+        datatype: "json",//数据类型
+
+        success: function (result) {
+
+            
+        }, error: function (msg) {
+
+            alert("Error");
+        }
+    });
+
+}
+function GetIsQueried() {
+    $.ajax({
+
+        type: "post",
+        url: "/Depreciation/GetIsQueryied",
+        
+        datatype: "json",//数据类型
+
+        success: function (result) {
+            isQ = result;
+        }, error: function (msg) {
+
+            alert("Error");
+        }
+    });
+
+}
 function printExcel(obj) {
-    alert(obj);
+     
     var xlsApp = null;
     try {
         xlsApp = new ActiveXObject('Excel.Application');
@@ -33,10 +85,12 @@ function printExcel(obj) {
 }
 $(document).ready(function () {
     //多选框
+    GetIsQueried();
     extend();
     loadOperator();
    // setPDserail(PDsearial);
    // LoadInitData_Detail(PDsearial)
+
     LoadInitData(searchCondtiion);
     
   //  LoadTreeLeft();
@@ -136,20 +190,15 @@ function LoadBYSearchCondition()
 
    
     searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
+    SetIsQueryied("true");
     // alert(searchCondtiion);
     flag = 1;
     LoadInitData(searchCondtiion);
 
 }
-function ReSetSeachCondition()
-{
-    $("#Invention_Code").val("");
-    $('#BeginDate_SC').datebox('setValue', '');
-    $('#EndDate_SC').datebox('setValue', '');
-    var searchCondtiion = "o,o,o,o,o";
-    LoadInitData(searchCondtiion);
-}
+ 
 function LoadInitData(searchCondtiion) {
+    //alert(isQ);
     //alert(searchCondtiion);
     var datagrid; //定义全局变量datagrid
     var editRow = undefined; //定义全局变量：当前编辑的行
@@ -620,7 +669,15 @@ function LoadInitData(searchCondtiion) {
             });
             $('#TableList_0_1').datagrid({
                 onLoadSuccess: function (data) {
-                  
+
+                   
+                    if (isQ== "true")
+                    {
+                        $('#TableList_0_1').datagrid('selectRow', 0);
+                        SetIsQueryied("false");
+                        return;
+                    }
+                    
                     if (flag == "0") {
                         $.ajax({
 
@@ -861,7 +918,7 @@ function loadPageTool_Detail(dataRight) {
                     onClose: function () {
                         AssetState = "";
                         $('#TableList_0_1').datagrid('reload');
-                        $('#TableList_0_2').datagrid('reload');
+                      //  $('#TableList_0_2').datagrid('reload');
                         //    var resultAlert = "成功插入记录！";
                         //    $.messager.show({
                         //        title: '提示',
