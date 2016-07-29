@@ -1001,6 +1001,13 @@ function ajaxLoadEnd() {
 }
 
 
+function cancelFormSubmit() {
+    try {
+        parent.$("#modalwindow").window("close");
+    } catch (e) {
+
+    }
+}
 function checkFormat(id_asset) {
     //基础属性
     var check_obj_ZCLB = $("#ZCLB_add").combotree("getValue");

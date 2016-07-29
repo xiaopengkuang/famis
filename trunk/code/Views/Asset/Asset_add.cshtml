@@ -24,9 +24,9 @@
     <![endif]-->
 </head>
 <body>
-     <div style="text-align:left; padding: 5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="checkFormat()">提交</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">重置</a>
+     <div style="text-align:left;"  class="easyui-panel">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'" onclick="checkFormat()">提交</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-cancel'" onclick="cancelFormSubmit()">取消</a>
     </div>
     <div class="easyui-tabs" id="tabs_add" style="height: 600px">
         <div title="基础资料" data-options="iconCls:'icon-edit',closable:false" fit="true" style="height: 600px">
@@ -67,28 +67,28 @@
                         <tr>
                             <td>所在部门:</td>
                             <td>
-                                <select class="easyui-combotree" id="SZBM_add" name="SZBM_add" style="width: 150px;">
+                                <select class="easyui-combotree" id="SZBM_add" name="SZBM_add" data-options="editable:false" style="width: 150px;">
                                 </select>
                             </td>
                             <td>使用人:</td>
                             <td>
-                                <select class="easyui-combobox" id="SYRY_add" name="SYRY_add" data-options="editable: false" style="width: 150px;">
+                                <select class="easyui-combobox" id="SYRY_add" name="SYRY_add"  data-options="editable: false" style="width: 150px;">
                                 </select>
                             </td>
                             <td>存放地点:</td>
                             <td>
-                                <input class="easyui-textbox" id="CFDD_add" name="CFDD_add" style="width: 150px;" />
+                                <input class="easyui-textbox" id="CFDD_add" name="CFDD_add" data-options="editable:false"  style="width: 150px;" />
                             </td>
                         </tr>
                         <tr>
                             <td>增加方式:</td>
                             <td>
-                                <select class="easyui-combobox" id="ZJFS_add" name="ZJFS_add" style="width: 150px;">
+                                <select class="easyui-combobox" id="ZJFS_add" name="ZJFS_add" data-options="editable:false"  style="width: 150px;">
                                 </select>
                             </td>
                             <td>供应商:</td>
                             <td>
-                                <select class="" id="GYS_add" name="GYS_add" style="width: 150px;">
+                                <select class="" id="GYS_add" name="GYS_add" data-options="editable:false"  style="width: 150px;">
                                 </select>
                             </td>
                             <td>联系人:</td>
@@ -99,7 +99,7 @@
                         <tr>
                             <td>购置日期:</td>
                             <td>
-                                <input class="easyui-datebox" name="GZRQ_add" id="GZRQ_add" data-options="formatter:myformatter,parser:myparser" style="width: 150px;">
+                                <input class="easyui-datebox" name="GZRQ_add" id="GZRQ_add" data-options="formatter:myformatter,parser:myparser,editable:false" style="width: 150px;">
                             </td>
                             <td>供应商地址:</td>
                             <td>
@@ -130,7 +130,7 @@
                             </td>
                             <td>折旧方式:</td>
                             <td>
-                                <select class="easyui-combobox" id="Other_ZJFS_add" name="Other_ZJFS_add" style="width: 150px;">
+                                <select class="easyui-combobox" id="Other_ZJFS_add" name="Other_ZJFS_add" data-options="editable:false"  style="width: 150px;">
                                 </select>
                             </td>
                             <td>净残值率:</td>

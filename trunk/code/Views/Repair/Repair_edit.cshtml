@@ -45,17 +45,17 @@
                     </td>
                     <td style="width: 100px"><span style="width: 100px">送修日期:</span></td>
                     <td>
-                        <input class="easyui-datebox" id="dateToP" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                        <input class="easyui-datebox" id="dateToP" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false" style="width: 200px;">
                     </td>
                     <td style="width: 100px"><span style="width: 100px">预计归还日期:</span></td>
                     <td>
-                        <input class="easyui-datebox" id="dateToR" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                        <input class="easyui-datebox" id="dateToR" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false" style="width: 200px;">
                     </td>
                 </tr>
                 <tr>
                     <td>维修商:</td>
                     <td>
-                        <input class="easyui-combobox" aria-readonly="true" id="supplier_repair" name="supplier_repair" style="width: 200px;">
+                        <input class="easyui-combobox" aria-readonly="true"  data-options="editable: false" id="supplier_repair" name="supplier_repair" style="width: 200px;">
                     </td>
                     <td>地址:</td>
                     <td>
@@ -69,12 +69,12 @@
                 <tr>
                     <td>申请人:</td>
                     <td>
-                        <select class="easyui-combobox" aria-readonly="true" id="UAP_add" name="UAP_add" style="width: 200px;">
+                        <select class="easyui-combobox"  data-options="editable: false" aria-readonly="true" id="UAP_add" name="UAP_add" style="width: 200px;">
                         </select>
                     </td>
                     <td>批准人:</td>
                     <td>
-                        <input class="easyui-combobox" readonly="readonly" id="UAT_add" name="UAT_add" style="width: 200px;" />
+                        <input class="easyui-combobox"   data-options="editable: false" readonly="readonly" id="UAT_add" name="UAT_add" style="width: 200px;" />
                     </td>
                 </tr>
             </table>

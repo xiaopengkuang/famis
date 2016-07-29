@@ -24,10 +24,10 @@
 </head>
 <body onload="bindData('@ViewBag.id')">
     <div class="easyui-panel" style="height: 500px;" fit="true">
-        <div style="text-align: center; padding: 5px;">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('@ViewBag.id',3)">通过</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('@ViewBag.id',4)">退回</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cancelForm()">取消</a>
+        <div class="easyui-panel" style="text-align: left; padding: 5px;">
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'" onclick="submitForm('@ViewBag.id',3)">通过</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'" onclick="submitForm('@ViewBag.id',4)">退回</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton"  data-options="plain:true,iconCls:'icon-cancel'"onclick="cancelForm()">取消</a>
         </div>
 
         <div id="jcsx_add" class="easyui-panel" title="基础属性" style="height: 120px; padding: 2px;"

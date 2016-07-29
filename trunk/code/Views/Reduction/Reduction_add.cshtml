@@ -40,23 +40,23 @@
                     </td>
                     <td style="width: 100px"><span style="width: 100px">减少日期:</span></td>
                     <td>
-                        <input class="easyui-datebox" name="date_reduction" id="date_reduction" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                        <input class="easyui-datebox" name="date_reduction" id="date_reduction" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false" style="width: 200px;">
                     </td>
                     <td style="width: 100px"><span style="width: 100px">减少方式:</span></td>
                     <td>
-                        <select class="easyui-combobox" aria-readonly="true" name="FS_SJ" id="FS_SJ" style="width: 200px;">
+                        <select class="easyui-combobox" aria-readonly="true" name="FS_SJ" id="FS_SJ" style="width: 200px;" data-options="editable: false">
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td>申请人:</td>
                     <td>
-                        <select class="easyui-combobox" aria-readonly="true" id="UAP_add" name="UAP_add" style="width: 200px;">
+                        <select class="easyui-combobox" aria-readonly="true" id="UAP_add" name="UAP_add" data-options="editable: false" style="width: 200px;">
                         </select>
                     </td>
                     <td>批准人:</td>
                     <td>
-                        <input class="easyui-combobox" readonly="readonly" id="UAT_add" name="UAT_add" style="width: 200px;" />
+                        <input class="easyui-combobox" readonly="readonly" id="UAT_add" name="UAT_add" data-options="editable: false" style="width: 200px;" />
                     </td>
                 </tr>
             </table>

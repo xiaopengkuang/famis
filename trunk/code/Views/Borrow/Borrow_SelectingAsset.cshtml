@@ -47,7 +47,7 @@
                 <tr>
                     <td>查询条件：</td>
                     <td>
-                        <select class="easyui-combobox" name="state" style="width: 80px;" id="Accounting_SC">
+                        <select class="easyui-combobox" name="state" style="width: 80px;" id="Accounting_SC" data-options="editable: false" >
                             <option value="DJRQ" selected="selected">登记日期</option>
                             <option value="GZRQ">购置日期</option>
                             <option value="ZCBH">资产编号</option>
@@ -57,11 +57,11 @@
                     </td>
                     <td class="SC_Date_Accounting">开始时间：</td>
                     <td class="SC_Date_Accounting">
-                        <input class="easyui-datebox" id="beginDate_SC" style="width: 100px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                        <input class="easyui-datebox" id="beginDate_SC" style="width: 100px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false">
                     </td>
                     <td class="SC_Date_Accounting">结束时间:</td>
                     <td class="SC_Date_Accounting">
-                        <input class="easyui-datebox" id="endDate_SC" style="width: 100px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                        <input class="easyui-datebox" id="endDate_SC" style="width: 100px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false">
                     </td>
                     <td class="SC_Content_Accounting">
                         <input class="easyui-textbox" style="margin-left: 10px" id="SC_Content" />

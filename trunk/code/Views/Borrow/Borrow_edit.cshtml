@@ -43,22 +43,22 @@
                     </td>
                     <td style="width: 100px"><span style="width: 100px">借出日期:</span></td>
                     <td>
-                        <input class="easyui-datebox" name="date_borrow" id="date_borrow" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                        <input class="easyui-datebox" name="date_borrow" id="date_borrow" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false" style="width: 200px;">
                     </td>
                     <td style="width: 100px"><span style="width: 100px">预计归还日期:</span></td>
                     <td>
-                        <input class="easyui-datebox" name="date_return" id="date_return" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                        <input class="easyui-datebox" name="date_return" id="date_return" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false" style="width: 200px;">
                     </td>
                 </tr>
                 <tr>
                     <td>借用部门:</td>
                     <td>
-                        <select class="easyui-combotree" aria-readonly="true" id="department_borrow" name="department_borrow" style="width: 200px;">
+                        <select class="easyui-combotree" aria-readonly="true" id="department_borrow" data-options="editable: false"  name="department_borrow" style="width: 200px;">
                         </select>
                     </td>
                     <td>借用人:</td>
                     <td>
-                        <input class="easyui-combobox" readonly="readonly" id="user_borrow" name="user_borrow" style="width: 200px;" />
+                        <input class="easyui-combobox" readonly="readonly" id="user_borrow" data-options="editable: false"  name="user_borrow" style="width: 200px;" />
                     </td>
                     <td style="width: 100px">借用原因：</td>
                     <td>

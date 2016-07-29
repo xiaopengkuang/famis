@@ -27,7 +27,7 @@
                 单据号
                 <input class="easyui-textbox" style="margin-right: 10px" id="DJH" />
                 单据状态
-                <select class="easyui-combobox" name="state" style="margin-right: 10px;width: 60px;" id="DJZT">
+                <select class="easyui-combobox" name="state" style="margin-right: 10px;width: 60px;" id="DJZT"  data-options="editable: false">
                     <option value="ALL" selected="selected">全部</option>
                     <option value="CG">草稿</option>
                     <option value="DSH">待审核</option>
@@ -37,9 +37,9 @@
                 </select>
                 &nbsp; &nbsp;
                 维修日期：
-                <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                <input class="easyui-datebox" id="beginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false">
                 至
-                <input class="easyui-datebox" id="endDate_SC" style="margin-right: 10px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                <input class="easyui-datebox" id="endDate_SC" style="margin-right: 10px;" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable: false">
                 &nbsp; &nbsp;
                 <a href="javascript:void(0);" class="easyui-linkbutton" onclick="searchCond()" style="margin-right: 10px;" data-options="iconCls:'icon-search'">查询</a>
                 &nbsp; &nbsp;

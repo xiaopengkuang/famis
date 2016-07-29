@@ -760,6 +760,16 @@ function checkFormat() {
    
 }
 
+
+
+function cancelFormSubmit()
+{
+    try {
+        parent.$("#modalwindow").window("close");
+    } catch (e) {
+
+    }
+}
 //判值是否为空
 function isNull(data) {
     return (data == "" || data == undefined || data == null) ? true : false;
