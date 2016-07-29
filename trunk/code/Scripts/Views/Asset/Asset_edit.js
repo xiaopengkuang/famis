@@ -811,7 +811,7 @@ function downloadFile_TP(id) {
 function exportData(url) {
     var form = $("<form>");//定义一个form表单
     form.attr("style", "display:none");
-    form.attr("target", "");
+    form.attr("target", "hidden_frame");
     form.attr("method", "post");
     form.attr("action", url);
     var input1 = $("<input>");
