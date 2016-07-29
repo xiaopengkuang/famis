@@ -112,6 +112,12 @@ namespace FAMIS.Controllers
         //===============================================================Action  Area===================================================================================//
       
      
+        /// <summary>
+        /// 插入新的资产
+        /// </summary>
+        /// <param name="Asset_add"></param>
+        /// <param name="data_cattr"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_addNewAsset(string Asset_add, String data_cattr)
         {
@@ -140,6 +146,16 @@ namespace FAMIS.Controllers
             return info;
         }
       
+
+        /// <summary>
+        /// 根据查询条件加载资产数据接口
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="tableType"></param>
+        /// <param name="searchCondtiion"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         [HttpPost]
         public String LoadAssets(int? page, int? rows, int tableType, String searchCondtiion, bool? exportFlag)
         {
@@ -170,6 +186,17 @@ namespace FAMIS.Controllers
 
 
 
+        /// <summary>
+        /// 加载资产数据获取方法
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="role"></param>
+        /// <param name="dto_condition"></param>
+        /// <param name="selectedIDs"></param>
+        /// <param name="dataType"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         public String loadAsset_By_Type(int? page, int? rows, int? role, dto_SC_Asset dto_condition, List<int> selectedIDs, int dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
@@ -201,6 +228,20 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 条件查询
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="role"></param>
+        /// <param name="cond"></param>
+        /// <param name="idsRight_deparment"></param>
+        /// <param name="idsRight_assetType"></param>
+        /// <param name="selectedIDs"></param>
+        /// <param name="dataType"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         public String loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs, int? dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
@@ -427,7 +468,7 @@ namespace FAMIS.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 字典方法查询
         /// </summary>
         /// <param name="page"></param>
         /// <param name="rows"></param>
@@ -662,6 +703,11 @@ namespace FAMIS.Controllers
             }
         }
 
+        /// <summary>
+        /// 删除数据  非物理删除    将标志位设为false
+        /// </summary>
+        /// <param name="selectedIDs"></param>
+        /// <returns></returns>
         [HttpPost]
         public int deleteAssets(List<int> selectedIDs)
         {
@@ -764,6 +810,13 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 更新资产信息
+        /// </summary>
+        /// <param name="Asset_add"></param>
+        /// <param name="data_cattr"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_updateAsset(string Asset_add, String data_cattr)
         {
@@ -849,6 +902,8 @@ namespace FAMIS.Controllers
 
 
 
+
+        //根据barcode获取资产信息
         public JsonResult getAssetBybarCode(String barcode)
         {
 
@@ -942,6 +997,13 @@ namespace FAMIS.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+
+
+        /// <summary>
+        /// 根据流水号获取资产ID
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
         [HttpPost]
         public List<int> getAssetIDBySerialNum(List<String> list)
         {
@@ -961,7 +1023,13 @@ namespace FAMIS.Controllers
         }
 
 
-
+        /// <summary>
+        /// 创建自定义属性
+        /// </summary>
+        /// <param name="id_asset"></param>
+        /// <param name="id_assetType"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public List<tb_Asset_CustomAttr> createAssetCAttr(int id_asset,int id_assetType,List<Json_asset_cattr_ad> data)
         {
             List<tb_Asset_CustomAttr> res = new List<tb_Asset_CustomAttr>();
@@ -1168,6 +1236,13 @@ namespace FAMIS.Controllers
         }
         
 
+
+
+        /// <summary>
+        /// 下载附属文件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult downloadSubFileBydocID(int? id)
         {
@@ -1193,6 +1268,12 @@ namespace FAMIS.Controllers
 
         }
 
+
+        /// <summary>
+        /// 下载附属图片
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult downloadSubPictureBydocID(int? id)
         {
@@ -1221,6 +1302,13 @@ namespace FAMIS.Controllers
 
         }
 
+
+
+        /// <summary>
+        /// 将文件以压缩包方式下载
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public ActionResult downloadFileByURL(String path)
         {
             List<string> fileLists = new List<string>();
@@ -1255,6 +1343,12 @@ namespace FAMIS.Controllers
            
         }
 
+
+        /// <summary>
+        /// 根据文件路径下载文件
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public ActionResult downLoadFile(String path)
         {
             if (!System.IO.File.Exists(path))
@@ -1282,6 +1376,13 @@ namespace FAMIS.Controllers
             return File(path, "application/x-zip-compressed");
         }
 
+
+
+       /// <summary>
+       /// 删除目录下所有文件
+       /// </summary>
+       /// <param name="path"></param>
+       /// <returns></returns>
         public bool DeleteFiles(string path)
         {
             if (Directory.Exists(path) == false)
@@ -1372,6 +1473,13 @@ namespace FAMIS.Controllers
         }
 
 
+
+
+        /// <summary>
+        /// 添加附属设备
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_add_subEquiment(String data)
         {
@@ -1407,6 +1515,13 @@ namespace FAMIS.Controllers
 
         }
 
+
+        /// <summary>
+        /// 删除附属信息
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public int delete_Sub_item(String type,int? id)
         {
@@ -1421,7 +1536,11 @@ namespace FAMIS.Controllers
             return result;
         }
 
-
+        /// <summary>
+        /// 删除附属设备
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public int delete_sub_SB(int? id)
         {
             var data = from p in DB_C.tb_Asset_sub_equiment
@@ -1440,6 +1559,12 @@ namespace FAMIS.Controllers
             return -1;
             }
         }
+
+        /// <summary>
+        /// 删除附属文件
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public int delete_sub_WJ(int? id)
         {
             var data = from p in DB_C.tb_Asset_sub_document
@@ -1462,6 +1587,12 @@ namespace FAMIS.Controllers
             }
         }
 
+
+        /// <summary>
+        /// 删除附属图片
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public int delete_sub_TP(int? id)
         {
             var data = from p in DB_C.tb_Asset_sub_picture
@@ -1484,6 +1615,11 @@ namespace FAMIS.Controllers
             }
         }
 
+
+
+        /// <summary>
+        /// 上次文件
+        /// </summary>
          [HttpPost]
         public void uploadDocument()
         {
@@ -1535,6 +1671,11 @@ namespace FAMIS.Controllers
             Response.Write(resultInfo);
 
         }
+
+
+        /// <summary>
+        /// 上次图片
+        /// </summary>
          [HttpPost]
          public void uploadPicture()
          {
@@ -1586,6 +1727,12 @@ namespace FAMIS.Controllers
 
          }
 
+
+
+        /// <summary>
+        /// 自定义空数据-datagrid
+        /// </summary>
+        /// <returns></returns>
         public JsonResult NULL_dataGrid()
         {
             var json = new
@@ -1633,7 +1780,12 @@ namespace FAMIS.Controllers
 
 
 
-
+        /// <summary>
+        /// 上次单个文件
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="theFileName"></param>
+        /// <returns></returns>
         private string upSingleFile(HttpPostedFile file, String theFileName)
         {
             string infos = "";
@@ -1679,7 +1831,7 @@ namespace FAMIS.Controllers
 
 
 
-
+        //上次单个图片
         private string upSinglePicture(HttpPostedFile file, String theFileName)
         {
             string infos = "";

@@ -23,6 +23,7 @@ namespace FAMIS.Controllers
     public class AllocationController : Controller
     {
 
+        //外部接口定义
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
         CommonConversion commonConversion = new CommonConversion();
         CommonController commonController = new CommonController();
@@ -35,10 +36,18 @@ namespace FAMIS.Controllers
         }
 
 
+        /// <summary>
+        /// 跳转到调拨主页面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Allocation()
         {
             return View();
         }
+        /// <summary>
+        /// 跳转到添加调拨单据页面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Allocation_add()
         {
             if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_add))
@@ -47,11 +56,20 @@ namespace FAMIS.Controllers
             }
             return View();
         }
+        /// <summary>
+        /// 选择可以调拨的资产
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Allocation_SelectingAsset()
         {
             return View();
         }
 
+        /// <summary>
+        /// 调拨单据编辑页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Allocation_edit(int? id)
         {
 
@@ -68,6 +86,12 @@ namespace FAMIS.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 查看调拨单据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Allocation_detail(int? id)
         {
             if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_view))
@@ -85,6 +109,11 @@ namespace FAMIS.Controllers
 
 
 
+        /// <summary>
+        /// 调拨单据审核
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Allocation_review(int? id)
         {
             if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_review))
@@ -103,6 +132,14 @@ namespace FAMIS.Controllers
 
 
 
+        /// <summary>
+        /// 加载调拨单据列表接口
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="searchCondtiion"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         [HttpPost]
         public String LoadAllocation(int? page, int? rows, String searchCondtiion, bool? exportFlag)
         {
@@ -119,6 +156,15 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 加载调拨单据数据获取
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="cond"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         public String loadAllocationList(int? page, int? rows, dto_SC_List cond, bool? exportFlag)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -242,6 +288,12 @@ namespace FAMIS.Controllers
             return json_result_2;
 
         }
+
+        /// <summary>
+        /// 添加调拨单据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_allocation_add(String data)
         {
@@ -311,6 +363,13 @@ namespace FAMIS.Controllers
 
         }
 
+
+        /// <summary>
+        /// 创建调拨单据详细记录
+        /// </summary>
+        /// <param name="id_collar"></param>
+        /// <param name="ids_asset"></param>
+        /// <returns></returns>
         public List<tb_Asset_allocation_detail> createAllocationDetailList(int? id_collar, List<int?> ids_asset)
         {
             List<tb_Asset_allocation_detail> list = new List<tb_Asset_allocation_detail>();
@@ -369,6 +428,12 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 更新调拨单据数据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_allocation_update(String data)
         {
@@ -438,7 +503,7 @@ namespace FAMIS.Controllers
 
 
         /// <summary>
-        /// 
+        /// 更新单据状态
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -572,7 +637,11 @@ namespace FAMIS.Controllers
 
 
 
-
+        /// <summary>
+        /// 判断用户是否有权限去更新单据状态
+        /// </summary>
+        /// <param name="id_json"></param>
+        /// <returns></returns>
         public bool RightToUpdateState(int? id_json)
         {
             String operation = null;
@@ -606,6 +675,12 @@ namespace FAMIS.Controllers
 
         }
 
+
+        /// <summary>
+        /// 根据调拨单据ID 获取其相应的资产
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public List<int> getAssetIdsByAllocationID(int? id)
         {
             var data = from p in DB_C.tb_Asset_allocation_detail
@@ -668,7 +743,11 @@ namespace FAMIS.Controllers
 
 
 
-
+        /// <summary>
+        /// 根据单据的单据号获取ID
+        /// </summary>
+        /// <param name="serialNum"></param>
+        /// <returns></returns>
         public int? getIDBySerialNum(String serialNum)
         {
             if (serialNum == null)
@@ -691,7 +770,12 @@ namespace FAMIS.Controllers
             return null;
         }
 
-
+        /// <summary>
+        /// 判断单据状态审核是否符合逻辑
+        /// </summary>
+        /// <param name="id_stateTarget"></param>
+        /// <param name="id_allocation"></param>
+        /// <returns></returns>
         public bool isOkToReview_allocation(int? id_stateTarget, int? id_allocation)
         {
             if (id_allocation == null || id_stateTarget == null || !SystemConfig.state_List.Contains((int)id_stateTarget))

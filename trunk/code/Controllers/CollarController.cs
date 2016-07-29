@@ -125,6 +125,14 @@ namespace FAMIS.Controllers
 
 
         //======================================================================================//
+        /// <summary>
+        /// 获取领用单据列表入口
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="searchCondtiion"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         [HttpPost]
         public String LoadCollars(int? page, int? rows, String searchCondtiion, bool? exportFlag)
         {
@@ -138,7 +146,14 @@ namespace FAMIS.Controllers
             }
             return LoadCollarsList(page, rows, dto_condition, exportFlag);
         }
-
+        /// <summary>
+        /// 获取单据列表方法
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="cond"></param>
+        /// <param name="exportFlag"></param>
+        /// <returns></returns>
         public String LoadCollarsList(int? page, int? rows, dto_SC_List cond, bool? exportFlag)
         {
             page = page == null ? 1 : page;
@@ -354,6 +369,12 @@ namespace FAMIS.Controllers
         //}
 
 
+
+        /// <summary>
+        /// 添加新的领用单据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_addCollar(String data)
         {
@@ -458,7 +479,11 @@ namespace FAMIS.Controllers
        
 
 
-
+        /// <summary>
+        /// 更新领用单据
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         [HttpPost]
         public int Handler_updateCollar(String data)
         {
@@ -524,7 +549,12 @@ namespace FAMIS.Controllers
         }
 
 
-
+        /// <summary>
+        /// 创建领用单据明细
+        /// </summary>
+        /// <param name="id_collar"></param>
+        /// <param name="ids_asset"></param>
+        /// <returns></returns>
         public List<tb_Asset_collar_detail> createCollarDetialList(int? id_collar,List<int?> ids_asset)
         {
             List<tb_Asset_collar_detail> list = new List<tb_Asset_collar_detail>();
@@ -551,6 +581,12 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 获取单个领用单据信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Json_collar getCollarByID(int? id)
         {
            var data= from p in DB_C.tb_Asset_collar
@@ -588,6 +624,14 @@ namespace FAMIS.Controllers
            return null;
 
         }
+
+        /// <summary>
+        /// 获取单据明细
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult LoadCollarDetailByID(int? page, int? rows, String id)
         {
@@ -598,7 +642,11 @@ namespace FAMIS.Controllers
             return commonController.getAssetsByIDs(page,rows,ids_asset);
         }
 
-
+        /// <summary>
+        /// 根据单据ID获取相应的资产ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public List<int?> getAssetIdsByCollarID(int? id)
         {
             var data = from p in DB_C.tb_Asset_collar_detail
@@ -615,6 +663,12 @@ namespace FAMIS.Controllers
         }
 
 
+
+        /// <summary>
+        /// 根据单据ＩＤ获取信息用于数据绑定
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult getCollar_edit(int? id)
         {
