@@ -39,7 +39,7 @@
                     </td>
                     <td style="width: 100px"><span style="width: 100px">调拨日期:</span></td>
                     <td>
-                        <input class="easyui-datebox" name="date_add" id="date_add" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser" style="width: 200px;">
+                        <input class="easyui-datebox" name="date_add" id="date_add" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser,editable:false" style="width: 200px;">
                     </td>
                     <td style="width: 100px"><span style="width: 100px">调拨原因:</span></td>
                     <td>
@@ -49,16 +49,16 @@
                 <tr>
                     <td>调入部门:</td>
                     <td>
-                        <select class="easyui-combotree" aria-readonly="true" id="LYBM_add" name="LYBM_add" style="width: 200px;">
+                        <select class="easyui-combotree" aria-readonly="true" id="LYBM_add" name="LYBM_add" data-options="editable:false"  style="width: 200px;">
                         </select>
                     </td>
                      <td>申请人:</td>
                     <td>
-                        <input class="easyui-combobox"  readonly="readonly" id="SYRY_add" name="SYRY_add" style="width: 200px;" />
+                        <input class="easyui-combobox"  readonly="readonly" id="SYRY_add" name="SYRY_add" data-options="editable:false"  style="width: 200px;" />
                     </td>
                     <td>调入地点:</td>
                     <td>
-                        <input class="easyui-textbox" id="CFDD_add" aria-readonly="true" name="CFDD_add" style="width: 200px;" />
+                        <input class="easyui-textbox" id="CFDD_add" aria-readonly="true" name="CFDD_add" data-options="editable:false"  style="width: 200px;" />
                     </td>
                 </tr>
             </table>
