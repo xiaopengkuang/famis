@@ -32,30 +32,26 @@ namespace FAMIS.Controllers
         StringBuilder sb_tree_SearchTree = new StringBuilder();
         Excel_Helper excel = new Excel_Helper();
         Serial serial = new Serial();
-        Print_Helper print=new Print_Helper("asd");
+        Print_Helper print=new Print_Helper("");
         public ActionResult depreciation()
         {
             return View();
         }
 
         [HttpPost]
-       public string Dep_JT()
+       public string Dep_JT()//保存折旧信息
         {
-           // StreamWriter sw = new StreamWriter("D:\\qp0.txt", true);
-             string ads;
+            
+             
             List<String> list = Get_Depreciation_Data();
             if (list.Count() != 0)
             {
-                ads = list[0];
+                
                 UpdateAsset_table(list);
             }
-           /* for (int i = 0; i < list.Count(); i++)
-            {
-                sw.WriteLine(list[i]);
-            }
-            sw.Close();测试*/
+        
 
-            return "NewDepreciation";
+            return "";
         }
         public void UpdateAsset_table(List<String> list)
         {
@@ -81,7 +77,7 @@ namespace FAMIS.Controllers
             }
             db.SaveChanges();
         }
-        public List<String> Get_Depreciation_Data()
+        public List<String> Get_Depreciation_Data()//得到折旧计算所需要的信息
         {
          
 
@@ -94,7 +90,7 @@ namespace FAMIS.Controllers
             {
 
                 int temp = 0;
-                foreach (tb_Asset o in asset)
+                foreach (tb_Asset o in asset)//读取折旧信息并拼写格式
                 {
 
 
@@ -113,18 +109,16 @@ namespace FAMIS.Controllers
             for (int i = 0; i < Assetrows.Length; i++)
             {
                
-               // StreamWriter sw = new StreamWriter("D:\\zima2.txt", true);
+              
                 string[] parameters = Assetrows[i].Split(',');
                 if (parameters[1] == null || parameters[1]=="")
                     continue;
-               //   sw.WriteLine(parameters[1] + ",");
-               //  sw.WriteLine(GetMethod_depreciation(int.Parse(parameters[1])));
-              //  sw.Close();
+               ;
             
-                switch (GetMethod_depreciation(int.Parse(parameters[1])))
+                switch (GetMethod_depreciation(int.Parse(parameters[1])))//目前只支持平均年限算法
                 {
 
-                    case "平均年限法":
+                    case SystemConfig.ZJ_Algorithm_PJNX:
                         {
                             
 
@@ -174,7 +168,7 @@ namespace FAMIS.Controllers
                 return "";
             else
             {
-               // Total_Depreciation_Amount = (float.Parse(Total_Depreciation_Amount) + month_passed * Month_Depreciation_Amount).ToString();
+                
                 Total_Depreciation_Amount = (month_passed * Month_Depreciation_Amount).ToString();
                 float net_value = totalprice - float.Parse(Total_Depreciation_Amount);
                 para = totalprice.ToString() + "," + Month_Depreciation_Amount.ToString() + "," + Total_Depreciation_Amount.ToString()
@@ -185,7 +179,7 @@ namespace FAMIS.Controllers
             return para;
         }
 
-        public string GetMethod_depreciation(int id)
+        public string GetMethod_depreciation(int id)//获得折旧算法
         {
             IEnumerable<tb_dataDict_para> data = from o in db.tb_dataDict_para
                                                  where o.ID == id
@@ -204,7 +198,7 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
-        public JsonResult Load_Asset( int? page, int? rows, string JSdata)
+        public JsonResult Load_Asset( int? page, int? rows, string JSdata)//加载资产折旧表
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
@@ -358,7 +352,7 @@ namespace FAMIS.Controllers
             return "";
         }
           [HttpPost]
-          public string GetIsQueryied(string Json)
+          public string GetIsQueryied(string Json)//检查用户是否进行过筛选查询
           {
               if (Session["IsQueried"] == null)
                   return "false";
@@ -367,8 +361,9 @@ namespace FAMIS.Controllers
           }
        
          [HttpPost]
-          public string SetCurrentRow(string Json)
+        public string SetCurrentRow(string Json)//用session记录一下当前用户所编辑的行
         {
+             
             Session["CurrentRow"] = Json;
             return "";
         }
@@ -408,7 +403,7 @@ namespace FAMIS.Controllers
         }
         //[HttpPost]
         [HttpPost]
-        public string AddDP(string JSdata)
+        public string AddDP(string JSdata)//添加盘点单
         {
             ArrayList mysearial = serial.ReturnNewSearial("PD", 1);
             Session["CurrentRow"] = 0;
@@ -731,9 +726,7 @@ namespace FAMIS.Controllers
             {
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-                    StreamWriter sw = new StreamWriter("D:\\tet.txt");
-                    sw.Write(dt.Rows.Count+","+dt.Columns.Count);
-                    sw.Close();
+                    
                     if (j != dt.Columns.Count-1)
                     temp = dt.Rows[i][j].ToString();
                     else

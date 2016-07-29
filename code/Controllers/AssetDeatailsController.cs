@@ -37,82 +37,10 @@ namespace FAMIS.Controllers
             return View();
         }
 
-        public class GetAsset// 绑定页面规则数据
-        {
-
-            public string ZCBH{ get; set; }
-
-            public string ZCXZ { get; set; }
-            public string ZCLB { get; set; }
-            public string ZCMC { get; set; }
-
-            public string GGXH { get; set; }
-            public string JLSW { get; set; }
-            public string SZBM { get; set; }
-            public string SYR { get; set; }
-            public string CFDD { get; set; }
-            public string ZJFS { get; set; }
-            public string JZCL { get; set; }
-            public string ZCDJ { get; set; }
-
-            public string ZCSL { get; set; }
-            public string ZCJZ { get; set; }
-            public string YTZJ { get; set; }
-
-            public string LJZJ { get; set; }
-
-            public string  JZ { get; set; }
-           //自定义属性不在其中！
-
-
-
-
-
-
-        }
+       
+       
          [HttpPost]
-        public string Get_Asset_Deatail_BySearial(string Json)
-        {
-            string json="";
-           IEnumerable<String>  q = from a in db.tb_Asset
-                     join t in db.tb_AssetType on a.type_Asset equals t.ID
-                                    join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_tt
-                                    from tt in temp_tt.DefaultIfEmpty()
-                                    join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
-                                    from dd in temp_d.DefaultIfEmpty()
-                                    join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
-
-                                    from jj in temp_j.DefaultIfEmpty()
-                                    join s in db.tb_dataDict_para on a.state_asset equals s.ID into temp_s
-
-                                    from ss in temp_s.DefaultIfEmpty()
-                                    join p in db.tb_department on a.department_Using equals p.ID into temp_p
-                                    from pp in temp_p.DefaultIfEmpty()
-                                    join u in db.tb_user on a.Owener equals u.ID into temp_u
-                                    from uu in temp_u.DefaultIfEmpty()
-                                    join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
-                                    from ssp in temp_sp.DefaultIfEmpty()
-                                    join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
-                                    from ee in temp_ee.DefaultIfEmpty()
-                                    join zj in db.tb_dataDict_para on a.Method_add equals zj.ID into temp_zj
-                                    from zzj in temp_zj.DefaultIfEmpty()
-                                    join fs in db.tb_dataDict_para on a.Method_depreciation equals fs.ID into temp_fs
-                                     from ffs in temp_fs.DefaultIfEmpty()
-                        
-
-                        where a.serial_number==Json
-                        select a.serial_number+","+t.name_Asset_Type+","+t.name_Asset_Type+","+a.name_Asset+","+a.specification+
-                        ","+dd.name_para+","+pp.name_Department+","+uu.true_Name+","+ jj.name_para+","+zzj.name_para+","+ssp.name_supplier+
-                         ","+ssp.linkman+","+ssp.address+","+a.Time_Purchase+","+ss.name_para+","+a.Time_add+","+a.YearService_month+","+
-                        ffs.name_para+","+a.Net_residual_rate+","+a.unit_price+","+a.amount+","+a.value+","+a.depreciation_Month+","
-                        +a.depreciation_tatol+","+a.Net_value;
-            
-             foreach(String a in q)
-                 json=a;
-             return json.ToString();    
-        }
-         [HttpPost]
-         public string Add_InventDeatails(string Json)
+         public string Add_InventDeatails(string Json)//添加资产明细
          {
              string[] temp = Json.Split('o');
              string condiation = temp[0];
@@ -356,7 +284,7 @@ namespace FAMIS.Controllers
            return json;
        }
         [HttpPost]
-        public JsonResult Load_Asset(int? page, int? rows, string JSdata)
+        public JsonResult Load_Asset(int? page, int? rows, string JSdata)//添加盘点明细的资产索引表
         {
            page = page == null ? 1 : page;
             rows = rows == null ? 1 : rows;
@@ -556,10 +484,50 @@ namespace FAMIS.Controllers
 
                 } 
             return Null_dataGrid();
-        }  
+        }
 
-            
-            
+
+        [HttpPost]
+        public string Get_Asset_Deatail_BySearial(string Json)
+        {
+            string json = "";
+            IEnumerable<String> q = from a in db.tb_Asset
+                                    join t in db.tb_AssetType on a.type_Asset equals t.ID
+                                    join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_tt
+                                    from tt in temp_tt.DefaultIfEmpty()
+                                    join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
+                                    from dd in temp_d.DefaultIfEmpty()
+                                    join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
+
+                                    from jj in temp_j.DefaultIfEmpty()
+                                    join s in db.tb_dataDict_para on a.state_asset equals s.ID into temp_s
+
+                                    from ss in temp_s.DefaultIfEmpty()
+                                    join p in db.tb_department on a.department_Using equals p.ID into temp_p
+                                    from pp in temp_p.DefaultIfEmpty()
+                                    join u in db.tb_user on a.Owener equals u.ID into temp_u
+                                    from uu in temp_u.DefaultIfEmpty()
+                                    join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
+                                    from ssp in temp_sp.DefaultIfEmpty()
+                                    join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
+                                    from ee in temp_ee.DefaultIfEmpty()
+                                    join zj in db.tb_dataDict_para on a.Method_add equals zj.ID into temp_zj
+                                    from zzj in temp_zj.DefaultIfEmpty()
+                                    join fs in db.tb_dataDict_para on a.Method_depreciation equals fs.ID into temp_fs
+                                    from ffs in temp_fs.DefaultIfEmpty()
+
+
+                                    where a.serial_number == Json
+                                    select a.serial_number + "," + t.name_Asset_Type + "," + t.name_Asset_Type + "," + a.name_Asset + "," + a.specification +
+                                    "," + dd.name_para + "," + pp.name_Department + "," + uu.true_Name + "," + jj.name_para + "," + zzj.name_para + "," + ssp.name_supplier +
+                                     "," + ssp.linkman + "," + ssp.address + "," + a.Time_Purchase + "," + ss.name_para + "," + a.Time_add + "," + a.YearService_month + "," +
+                                    ffs.name_para + "," + a.Net_residual_rate + "," + a.unit_price + "," + a.amount + "," + a.value + "," + a.depreciation_Month + ","
+                                    + a.depreciation_tatol + "," + a.Net_value;
+
+            foreach (String a in q)
+                json = a;
+            return json.ToString();
+        }     
           
 
        
