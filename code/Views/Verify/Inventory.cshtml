@@ -37,24 +37,24 @@
                         </td>
                         <td>盘点日期</td>
                         <td>
-                            <input class="easyui-datebox" id="BeginDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                            <input class="easyui-datebox" id="BeginDate_SC" data-options="editable: false,sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
 
                         </td>
                         <td>至</td>
                         <td>
-                            <input class="easyui-datebox" id="EndDate_SC" data-options="sharedCalendar:'#cc',formatter:myformatter,parser:myparser">
+                            <input class="easyui-datebox" id="EndDate_SC" data-options="editable: false,sharedCalendar:'#cc',formatter:myformatter,parser:myparser" />
 
                         </td>
                         <td>盘点状态</td>
                         <td>
-                            <select class="easyui-combobox" id="Invention_State"  name="Invention_State" style="width: 150px;" >
+                            <select class="easyui-combobox" id="Invention_State" name="Invention_State" style="width: 150px;" data-options="editable: false">
                                 <option value="WPD">未盘点</option>
                                 <option value="PDZ">盘点中</option>
                                 <option value="YPD">已盘点</option>
                             </select>
                         </td>
                         <td>盘点人</td>
-                        <td> <select class="easyui-combobox" id="operator" name="operator" style="width: 150px;"></select></td>
+                        <td> <select class="easyui-combobox" id="operator" name="operator" style="width: 150px;" data-options="editable: false"></select></td>
 
                         <td> <a href="#" onclick="LoadBYSearchCondition()" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'">查询</a></td>
                         <td>
