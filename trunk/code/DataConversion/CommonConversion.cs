@@ -574,5 +574,28 @@ namespace FAMIS.DataConversion
         }
 
 
+
+        public String getUniqAssetTypeCode()
+        {
+                String h = DateTime.Now.Hour.ToString().PadLeft(2, '0');      //获取当前时间的小时部分
+                String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
+                String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
+                int code_temp =int.Parse( h + m + s);
+                bool flag=true;
+                while(flag)
+                {
+                     code_temp++;
+                     var data = from p in DB_C.tb_AssetType
+                               where p.assetTypeCode==code_temp
+                               select p;
+                     if (data.Count() < 1)
+                     {
+                         flag = false;
+                     }
+                }
+                return code_temp.ToString();           
+        }
+
+
     }
 }

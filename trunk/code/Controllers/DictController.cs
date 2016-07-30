@@ -38,6 +38,9 @@ namespace FAMIS.Controllers
         StringBuilder result_tree_Address = new StringBuilder();
         StringBuilder sb_tree_Address = new StringBuilder();
        
+
+
+       //ALL View();跳转到相应的页面或者指定的页面
         // GET: Dict
         public ActionResult staff()
         {
@@ -57,6 +60,9 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+
+
+       
         public ActionResult add_AssetType(int? pid,String pname,String level)
         {
             if (pname == null || pname == "" || pid == null)
@@ -74,14 +80,12 @@ namespace FAMIS.Controllers
                 //获取  获取新的资产编号
                 //TODO: 
                 //DateTime dt = DateTime.Now;
-                String h = DateTime.Now.Hour.ToString().PadLeft(2, '0');      //获取当前时间的小时部分
-                String m = DateTime.Now.Minute.ToString().PadLeft(2, '0');    //获取当前时间的分钟部分
-                String s = DateTime.Now.Second.ToString().PadLeft(2, '0');    //获取当前时间的秒部分
+              
                 //23.ToString().PadLeft(6, '0');
 
 
 
-                ViewBag.CodeAssetType = h + m + s;
+                ViewBag.CodeAssetType = commonConversion.getUniqAssetTypeCode();
 
                 return View();
             }
@@ -92,6 +96,10 @@ namespace FAMIS.Controllers
             }
             
         }
+
+
+
+
 
         public ActionResult edit_AssetType(int? id,String name)
         {
@@ -110,6 +118,13 @@ namespace FAMIS.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 加载供应商
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="rows"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult load_supplier(int? page, int? rows)
         {

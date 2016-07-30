@@ -21,7 +21,12 @@ namespace FAMIS.Controllers
         }
 
 
-
+        /// <summary>
+        /// 创建条形码
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="info_Asset"></param>
+        /// <returns></returns>
         [HttpPost]
         public String CreateBarCode(String data,String info_Asset)
         {
