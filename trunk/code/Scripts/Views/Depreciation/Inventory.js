@@ -582,18 +582,7 @@ function LoadInitData(searchCondtiion) {
                 ],
 
                 onSelect: function (index, row) {
-                    /*  var data = $('#TableList_0_1').datagrid('getData');
-                      alert(index);
-                      for (var i = index+1; i < data.rows.length; i++)
-                      {
-                          alert(i);
-                          $("#TableList_0_1")[i].disabled = true;
-                      }
-                      for (var i = 0; i < index + 1; i++) {
-                          alert(i);
-                          $("#TableList_0_1")[i].disabled = true;
-                      }
-                      */
+                 
                     var rowdata = $('#TableList_0_1').datagrid('getData');
                     try {
                         var searial = rowdata.rows[index].serial_number;//暂时先用ID代替编号
