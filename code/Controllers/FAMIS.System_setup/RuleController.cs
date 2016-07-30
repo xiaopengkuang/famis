@@ -683,22 +683,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         }
 
         [HttpPost]
-        public ActionResult AddRule([Bind(Include = "Name_SeriaType,Rule_Generate,serialNum_length")] tb_Rule_Generate rule)
+        public ActionResult AddRule([Bind(Include = "Name_SeriaType,Rule_Generate,serialNum_length")] tb_Rule_Generate rule) //增加规则
         {
-            /*StreamWriter sw = new StreamWriter("D:\\123456.txt");
-            sw.Write(staff.ID_Staff + "\r\n");
-            sw.Write(staff.code_Departmen + "\r\n");
-            sw.Write(staff.sex+ "\r\n");
-            sw.Write(staff.entry_Time + "\r\n");
-            sw.Write(staff.phoneNumber + "\r\n");
-            sw.Write(staff.email + "\r\n");
-            sw.Write(staff.effective_Flag+"\r\n");
-            sw.Write(staff.create_TIME + "\r\n");
-            sw.Write(staff.invalid_TIME + "\r\n");
-            sw.Write(staff._operator + "\r\n");
-            sw.Write(staff.name + "\r\n");
-            sw.Close();*/
-
+            
             if (ModelState.IsValid)
             {
                 mydb.tb_Rule_Generate.Add(rule);
