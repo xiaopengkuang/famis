@@ -32,6 +32,12 @@ namespace FAMIS.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 选择审核用户   依据菜单名称
+        /// </summary>
+        /// <param name="menuName"></param>
+        /// <returns></returns>
         public ActionResult SelectReviewer(String menuName)
         {
             if (menuName == null)
@@ -131,7 +137,12 @@ namespace FAMIS.Controllers
 
 
 
-
+        /// <summary>
+        /// 获取一个新的单据号
+        /// </summary>
+        /// <param name="ruleType">规则类型</param>
+        /// <param name="num">  规格数量</param>
+        /// <returns></returns>
         [HttpPost]
         public String GetOneSerialNumber(String ruleType, int num)
         {
@@ -144,14 +155,19 @@ namespace FAMIS.Controllers
             return resultsTr;
         }
 
+
+       /// <summary>
+       /// 获取单据号列表
+       /// </summary>
+       /// <param name="ruleType"></param>
+       /// <param name="num"></param>
+       /// <returns></returns>
         [HttpPost]
-        /**
-         * 
-         * */
         public ArrayList getNewSerialNumber(String ruleType, int num)
         {
             return myserial.ReturnNewSearial(ruleType, num);
         }
+
 
 
         public String getLatestOneSerialNumber(String ruleType) 
@@ -741,6 +757,12 @@ namespace FAMIS.Controllers
         }
 
 
+
+       /// <summary>
+       /// 获取diC中某个id的子节点
+       /// </summary>
+       /// <param name="p_id"></param>
+       /// <returns></returns>
         public List<int?> GetSonIDs_dataDict_Para(int? p_id)
         {
             var data = GetSon_dataDict_Para(p_id);
@@ -753,7 +775,11 @@ namespace FAMIS.Controllers
             return ids;
         }
 
-        //获取取子节点 但是没有包含父节点
+        /// <summary>
+        /// 获取取子节点 但是没有包含父节点
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
         public IEnumerable<tb_department> GetSon_Department(int? p_id)
         {
             var query = from c in DB_C.tb_department
@@ -764,6 +790,12 @@ namespace FAMIS.Controllers
             return query.ToList().Concat(query.ToList().SelectMany(t => GetSon_Department(t.ID)));
         }
 
+
+        /// <summary>
+        /// 获取部门下的子节点
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
         public List<int?> GetSonIDs_Department(int? p_id)
         {
             var data = GetSon_Department(p_id);
@@ -776,6 +808,12 @@ namespace FAMIS.Controllers
             return ids;
         }
 
+
+        /// <summary>
+        /// 获取资产类型的子节点
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
         public IEnumerable<tb_AssetType> GetSon_AsseType(int? p_id)
         {
             var query = from c in DB_C.tb_AssetType
@@ -834,7 +872,11 @@ namespace FAMIS.Controllers
         }
 
 
-
+        /// <summary>
+        /// 获取用户页面的操作权限
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <returns></returns>
         public JsonResult getOperationRightsByMenu(String menu)
         {
             Json_operationRight right=new Json_operationRight ();
@@ -972,6 +1014,13 @@ namespace FAMIS.Controllers
 
 
 
+
+        /// <summary>
+        /// 判断用户是否有操作权限
+        /// </summary>
+        /// <param name="menu"></param>
+        /// <param name="operation"></param>
+        /// <returns></returns>
         public bool isRightToOperate(String menu,String operation)
         {
 
