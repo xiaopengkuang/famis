@@ -19,23 +19,29 @@
 
     var previous_head = "";
     var head = "";
+        
     function SetHead(hd) {
-        previous_head = head;
-        SetPrevious_Value("", previous_head);
+        try {
+            previous_head = head;
 
-        var reg = "";
-        head = hd;
+            SetPrevious_Value("", previous_head);
 
-        $('#' + head + '_serial').keyup(function () {
+            var reg = "";
+            head = hd;
 
-            reg = "/[^" + head + "yyMMDD]/";
-            //  alert(reg);
-            reg = eval('(' + reg + ')');
+            $('#' + head + '_serial').keyup(function () {
 
-            this.value = this.value.replace(reg, '');
+                reg = "/[^" + head + "yyMMDD]/";
+                //  alert(reg);
+                reg = eval('(' + reg + ')');
 
-        });
-        SetPrevious_Value(head, "");
+                this.value = this.value.replace(reg, '');
+
+            });
+            SetPrevious_Value(head, "");
+        }
+        catch (e)
+        { };
 
     }
     function SetHeadRule(previous_head)
@@ -257,8 +263,12 @@
             LoadRule();
             $('#Add_Rule_btn').mouseover(function () {
 
-               // alert(head);
-                SetHeadRule(head);
+                // alert(head);
+                try {
+                    SetHeadRule(head);
+                }
+                catch (e)
+                { };
 
             });
         
