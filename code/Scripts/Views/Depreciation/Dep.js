@@ -12,16 +12,17 @@ function depreciation() {
 
         success: function (result) {
 
-
+            $('#p').show();
+            start();
 
         }, error: function (msg) {
-            alert("折旧失败!");
+            alert("无资产信息或资产信息有误!");
+            return null;
         }
     });
 
 
-    $('#p').show();
-    start();
+   
 }
 function MessShow(mess) {
     $.messager.show({
