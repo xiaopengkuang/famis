@@ -140,17 +140,24 @@
                       editor: {
                           type: 'combotree', options: {
                               valueField: 'nameText', textField: 'nameText', method: 'POST', editable: false, url: '/Dict/load_SZBM',
-                              onSelect: function (node) {
+                              success: function (result) {
+                                   
+                                  alert(result);
+                              }, error: function (msg) {
+                                  alert("该角色没有任何部门权限！");
+                                   
+                              },onSelect: function (node) {
                                   try {
+                                      
                                       dptid =node.text;
                                       
-                                      combotree('getValue');
+                                      // combotree('getValue');
                                       
                                   }
                                   catch (e)
                                   { }
 
-                              }, required: false
+                              },required: false
                           }
                       }
                   }
@@ -234,32 +241,37 @@
              {
                  text: '修改', iconCls: 'icon-edit', disabled: !dataRight.edit_able, handler: function () {
                      //修改时要获取选择到的行
-                     var rows = datagrid.datagrid("getSelections");
-                     var index = datagrid.datagrid("getRowIndex", rows[0]);
-                     $("#dd").datagrid('selectRow', index);
-                     //如果只选择了一行则可以进行修改，否则不操作
-                     if (rows.length == 1) {
-                         //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
-                         if (editRow != undefined) {
-                             datagrid.datagrid("endEdit", editRow);
-                             var index = datagrid.datagrid("getRowIndex", rows[0]);
-                             $("#dd").datagrid('selectRow', index);
-                         }
-                         //当无编辑行时
-                         if (editRow == undefined) {
-                             //获取到当前选择行的下标
-                             var index = datagrid.datagrid("getRowIndex", rows[0]);
+                     try {
+                         var rows = datagrid.datagrid("getSelections");
+                         var index = datagrid.datagrid("getRowIndex", rows[0]);
+                         $("#dd").datagrid('selectRow', index);
+                         //如果只选择了一行则可以进行修改，否则不操作
+                         if (rows.length == 1) {
+                             //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
+                             if (editRow != undefined) {
+                                 datagrid.datagrid("endEdit", editRow);
+                                 var index = datagrid.datagrid("getRowIndex", rows[0]);
+                                 $("#dd").datagrid('selectRow', index);
+                             }
+                             //当无编辑行时
+                             if (editRow == undefined) {
+                                 //获取到当前选择行的下标
+                                 var index = datagrid.datagrid("getRowIndex", rows[0]);
 
-                             //开启编辑
-                             datagrid.datagrid("beginEdit", index);
-                             //把当前开启编辑的行赋值给全局变量editRow
-                             editRow = index;
-                             //当开启了当前选择行的编辑状态之后，
-                             //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
-                             //  datagrid.datagrid("unselectAll");
+                                 //开启编辑
+                                 datagrid.datagrid("beginEdit", index);
+                                 //把当前开启编辑的行赋值给全局变量editRow
+                                 editRow = index;
+                                 //当开启了当前选择行的编辑状态之后，
+                                 //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
+                                 //  datagrid.datagrid("unselectAll");
 
+                             }
                          }
                      }
+                     catch (e)
+                     { };
+
                  }
              }, '-',
              {
@@ -409,17 +421,21 @@
             },
             onDblClickRow: function (rowIndex, rowData) {
                 //双击开启编辑行
-                if (!dataRight.edit_able) {
-                    return;
+                try {
+                    if (!dataRight.edit_able) {
+                        return;
+                    }
+                    if (editRow != undefined) {
+
+                        datagrid.datagrid("endEdit", editRow);
+                    }
+                    if (editRow == undefined) {
+                        datagrid.datagrid("beginEdit", rowIndex);
+                        editRow = rowIndex;
+                    }
                 }
-                if (editRow != undefined) {
-                    
-                    datagrid.datagrid("endEdit", editRow);
-                }
-                if (editRow == undefined) {
-                    datagrid.datagrid("beginEdit", rowIndex);
-                    editRow = rowIndex;
-                }
+                catch (e)
+                { };
             },
             
         singleSelect: true, //允许选择多行

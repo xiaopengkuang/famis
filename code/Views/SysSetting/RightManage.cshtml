@@ -67,6 +67,7 @@
                         },
                         onLoadSuccess: function (node, data) {
                             $('#lefttree').show();
+                            $('#lefttree').tree('collapseAll');
                             Innitial_Right();
                         }
                     });
@@ -337,6 +338,7 @@
                     },
                     onLoadSuccess: function (node, data) {
                         $('#righttree').show();
+                        $('#righttree').tree('collapseAll');
                         InnitialAT_Right();
                     }
                 });
@@ -365,6 +367,7 @@
                     
                     onLoadSuccess: function (node, data) {
                         $('#mtree').show();
+                        $('#mtree').tree('collapseAll');
                         InnitialDP_Right();
                     }
                 });
@@ -437,15 +440,30 @@
                 submitATdata();
                 submitDPdata();
             }
+            function collapseAll() {
+                $('#lefttree').tree('collapseAll');
+                $('#righttree').tree('collapseAll');
+                $('#mtree').tree('collapseAll');
+            }
+            function expandAll() {
+                $('#lefttree').tree('expandAll');
+                $('#righttree').tree('expandAll');
+                $('#mtree').tree('expandAll');
+            }
+            function C_query() {
+                $('#lefttree').tree('reload');
+                $('#righttree').tree('reload');
+                $('#mtree').tree('reload');
+            }
         </script>
 </head>
 <body style="text-align:center">
 
     
 
-    <div data-options="region:'center',title:'角色管理',iconCls:'icon-ok',border:true">
+     
         
-            <div class="easyui-layout" style="text-align:center; width:100%;height:455px;">
+            <div class="easyui-layout" style="text-align:center; width:100%;height:655px;">
 
 
 
@@ -455,7 +473,11 @@
                     <div class="easyui-tabs" data-options="fit:true,border:false,plain:true" onclick="">
 
                         <div title="菜单权限" data-options="javascript: Innitial_Right()" style="padding:10px">
-
+                            <div style="text-align: left; padding: 5px;">
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">刷新</a>
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="collapseAll()">收起</a>
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="expandAll()">展开</a>
+                            </div>
                             <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
                             <div style="text-align: center; padding: 5px;">
                                 <a href=" javascript:Submit()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
@@ -463,6 +485,11 @@
                             </div>
                         </div>
                         <div title="资产类别权限" style="padding:5px" onclick="">
+                            <div style="text-align: left; padding: 5px;">
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">刷新</a>
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="collapseAll()">收起</a>
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="expandAll()">展开</a>
+                            </div>
                             <ul id="righttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
                             <div style="text-align: center; padding: 5px;">
                                 <a href=" javascript:Submit()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
@@ -471,6 +498,11 @@
                         </div>
 
                         <div title="部门权限" style="padding:5px" onclick="">
+                            <div style="text-align: left; padding: 5px;">
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">刷新</a>
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="collapseAll()">收起</a>
+                                <a href="javascript:void(0);" class="easyui-linkbutton" onclick="expandAll()">展开</a>
+                            </div>
                             <ul id="mtree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
                             <div style="text-align: center; padding: 5px;">
                                 <a href=" javascript:Submit()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
@@ -480,7 +512,7 @@
                     </div>
                     </div>
                 </div>
-            </div>
+            
         
 </body>
 </html>
