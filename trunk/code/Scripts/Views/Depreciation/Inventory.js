@@ -65,6 +65,13 @@ function GetIsQueried() {
     });
 
 }
+function ReSetSeachCondition() {
+    $("#Invention_Code").val("");
+    $('#BeginDate_SC').datebox('setValue', '');
+    $('#EndDate_SC').datebox('setValue', '');
+    var searchCondtiion = "o,o,o,o,o";
+    LoadInitData(searchCondtiion);
+}
 function printExcel(obj) {
      
     var xlsApp = null;
