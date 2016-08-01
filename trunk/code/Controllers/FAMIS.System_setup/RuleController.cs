@@ -153,6 +153,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             List<tb_role> list = mydb.tb_role.OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             var result = (from r in list
+                          where r.flag==true
                           select new tb_role()
                           {
                               ID = r.ID,
