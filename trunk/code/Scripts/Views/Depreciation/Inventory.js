@@ -97,7 +97,7 @@ $(document).ready(function () {
     loadOperator();
    // setPDserail(PDsearial);
    // LoadInitData_Detail(PDsearial)
-
+     $("#Invention_State").combobox('select', "");
     LoadInitData(searchCondtiion);
     
   //  LoadTreeLeft();
@@ -162,7 +162,8 @@ function loadOperator() {
         url: '/Rule/GetUserID',
         onLoadSuccess:function(){
             var data = $('#operator').combobox('getData');
-            $("#operator").combobox('select', data[0].true_Name);
+            $("#operator").combobox('select', "");
+           
         },
         onSelect: function (rec) {
             $('#operator').combobox('setValue', rec.ID);
