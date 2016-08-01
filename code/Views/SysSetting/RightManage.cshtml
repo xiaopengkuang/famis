@@ -145,7 +145,7 @@
                     var JS_Data = RoleID;
                 else
                     var JS_Data = RoleID + "o" + s;
-                alert(JS_Data);
+              //  alert(JS_Data);
 
                 $.ajax({
 
@@ -320,7 +320,7 @@
                         for (var i = 0; i < data.length; ++i) {
                             var tmp = data[i];
                             // 循环输出，用变量替换template中的{{变量}}
-                            alert(tmp);
+                           // alert(tmp);
                         }
                     }, error: function (msg) {
                         alert("Error 2");
@@ -355,10 +355,10 @@
                         for (var i = 0; i < data.length; ++i) {
                             var tmp = data[i];
                             // 循环输出，用变量替换template中的{{变量}}
-                            alert(tmp);
+                            //alert(tmp);
                         }
                     }, error: function (msg) {
-                        alert("Error 2");
+                        alert("Error");
                     },
 
 
@@ -430,6 +430,13 @@
 
 
             });
+
+            function Submit()
+            {
+                submitdata();
+                submitATdata();
+                submitDPdata();
+            }
         </script>
 </head>
 <body style="text-align:center">
@@ -451,14 +458,14 @@
 
                             <ul id="lefttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
                             <div style="text-align: center; padding: 5px;">
-                                <a href=" javascript:submitdata()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
+                                <a href=" javascript:Submit()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
                                 <a href="javascript:  window.parent.$('#modalwindow').window('close')" class="easyui-linkbutton" style="text-align:center">退出</a>
                             </div>
                         </div>
                         <div title="资产类别权限" style="padding:5px" onclick="">
                             <ul id="righttree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
                             <div style="text-align: center; padding: 5px;">
-                                <a href=" javascript:submitATdata()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
+                                <a href=" javascript:Submit()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
                                 <a href="javascript:  window.parent.$('#modalwindow').window('close')" class="easyui-linkbutton" style="text-align:center">退出</a>
                             </div>
                         </div>
@@ -466,7 +473,7 @@
                         <div title="部门权限" style="padding:5px" onclick="">
                             <ul id="mtree" class="easyui-tree" data-options="animate:true,lines:true"></ul>
                             <div style="text-align: center; padding: 5px;">
-                                <a href=" javascript:submitDPdata()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
+                                <a href=" javascript:Submit()" class="easyui-linkbutton" id="Add_Right_btn" style="text-align:center">提交</a>
                                 <a href="javascript:window.parent.$('#modalwindow').window('close')" class="easyui-linkbutton" style="text-align:center">退出</a>
                             </div>
                         </div>
