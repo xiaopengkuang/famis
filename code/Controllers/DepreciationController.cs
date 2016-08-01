@@ -844,13 +844,61 @@ namespace FAMIS.Controllers
                      
 
                    }
+               case 1:
+                   {
+                       var data = from r in db.tb_Asset_inventory
+                                  join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                                  from pp in temp_p.DefaultIfEmpty()
+
+                                  where r.serial_number.Contains(searial) || r.date >= BeginDate || r.date <= EndDate || r.state == PDstate || r._operator == PDperson && r.flag == true
+                                  select new
+                                  {
+                                      ID = r.ID,
+                                      serial_number = r.serial_number,
+                                      date = r.date,
+                                      _operator = r._operator,
+                                      amountOfSys = r.amountOfSys,
+                                      amountOfInv = r.amountOfInv,
+                                      difference = r.difference,
+                                      property = r.property,
+                                      state = r.state,
+                                      date_Create = r.date_Create,
+                                      ps = r.ps + " "
+
+                                  };
+
+                       data = data.OrderByDescending(a => a.ID);
+                       int skipindex = ((int)page - 1) * (int)rows;
+                       int rowsNeed = (int)rows;
+
+                       var json = new
+                       {
+
+                           total = data.ToList().Count,
+                           rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
+                           //rows = data.ToList().ToArray()
+                       };
+                       return Json(json, JsonRequestBehavior.AllowGet);
+
+
+
+                   }
                case 2:
                    {
                       var data=from r in db.tb_Asset_inventory
                                join p in db.tb_user on r._operator equals p.true_Name into temp_p
                                from pp in temp_p.DefaultIfEmpty()
                                
-                                   where r.state==PDstate&&pp.ID.ToString()==PDperson&&r.flag==true
+                                   where (r.state==PDstate&&pp.ID.ToString()==PDperson&&r.flag==true)
+                                   || (r.state == PDstate && r.serial_number.Contains(searial) && r.flag == true)
+                                   || (r.state == PDstate && r.date >= BeginDate && r.flag == true)
+                                   || (r.state == PDstate && r.date <= EndDate && r.flag == true)
+                                   || (pp.ID.ToString() == PDperson && r.serial_number.Contains(searial) && r.flag == true)
+                                   || (pp.ID.ToString() == PDperson && r.date >= BeginDate && r.flag == true)
+                                   || (pp.ID.ToString() == PDperson && r.date <= EndDate && r.flag == true)
+                                   || ( r.serial_number.Contains(searial)&&r.date >= BeginDate && r.flag == true)
+                                   || (r.serial_number.Contains(searial) && r.date <= EndDate&& r.flag == true)
+                                   || (r.date <= EndDate && r.date >= BeginDate && r.flag == true)
                                    select new
                                    {
                                        ID = r.ID,
@@ -888,9 +936,18 @@ namespace FAMIS.Controllers
                     var data= from r in db.tb_Asset_inventory
                               join p in db.tb_user on r._operator equals p.true_Name into temp_p
                               from pp in temp_p.DefaultIfEmpty()
-                              where (r.state == PDstate && pp.ID.ToString() == PDperson && BeginDate <= r.date && r.flag == true)
-                                 || (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && r.flag == true)
-                                 || (r.state == PDstate && pp.ID.ToString() == PDperson && r.serial_number.Contains(searial) && r.flag == true)
+                              where (r.serial_number.Contains(searial) && r.date <= EndDate && r.date >= BeginDate && r.flag == true)
+                                   || ((pp.ID.ToString() == PDperson&&r.date <= EndDate && r.date >= BeginDate && r.flag == true)
+                                   || (pp.ID.ToString() == PDperson&&r.serial_number.Contains(searial)&& r.date <= EndDate && r.flag == true)
+                                   || (pp.ID.ToString() == PDperson&&r.serial_number.Contains(searial) && r.date >= BeginDate && r.flag == true)
+
+                                   || (r.state==PDstate&&r.date <= EndDate && r.date >= BeginDate && r.flag == true)
+                                   || (r.state==PDstate&&r.date <= EndDate && r.serial_number.Contains(searial) && r.flag == true)
+                                   || (r.state==PDstate &&r.date >= BeginDate &&r.serial_number.Contains(searial)&& r.flag == true)
+
+                                   || (r.state==PDstate&&r.date <= EndDate &&pp.ID.ToString()==PDperson&& r.flag == true)
+                                   || (r.state == PDstate && r.date >= BeginDate && pp.ID.ToString() == PDperson && r.flag == true)
+                                   || (r.state == PDstate && pp.ID.ToString() == PDperson && r.serial_number.Contains(searial) && r.flag == true))
 
                                  select new
                                  {
@@ -929,6 +986,8 @@ namespace FAMIS.Controllers
                              where (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && r.date >= BeginDate && r.flag == true)
                                  || (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && searial.Contains(searial) && r.flag == true)
                                  || (r.state == PDstate && pp.ID.ToString() == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
+                                 || (EndDate >= r.date && pp.ID.ToString() == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
+                                  || (EndDate >= r.date && r.state == PDstate && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
                                  select new
                                  {
                                      ID = r.ID,
