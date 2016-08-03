@@ -228,6 +228,7 @@ namespace FAMIS.Controllers
                 var data = from u in db.tb_user
                         join r in db.tb_role on u.roleID_User equals r.ID
                         join d in db.tb_department on u.ID_DepartMent equals d.ID
+                        where u.flag==true
                         select new  
                         {
                              ID=u.ID,

@@ -233,7 +233,7 @@ namespace FAMIS.Controllers
         {
             int? roleID = commonConversion.getRoleID();
             bool supU = commonConversion.isSuperUser(roleID);
-            StreamWriter sw = new StreamWriter("D:\\msda.txt");
+           // StreamWriter sw = new StreamWriter("D:\\msda.txt");
             string Menu_JSON = "";
             int rid = int.Parse(JSON);
             int indexof_menu_ID = 1;
@@ -245,7 +245,7 @@ namespace FAMIS.Controllers
             
                 var menu_ID = !supU? from o in DBConnecting.tb_role_authorization
                               join m in DBConnecting.tb_Menu on o.Right_ID equals m.ID
-                              where o.role_ID == rid && o.type == "menu" && m.isMenu==true
+                                     where o.role_ID == rid && o.type == "menu" && m.isMenu == true
                               orderby m.ID_Menu
                                     select m : from o in DBConnecting.tb_Menu
                                                where o.isMenu==true
@@ -291,8 +291,8 @@ namespace FAMIS.Controllers
            
             
          
-           sw.Write(Menu_JSON);
-           sw.Close();
+         //  sw.Write(Menu_JSON);
+          // sw.Close();
            return Menu_JSON;
 
 
