@@ -21,9 +21,21 @@ namespace FAMIS.Controllers
         {
             return View();
         }
-        [HttpGet]
-        public ActionResult WX_detail(String code)
+
+        public ActionResult WX_Userbinding() 
         {
+            return View();
+        }
+        [HttpGet]
+        public ActionResult WX_detail(String code,String openid)
+        {
+            if (openidExist(openid))
+            {
+                return View("WX_Userbinding");
+            }
+
+
+            //TODO
             Json_WXSearch_detail data= getAssetByBH(code);
             if (data != null)
             {
@@ -43,6 +55,40 @@ namespace FAMIS.Controllers
             HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             return View();
         }
+
+
+
+
+
+
+
+
+        public bool openidExist(String openid)
+        {
+            if (openid == null || openid == "")
+            {
+                return false;
+            }
+
+            var data = from p in DB_C.tb_user
+                       where p.openid_WX == openid
+                       select p;
+            if(data.Count()==1)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+
+
+
+
+
+
+
+
 
 
         public Json_WXSearch_detail getAssetByBH(String code)

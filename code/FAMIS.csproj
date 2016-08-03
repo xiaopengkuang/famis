@@ -1901,6 +1901,14 @@
     <Content Include="Scripts\tabs\bootStrap_addTable.js" />
     <Content Include="Scripts\tabs\easyUI_addTabs.js" />
     <Content Include="Scripts\tabs\tabs.js" />
+    <Content Include="Scripts\UI\Collar.js" />
+    <Content Include="Scripts\UI\easyui-lang-zh_CN.js" />
+    <Content Include="Scripts\UI\jquery-1.6.4.min.js" />
+    <Content Include="Scripts\UI\jquery.printPage.js" />
+    <Content Include="Scripts\UI\js_Accounting.js" />
+    <Content Include="Scripts\UI\LoadTreeMenu.js" />
+    <Content Include="Scripts\UI\LodopFuncs.js" />
+    <Content Include="Scripts\UI\Print_Helper.js" />
     <Content Include="Scripts\Views\Allocation\Allocation.js" />
     <Content Include="Scripts\Views\Allocation\Allocation_add.js" />
     <Content Include="Scripts\Views\Allocation\Allocation_detail.js" />
@@ -1992,9 +2000,6 @@
     <Content Include="Scripts\Views\User\LoadMenubyRoless.js" />
     <Content Include="Views\Dict\edit_supplier.cshtml" />
     <None Include="Scripts\_references.js" />
-    <Content Include="Scripts\UI\easyui-lang-zh_CN.js" />
-    <Content Include="Scripts\UI\js_Accounting.js" />
-    <Content Include="Scripts\UI\LoadTreeMenu.js" />
     <Content Include="Scripts\Views\Asset\Accounting.js" />
     <Content Include="Scripts\Views\Asset\Asset_add.js" />
     <Content Include="Scripts\Views\Commom.js" />
@@ -2349,7 +2354,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
+      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

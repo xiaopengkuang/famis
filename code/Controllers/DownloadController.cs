@@ -159,9 +159,9 @@ namespace FAMIS.Controllers
 
             foreach (var item in data)
             {
-                if (System.IO.File.Exists(item.path_qrcode_img))
+                if (System.IO.File.Exists(Server.MapPath(item.path_qrcode_img)))
                 {
-                    fileLists.Add(item.path_qrcode_img);
+                    fileLists.Add(Server.MapPath(item.path_qrcode_img));
                 }
             }
             return fileLists;
