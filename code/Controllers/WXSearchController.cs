@@ -24,9 +24,10 @@ namespace FAMIS.Controllers
 
         public ActionResult WX_Userbinding() 
         {
+            HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             return View();
         }
-
+        [HttpGet]
         public ActionResult WX_Search_getPara(String code, String openid)
         {
             if (openidExist(openid))
@@ -38,14 +39,17 @@ namespace FAMIS.Controllers
             }
             ViewBag.code = code;
             ViewBag.openid = openid;
+            HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             return View();
         }
 
         [HttpGet]
         public ActionResult WX_detail(String code,String openid)
         {
+            HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             if (!openidExist(openid))
             {
+                HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
                 return View("WX_Userbinding");
             }
 
