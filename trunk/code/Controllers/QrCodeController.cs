@@ -22,6 +22,14 @@ namespace FAMIS.Controllers
 
 
 
+
+        /// <summary>
+        /// 保存图片到相对路径
+        /// </summary>
+        /// <param name="codeInfo"></param>
+        /// <param name="fileNmae_ID"></param>
+        /// <param name="info_asset"></param>
+        /// <returns></returns>
         public String CreateQRCodeWithText(String codeInfo,String fileNmae_ID,string info_asset)
         {
             String result = null;
@@ -29,13 +37,6 @@ namespace FAMIS.Controllers
             {
                 return null;
             }
-            //QRCodeEncoder qrCodeEncoder = new QRCodeEncoder();
-            ////设置类型
-            //qrCodeEncoder.QRCodeEncodeMode = QRCodeEncoder.ENCODE_MODE.BYTE;
-            //qrCodeEncoder.QRCodeScale = 7;
-            //qrCodeEncoder.QRCodeVersion = 30;
-            //qrCodeEncoder.QRCodeErrorCorrect = QRCodeEncoder.ERROR_CORRECTION.M;
-            ////System.Drawing.Image image = qrCodeEncoder.Encode("4408810820 深圳－广州 小江");
             try
             {
                 int towidth = 925;
@@ -57,27 +58,24 @@ namespace FAMIS.Controllers
                 //在指定位置并且按指定大小绘制原图片的指定部分  
                 g.DrawImage(bitmap_qrcode,new Rectangle(0,0,bitmap_qrcode.Width,bitmap_qrcode.Height));
               
-                //g.DrawImage(bitmap_qrcode, new Rectangle(0, 10, 215, 215),
-                // new Rectangle(0, 0, 925, 295),
-                // GraphicsUnit.Pixel);
+        
 
                 //画文字图片
                 g.DrawString(info_asset, font_text, Brushes.Black, new PointF(295, 30));
-                //Bitmap bmp = new Bitmap(100, 100);
-                //Graphics g_font = Graphics.FromImage(bmp);
-                //g_font.FillRectangle(Brushes.White, new Rectangle() { X = 0, Y = 0, Height = 100, Width = 100 });
-                //g_font.DrawString(info_asset,font_size, Brushes.Black);
-                ////g.DrawImage(bitmap_qrcode, new Rectangle(250, 10, 215, 215),
-                //new Rectangle(0, 0, 925, 295),
-                // GraphicsUnit.Pixel);
+        
 
                 try
                 {
+                    //文件名
                     string filename = fileNmae_ID + ".png";
-                    string filepath = Server.MapPath(SystemConfig.FOLEDER_QRCODE_IMAGE) + filename;
+                    //文件相对路径
+                    string path_opposite = SystemConfig.FOLEDER_QRCODE_IMAGE + filename;
+                    //文件保存的绝对路径
+                    string filepath = Server.MapPath(path_opposite);
                     //以Jpeg格式保存缩略图(KB最小)  
                     bitmap_back.Save(filepath, System.Drawing.Imaging.ImageFormat.Png);
-                    result = filepath;
+
+                    result = path_opposite;
                 }
                 catch (System.Exception e)
                 {
@@ -89,15 +87,7 @@ namespace FAMIS.Controllers
                     bitmap_back.Dispose();
                     g.Dispose();
                 }  
-
-
-                //string filename = fileNmae_ID + ".png";
-                //string filepath = Server.MapPath(SystemConfig.FOLEDER_QRCODE_IMAGE) + filename;
-                //System.IO.FileStream fs = new System.IO.FileStream(filepath, System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write);
-                //bitmap_qrcode.Save(fs, System.Drawing.Imaging.ImageFormat.Png);
-                //fs.Close();
-                //bitmap_qrcode.Dispose();
-                //result = filepath;
+              
             }
             catch (Exception e)
             {
@@ -150,7 +140,8 @@ namespace FAMIS.Controllers
                 {
                     tb_Asset_code128 code_ex = data_1.First();
                     createCodeCurrent.Add(code_ex.code128);
-                    String existFile = code_ex.path_qrcode_img;
+                    //文件相对路径转绝对路径
+                    String existFile = Server.MapPath(code_ex.path_qrcode_img);
                     if (!System.IO.File.Exists(existFile))
                     {
                         String str_ean13 = code_ex.code128;
@@ -190,7 +181,6 @@ namespace FAMIS.Controllers
             }
 
             DB_C.SaveChanges();
-
             return filePathList.Count();
         }
 
@@ -382,9 +372,9 @@ namespace FAMIS.Controllers
             if (data.Count() > 0)
             {
                 tb_Asset_code128 item = data.First();
-                if (System.IO.File.Exists(item.path_qrcode_img))
+                if (System.IO.File.Exists(Server.MapPath(item.path_qrcode_img)))
                 {
-                    return item.path_qrcode_img;
+                    return Server.MapPath(item.path_qrcode_img);
                 }
                 return "";
             }

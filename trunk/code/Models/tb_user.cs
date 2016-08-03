@@ -26,5 +26,8 @@ namespace FAMIS.Models
         public bool? flag { get; set; }
 
         public int? ID_DepartMent { get; set; }
+
+        [StringLength(200)]
+        public string openid_WX { get; set; } 
     }
 }
