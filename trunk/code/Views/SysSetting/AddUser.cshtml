@@ -1,0 +1,210 @@
+﻿    @{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加职员</title>
+
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+
+
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../../Scripts/Views/SysSetting/UserManage.js"></script>
+    <script type="text/javascript">
+
+        //==================================global data==========================================//
+
+
+
+
+        $(function () {
+
+            loadInitDate();
+
+
+
+
+            //alert(111);
+        });
+
+        function loadInitDate() {
+            load_Operator();
+            load_SZBM_add();
+
+        }
+
+
+
+
+        function load_SZBM_add() {
+            //alert("12");
+            $('#SZBM_add').combotree
+            ({
+                url: '/Dict/load_SZBM',
+                valueField: 'id',
+                textField: 'nameText',
+               
+                method: 'POST',
+                editable: false,
+                //选择树节点触发事件
+                onSelect: function (node) {
+
+                },
+                onLoadSuccess: function (node, data) {
+                    //$('#SZBM_add').combotree('tree').tree("collapseAll");
+                }
+            });
+
+        }
+
+        function load_Operator() {
+            $("#R_add").combobox({
+                valueField: 'name',
+                method: 'POST',
+                textField: 'name',
+                required: true,
+                url: '/Rule/GetRoleID',
+                onSelect: function (rec) {
+
+                    $('#R_add').combobox('setValue', rec.name);
+                    $('#R_add').combobox('setText', rec.name);
+
+
+                }
+            });
+        }
+        function adduser(){
+            var Id="-100000"
+            var myname = $("#yhm").val();
+            var pwd = $("#mm").val();
+            var truename = $("#zsxm").val();
+            var rid = $('#R_add').combobox('getValue');
+            var dp = $('#SZBM_add').combotree('getValue');
+            if (myname == "" || myname == null) {
+
+                $.messager.alert("提示", "用户名不能为空！", "error");
+                
+                return;
+            }
+            if (pwd == "" || pwd == null) {
+
+                $.messager.alert("提示", "密码不能为空！", "error");
+                 
+                return;
+            }
+            if (truename == "" || truename == null) {
+
+                $.messager.alert("提示", "真实姓名不能为空！", "error");
+                
+                return;
+            }
+            if (rid == "" || rid == null) {
+
+                $.messager.alert("提示", "所属角色不能为空！", "error");
+                
+                return;
+            }
+            if (dp == "" || dp == null) {
+
+                $.messager.alert("提示", "所属部门不能为空！", "error");
+                 
+                return;
+            }
+            var data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + dp + "," + "False";
+            //alert(data);
+            $.ajax({
+
+                type: "post",
+                url: "/Rule/AddUser",
+                data: { JSdata: data },
+                datatype: "json",//数据类型
+
+                success: function (result) {
+
+                    if (result == "name_exist") {
+                        $.messager.alert("提示", "该用户已存在，不可重复添加！", "error");
+                        $('#dd').datagrid('reload');
+                        return;
+                    }
+                    cancelForm();
+                    //  alert("添加成功！");
+                    
+
+                }, error: function (msg) {
+                    alert("Error");
+                }
+            });
+
+        }
+
+        //加载规格型号
+
+
+
+
+    </script>
+
+</head>
+<body>
+
+
+
+    <div fit="true" class="easyui-panel">
+        <table style="text-align: center; padding: 5px">
+
+            <tr>
+                <td style="width: 100px">
+                    <label>用户名:</label>
+                </td>
+                <td style="width: 250px">
+                    <input class="easyui-textbox" id="yhm" data-options="multiline:true" style="width:246px">
+
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100px">
+                    <label>密码:</label>
+                </td>
+                <td style="width: 250px">
+                    <input class="easyui-textbox" id="mm" data-options="multiline:true" style="width:246px">
+
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 100px">
+                    <label>真实姓名:</label>
+                </td>
+                <td style="width: 250px">
+                    <input class="easyui-textbox" id="zsxm" data-options="multiline:true" style="width:246px">
+
+                </td>
+            </tr>
+            <tr>
+                <td>所属角色:</td>
+                <td>
+                    <select class="easyui-combobox" id="R_add" name="R_add" data-options="editable:false" style="width:246px;"></select>
+                </td>
+            </tr>
+            <tr>
+                <td>所在部门:</td>
+                <td>
+                    <input class="easyui-combotree" id="SZBM_add" name="SZBM_add" data-options="editable:false" style="width: 246px;">
+                </td>
+            </tr>
+        </table>
+
+        <div style="text-align: center; padding: 5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="adduser()">提交</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="cancelForm()">取消</a>
+        </div>
+</div>
+</body>
+</html>
