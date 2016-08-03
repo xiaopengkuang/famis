@@ -19,7 +19,7 @@
 
     var previous_head = "";
     var head = "";
-        
+     console.e   
     function SetHead(hd) {
         try {
             previous_head = head;
@@ -30,7 +30,7 @@
             head = hd;
 
             $('#' + head + '_serial').keyup(function () {
-
+               // reg = "/^d+[^d]+/";
                 reg = "/[^" + head + "yyMMDD]/";
                 //  alert(reg);
                 reg = eval('(' + reg + ')');
