@@ -840,10 +840,10 @@ function openModelWindow(url, titleName) {
     var $winADD;
     $winADD = $('#modalwindow2').window({
         title: titleName,
-        width: 500,
+        width: 700,
         height: 450,
         top: (($(window).height() - 450) > 0 ? ($(window).height() - 450) : 200) * 0.5,
-        left: (($(window).width() - 500) > 0 ? ($(window).width() - 500) : 100) * 0.5,
+        left: (($(window).width() - 700) > 0 ? ($(window).width() - 700) : 100) * 0.5,
         shadow: true,
         modal: true,
         iconCls: 'icon-add',

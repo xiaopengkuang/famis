@@ -510,7 +510,7 @@ function deletNode(treeGrid, treeID)
 {
     var node = $('#' + treeGrid).treegrid('getSelected');
     var treeNode = $('#' + treeID).tree('getSelected')
-    if (node == null) {
+    if (node == null||treeNode==null) {
         $.messager.alert('提示', '请选择数据!', 'error');
         return;
     }

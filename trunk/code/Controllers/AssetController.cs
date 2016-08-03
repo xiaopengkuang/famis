@@ -1262,7 +1262,7 @@ namespace FAMIS.Controllers
 
             if (file.path_file != null && file.path_file != "")
             {
-                return downloadFileByURL(file.path_file);
+                return downloadFileByURL(System.AppDomain.CurrentDomain.BaseDirectory +file.path_file);
             }
             return null;
 
@@ -1294,7 +1294,7 @@ namespace FAMIS.Controllers
 
             if (file.path_file != null && file.path_file != "")
             {
-                return downloadFileByURL(file.path_file);
+                return downloadFileByURL(System.AppDomain.CurrentDomain.BaseDirectory +file.path_file);
             }
 
             return null;
@@ -1642,7 +1642,10 @@ namespace FAMIS.Controllers
             }
             if (fileSavedPath==name)
             {
-                fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
+
+                //保存为相对路径
+                fileSavedPath = SystemConfig.FOLDER_DOCU_ASSET_SUB + System.IO.Path.GetFileName(FileCollect[0].FileName);
+                //fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
                 //保存数据
                 tb_Asset_sub_document newItem = new tb_Asset_sub_document();
                 newItem._abstract = abstractInfo;
@@ -1696,7 +1699,9 @@ namespace FAMIS.Controllers
              }
              if (fileSavedPath == name)
              {
-                 fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
+                 //保存相对路径
+                 //fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
+                 fileSavedPath = SystemConfig.FOLDER_IMAGE_ASSET_SUB + System.IO.Path.GetFileName(FileCollect[0].FileName);
                  //保存数据
                  tb_Asset_sub_picture newItem = new tb_Asset_sub_picture();
                  newItem.date_add = DateTime.Now;
