@@ -26,6 +26,21 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+
+        public ActionResult WX_Search_getPara(String code, String openid)
+        {
+            if (openidExist(openid))
+            {
+                ViewBag.jump = 1;
+            }
+            else {
+                ViewBag.jump = 0;
+            }
+            ViewBag.code = code;
+            ViewBag.openid = openid;
+            return View();
+        }
+
         [HttpGet]
         public ActionResult WX_detail(String code,String openid)
         {
