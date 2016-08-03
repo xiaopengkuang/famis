@@ -2306,6 +2306,7 @@
     <Content Include="Views\Verify\Deatails_View.cshtml" />
     <Content Include="Views\Verify\New_Deatails.cshtml" />
     <Content Include="Views\WXSearch\WX_Userbinding.cshtml" />
+    <Content Include="Views\WXSearch\WX_Search_getPara.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
