@@ -34,7 +34,7 @@ namespace FAMIS.Controllers
                 return View("WX_Userbinding");
             }
 
-
+                return View("WX_Userbinding");
             //TODO
             Json_WXSearch_detail data= getAssetByBH(code);
             if (data != null)
