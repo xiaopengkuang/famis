@@ -1,5 +1,10 @@
 ﻿ 
 var searchCondtiion = "o,o,o,o,o";
+var searial = "o";
+var begin = "o";
+var end = "o";
+var state = "o";
+var person = "o";
 //alert(searchCondtiion);
 var datagrid; //定义全局变量datagrid
 var editRow = undefined; //定义全局变量：当前编辑的行
@@ -99,7 +104,7 @@ $(document).ready(function () {
     loadOperator();
    // setPDserail(PDsearial);
    // LoadInitData_Detail(PDsearial)
-     $("#Invention_State").combobox('select', "");
+    $("#Invention_State").combobox('select', "全部");
     LoadInitData(searchCondtiion);
     
   //  LoadTreeLeft();
@@ -164,7 +169,7 @@ function loadOperator() {
         url: '/Rule/GetUserID',
         onLoadSuccess:function(){
             var data = $('#operator').combobox('getData');
-            $("#operator").combobox('select', "");
+            $("#operator").combobox('select', "全部");
            
         },
         onSelect: function (rec) {
@@ -177,11 +182,7 @@ function loadOperator() {
 function LoadBYSearchCondition()
 {
    
-    var searial="o";
-    var begin="o";
-    var end="o";
-    var state="o";
-    var person="o";
+   // alert("kais!");
     if($('#Invention_Code').val()!="")
       searial=$('#Invention_Code').val();
    
@@ -192,16 +193,17 @@ function LoadBYSearchCondition()
     if($('#EndDate_SC').datebox('getValue')!="")
         end = $('#EndDate_SC').datebox('getValue');
 
-    if ($('#Invention_State').combobox('getValue')!="");
+    if ($('#Invention_State').combobox('getValue')!= "全部" )
     state = $('#Invention_State').combobox('getValue');
 
-    if ($('#operator').combobox('getValue') != "");
+    if ($('#operator').combobox('getValue')!= "全部")
     person = $('#operator').combobox('getValue');
 
    
     searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
     SetIsQueryied("true");
-    // alert(searchCondtiion);
+    //alert(searchCondtiion);
+    
     flag = 1;
     LoadInitData(searchCondtiion);
 
@@ -447,12 +449,8 @@ function LoadInitData(searchCondtiion) {
                              var rowdata = $('#TableList_0_1').datagrid('getData');
                              var ID = rowdata.rows[index].ID;
                              var operator = rowdata.rows[index]._operator;
-                              var pddate = rowdata.rows[index].date;
-                           //  var ed = $('#TableList_0_1').datagrid('getEditor', { index: index, field: 'date' });
-                          //   var date_PD = $(ed.target).datebox('getValue');
-                          //   alert(ID + "," + operator + "," + ps + "," + pddate + "," + zctype);
-                            
-                             //var value = $(ed.target).combobox('getValue');
+                             var pddate = fmt(rowdata.rows[index].date);
+                             //alert(pddate);
 
                              var ps = rowdata.rows[index].ps;
                              var zctype = rowdata.rows[index].property;
@@ -1052,6 +1050,17 @@ function BrowseFolder() {
         }
     } catch (e) {
         alert("Error");
+    }
+}
+function fmt(date) {
+    try {
+        var pa = /.*\((.*)\)/;
+        var unixtime = date.match(pa)[1].substring(0, 10);
+       // alert(getTime(unixtime));
+        return getTime(unixtime);
+    }
+    catch (e) {
+        return "";
     }
 }
 function ReadExcel()
