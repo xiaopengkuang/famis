@@ -172,6 +172,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             List<tb_user> list = mydb.tb_user.OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             var result = (from r in list
+                          where r.flag==true
                           select new tb_user()
                           {
                               ID = r.ID,
@@ -413,7 +414,11 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 rid = roids;
             }
 
-            if (isText == "True")
+            try
+            {
+                did = int.Parse(deptemp);
+            }
+            catch (Exception e)
             {
                 var z = from o in mydb.tb_department
                         where o.name_Department == deptemp
@@ -423,10 +428,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     did = a;
                 }
             }
-            else
-            {
-                did = int.Parse(deptemp);
-            }
+            
+               
+            
             var q = from o in mydb.tb_user
                                           where o.ID == id
                                           select o;

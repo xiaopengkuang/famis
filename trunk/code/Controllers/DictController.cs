@@ -62,7 +62,7 @@ namespace FAMIS.Controllers
         }
 
 
-       
+       /*
         public ActionResult add_AssetType(int? pid,String pname,String level)
         {
             if (pname == null || pname == "" || pid == null)
@@ -95,7 +95,7 @@ namespace FAMIS.Controllers
                 return View("Error");
             }
             
-        }
+        }*/
 
 
 
