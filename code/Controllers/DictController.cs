@@ -1255,9 +1255,9 @@ namespace FAMIS.Controllers
                 {
                     return 0;
                 }
-
-                //找到其父节点
-                for (int i = 0; i < ids_dict.Count; i++)
+                int countter = ids_dict.Count();
+                //找到其子节点
+                for (int i = 0; i < countter; i++)
                 {
                     ids_dict.AddRange(commonController.GetSonIDs_dataDict_Para(ids_dict[i]));
                 }

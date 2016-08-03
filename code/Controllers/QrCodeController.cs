@@ -133,6 +133,7 @@ namespace FAMIS.Controllers
             {
                 var data_1 = from p in DB_C.tb_Asset_code128
                              where p.ID_Asset == item.ID
+                             where p.path_qrcode_img!=null
                              select p;
 
 
@@ -141,7 +142,7 @@ namespace FAMIS.Controllers
                     tb_Asset_code128 code_ex = data_1.First();
                     createCodeCurrent.Add(code_ex.code128);
                     //文件相对路径转绝对路径
-                    String existFile = Server.MapPath(code_ex.path_qrcode_img);
+                    String existFile = System.AppDomain.CurrentDomain.BaseDirectory + code_ex.path_qrcode_img.ToString();
                     if (!System.IO.File.Exists(existFile))
                     {
                         String str_ean13 = code_ex.code128;
@@ -372,9 +373,9 @@ namespace FAMIS.Controllers
             if (data.Count() > 0)
             {
                 tb_Asset_code128 item = data.First();
-                if (System.IO.File.Exists(Server.MapPath(item.path_qrcode_img)))
+                if (System.IO.File.Exists(Server.MapPath("") + item.path_qrcode_img))
                 {
-                    return Server.MapPath(item.path_qrcode_img);
+                    return Server.MapPath("") + item.path_qrcode_img;
                 }
                 return "";
             }
