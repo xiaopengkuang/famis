@@ -201,7 +201,7 @@ namespace FAMIS.Controllers
         public JsonResult Load_Asset( int? page, int? rows, string JSdata)//加载资产折旧表
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
 
             
           
@@ -504,7 +504,7 @@ namespace FAMIS.Controllers
         {
 
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
 
             List<tb_Asset_inventory_Details> list = db.tb_Asset_inventory_Details.ToList();
            var data=from r in db.tb_Asset_inventory_Details
@@ -758,7 +758,7 @@ namespace FAMIS.Controllers
        public JsonResult Query_By_Condition(int? page, int ? rows,String JSON) 
        {
            page = page == null ? 1 : page;
-           rows = rows == null ? 1 : rows;
+           rows = rows == null ? 15 : rows;
 
            string [] temp= JSON.Split(',');
            List<tb_Asset_inventory> list = db.tb_Asset_inventory.ToList();
@@ -850,7 +850,7 @@ namespace FAMIS.Controllers
                                   join p in db.tb_user on r._operator equals p.true_Name into temp_p
                                   from pp in temp_p.DefaultIfEmpty()
 
-                                  where r.serial_number.Contains(searial) || r.date >= BeginDate || r.date <= EndDate || r.state == PDstate || r._operator == PDperson && r.flag == true
+                                  where r.serial_number.Contains(searial) && r.flag == true || r.date >= BeginDate && r.flag == true || r.date <= EndDate && r.flag == true || r.state == PDstate && r.flag == true || r._operator == PDperson && r.flag == true
                                   select new
                                   {
                                       ID = r.ID,

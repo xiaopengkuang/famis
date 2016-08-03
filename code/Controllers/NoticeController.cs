@@ -112,7 +112,7 @@ namespace FAMIS.Controllers
         public JsonResult Invalidate_Notice(int? page,int? rows)
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
             List<tb_Asset> asset = new List<tb_Asset>();
 
             var data = from r in db.tb_Asset
@@ -173,7 +173,7 @@ namespace FAMIS.Controllers
         {
             List<tb_Asset_Repair> repair = new List<tb_Asset_Repair>();
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
             var data = from r in db.tb_Asset_Repair
                         join s in db.tb_State_List on r.state_list equals s.id into temp_s
                         from ss in temp_s.DefaultIfEmpty()
@@ -239,7 +239,7 @@ namespace FAMIS.Controllers
         public JsonResult Return_Notice(int? page, int? rows)
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
             List<tb_Asset_Borrow> repair = new List<tb_Asset_Borrow>();
 
             var data = from r in db.tb_Asset_Borrow

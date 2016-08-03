@@ -24,7 +24,10 @@ namespace FAMIS.Controllers
         {
             return View();
         }
-
+        public ActionResult AddUser()
+        {
+            return View();
+        }
         public ActionResult BarcodeCreating()
         {
             return View();
@@ -217,7 +220,7 @@ namespace FAMIS.Controllers
         public JsonResult getUser(int? page, int? rows, int? role, int? tableType)
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
 
 
 
@@ -259,7 +262,7 @@ namespace FAMIS.Controllers
         public JsonResult getpageOrder(int? page, int? rows)
         {
             page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
 
 
 

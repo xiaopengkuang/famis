@@ -287,7 +287,7 @@ namespace FAMIS.Controllers
         public JsonResult Load_Asset(int? page, int? rows, string JSdata)//添加盘点明细的资产索引表
         {
            page = page == null ? 1 : page;
-            rows = rows == null ? 1 : rows;
+            rows = rows == null ? 15 : rows;
             
             int flagnum = int.Parse(JSdata);
             if (flagnum == 0)
