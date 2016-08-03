@@ -363,6 +363,7 @@ function saveData(info) {
             if (data > 0) {
                 try {
                     window.parent.$('#tabs').tabs('close', '添加领用单');
+                    parent.reloadTabGrid("资产领用");
                 } catch (e) {
                     $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
                 }
