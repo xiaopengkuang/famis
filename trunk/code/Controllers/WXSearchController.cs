@@ -29,7 +29,7 @@ namespace FAMIS.Controllers
         [HttpGet]
         public ActionResult WX_detail(String code,String openid)
         {
-            if (openidExist(openid))
+            if (!openidExist(openid))
             {
                 return View("WX_Userbinding");
             }
