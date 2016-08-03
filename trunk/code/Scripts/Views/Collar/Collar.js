@@ -7,7 +7,9 @@ var ID_collar = null;
 
 //========================全局数据================================//
 
-
+window.top["reload_datagrid_collar"] = function () {
+    $("#datagrid_collor").datagrid('reload');
+};
 
 //===================初始化数据=====================================//
 $(function () {
