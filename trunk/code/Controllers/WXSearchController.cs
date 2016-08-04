@@ -24,7 +24,6 @@ namespace FAMIS.Controllers
 
         public ActionResult WX_Userbinding(String openid) 
         {
-            openid = "121231212";
             if (openidExist(openid))
             {
                 ViewBag.jump = 1;
