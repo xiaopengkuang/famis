@@ -17,8 +17,42 @@ namespace FAMIS.Controllers
         FAMISDBTBModels DB_C=new FAMISDBTBModels();
         
         // GET: WXSearch
-        public ActionResult WX_Search() 
+        public ActionResult WX_Search(String openid) 
         {
+            if (openidExist(openid))
+            {
+                //进行用户登录
+                var data = from p in DB_C.tb_user
+                           where p.flag == true
+                           where p.openid_WX == openid
+                           select p;
+                if (data.Count() == 1)
+                {
+                    Session.RemoveAll();
+                    ViewBag.jump = 1;
+                    tb_user userinfo = data.First();
+                    Session["Logined"] = "OK";
+                    ViewBag.LoginUser = userinfo.true_Name;
+                    //往Session里面保存用户信息
+                    //用户名
+                    Session["userName"] = userinfo.name_User;
+
+                    Session["userID"] = userinfo.ID;
+                    ////用户名
+                    Session["password"] = userinfo.password_User;
+                    //用户角色
+                    Session["userRole"] = userinfo.roleID_User;
+                }
+                else
+                {
+                    ViewBag.jump = 0;
+                }
+
+            }
+            else
+            {
+                ViewBag.jump = 0;
+            }
             return View();
         }
 
@@ -174,14 +208,8 @@ namespace FAMIS.Controllers
                 {
                     return "绑定失败！";
                 }
-
-
             }
             return "绑定失败！";
-
-
-
-
         }
 
 
@@ -370,7 +398,6 @@ namespace FAMIS.Controllers
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             String result = serializer.Serialize(json).ToString().Replace("\\", "");
             return result;
-            //return Json(json,JsonRequestBehavior.AllowGet);
         }
 
     }
