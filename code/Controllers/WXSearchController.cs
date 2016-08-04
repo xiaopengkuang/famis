@@ -130,7 +130,58 @@ namespace FAMIS.Controllers
         }
 
 
+        public String userBinding_WX(String data)
+        {
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            Json_userbinding_wx cond = serializer.Deserialize<Json_userbinding_wx>(data);
+            if (cond == null || cond.username == null || cond.password == null )
+            {
+                return "无法获取输入的用户信息！";
+            }
+            if(cond.openid==null||cond.openid=="")
+            {
+                return "无法获取微信用户信息！";
+            }
+            if (openidExist(cond.openid))
+            {
+                return "该微信用户已经绑定了固资系统用户！"; 
+            }
 
+            var db_data = from p in DB_C.tb_user
+                       where p.flag == true
+                       where p.name_User == cond.username && p.password_User==cond.password
+                       select p;
+
+            if (db_data.Count() == 1)
+            {
+                tb_user user = db_data.First();
+                if (user.openid_WX != null && user.openid_WX != "")
+                {
+                    return "该微信用户已经绑定了固资系统用户！";            
+                }
+
+                foreach (var item in db_data)
+                {
+                    item.openid_WX = cond.openid;
+                }
+
+                try {
+                    DB_C.SaveChanges();
+                    return "ok";
+                }
+                catch (Exception e)
+                {
+                    return "绑定失败！";
+                }
+
+
+            }
+            return "绑定失败！";
+
+
+
+
+        }
 
 
 
