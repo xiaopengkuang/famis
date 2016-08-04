@@ -19,18 +19,15 @@
         $(function () {
             //数据跳转
             if ("@ViewBag.jump" == 1 || "@ViewBag.jump" == "1") {
-                alert(1);
-                //$("#detail_right").show();
-                //$("#reminderDIV").hide();
                 document.getElementById("detail_right").style.display = "block";
                 document.getElementById("reminderDIV").style.display = "none";
             } else {
-                alert(2);
                 document.getElementById("detail_right").style.display = "none";
                 document.getElementById("reminderDIV").style.display = "block";
             }
+            window.opener = null; window.open('', '_self'); window.close();
+
         })
-        
     </script>
 </head>
 <body>

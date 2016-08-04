@@ -16,12 +16,22 @@
     <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript">
+        $(function () {
+            //数据跳转用户不存在绑定
+            if ("@ViewBag.jump" == 0 || "@ViewBag.jump" == "0") {
+                document.getElementById("bindDIv").style.display = "block";
+                document.getElementById("info").style.display = "none";
+            } else {//存在绑定
+                document.getElementById("bindDIv").style.display = "none";
+                document.getElementById("info").style.display = "block";
+            }
+        });
 
     </script>
 
 </head>
 <body>
-    <div class="easyui-panel">
+    <div class="easyui-panel" id="bindDIv" style="display:none">
         <div style="margin-bottom: 20px">
             <div>用户名:</div>
             <input class="easyui-textbox">
@@ -31,8 +41,11 @@
             <input class="easyui-textbox" type="password">
         </div>
         <div>
-            <a href="#" class="easyui-linkbutton" iconcls="icon-ok">绑定</a>
+            <a href="#" class="easyui-linkbutton" data-options="plain:true,iconcls:'icon-save'">绑定</a>
         </div>
+    </div>
+    <div class="easyui-panel" id="info" style="display:none">
+        <p>用户已经绑定！</p>
     </div>
 </body>
 </html>

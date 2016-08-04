@@ -22,8 +22,16 @@ namespace FAMIS.Controllers
             return View();
         }
 
-        public ActionResult WX_Userbinding() 
+        public ActionResult WX_Userbinding(String openid) 
         {
+            if (openidExist(openid))
+            {
+                ViewBag.jump = 1;
+            }
+            else
+            {
+                ViewBag.jump = 0;
+            }
             HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             return View();
         }
