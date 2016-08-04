@@ -29,15 +29,21 @@
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
     <script type="text/javascript" src="../../Scripts/respond-1.4.2/respond.js"></script>
     <![endif]-->
+    <style type="text/css">
+        .font_Phone {
+            font-size: 20px;
+            line-height: 30px;
+        }
+    </style>
 
 </head>
 <body>
-    <div id="info_WX" style="display:none">
-         <p>请先绑定系统用户！</p>
+    <div id="info_WX" style="display: none" class="font_Phone">
+        <p>请先绑定系统用户！</p>
         <p>提示：在微信公众号菜单栏中“用户绑定”中进行用户绑定。</p>
     </div>
-    <div id="searchDIV_WX" style="display:none">
-        <div style=" border-spacing: 2px; left: 10px">
+    <div id="searchDIV_WX" style="display: none">
+        <div style="border-spacing: 2px; left: 10px">
             <div style="float: left; border-spacing: 2px">
                 <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC">
                     <option value="DJRQ" selected="selected">登记日期</option>
@@ -78,9 +84,9 @@
                 </table>
             </div>
         </div>
-        <div style="clear:both; width:100%; height:300px;" fit="ture">
-        <table id="TableList_0_1" class="easyui-datagrid" style="height: 500px" data-options="border:false,singleSelect:true,fitcolumns:true" fit="true"></table>
+        <div style="clear: both; width: 100%; height: 300px;" fit="ture">
+            <table id="TableList_0_1" class="easyui-datagrid" style="height: 500px" data-options="border:false,singleSelect:true,fitcolumns:true" fit="true"></table>
         </div>
-        </div>
+    </div>
 </body>
 </html>
