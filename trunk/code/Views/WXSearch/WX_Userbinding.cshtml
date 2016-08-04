@@ -34,15 +34,16 @@
     <div class="easyui-panel" id="bindDIv" style="display:none">
         <div style="margin-bottom: 20px">
             <div>用户名:</div>
-            <input class="easyui-textbox">
+            <input class="easyui-textbox" id="username">
         </div>
-        <div style="margin-bottom: 20px">
+        <div style="margin-bottom: 20px" >
             <div>密码:</div>
-            <input class="easyui-textbox" type="password">
+            <input class="easyui-textbox" id="password" type="password">
         </div>
         <div>
-            <a href="#" class="easyui-linkbutton" data-options="plain:true,iconcls:'icon-save'">绑定</a>
+            <a href="#" class="easyui-linkbutton" onclick="bindUser('@ViewBag.openid')" data-options="plain:true,iconcls:'icon-save'">绑定</a>
         </div>
+        
     </div>
     <div class="easyui-panel" id="info" style="display:none">
         <p>用户已经绑定！</p>

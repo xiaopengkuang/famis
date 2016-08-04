@@ -28,6 +28,6 @@ namespace FAMIS.Models
         public int? ID_DepartMent { get; set; }
 
         [StringLength(200)]
-        public string openid_WX { get; set; } 
+        public string openid_WX { get; set; }
     }
 }

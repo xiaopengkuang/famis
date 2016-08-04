@@ -1101,6 +1101,7 @@ namespace FAMIS.Controllers
                     tb_data.active_flag = true;
                     tb_data.flag_Search = false;
                     tb_data.isSysSet = false;
+                    tb_data.editAble = true;
                     tb_data.orderID=commonConversion.getUniqueID();
                     tb_data.url = "javascript:void(0)";
                     DB_C.tb_dataDict.Add(tb_data);
@@ -2382,6 +2383,7 @@ namespace FAMIS.Controllers
             {
                 var result = new {
                     isTree = item.isTree == true ? true : false,
+                    //TODO
                     editAble = item.editAble == true ? true : false
                 };
 

@@ -12,7 +12,6 @@ namespace FAMIS.Models
         {
         }
 
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<tb_customAttribute> tb_customAttribute { get; set; }
         public virtual DbSet<tb_customAttribute_Type> tb_customAttribute_Type { get; set; }
         public virtual DbSet<tb_dataDict_para> tb_dataDict_para { get; set; }
@@ -435,6 +434,10 @@ namespace FAMIS.Models
 
             modelBuilder.Entity<tb_user>()
                 .Property(e => e.true_Name)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<tb_user>()
+                .Property(e => e.openid_WX)
                 .IsUnicode(false);
         }
     }
