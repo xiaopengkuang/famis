@@ -105,14 +105,14 @@ function LoadInitData_Detail() {
                 pageNumber: 1, //默认显示第几页 
                 pageList: [15, 30, 45],//分页中下拉选项的数值 
                 columns: [[
-                    { field: 'ID', checkbox: false, width: 50 },
-                    { field: 'serial_number', title: '资产编号', width: 50 },
-                    { field: 'name_Asset', title: '资产名称', width: 50 },
-                    { field: 'type_Asset', title: '资产类型', width: 50 },
-                    { field: 'specification', title: '型号规范', width: 50 },
+                    { field: 'ID', checkbox: false},
+                    { field: 'serial_number', title: '资产编号'},
+                    { field: 'name_Asset', title: '资产名称' },
+                    { field: 'type_Asset', title: '资产类型' },
+                    { field: 'specification', title: '型号规范' },
                     //{ field: 'unit_price', title: '单价', width: 50 },
                     //{ field: 'amount', title: '数量', width: 50 },
-                    { field: 'department_Using', title: '使用部门', width: 50 },
+                    { field: 'department_Using', title: '使用部门' },
                     //{ field: 'Method_add', title: '添加方式', width: 50 },
                     //{
                     //    field: 'state_asset', title: '资产状态', width: 50,
@@ -131,7 +131,7 @@ function LoadInitData_Detail() {
                     //        }
                     //    }
                     //},
-                    { field: 'supplierID', title: '供应商', width: 50 }
+                    { field: 'supplierID', title: '供应商'}
                 ]],
                 singleSelect: true, //允许选择多行
                 selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
