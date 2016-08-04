@@ -43,7 +43,12 @@
                     "data": JSON.stringify(data)
                 },
                 success: function (info) {
-                    alert(info);
+                    if (info == "ok") {
+                        document.getElementById("bindDIv").style.display = "none";
+                        document.getElementById("info").style.display = "block";
+                    } else {
+                        alert(info);
+                    }
                 }
             });
         }
@@ -57,7 +62,7 @@
     <div id="bindDIv" style="display:none">
          <div style="margin-bottom: 20px">
             <div>openid:</div>
-            <input type="text" id="openid">
+            <input type="text" id="openid" readonly="readonly">
         </div>
         <div style="margin-bottom: 20px">
             <div>用户名:</div>
