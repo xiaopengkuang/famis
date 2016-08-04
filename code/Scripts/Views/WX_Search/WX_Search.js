@@ -110,27 +110,27 @@ function LoadInitData_Detail() {
                     { field: 'name_Asset', title: '资产名称', width: 50 },
                     { field: 'type_Asset', title: '资产类型', width: 50 },
                     { field: 'specification', title: '型号规范', width: 50 },
-                    { field: 'unit_price', title: '单价', width: 50 },
-                    { field: 'amount', title: '数量', width: 50 },
+                    //{ field: 'unit_price', title: '单价', width: 50 },
+                    //{ field: 'amount', title: '数量', width: 50 },
                     { field: 'department_Using', title: '使用部门', width: 50 },
-                    { field: 'Method_add', title: '添加方式', width: 50 },
-                    {
-                        field: 'state_asset', title: '资产状态', width: 50,
-                        formatter: function (data) {
-                            if (data == "在用") {
-                                return '<font color="#696969">' + data + '</font>';
-                            }
-                            else if (data == "借出") {
-                                return '<font color="#FFD700">' + data + '</font>';
-                            } else if (data == "闲置") {
-                                return '<font color="#228B22">' + data + '</font>';
-                            } else if (data == "报废") {
-                                return '<font color="red">' + data + '</font>';
-                            } else {
-                                return data;
-                            }
-                        }
-                    },
+                    //{ field: 'Method_add', title: '添加方式', width: 50 },
+                    //{
+                    //    field: 'state_asset', title: '资产状态', width: 50,
+                    //    formatter: function (data) {
+                    //        if (data == "在用") {
+                    //            return '<font color="#696969">' + data + '</font>';
+                    //        }
+                    //        else if (data == "借出") {
+                    //            return '<font color="#FFD700">' + data + '</font>';
+                    //        } else if (data == "闲置") {
+                    //            return '<font color="#228B22">' + data + '</font>';
+                    //        } else if (data == "报废") {
+                    //            return '<font color="red">' + data + '</font>';
+                    //        } else {
+                    //            return data;
+                    //        }
+                    //    }
+                    //},
                     { field: 'supplierID', title: '供应商', width: 50 }
                 ]],
                 singleSelect: true, //允许选择多行
