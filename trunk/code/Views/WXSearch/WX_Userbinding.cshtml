@@ -56,11 +56,17 @@
 
 
     </script>
+    <style type="text/css">
+        .font_Phone {
+            font-size: 20px;
+            line-height: 30px;
+        }
+    </style>
 
 </head>
 <body>
-    <div id="bindDIv" style="display:none">
-         <div style="margin-bottom: 20px">
+    <div id="bindDIv" style="display: none">
+        <div style="margin-bottom: 20px">
             <div>openid:</div>
             <input type="text" id="openid" readonly="readonly">
         </div>
@@ -68,16 +74,16 @@
             <div>用户名:（固资系统用户名）</div>
             <input type="text" id="username">
         </div>
-        <div style="margin-bottom: 20px" >
+        <div style="margin-bottom: 20px">
             <div>密码:（固资系统密码）</div>
             <input id="password" type="password">
         </div>
         <div>
             <input type="button" onclick="bindUser()" title="绑定" value="绑定" />
         </div>
-        
+
     </div>
-    <div  id="info" style="display:none">
+    <div id="info" style="display: none" class="font_Phone">
         <p>用户已经绑定！</p>
     </div>
 </body>
