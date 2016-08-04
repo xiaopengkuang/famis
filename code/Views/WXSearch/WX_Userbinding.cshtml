@@ -22,6 +22,7 @@
         });
 
         function bindUser(openid) {
+            var openid = $("#openid").val();
             var username = $("#username").val();
             var password = $("#password").val();
             if (password == "" || username == "" || openid == undefined || openid == null || openid == "") {
@@ -35,7 +36,7 @@
             }
 
             $.ajax({
-                url: "http://10.10.64.108:8989/WXSearch/Handler_addNewAssetType",
+                url: "/WXSearch/userBinding_WX",
                 type: 'POST',
                 data: {
                     "data": JSON.stringify(data)
@@ -53,6 +54,10 @@
 </head>
 <body>
     <div id="bindDIv" style="display:none">
+         <div style="margin-bottom: 20px">
+            <div>openid:</div>
+            <input type="text" id="openid" value="@ViewBag.openid">
+        </div>
         <div style="margin-bottom: 20px">
             <div>用户名:</div>
             <input type="text" id="username">
@@ -62,7 +67,7 @@
             <input id="password" type="password">
         </div>
         <div>
-            <input type="button" onclick="bindUser('@ViewBag.openid')" title="绑定" value="绑定" />
+            <input type="button" onclick="bindUser()" title="绑定" value="绑定" />
         </div>
         
     </div>

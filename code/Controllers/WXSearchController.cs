@@ -24,6 +24,7 @@ namespace FAMIS.Controllers
 
         public ActionResult WX_Userbinding(String openid) 
         {
+            openid = "121231212";
             if (openidExist(openid))
             {
                 ViewBag.jump = 1;
@@ -32,7 +33,7 @@ namespace FAMIS.Controllers
             {
                 ViewBag.jump = 0;
             }
-            ViewBag.openid =openid;
+            ViewBag.openid = openid;
             HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             return View();
         }
@@ -132,6 +133,7 @@ namespace FAMIS.Controllers
 
         public String userBinding_WX(String data)
         {
+            HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_userbinding_wx cond = serializer.Deserialize<Json_userbinding_wx>(data);
             if (cond == null || cond.username == null || cond.password == null )
