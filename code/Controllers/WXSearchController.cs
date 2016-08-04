@@ -37,8 +37,26 @@ namespace FAMIS.Controllers
             else {
                 ViewBag.jump = 0;
             }
+
             ViewBag.code = code;
             ViewBag.openid = openid;
+            Json_WXSearch_detail data = getAssetByBH(code);
+            if (data != null)
+            {
+                ViewBag.name = data.name;
+                ViewBag.serialNum = data.serialNum;
+                ViewBag.state = data.state;
+                ViewBag.department = data.department;
+                ViewBag.peopleUsing = data.peopleUsing;
+                ViewBag.zcxh = data.zcxh;
+                ViewBag.measurement = data.measurement;
+                ViewBag.supplier = data.supplier;
+                ViewBag.dj = data.dj;
+                ViewBag.sl = data.sl;
+                ViewBag.zj = data.zj;
+            }
+
+
             HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
             return View();
         }
