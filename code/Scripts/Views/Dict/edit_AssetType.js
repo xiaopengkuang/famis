@@ -125,14 +125,28 @@ function submitForm(id) {
             if (data > 0) {
                 parent.$("#modalwindow").window("close");
                 parent.$("#treegrid").treegrid('reload');
+            } else if (data == -2) {
+                MessShow("存在同名称的资产类别！");
             } else {
-                result = "系统正忙，请稍后继续！";
-                $.messager.alert('警告', result, 'warning');
+                MessShow("插入数据失败，请稍后再试！");
             }
         }
     });
     //alert(JSON.stringify(data));
 
+}
+
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
 }
 
 function cancelForm() {
