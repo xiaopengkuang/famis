@@ -395,6 +395,26 @@ namespace FAMIS.Controllers
 
             return this.Json(Model);
         }
+        [HttpPost]
+
+        public String LoadPDstate()
+        {
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            var data =( from d in db.tb_dataDict
+                       join dd in db.tb_dataDict_para on d.ID equals dd.ID_dataDict into temp_dd
+                       from ddd in temp_dd.DefaultIfEmpty()
+                       where d.name_dataDict==SystemConfig.Name_Dict_PDZT
+                       select new {
+                           ID = ddd.ID,
+                           Name = ddd.name_para
+                       
+                       }).ToList();
+            String json = jss.Serialize(data).ToString().Replace("\\", "");
+
+
+            return json;
+
+        }
 
         [HttpPost]
         public string Getbase64()
@@ -405,46 +425,63 @@ namespace FAMIS.Controllers
         [HttpPost]
         public string AddDP(string JSdata)//添加盘点单
         {
-            ArrayList mysearial = serial.ReturnNewSearial("PD", 1);
+            ArrayList mysearial = serial.ReturnNewSearial("PD", 1);//生成一个盘点单
             Session["CurrentRow"] = 0;
             int id = 0;
+            
             try
             {
                 id = int.Parse(JSdata.Split(',')[0]);
             }
             catch (Exception e)
             {
-                ;
+               
             }
+            
             string oper= JSdata.Split(',')[1];
             string ps = JSdata.Split(',')[2];
             DateTime pddate = DateTime.Parse(JSdata.Split(',')[3].ToString());
             string type = JSdata.Split(',')[4];
 
-            IEnumerable<String> tt = from o in db.tb_user
-                     where o.ID.ToString() == oper
-                     select o.true_Name;
-            foreach(String pq in tt )
+            try
             {
-                oper = pq;
+             int temp=int.Parse(oper);
+               
             }
-           
 
+            catch (Exception e)//如果不是ID
+            {
+                var qq = from o in db.tb_user
+                         where o.true_Name == oper
+                         select o;
+                foreach (var p in qq)
+                {
+                    oper = p.ID.ToString();
+                }
+            };
 
             /* var q = from p in mydb.tb_Menu
               where p.Role_ID == Roleid
               select p;*/
+            string wpdID = "";
             var q = from o in db.tb_Asset_inventory
                     where o.ID == id
                     select o;
-
+            var GetWPD = from o in db.tb_dataDict_para
+                         where o.name_para == "未盘点"
+                         select o;
+            foreach (var p in GetWPD)
+            {
+                wpdID = p.ID.ToString();
+            }
+                       
             if (q.Count() == 0)
             {
                 var rule_tb = new tb_Asset_inventory
                 {
                      serial_number=mysearial[0].ToString(),
                      _operator = oper,
-                     state="未盘点",
+                     state=wpdID,
                      date=pddate,
                      property=type,
                      date_Create=DateTime.Now,
@@ -650,14 +687,24 @@ namespace FAMIS.Controllers
             foreach (var p in q)
             { 
                 if(JSdata=="2")
-             p.state="盘点中";
+
+             p.state=GetStateID("盘点中");
                 if (JSdata == "3")
-                    p.state = "已盘点";          
+                    p.state = GetStateID("已盘点");          
             }
             db.SaveChanges();
             return "";
         
         }
+      public string GetStateID(string state)
+      {
+        var q=from o in db.tb_dataDict_para
+              where o.name_para==state
+              select o;
+          foreach(var p in q)
+              return p.ID.ToString();
+          return "";
+      }
          [HttpPost]
         public string GetForm()
         {
@@ -781,27 +828,7 @@ namespace FAMIS.Controllers
            
            string PDstate = temp[3];
            string PDperson = temp[4];
-           switch (PDstate)
-           {
-               case "WPD":
-                   {
-                       
-                       PDstate = "未盘点";
-                       break;
-                   }
-               case "PDZ":
-                   {
-
-                       PDstate = "盘点中";
-                       break;
-                   }
-               case "YPD":
-                   {
-
-                       PDstate = "已盘点";
-                       break;
-                   }
-           }
+          
 
            switch(Effective_Query_Num)
            {
@@ -812,18 +839,23 @@ namespace FAMIS.Controllers
                            
 
                            var data = from r in db.tb_Asset_inventory
-                                    where r.flag==true
+                                      join p in db.tb_user on r._operator equals p.ID.ToString() into temp_p
+                                      from pp in temp_p.DefaultIfEmpty()
+                                      join d in db.tb_dataDict_para on r.state equals d.ID.ToString() into temp_d
+
+                                      from dd in temp_d.DefaultIfEmpty()
+                                      where r.flag==true
                                    select new
                                    {
                                        ID = r.ID,
                                        serial_number = r.serial_number,
                                        date = r.date,
-                                       _operator = r._operator,
+                                       _operator = pp.true_Name,
                                        amountOfSys = r.amountOfSys,
                                        amountOfInv = r.amountOfInv,
                                        difference = r.difference,
                                        property = r.property,
-                                       state = r.state,
+                                       state = dd.name_para,
                                        date_Create = r.date_Create,
                                        ps = r.ps
                                    };
@@ -847,21 +879,23 @@ namespace FAMIS.Controllers
                case 1:
                    {
                        var data = from r in db.tb_Asset_inventory
-                                  join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                                  join p in db.tb_user on r._operator equals p.ID.ToString()  into temp_p
                                   from pp in temp_p.DefaultIfEmpty()
+                                  join d in db.tb_dataDict_para on r.state equals d.ID.ToString() into temp_d
 
-                                  where r.serial_number.Contains(searial) && r.flag == true || r.date >= BeginDate && r.flag == true || r.date <= EndDate && r.flag == true || r.state == PDstate && r.flag == true || r._operator == PDperson && r.flag == true
+                                  from dd in temp_d.DefaultIfEmpty()
+                                  where r.serial_number.Contains(searial) && r.flag == true || r.date >= BeginDate && r.flag == true || r.date <= EndDate && r.flag == true || r.state == PDstate && r.flag == true || pp.ID.ToString()== PDperson && r.flag == true
                                   select new
                                   {
                                       ID = r.ID,
                                       serial_number = r.serial_number,
                                       date = r.date,
-                                      _operator = r._operator,
+                                      _operator = pp.true_Name,
                                       amountOfSys = r.amountOfSys,
                                       amountOfInv = r.amountOfInv,
                                       difference = r.difference,
                                       property = r.property,
-                                      state = r.state,
+                                      state = dd.name_para,
                                       date_Create = r.date_Create,
                                       ps = r.ps + " "
 
@@ -886,9 +920,11 @@ namespace FAMIS.Controllers
                case 2:
                    {
                       var data=from r in db.tb_Asset_inventory
-                               join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                               join p in db.tb_user on r._operator equals p.ID.ToString() into temp_p
                                from pp in temp_p.DefaultIfEmpty()
-                               
+                               join d in db.tb_dataDict_para on r.state equals d.ID.ToString() into temp_d
+
+                               from dd in temp_d.DefaultIfEmpty()
                                    where (r.state==PDstate&&pp.ID.ToString()==PDperson&&r.flag==true)
                                    || (r.state == PDstate && r.serial_number.Contains(searial) && r.flag == true)
                                    || (r.state == PDstate && r.date >= BeginDate && r.flag == true)
@@ -904,12 +940,12 @@ namespace FAMIS.Controllers
                                        ID = r.ID,
                                        serial_number = r.serial_number,
                                        date = r.date,
-                                       _operator = r._operator,
+                                       _operator = pp.true_Name,
                                        amountOfSys = r.amountOfSys,
                                        amountOfInv = r.amountOfInv,
                                        difference = r.difference,
                                        property = r.property,
-                                       state = r.state,
+                                       state = dd.name_para,
                                        date_Create = r.date_Create,
                                        ps = r.ps+" "
 
@@ -934,8 +970,11 @@ namespace FAMIS.Controllers
                case 3:
                  {
                     var data= from r in db.tb_Asset_inventory
-                              join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                              join p in db.tb_user on r._operator equals p.ID.ToString() into temp_p
                               from pp in temp_p.DefaultIfEmpty()
+                              join d in db.tb_dataDict_para on r.state equals d.ID.ToString() into temp_d
+
+                              from dd in temp_d.DefaultIfEmpty()
                               where (r.serial_number.Contains(searial) && r.date <= EndDate && r.date >= BeginDate && r.flag == true)
                                    || ((pp.ID.ToString() == PDperson&&r.date <= EndDate && r.date >= BeginDate && r.flag == true)
                                    || (pp.ID.ToString() == PDperson&&r.serial_number.Contains(searial)&& r.date <= EndDate && r.flag == true)
@@ -954,12 +993,12 @@ namespace FAMIS.Controllers
                                      ID = r.ID,
                                      serial_number = r.serial_number,
                                      date = r.date,
-                                     _operator = r._operator,
+                                     _operator = pp.true_Name,
                                      amountOfSys = r.amountOfSys,
                                      amountOfInv = r.amountOfInv,
                                      difference = r.difference,
                                      property = r.property,
-                                     state = r.state,
+                                     state = dd.name_para,
                                      date_Create = r.date_Create,
                                      ps = r.ps
 
@@ -981,8 +1020,11 @@ namespace FAMIS.Controllers
                case 4:
                  {
                     var data=from r in db.tb_Asset_inventory
-                             join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                             join p in db.tb_user on r._operator equals p.ID.ToString() into temp_p
                              from pp in temp_p.DefaultIfEmpty()
+                             join d in db.tb_dataDict_para on r.state equals d.ID.ToString() into temp_d
+
+                             from dd in temp_d.DefaultIfEmpty()
                              where (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && r.date >= BeginDate && r.flag == true)
                                  || (r.state == PDstate && pp.ID.ToString() == PDperson && EndDate >= r.date && searial.Contains(searial) && r.flag == true)
                                  || (r.state == PDstate && pp.ID.ToString() == PDperson && BeginDate <= r.date && r.serial_number.Contains(searial) && r.flag == true)
@@ -993,12 +1035,12 @@ namespace FAMIS.Controllers
                                      ID = r.ID,
                                      serial_number = r.serial_number,
                                      date = r.date,
-                                     _operator = r._operator,
+                                     _operator = pp.true_Name,
                                      amountOfSys = r.amountOfSys,
                                      amountOfInv = r.amountOfInv,
                                      difference = r.difference,
                                      property = r.property,
-                                     state = r.state,
+                                     state = dd.name_para,
                                      date_Create = r.date_Create,
                                      ps = r.ps
 
@@ -1022,20 +1064,23 @@ namespace FAMIS.Controllers
                case 5:
                  {
                     var data=from r in db.tb_Asset_inventory
-                             join p in db.tb_user on r._operator equals p.true_Name into temp_p
+                             join p in db.tb_user on r._operator equals p.ID.ToString() into temp_p
                              from pp in temp_p.DefaultIfEmpty()
+                             join d in db.tb_dataDict_para on r.state equals d.ID.ToString() into temp_d
+
+                             from dd in temp_d.DefaultIfEmpty()
                              where r.serial_number.Contains(searial) && BeginDate <= r.date && r.date <= EndDate && r.state == PDstate && pp.ID.ToString() == PDperson && r.flag == true
                                  select new
                                  {
                                      ID = r.ID,
                                      serial_number = r.serial_number,
                                      date = r.date,
-                                     _operator = r._operator,
+                                     _operator =pp.true_Name,
                                      amountOfSys = r.amountOfSys,
                                      amountOfInv = r.amountOfInv,
                                      difference = r.difference,
                                      property = r.property,
-                                     state = r.state,
+                                     state = dd.name_para,
                                      date_Create = r.date_Create,
                                      ps = r.ps
 
