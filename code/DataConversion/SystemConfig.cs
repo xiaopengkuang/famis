@@ -166,7 +166,8 @@ namespace FAMIS.DataConversion
         public const String Export_File_Name_BF = "报废提醒明细详情";
        
         public const String ZJ_Algorithm_PJNX ="平均年限法";
-
+        public const String Name_Dict_PDZT = "盘点状态";
+       
         public const String TB_Collar = "Collar";
         public const String TB_Allocation = "Allocation";
         public const String TB_Repair = "Repair";
