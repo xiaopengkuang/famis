@@ -72,14 +72,27 @@ function submitForm(id)
                 } catch (e) {
 
                 }
+            } else if (data == -2) {
+                MessShow("已存在同名参数！");
             } else {
-                result = "系统正忙，请稍后继续！";
-                $.messager.alert('警告', result, 'warning');
+                MessShow("添加数据失败，请稍后继续！");
             }
         }
     });
 
 
+}
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
 }
 
 

@@ -1003,6 +1003,12 @@ namespace FAMIS.Controllers
             Json_AssetType_add json_data = serializer.Deserialize<Json_AssetType_add>(data);
             if (json_data != null)
             {
+                if (existAssetType(json_data.lbmc))
+                {
+                    return -2;
+                }
+
+
                 try {
                     
                     tb_AssetType at = convertHandler.ConverJsonToTable(json_data);
@@ -1023,6 +1029,16 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+
+
+        public bool existAssetType(String typeName)
+        {
+            var data = from p in DB_C.tb_AssetType
+                       where p.flag == true
+                       where p.name_Asset_Type == typeName
+                       select p;
+            return data.Count() > 0 ? true : false;
+        }
         [HttpPost]
         public int Handler_InsertDepartmen(String data)
         {
@@ -1078,7 +1094,10 @@ namespace FAMIS.Controllers
             if (json_data != null && json_data.zclb != null)
             {
                 //TODO：优化 先判断 是否存在该资产类型
-                
+                if (existCAttr(json_data.zclb, json_data.sxbt))
+                {
+                    return -2;
+                }
                 //
                 try
                 {
@@ -1101,6 +1120,15 @@ namespace FAMIS.Controllers
 
         }
 
+        public bool existCAttr(int? zclb, String Name)
+        {
+            var data = from p in DB_C.tb_customAttribute
+                       where p.flag == true
+                       where p.title == Name && p.type == zclb
+                       select p;
+            return data.Count() > 0 ? true : false;
+        }
+
         [HttpPost]
         public int Handler_InsertdataDic(String data)
         {
@@ -1108,6 +1136,11 @@ namespace FAMIS.Controllers
             Json_dataDict json_data = serializer.Deserialize<Json_dataDict>(data);
             if (json_data != null && json_data.cslx != null)
             {
+                if (existDataDic(json_data.csmc))
+                {
+                    return -2;
+                }
+
                 try {
                     tb_dataDict tb_data = convertHandler.ConverJsonToTable(json_data); 
                    
@@ -1129,6 +1162,22 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+        public bool existDataDic(String name)
+        {
+            var data = from p in DB_C.tb_dataDict
+                       where p.active_flag == true
+                       where p.name_dataDict == name
+                       select p;
+            return data.Count() > 0 ? true : false;
+        }
+        public bool existDataDic_Para(String name,int? ID_dataDict)
+        {
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       where p.name_para == name && p.ID_dataDict==ID_dataDict
+                       select p;
+            return data.Count() > 0 ? true : false;
+        }
         [HttpPost]
         public int Handler_InsertDictPara(String data)
         {
@@ -1136,6 +1185,11 @@ namespace FAMIS.Controllers
             Json_dataDict_Para json_data = serializer.Deserialize<Json_dataDict_Para>(data);
             if (json_data != null && json_data.cslx != null)
             {
+                if (existDataDic_Para(json_data.csmc,json_data.cslx))
+                {
+                    return -2;
+                }
+
                 try
                 {
                     tb_dataDict_para tb_data = convertHandler.ConverJsonToTable(json_data);
@@ -1165,6 +1219,11 @@ namespace FAMIS.Controllers
             Json_supplier json_data = serializer.Deserialize<Json_supplier>(data);
             if (json_data != null && json_data.GYSMC != null && json_data.GYSMC != "")
             {
+                if (existSupplier(json_data.GYSMC))
+                {
+                    return -2;
+                }
+
                 try {
                     tb_supplier tb_data = convertHandler.ConverJsonToTable(json_data);
                     //定义默认参数
@@ -1183,6 +1242,14 @@ namespace FAMIS.Controllers
             return 0;
         }
 
+        public bool existSupplier(String name)
+        {
+            var data = from p in DB_C.tb_supplier
+                       where p.flag == true
+                       where p.name_supplier == name
+                       select p;
+            return data.Count() > 0 ? true : false;
+        }
 
         [HttpPost]
         public int Handler_deleteCAttr(String ids)
@@ -1408,8 +1475,6 @@ namespace FAMIS.Controllers
             {
                 return -2;
             }
-
-
             var q=from p in DB_C.tb_department where p.ID == id select p;
             if (q.Count() != 1)
             {
@@ -1498,7 +1563,15 @@ namespace FAMIS.Controllers
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_AssetType_add json_data = serializer.Deserialize<Json_AssetType_add>(data);
-            
+            if (json_data == null)
+            {
+                return -1;
+            }
+            if (existAssetType(json_data.lbmc))
+            {
+                return -2;
+            }
+
 
             var q = from p in DB_C.tb_AssetType
                     where p.ID == id
@@ -1531,6 +1604,15 @@ namespace FAMIS.Controllers
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_dataDict json_data = serializer.Deserialize<Json_dataDict>(data);
+            if (json_data == null)
+            {
+                return -1;
+            }
+            if (existDataDic(json_data.csmc))
+            {
+                return -2;
+            }
+
 
             var q = from p in DB_C.tb_dataDict
                     where p.active_flag == true
@@ -1572,6 +1654,11 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
+            if (existDataDic_Para(json_data.csmc, json_data.cslx))
+            {
+                return -2;
+            }
+
             var q = from p in DB_C.tb_dataDict_para
                     where p.activeFlag == true
                     where p.ID == id
@@ -1606,6 +1693,11 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
+            if (existSupplier(json_data.GYSMC))
+            {
+                return -2;
+            }
+
             var q = from p in DB_C.tb_supplier
                     where p.flag == true
                     where p.ID == id

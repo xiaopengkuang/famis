@@ -72,7 +72,7 @@ function submitForm(id) {
             } else if (data == -2) {
                 MessShow("已存在同名称部门！");
             } else {
-                MessShow("添加数据失败，请稍后继续！")
+                MessShow("添加数据失败，请稍后继续！");
             }
         }
     });
