@@ -24,7 +24,7 @@
 
 
 
-
+        var rid="0";
         $(function () {
 
             loadInitDate();
@@ -45,10 +45,10 @@
 
 
         function load_SZBM_add() {
-            //alert("12");
+           // alert(rid);
             $('#SZBM_add').combotree
             ({
-                url: '/Dict/load_SZBM',
+                url: '/Dict/load_SZBM?RoleID='+rid+'',
                 valueField: 'id',
                 textField: 'nameText',
                
@@ -67,18 +67,20 @@
 
         function load_Operator() {
             $("#R_add").combobox({
-                valueField: 'name',
+                valueField: 'ID',
                 method: 'POST',
                 textField: 'name',
                 required: true,
                 url: '/Rule/GetRoleID',
                 onSelect: function (rec) {
-
-                    $('#R_add').combobox('setValue', rec.name);
+                    rid = $('#R_add').combotree('getValue');
+                    load_SZBM_add();
+                    $('#R_add').combobox('setValue', rec.ID);
                     $('#R_add').combobox('setText', rec.name);
 
 
                 }
+
             });
         }
         function adduser(){
