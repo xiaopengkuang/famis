@@ -153,7 +153,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             List<tb_role> list = mydb.tb_role.OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
             var result = (from r in list
-                          where r.flag==true
+                          where r.flag==true&&r.isSuperUser==false
                           select new tb_role()
                           {
                               ID = r.ID,
@@ -381,7 +381,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         public string AddUser(string JSdata)
         {
             GetRule model = new GetRule();
-           
+            string temprid = JSdata.Split(',')[4];
             int id = 0;
             try
             {
@@ -391,28 +391,37 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 Console.WriteLine(e.Message);
             }
             int rid=0;
-            int did=0; 
-             string ridtemp=JSdata.Split(',')[4];
+            int did=0;
+            try
+            {
+                rid = int.Parse(JSdata.Split(',')[4]);
+            }
+            catch (Exception e)
+            {
+                var us = from o in mydb.tb_role
+                         where o.name == temprid
+                         select o.ID;
+                foreach (int p in us)
+                {
+                    rid = p;
+                }
+            }
+
              string deptemp = JSdata.Split(',')[5];
             string name = JSdata.Split(',')[1];
             string pwd = JSdata.Split(',')[2];
             string tname = JSdata.Split(',')[3];
             string isText =JSdata.Split(',')[6];
             var validate = from o in mydb.tb_user
-                           where o.name_User == name
+                           where o.name_User == name&&o.flag==true
                            select o;
             foreach(var v in validate)
             {
              if (v.ID!=id)
                 return "name_exist";
             }
-            IEnumerable<int> ri = from o in mydb.tb_role
-                     where o.name == ridtemp
-                     select o.ID;
-            foreach (int roids in ri)
-            {
-                rid = roids;
-            }
+            
+            
 
             try
             {

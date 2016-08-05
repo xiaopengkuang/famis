@@ -443,9 +443,14 @@ namespace FAMIS.Controllers
 
 
          [HttpPost]
-        public String load_SZBM()
+        public String load_SZBM(string RoleID)
         {
-            return GenerateTree_Department();
+
+             if(RoleID==null)
+                 return GenerateTree_Department(0);
+            int rid = int.Parse(RoleID);
+             
+            return GenerateTree_Department(rid);
         }
 
         [HttpPost]
@@ -2069,15 +2074,24 @@ namespace FAMIS.Controllers
 
 
        
-         public String GenerateTree_Department()
+         public String GenerateTree_Department(int? rid)
          {
+             List<int?> ids_de;
              if (!result_tree_department.Equals(""))
              {
                  Thread.Sleep(1000);
              }
+             if (rid !=0)
+             {
+                   ids_de = commonConversion.getids_departmentByRole(rid);
+             }
              //获取用户角色ＩＤ
-             int? roleID = commonConversion.getRoleID();
-             List<int?> ids_de = commonConversion.getids_departmentByRole(roleID);
+             else
+             {
+                 int? roleID = commonConversion.getRoleID();
+                ids_de = commonConversion.getids_departmentByRole(roleID);
+
+             }
 
              result_tree_department.Clear();
              sb_tree_department.Clear();
