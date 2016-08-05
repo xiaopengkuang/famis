@@ -314,6 +314,7 @@ function saveData(info,id) {
             ajaxLoadEnd();
             if (data > 0) {
                 try {
+                    window.parent.reloadTabGrid("资产领用");
                     window.parent.$('#tabs').tabs('close', '编辑领用');
                 } catch (e) {
                     $.messager.alert('提示', '系统忙，请手动关闭该面板', 'info');
@@ -390,13 +391,23 @@ function getTime(/** timestamp=0 **/) {
 }
 
 function openModelWindow(url, titleName) {
+    //获取当前页面的Width和高度
+    var winWidth = (document.body.clientWidth - 20) < 0 ? 0 : (document.body.clientWidth - 20);
+    var winheight = (document.body.clientHeight - 20) < 0 ? 0 : (document.body.clientHeight - 20);
+
+
+    try {
+        $("#modalwindow").window("close");
+    } catch (e) { }
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,
-        width: 850,
-        height: 650,
-        top: (($(window).height() - 650) > 0 ? ($(window).height() - 650) : 200) * 0.5,
-        left: (($(window).width() - 850) > 0 ? ($(window).width() - 850) : 100) * 0.5,
+        width: winWidth,
+        height: winheight,
+        //top: (($(window).height() - 650) > 0 ? ($(window).height() - 650) : 200) * 0.5,
+        //left: (($(window).width() - 850) > 0 ? ($(window).width() - 850) : 100) * 0.5,
+        top: 10,
+        left:10,
         shadow: true,
         modal: true,
         iconCls: 'icon-add',

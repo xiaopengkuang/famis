@@ -752,11 +752,8 @@ function checkFormat() {
             }; break;
             default:; break;
         }
-
-        submitForm();
     }
-    
-  
+    submitForm();
    
 }
 
