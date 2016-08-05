@@ -141,7 +141,10 @@ namespace FAMIS.Controllers
                             name = p.name_supplier,
                             addree = p.address,
                             lineMan = p.linkman,
-                            editTime=p.editTime
+                            editTime=p.editTime,
+                            phoneNum=p.phoneNumber,
+                            email=p.email,
+                            fax = p.fax
 
                         }).OrderByDescending(a=>a.editTime);
 
@@ -1124,7 +1127,7 @@ namespace FAMIS.Controllers
         {
             var data = from p in DB_C.tb_customAttribute
                        where p.flag == true
-                       where p.title == Name && p.type == zclb
+                       where p.title == Name && p.assetTypeID == zclb
                        select p;
             return data.Count() > 0 ? true : false;
         }
