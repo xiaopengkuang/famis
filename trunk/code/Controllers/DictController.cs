@@ -1030,6 +1030,12 @@ namespace FAMIS.Controllers
             Json_department dp = serializer.Deserialize<Json_department>(data);
             if(dp!=null)
             {
+
+                if (existDepartment(dp.bmmc))
+                {
+                    return -2;
+                }
+
                 try {
                     tb_department tb_dp = new tb_department();
                     tb_dp =convertHandler.ConverJsonToTable(dp);
@@ -1052,7 +1058,15 @@ namespace FAMIS.Controllers
                 }
             }
             return 0;
+        }
 
+        public bool existDepartment(String name)
+        {
+            var data = from p in DB_C.tb_department
+                       where p.effective_Flag == true
+                       where p.name_Department == name
+                       select p;
+            return data.Count() > 0 ? true : false;
         }
 
 
@@ -1386,6 +1400,15 @@ namespace FAMIS.Controllers
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_department json_data = serializer.Deserialize<Json_department>(data);
+            if (json_data == null)
+            {
+                return -1;
+            }
+            if (existDepartment(json_data.bmmc))
+            {
+                return -2;
+            }
+
 
             var q=from p in DB_C.tb_department where p.ID == id select p;
             if (q.Count() != 1)
