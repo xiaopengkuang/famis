@@ -1,4 +1,5 @@
 ﻿ 
+var IsEdit = false;
 var searchCondtiion = "o,o,o,o,o";
 var searial = "o";
 var begin = "o";
@@ -74,8 +75,8 @@ function ReSetSeachCondition() {
     $("#Invention_Code").val("");
     $('#BeginDate_SC').datebox('setValue', '');
     $('#EndDate_SC').datebox('setValue', '');
-    $("#Invention_State").combobox('select', "");
-    $("#operator").combobox('select', "");
+    $("#Invention_State").combobox('select', "全部");
+    $("#operator").combobox('select', "全部");
     var searchCondtiion = "o,o,o,o,o";
     LoadInitData(searchCondtiion);
 }
@@ -102,9 +103,11 @@ $(document).ready(function () {
     GetIsQueried();
     extend();
     loadOperator();
+    loadmyOperator();
+    loadPDState();
    // setPDserail(PDsearial);
    // LoadInitData_Detail(PDsearial)
-    $("#Invention_State").combobox('select', "全部");
+    
     LoadInitData(searchCondtiion);
     
   //  LoadTreeLeft();
@@ -179,10 +182,55 @@ function loadOperator() {
     });
    
 }
+function loadPDState() {
+
+    $("#Invention_State").combobox({
+        valueField: 'ID',
+        method: 'POST',
+        textField: 'Name',
+        url: '/Depreciation/LoadPDstate',
+        onLoadSuccess: function () {
+            var data = $('#Invention_State').combobox('getData');
+            $("#Invention_State").combobox('select', "全部");
+
+        },
+        onSelect: function (rec) {
+            $('#Invention_State').combobox('setValue', rec.ID);
+            $('#Invention_State').combobox('setText', rec.Name);
+        }
+    });
+
+}
+function loadmyOperator() {
+
+    $("#operator_add").combobox({
+        valueField: 'ID',
+        method: 'POST',
+        textField: 'true_Name',
+        url: '/Rule/GetUserID',
+        onLoadSuccess: function () {
+            var data = $('#operator_add').combobox('getData');
+            $("#operator_add").combobox('select', data[0].true_Name);
+            
+
+        },
+        onSelect: function (rec) {
+            $('#operator_add').combobox('setValue', rec.ID);
+            $('#operator_add').combobox('setText', rec.true_Name);
+        }
+    });
+
+}
+
 function LoadBYSearchCondition()
 {
    
-   // alert("kais!");
+    // alert("kais!");
+    searial = "o";
+      begin = "o";
+     end = "o";
+    state = "o";
+     person = "o";
     if($('#Invention_Code').val()!="")
       searial=$('#Invention_Code').val();
    
@@ -202,7 +250,7 @@ function LoadBYSearchCondition()
    
     searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
     SetIsQueryied("true");
-    //alert(searchCondtiion);
+   // alert(searchCondtiion);
     
     flag = 1;
     LoadInitData(searchCondtiion);
@@ -260,6 +308,8 @@ function LoadInitData(searchCondtiion) {
                         field: 'date', title: '盘点日期', width: 180,editable: false,
 
                         formatter: function (date) {
+                            if (IsEdit)
+                                return date;
                             try {
                                 var pa = /.*\((.*)\)/;
                                 var unixtime = date.match(pa)[1].substring(0, 10);
@@ -297,7 +347,7 @@ function LoadInitData(searchCondtiion) {
                     },
 
                      {
-                         field: '_operator', title: '操作人',  width: 150,
+                         field: '_operator', title: '操作人',  width: 100,
                          editor: {
                              type: 'combobox', options: {
                                  valueField: 'ID', editable: false, textField: 'true_Name', url: '/Rule/GetUserID',
@@ -314,7 +364,7 @@ function LoadInitData(searchCondtiion) {
                          }
                      },
                      {
-                         field: 'state', title: '盘点状态', editble: false, width: 150,
+                         field: 'state', title: '盘点状态', editble: false, width: 100,
                          formatter: function (state) {
                              try {
                                  if (state == "未盘点")
@@ -384,7 +434,7 @@ function LoadInitData(searchCondtiion) {
                                              datatype: "json",//数据类型
 
                                              success: function (result) {
-                                                 
+                                                // datagrid.datagrid('selectRow', index); 
                                                  $('#TableList_0_2').datagrid('reload');
 
 
@@ -409,10 +459,12 @@ function LoadInitData(searchCondtiion) {
                  }, '-',
                  {
                      text: '修改', iconCls: 'icon-edit', disabled: !dataRight.edit_able, handler: function () {
+
                          if (AssetState == "已盘点")
                              $.messager.alert("提示", "该盘点单已盘点，不可修改！");
                          else {
                              //修改时要获取选择到的行
+                             IsEdit = true;
                              var rows = datagrid.datagrid("getSelections");
 
                              //如果只选择了一行则可以进行修改，否则不操作
@@ -444,13 +496,18 @@ function LoadInitData(searchCondtiion) {
                          datagrid.datagrid("endEdit", editRow);
                          var row = $('#TableList_0_1').datagrid('getSelected');
                          // var row = $("#dd").datagrid('getChanges');
+                        // alert(IsEdit);
                          if (row) {
+                             var pddate;
                              var index = $('#TableList_0_1').datagrid('getRowIndex', row);
                              var rowdata = $('#TableList_0_1').datagrid('getData');
                              var ID = rowdata.rows[index].ID;
                              var operator = rowdata.rows[index]._operator;
-                             var pddate = fmt(rowdata.rows[index].date);
-                             //alert(pddate);
+                             if (!IsEdit||editRow!=index)
+                                 pddate = fmt(rowdata.rows[index].date);
+                             else
+                                  pddate = rowdata.rows[index].date;
+                            // alert(pddate);
 
                              var ps = rowdata.rows[index].ps;
                              var zctype = rowdata.rows[index].property;
@@ -464,8 +521,9 @@ function LoadInitData(searchCondtiion) {
 
                                  success: function (result) {
 
-
+                                     IsEdit = false;
                                      $.messager.alert("提示", "修改成功！", "ok");
+                                     
                                      $('#TableList_0_1').datagrid('reload');
 
 
@@ -634,6 +692,19 @@ function LoadInitData(searchCondtiion) {
                     }
                     LoadInitData_Detail(PDsearial);
                 },
+                onClickRow: function (index, data) {
+                    // alert(index);
+                    //IsEdit = false;
+                    if (editRow != undefined) {
+                        datagrid.datagrid("endEdit", editRow);
+                    }
+                },
+                onCheck: function (index, data) {
+                   // IsEdit = false;
+                    if (editRow != undefined) {
+                        datagrid.datagrid("endEdit", editRow);
+                    }
+                },
                 onAfterEdit: function (rowIndex, rowData, changes) {
                     //endEdit该方法触发此事件
                     console.info(rowData);
@@ -649,12 +720,14 @@ function LoadInitData(searchCondtiion) {
                     }
                     else {
                         if (editRow != undefined) {
+
                             datagrid.datagrid("endEdit", editRow);
                         }
                         if (editRow == undefined) {
                             datagrid.datagrid("beginEdit", rowIndex);
                             editRow = rowIndex;
                         }
+                        IsEdit = true;
                     }
                 },
                 singleSelect: true, //允许选择多行
@@ -735,12 +808,18 @@ function cancelForm() {
 function Add_PD()
 {
     var ID = "-1000";
-    var operator = $('#operator').combobox('getValue');
+    var operator = $('#operator_add').combobox('getValue');
+   // alert(operator);
     var ps = $('#ps').val();
     var pddate = $('#pddate').datebox('getValue');
     var zctype = $('#ZCLB').combobox('getValue');
+    
     if (pddate == "" || pddate == null) {
         $.messager.alert("提示", "盘点日期不能为空！", "error");
+        return;
+    }
+    if (ps == null || ps == "") {
+        $.messager.alert("提示", "备注不能为空！");
         return;
     }
     $.ajax({
