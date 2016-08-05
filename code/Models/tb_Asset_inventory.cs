@@ -10,7 +10,7 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string serial_number { get; set; }
 
         public DateTime? date { get; set; }

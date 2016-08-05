@@ -14,7 +14,7 @@ namespace FAMIS.Models
 
         public int? ID_customAttr { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string value { get; set; }
 
         public bool? flag { get; set; }

@@ -19,7 +19,7 @@ namespace FAMIS.Models
         [StringLength(8)]
         public string father_Menu_ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string name_Menu { get; set; }
 
         public int? treeLevel { get; set; }

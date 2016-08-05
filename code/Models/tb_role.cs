@@ -10,7 +10,7 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string name { get; set; }
 
         [StringLength(300)]
