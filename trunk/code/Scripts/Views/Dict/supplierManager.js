@@ -43,7 +43,10 @@ function loadDataGrid(datagrid, url, toolbar) {
             { field: 'id', checkbox: true, width: 50, hidden: toolbar },
             { field: 'name', title: '名称', width: 50 },
             { field: 'lineMan', title: '负责人', width: 100 },
-            { field: 'addree', title: '地址', width: 50 }
+            { field: 'addree', title: '地址', width: 50 },
+            { field: 'phoneNum', title: '联系电话', width: 50 },
+            { field: 'email', title: '邮箱', width: 50 },
+            { field: 'fax', title: '传真', width: 50 }
 
         ]],
         singleSelect: false, //允许选择多行
