@@ -26,7 +26,7 @@ function tt() {
 function load_SZBM_add() {
     $('#SZBM_add').combotree
     ({
-        url: '/Dict/load_SZBM',
+        url: '/Dict/load_SZBM?RoleID=',
         valueField: 'id',
         textField: 'nameText',
         required: true,
@@ -201,6 +201,10 @@ function LoadMain() {
                          //修改时要获取选择到的行
                          try {
                              var rows = datagrid.datagrid("getSelections");
+                             if (rows.length == 0) {
+                                 $.messager.alert("提示", "请选择要编辑的行!", "error");
+                                 return;
+                             }
                              var index = datagrid.datagrid("getRowIndex", rows[0]);
                              $("#dd").datagrid('selectRow', index);
                              //如果只选择了一行则可以进行修改，否则不操作
@@ -358,6 +362,14 @@ function LoadMain() {
                          datagrid.datagrid("rejectChanges");
                          datagrid.datagrid("unselectAll");
                      }
+                 }, '-',
+                 {
+                     text: '刷新', iconCls: 'icon-undo', handler: function () {
+                         //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
+                         editRow = undefined;
+                         datagrid.datagrid("reload");
+                         
+                     }
                  }
                 ],
 
@@ -435,23 +447,5 @@ function cancelForm() {
     LoadMain();
     parent.$("#modalwindow").window("close");
 }
-function load_SZBM_add() {
-    $('#SZBM_add').combotree
-    ({
-        url: '/Dict/load_SZBM',
-        valueField: 'id',
-        textField: 'nameText',
-        required: true,
-        method: 'POST',
-        editable: false,
-        //选择树节点触发事件  
-        onSelect: function (node) {
-            
-        }, //全部折叠
-        onLoadSuccess: function (node, data) {
-            //$('#SZBM_add').combotree('tree').tree("collapseAll");
-        }
-    });
-
-}
+ 
  
