@@ -5,7 +5,9 @@ var ID_datagrid = "datagrid_allocation";
 var ID_targetState = null;
 var ID_Allocation = null;
 
-
+window.top["reload_datagrid_allocation"] = function () {
+    $("#datagrid_allocation").datagrid('reload');
+};
 
 //===================初始化数据=====================================//
 $(function () {
@@ -513,13 +515,23 @@ function myparser(s) {
 
 
 function openModelWindow(url, titleName) {
+    //获取当前页面的Width和高度
+    var winWidth = (document.body.clientWidth - 20) < 0 ? 0 : (document.body.clientWidth - 20);
+    var winheight = (document.body.clientHeight - 20) < 0 ? 0 : (document.body.clientHeight - 20);
+
+
+    try {
+        $("#modalwindow").window("close");
+    } catch (e) { }
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,
-        width: 900,
-        height: 700,
-        top: (($(window).height() - 700) > 0 ? ($(window).height() - 700) : 200) * 0.5,
-        left: (($(window).width() - 900) > 0 ? ($(window).width() - 900) : 100) * 0.5,
+        width: winWidth,
+        height: winheight,
+        left: 10,
+        top: 10,
+        //top: (($(window).height() - 700) > 0 ? ($(window).height() - 700) : 200) * 0.5,
+        //left: (($(window).width() - 900) > 0 ? ($(window).width() - 900) : 100) * 0.5,
         shadow: true,
         modal: true,
         iconCls: 'icon-add',

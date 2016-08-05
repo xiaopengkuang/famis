@@ -36,7 +36,7 @@ $(function () {
     //setTimeout('refresh()', 15000);
 
     $(window).resize(function () {
-        var win_width = $(window).width();
+        var win_width = document.body.clientWidth;
         $("#datagrid_collor").datagrid('resize', { width: win_width - 20 });
     });
 })
@@ -538,13 +538,21 @@ function myparser(s) {
 
 
 function openModelWindow(url, titleName) {
+    //获取当前页面的Width和高度
+    var winWidth = (document.body.clientWidth - 20) < 0 ? 0 : (document.body.clientWidth - 20);
+    var winheight = (document.body.clientHeight - 20) < 0 ? 0 : (document.body.clientHeight - 20);
+    try {
+        $("#modalwindow").window("close");
+    } catch (e) { }
     var $winADD;
     $winADD = $('#modalwindow').window({
         title: titleName,
-        width: 900,
-        height: 700,
-        top: (($(window).height() - 700) > 0 ? ($(window).height() - 700) : 200) * 0.5,
-        left: (($(window).width() - 900) > 0 ? ($(window).width() - 900) : 100) * 0.5,
+        width: winWidth,
+        height: winheight,
+        //top: (($(window).height() - 700) > 0 ? ($(window).height() - 700) : 200) * 0.5,
+        top:10,
+        //left: (($(window).width() - 900) > 0 ? ($(window).width() - 900) : 100) * 0.5,
+        left:10,
         shadow: true,
         modal: true,
         iconCls: 'icon-add',
