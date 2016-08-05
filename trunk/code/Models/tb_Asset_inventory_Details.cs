@@ -10,7 +10,7 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string serial_number { get; set; }
 
         [StringLength(10)]
@@ -22,7 +22,7 @@ namespace FAMIS.Models
 
         public int? difference { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string serial_number_Asset { get; set; }
 
         public bool? flag { get; set; }

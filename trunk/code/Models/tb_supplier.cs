@@ -19,10 +19,10 @@ namespace FAMIS.Models
         [StringLength(30)]
         public string email { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string linkman { get; set; }
 
-        [StringLength(15)]
+        [StringLength(30)]
         public string phoneNumber { get; set; }
 
         [StringLength(30)]

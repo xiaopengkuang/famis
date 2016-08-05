@@ -12,7 +12,7 @@ namespace FAMIS.Models
 
         public int? assetTypeCode { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string name_Asset_Type { get; set; }
 
         public int? father_MenuID_Type { get; set; }

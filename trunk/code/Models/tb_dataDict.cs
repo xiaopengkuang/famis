@@ -10,10 +10,10 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string name_flag { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string name_dataDict { get; set; }
 
         public int? father_ID { get; set; }

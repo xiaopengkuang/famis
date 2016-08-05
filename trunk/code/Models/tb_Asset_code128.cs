@@ -12,7 +12,7 @@ namespace FAMIS.Models
 
         public int? ID_Asset { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string code128 { get; set; }
 
         [StringLength(200)]

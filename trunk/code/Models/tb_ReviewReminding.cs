@@ -10,7 +10,7 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string Type_Review_TB { get; set; }
 
         public int? ID_review_TB { get; set; }

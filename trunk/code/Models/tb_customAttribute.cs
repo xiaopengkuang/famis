@@ -10,10 +10,10 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string SYSID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string title { get; set; }
 
         public int? type { get; set; }

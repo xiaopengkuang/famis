@@ -10,15 +10,15 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string serial_number { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string name_Asset { get; set; }
 
         public int? type_Asset { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string specification { get; set; }
 
         public int? measurement { get; set; }

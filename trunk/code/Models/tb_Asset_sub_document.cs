@@ -12,7 +12,7 @@ namespace FAMIS.Models
 
         public int? ID_Asset { get; set; }
 
-        [StringLength(50)]
+        [StringLength(100)]
         public string fileName { get; set; }
 
         [Column("abstract")]

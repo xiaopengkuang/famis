@@ -10,7 +10,7 @@ namespace FAMIS.Models
     {
         public int ID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string serialNumber { get; set; }
 
         public DateTime? date_ToRepair { get; set; }
@@ -43,7 +43,7 @@ namespace FAMIS.Models
 
         public int? ID_Asset { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string Name_equipment { get; set; }
 
         public double? CostToRepair { get; set; }

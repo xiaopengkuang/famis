@@ -12,10 +12,10 @@ namespace FAMIS.Models
 
         public int? ID_Asset { get; set; }
 
-        [StringLength(20)]
+        [StringLength(30)]
         public string serialCode { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string name { get; set; }
 
         public int? measurement { get; set; }
@@ -24,7 +24,7 @@ namespace FAMIS.Models
 
         public int? supplyID { get; set; }
 
-        [StringLength(20)]
+        [StringLength(100)]
         public string specification { get; set; }
 
         [StringLength(200)]
