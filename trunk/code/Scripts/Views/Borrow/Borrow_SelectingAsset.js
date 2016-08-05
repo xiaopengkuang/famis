@@ -95,8 +95,8 @@ function LoadInitData_Detail() {
             { field: 'name_Asset', title: '资产名称', width: 50 },
             { field: 'type_Asset', title: '资产类型', width: 50 },
             { field: 'specification', title: '型号规范', width: 50 },
-            { field: 'unit_price', title: '单价', width: 50 },
-            { field: 'amount', title: '数量', width: 50 },
+            //{ field: 'unit_price', title: '单价', width: 50 },
+            //{ field: 'amount', title: '数量', width: 50 },
             { field: 'department_Using', title: '使用部门', width: 50 },
             { field: 'addressCF', title: '地址', width: 50 },
             { field: 'Method_add', title: '添加方式', width: 50 },
@@ -116,8 +116,8 @@ function LoadInitData_Detail() {
                         return data;
                     }
                 }
-            },
-            { field: 'supplierID', title: '供应商', width: 50 }
+            }
+            //{ field: 'supplierID', title: '供应商', width: 50 }
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
