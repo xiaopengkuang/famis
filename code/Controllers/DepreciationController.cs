@@ -729,7 +729,7 @@ namespace FAMIS.Controllers
                     else
                     {
                         Session["ErrorFile"] = "FileUploaded";
-                        String existFile = System.AppDomain.CurrentDomain.BaseDirectory + "/Tempory_Files";
+                        String existFile = System.AppDomain.CurrentDomain.BaseDirectory + "Tempory_Files";
                         StreamWriter sw = new StreamWriter("D:\\tt.txt");
                         sw.Write(existFile);
                         
