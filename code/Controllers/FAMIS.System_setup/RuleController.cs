@@ -496,7 +496,8 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             string name = JSdata.Split(',')[1];
             string des = JSdata.Split(',')[2];
             var hasexist = from o in mydb.tb_role
-                           where o.name == name
+                           
+                           where o.name == name&&o.flag==true
                            select o;
             foreach (var v in hasexist)
             {
