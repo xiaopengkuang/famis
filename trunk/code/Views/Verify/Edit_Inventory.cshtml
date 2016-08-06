@@ -13,34 +13,90 @@
 
 
 
- 
+
 
 <script type="text/javascript">
-    
+
     
     $(function () {
+        $("#operator_add").combobox({
+            valueField: 'ID',
+            method: 'POST',
+            textField: 'true_Name',
+            url: '/Rule/GetUserID',
+            onLoadSuccess: function () {
+                var data = $('#operator_add').combobox('getData');
+                for (var i = 0; i < data.length; i++)
+                    if(data[i].true_Name==arr[3])
+                $("#operator_add").combobox('select', data[i].true_Name);
+
+
+            },
+            onSelect: function (rec) {
+                $('#operator_add').combobox('setValue', rec.ID);
+                $('#operator_add').combobox('setText', rec.true_Name);
+            }
+        });
+        var PDdata = String(GetEditData());
+        var arr = PDdata.split(',');
+        $('#LBMC').val(arr[0]);
+        $('#pddate').val(arr[1]);
+        var Asset_Type = $('#ZCLB').combobox('select',arr[2]);
          
-            $("#operator_add").combobox({
-                valueField: 'ID',
-                method: 'POST',
-                textField: 'true_Name',
-                url: '/Rule/GetUserID',
-                onLoadSuccess: function () {
-                    var data = $('#operator_add').combobox('getData');
-                    $("#operator_add").combobox('select', data[0].true_Name);
+       
 
+        $('ps').val(arr[4]);
 
-                },
-                onSelect: function (rec) {
-                    $('#operator_add').combobox('setValue', rec.ID);
-                    $('#operator_add').combobox('setText', rec.true_Name);
-                }
-            });
-        
-           
-        
     });
-    
+    function fmt(date) {
+        try {
+            var pa = /.*\((.*)\)/;
+            var unixtime = date.match(pa)[1].substring(0, 10);
+            // alert(getTime(unixtime));
+            return getTime(unixtime);
+        }
+        catch (e) {
+            return "";
+        }
+    }
+    function GetEditData()
+    {
+        var eid = GetEID();
+        var obj = eid + "," + "PD";
+        $.ajax({
+
+            type: "post",
+            url: "/Depreciation/GetEditData",
+
+            datatype: "json",//数据类型
+            data: { Json: obj },
+            success: function (result) {
+                
+                return result;
+
+            }, error: function (msg) {
+                alert("Error");
+            }
+        });
+    }
+    function GetEID()
+    {
+        $.ajax({
+
+            type: "post",
+            url: "/Depreciation/GetEditID",
+
+            datatype: "json",//数据类型
+
+            success: function (result) {
+
+                return result;
+
+            }, error: function (msg) {
+                alert("Error");
+            }
+        });
+    }
     function Add_PD() {
         var ID = "-1000";
         var operator = $('#operator_add').combobox('getValue');
@@ -81,13 +137,13 @@
     }
 
 </script>
- 
+
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>添加资产类型</title>
-   
+
 </head>
 <body>
 
@@ -112,7 +168,7 @@
                     <label>盘点编号<span style="color: red">*</span>:</label>
                 </td>
                 <td style="width: 250px">
-                    <input class="easyui-textbox" value="自动生成" data-options="disabled:true" id="LBMC" style="width: 246px" readonly="readonly">
+                    <input class="easyui-textbox"  data-options="disabled:true" id="LBMC" style="width: 246px" readonly="readonly">
                 </td>
             </tr>
             <tr>
@@ -131,7 +187,7 @@
                     <input id="operator_add" class="easyui-combobox" style="width: 250px; height: 18px" data-options="editable: false">
 
 
-                    
+
                 </td>
 
             </tr>
