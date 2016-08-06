@@ -96,6 +96,10 @@ namespace FAMIS.Models
                 .Property(e => e.specification)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<tb_Asset>()
+                .Property(e => e.note)
+                .IsUnicode(false);
+
             modelBuilder.Entity<tb_Asset_allocation>()
                 .Property(e => e.serial_number)
                 .IsUnicode(false);

@@ -216,15 +216,15 @@ function initAttr(data) {
              tr = document.createElement("tr");
         }
         var td1 = document.createElement("td");
-        td1.style.width = "50px";
+        td1.style.width = "80px";
         var td2 = document.createElement("td");
-        td2.style.width = "200px";
+        td2.style.width = "170px";
 
         var lable_item = document.createElement("label");
         lable_item.innerHTML = data[i].title + ":";
         var input_item = document.createElement("input");
         input_item.id = "CAttr_INPUT_" + data[i].ID;
-        input_item.style.width = "200px";
+        input_item.style.width = "170px";
         td1.appendChild(lable_item);
         td2.appendChild(input_item);
         tr.appendChild(td1);
@@ -338,10 +338,10 @@ function initcombotree(id_combotree, id_dic, requiredFlag, ca_checked)
 
 function initNumberBox(id_Numbox, ca_checked)
 {
-    $('#'+id_Numbox).numberbox({
-        min: 0,
-        precision: 2
-    });
+    //$('#'+id_Numbox).numberbox({
+    //    min: 0,
+    //    precision: 2
+    //});
 
     if (ca_checked)
     {
@@ -417,6 +417,7 @@ function load_JLDW_add() {
 
 
 function load_SZBM_add() {
+
     $('#SZBM_add').combotree
     ({
         url: '/Dict/load_SZBM',

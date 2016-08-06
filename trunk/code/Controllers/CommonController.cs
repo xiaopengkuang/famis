@@ -77,8 +77,8 @@ namespace FAMIS.Controllers
                        where tb_RAT.flag == true
                        where tb_RAT.type == SystemConfig.role_menu
                        join tb_me in DB_C.tb_Menu on tb_RAT.Right_ID equals tb_me.ID
-                       where tb_me.name_Menu == menuName
-                       where tb_me.operation == SystemConfig.operation_submit
+                       where tb_me.father_Menu == menuName.Trim()
+                       where tb_me.operation == SystemConfig.operation_review
                        select new { 
                        id=p.ID,
                        name=p.true_Name
