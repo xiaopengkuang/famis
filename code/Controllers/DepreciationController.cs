@@ -730,18 +730,18 @@ namespace FAMIS.Controllers
                     {
                         Session["ErrorFile"] = "FileUploaded";
                         String existFile = System.AppDomain.CurrentDomain.BaseDirectory + "Tempory_Files";
-                        StreamWriter sw = new StreamWriter("D:\\tt.txt");
-                        sw.Write(existFile);
+                       // StreamWriter sw = new StreamWriter("D:\\tt.txt");
+                        //sw.Write(existFile);
                         
                              
-                        if (!System.IO.File.Exists(existFile))
+                     /*   if (!System.IO.File.Exists(existFile))
                         {
                             
                                 Directory.CreateDirectory(Server.MapPath(existFile));
                                 sw.Write(" :::: "+Server.MapPath(existFile).ToString());
                                 sw.Close();
                             
-                        }
+                        }*/
                         string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
                         string imgPath = "/Tempory_Files"+"/" + imgName + FileSave.FileName;  
                         //通过此对象获取文件名
