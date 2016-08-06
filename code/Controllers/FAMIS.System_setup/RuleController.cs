@@ -624,6 +624,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                                                       select a;
                     foreach (tb_AssetType at in asset)
                     {
+
+                        if (IsFather(at.ID,"assettype"))
+                            continue;
                         if (temp != role_au.Count() - 1)
                             json += at.ID+ ",";
                         else
@@ -639,6 +642,30 @@ namespace FAMIS.Controllers.FAMIS.System_setup
            
             return json;
 
+        }
+        public bool IsFather(int id,string type)
+        {
+            if (type == "department")
+            {
+                var q = from o in mydb.tb_department
+                        where o.ID_Father_Department == id
+                        select o;
+                if (q.Count() > 0)
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                var q = from o in mydb.tb_AssetType
+                        where o.father_MenuID_Type == id
+                        select o;
+                if (q.Count() > 0)
+                    return true;
+                else
+                    return false;
+            }
+            
         }
         [HttpPost]
         public String Get_DPSelected_Url(string JSON)
@@ -661,7 +688,8 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                                                       select a;
                     foreach (tb_department d in depart)
                     {
-
+                        if (IsFather(d.ID,"department"))
+                            continue;
                         if (temp != role_au.Count() - 1)
                             json += d.ID + ",";
                         else
