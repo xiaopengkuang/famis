@@ -560,6 +560,8 @@ function submitForm() {
 
     var d_GYSDD_add = $("#GYSDD_add").val();
 
+    var d_note_add = $("#node_add").val();
+
     var d_Check_PLZJ_add = $("#Num_PLTJ_add").is(":hidden");  //true表示未被选选中  false表示选择
 
     var d_Num_PLTJ_add = d_Check_PLZJ_add == true ? 1 : $("#Num_PLTJ_add").val();
@@ -607,7 +609,8 @@ function submitForm() {
         "d_Other_JCZL_add": d_Other_JCZL_add,
         "d_Other_ZCDJ_add": d_Other_ZCDJ_add,
         "d_Other_ZCSL_add": d_Other_ZCSL_add,
-        "d_Other_ZCJZ_add": d_Other_ZCJZ_add
+        "d_Other_ZCJZ_add": d_Other_ZCJZ_add,
+        "d_note_add": d_note_add
         //"d_Other_YTZJ_add": d_Other_YTZJ_add,
         //"d_Other_LJZJ_add": d_Other_LJZJ_add,
         //"d_Other_JZ_add": d_Other_JZ_add

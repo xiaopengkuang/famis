@@ -2069,7 +2069,24 @@ namespace FAMIS.Controllers
 
 
 
-
+        /* public List<int?> ReturnTrueIDs(List<int?> ids)
+         {
+             foreach (int id in ids)
+             {
+                 var p = from o in DB_C.tb_department
+                         where o.ID == id
+                         select o;
+                 foreach(var q in p)
+                 {
+                     if (!ids.Contains((q.ID_Father_Department)))
+                     {
+                         ids.Add(q.ID_Father_Department);
+                         
+                     }
+                 }
+             }
+             return ids;
+         }*/
 
 
        
@@ -2083,7 +2100,9 @@ namespace FAMIS.Controllers
              if (rid !=0)
              {
                    ids_de = commonConversion.getids_departmentByRole(rid);
+                  // ids_de = ReturnTrueIDs(ids_de);
              }
+
              //获取用户角色ＩＤ
              else
              {
