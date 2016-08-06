@@ -62,40 +62,39 @@ namespace FAMIS.Controllers
         }
 
 
-       /*
-        public ActionResult add_AssetType(int? pid,String pname,String level)
-        {
-            if (pname == null || pname == "" || pid == null)
-            {
-                ViewBag.info = pname;
-                return View("Error");
-            }
-            //return View("Error");
+        
+         public ActionResult add_AssetType(int? pid,String pname,String level)
+         {
+             if (pname == null || pname == "" || pid == null)
+             {
+                 ViewBag.info = pname;
+                 return View("Error");
+             }
 
-            if (pid!=null&&pname!="")
-            {
-                ViewBag.fatherID = pid;
-                ViewBag.fatherName = pname;
-                ViewBag.level = level;
-                //获取  获取新的资产编号
-                //TODO: 
-                //DateTime dt = DateTime.Now;
+             if (pid!=null&&pname!="")
+             {
+                 ViewBag.fatherID = pid;
+                 ViewBag.fatherName = pname;
+                 ViewBag.level = level;
+                 //获取  获取新的资产编号
+                 //TODO: 
+                 DateTime dt = DateTime.Now;
               
-                //23.ToString().PadLeft(6, '0');
+                 23.ToString().PadLeft(6, '0');
 
 
 
-                ViewBag.CodeAssetType = commonConversion.getUniqAssetTypeCode();
+                 ViewBag.CodeAssetType = commonConversion.getUniqAssetTypeCode();
 
-                return View();
-            }
-            else
-            {
-                ViewBag.info = pname+"\tss";
-                return View("Error");
-            }
+                 return View();
+             }
+             else
+             {
+                 ViewBag.info = pname+"\tss";
+                 return View("Error");
+             }
             
-        }*/
+         }
 
 
 

@@ -62,5 +62,8 @@ namespace FAMIS.Models
         public double? Total_price { get; set; }
 
         public int? Owener { get; set; }
+
+        [StringLength(300)]
+        public string note { get; set; }
     }
 }
