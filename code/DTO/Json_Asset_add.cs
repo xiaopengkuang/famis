@@ -65,6 +65,9 @@ namespace FAMIS.DTO
 
         public double? d_Other_LJZJ_add { get; set; }
         public double? d_Other_JZ_add { get; set; }
+
+
+        public String d_note_add { get; set; }
   
 
 

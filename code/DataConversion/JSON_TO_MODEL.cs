@@ -107,6 +107,7 @@ namespace FAMIS.DataConversion
             tb_asset_add.Net_value = data.d_Other_JZ_add;
             tb_asset_add.Method_add = data.d_ZJFS_add;
             tb_asset_add.Owener = data.d_SYRY_add;
+            tb_asset_add.note = data.d_note_add;
             return tb_asset_add;
         }
 

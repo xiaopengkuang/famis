@@ -876,6 +876,7 @@ namespace FAMIS.Controllers
                     item.Method_depreciation = json_data.d_Other_ZJFS_add;
                     item.Net_residual_rate = json_data.d_Other_JCZL_add;
                     item.Method_add = json_data.d_ZJFS_add;
+                    item.note = json_data.d_note_add;
                 }
                 var data_detail = from p in DB_C.tb_Asset_CustomAttr
                                   where p.flag == true
@@ -1089,7 +1090,8 @@ namespace FAMIS.Controllers
                         value=p.value,
                         YearService_month=p.YearService_month,
                         Owener=p.Owener,
-                        name_owner=US.true_Name
+                        name_owner=US.true_Name,
+                        note=p.note
                        };
             if (data.Count() > 0)
             {

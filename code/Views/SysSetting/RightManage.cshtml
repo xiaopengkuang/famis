@@ -34,8 +34,8 @@
                 DPload();
               
               
-            //   InnitialAT_Right();
-            //   InnitialDP_Right();
+             
+            
                 function LoadInitData_Detail() {
 
                     //获取查询条件
@@ -58,9 +58,6 @@
 
 
                         onCheck: function (node) {
-
- 
-
 
 
 
@@ -125,14 +122,14 @@
                 var nodes = $('#righttree').tree('getChecked');
                 var s = "";
 
-               /* for (var i = 0; i < fnodes.length; i++) {
+               for (var i = 0; i < fnodes.length; i++) {
                     //if (s != '') s += ',';
                     if (i != fnodes.length - 1)
                         s += fnodes[i].text + "," + fnodes[i].id
                         //s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
                     else
                         s += fnodes[i].text + "," + fnodes[i].id + "o";
-                }*/
+                }
                 for (var i = 0; i < nodes.length; i++) {
 
  
@@ -175,14 +172,14 @@
                 var nodes = $('#mtree').tree('getChecked');
                 var s = "";
 
-              /* for (var i = 0; i < fnodes.length; i++) {
+              for (var i = 0; i < fnodes.length; i++) {
                     //if (s != '') s += ',';
                     if (i != fnodes.length - 1)
                         s += fnodes[i].text + "," + fnodes[i].id
                         //s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
                     else
                         s += fnodes[i].text + "," + fnodes[i].id + "o";
-                }*/
+                }
                 for (var i = 0; i < nodes.length; i++) {
 
 
@@ -259,6 +256,30 @@
                 //}
 
             }
+            function IsFather(id)
+            {
+                $.ajax({
+
+                    type: "post",
+                    url: "/Rule/IsFather",
+                    data: { JSON: id },
+                    datatype: "string",//数据类型
+
+                    success: function (result) {
+                        alert(result);
+                        if (result == "IsFather") {
+                            
+                            return true;
+                        }
+                        else
+                            return false;
+
+
+                    }, error: function (msg) {
+                        alert("错误！");
+                    }
+                });
+            }
             function InnitialAT_Right() {
 
                 $.ajax({
@@ -279,8 +300,8 @@
                         try {
                             for (var i = 0; i <= str.split(",").length; i++) {
 
-                                if (arr[i].split("_").length == 0)
-                                    continue;
+                               // if(IsFather(arr[i]))
+                                 //   continue;
 
 
                                 var node = $('#righttree').tree('find', arr[i]);
@@ -392,8 +413,8 @@
                             var arr = str.split(",");
                             try {
                                 for (var i = 0; i <= str.split(",").length; i++) {
-                                    // if (arr[i].split("_").length == 1)
-                                    //    continue;
+                                    //if (IsFather(arr[i]))
+                                       // continue;
                                     var node = $('#mtree').tree('find', arr[i]);
 
                                     $('#mtree').tree('check', node.target);

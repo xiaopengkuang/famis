@@ -114,6 +114,7 @@ function bindData(id)
                 $("#Other_YTZJ_add").val(data.depreciation_Month);
                 $("#Other_LJZJ_add").val(data.depreciation_tatol);
                 $("#Other_JZ_add").val(data.Net_value);
+                $("#note_add").val(data.note);
 
                 //自定义属性
                 cattrs = data.cattrs;
@@ -914,6 +915,8 @@ function submitForm(id_asset) {
 
     var d_Other_ZCJZ_add = $("#Other_ZCJZ_add").val();
 
+    var d_note_add = $("#note_add").val();
+
 
     //===============================自定义属性===================================//
 
@@ -938,6 +941,7 @@ function submitForm(id_asset) {
         "d_Other_ZCDJ_add": d_Other_ZCDJ_add,
         "d_Other_ZCSL_add": d_Other_ZCSL_add,
         "d_Other_ZCJZ_add": d_Other_ZCJZ_add,
+        "d_note_add":d_note_add,
         "ID":id_asset
     };
 
