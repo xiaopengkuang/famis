@@ -331,6 +331,13 @@ namespace FAMIS.Controllers
             Session["ErrorFile"] = Json;
             return "";
         }
+        [HttpPost]
+        public string SetEditID(string Json)
+        {
+            
+            Session["EditID"] = Json;
+            return "";
+        }
 
         [HttpPost]
         public string Set_SearialNum(string Json)
@@ -359,7 +366,62 @@ namespace FAMIS.Controllers
              return Session["IsQueried"].ToString();
               
           }
-       
+          [HttpPost]
+          public string GetEditID(string Json)//检查用户是否进行过筛选查询
+          {
+              if (Session["EditID"] == null)
+                  return "false";
+              return Session["EditID"].ToString();
+
+          }
+          [HttpPost]
+          public string GetEditData(string Json)//检查用户是否进行过筛选查询
+          {
+              string type=Json.Split(',')[1];
+              string ID=Json.Split(',')[0];
+              string data = "";
+              switch (type)
+              {
+                  case "PD":
+                      {
+                          var q = from o in db.tb_Asset_inventory
+                                  where o.ID.ToString() == ID
+                                  select o;
+                          foreach (var p in q)
+                          {
+                              
+                              data += p.serial_number+","+p.date+","+ p.property + "," + p._operator + "," + p.ps;
+                          }
+                          return data; 
+                      }
+                  case "YH":
+                      {
+                          var q = from o in db.tb_user
+                                  where o.ID.ToString() == ID
+                                  select o;
+                          foreach (var p in q)
+                          {
+
+                              data += p.name_User + "," + p.password_User + "," + p.true_Name+","+p.roleID_User+","+p.ID_DepartMent;
+                          }
+                          return data;
+                      }
+                  case "JS":
+                      {
+                          var q = from o in db.tb_role
+                                  where o.ID.ToString() == ID
+                                  select o;
+                          foreach (var p in q)
+                          {
+
+                              data += p.name + "," + p.description;
+                          }
+                          return data;
+                      }
+              }
+              return "false";
+
+          }
          [HttpPost]
         public string SetCurrentRow(string Json)//用session记录一下当前用户所编辑的行
         {
