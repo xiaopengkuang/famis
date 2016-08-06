@@ -26,12 +26,13 @@ $(function () {
     });
 
     $(window).resize(function () {
-        var win_width = $(window).width();
+        var win_width = document.body.clientWidth;
         $("#TableList_0_1").datagrid('resize', { width: win_width - 220 });
     });
 
 
 });
+
 function chanegeTableType_Radio() {
 
     var selectType = $("input[name='table_TYPE']:checked").val();

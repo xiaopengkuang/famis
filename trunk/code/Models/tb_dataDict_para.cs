@@ -12,7 +12,7 @@ namespace FAMIS.Models
 
         public int? ID_dataDict { get; set; }
 
-        [StringLength(100)]
+        [StringLength(20)]
         public string name_para { get; set; }
 
         [StringLength(300)]

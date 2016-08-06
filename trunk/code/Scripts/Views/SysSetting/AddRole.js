@@ -307,13 +307,8 @@ function LoadMain() {
                 checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
 
             });
-            $('#dd').datagrid({
-                onLoadSuccess: function (data) {
-
-
-                    $('#dd').datagrid('selectRow', 0);
-                }
-            });
+           
+           
         }
     });
 
