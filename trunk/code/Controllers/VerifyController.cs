@@ -42,6 +42,11 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        public ActionResult Edit_Inventory()
+        {
+            return View();
+        }
+        
         [HttpPost]
         public ActionResult ExportStu2(string JSdata)
         {
