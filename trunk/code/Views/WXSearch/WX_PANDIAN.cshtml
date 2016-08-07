@@ -1,0 +1,44 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+    <table>
+        <tr>
+            <td>盘点单:</td>
+            <td>
+                <select class="easyui-combobox" id="R_add" name="R_add" data-options="editable:false" style="width:246px;"></select>
+            </td>
+        </tr>
+        </table>
+    </div>
+    <script>
+        function load_PD() {
+            $("#ps").combobox({
+                valueField: 'Serial',
+                method: 'POST',
+                textField: 'ps',
+                required: true,
+                url: '/Rule/GetRoleID',
+                onSelect: function (rec) {
+                     
+                    
+                    $('#ps').combobox('setValue', rec.Serial);
+                    $('#ps').combobox('setText', rec.ps);
+
+
+                }
+
+            });
+        }
+        </script>
+</body>
+</html>
