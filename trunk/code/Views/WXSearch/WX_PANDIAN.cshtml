@@ -8,30 +8,46 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title></title>
-</head>
-<body>
-    <div>
-    <table>
-        <tr>
-            <td>盘点单:</td>
-            <td>
-                <select class="easyui-combobox" id="R_add" name="R_add" data-options="editable:false" style="width:246px;"></select>
-            </td>
-        </tr>
-        </table>
-    </div>
-    <script>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/icons/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        var U_ID = "@ViewBag.PDUserID";
+        var Asset_Serial = "@ViewBag.Asset_Serial";
+        var Asset_Amount = "@ViewBag.Asset_Amount";
+
+        $(function () {
+
+            //数据跳转
+            if ("@ViewBag.jump" == 1 || "@ViewBag.jump" == "1") {
+                document.getElementById("detail_right").style.display = "block";
+                document.getElementById("reminderDIV").style.display = "none";
+                load_PD();
+            } else {
+                document.getElementById("detail_right").style.display = "none";
+                document.getElementById("reminderDIV").style.display = "block";
+            }
+
+    
+
+        })
+
+
+
         function load_PD() {
             $("#ps").combobox({
-                valueField: 'Serial',
+                valueField: 'serial',
                 method: 'POST',
                 textField: 'ps',
                 required: true,
-                url: '/Rule/GetRoleID',
+                url: '/Depreciation/LoadPD?Json=' + U_ID + '',
                 onSelect: function (rec) {
-                     
-                    
-                    $('#ps').combobox('setValue', rec.Serial);
+
+                  
+                    $('#ps').combobox('setValue', rec.serial);
                     $('#ps').combobox('setText', rec.ps);
 
 
@@ -39,6 +55,55 @@
 
             });
         }
-        </script>
+        function Confirm()
+        {
+            var pdserial = $('#ps').combobox('getValue');
+            var jsdata = pdserial + "," + Asset_Serial + "," + Asset_Amount;
+            $.ajax({
+
+                type: "post",
+                url: "/Depreciation/WX_Set_PD_Data?Json=" + jsdata + "",
+
+                datatype: "json",//数据类型
+                data: { Json: obj },
+                success: function (result) {
+
+                    if (result == "success")
+                        alert("成功！");
+
+                }, error: function (msg) {
+                    alert("Error");
+                }
+            });
+        }
+    </script>
+    <style type="text/css">
+        .font_Phone {
+            font-size: 20px;
+            line-height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="detail_right" style="display:none">
+        <table>
+            <tr>
+                <td>盘点单:</td>
+                <td>
+                    <select class="easyui-combobox" id="ps" name="ps" data-options="editable:false" style="width:246px;"></select>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: center; padding: 5px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Confirm()">选择</a>
+            
+        </div>
+    </div>
+     
+    <div id="reminderDIV" style="display:none" class="font_Phone">
+        <p>请先绑定系统用户！</p>
+        <p>提示：在微信公众号菜单栏中“用户绑定”中进行用户绑定。</p>
+    </div>
 </body>
 </html>
