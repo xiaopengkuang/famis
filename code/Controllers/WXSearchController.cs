@@ -71,6 +71,7 @@ namespace FAMIS.Controllers
             ViewBag.code=getSrialNumByCODE(code);
             SetPD_Asset_To_View(code);
             SetPDoperator_To_View(openid);
+            WX_Search_getPara(code, openid);
             return View();
         }
         public string SetPD_Asset_To_View(string code)
