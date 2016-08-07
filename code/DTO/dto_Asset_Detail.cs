@@ -62,7 +62,9 @@ namespace FAMIS.DTO
         public String Method_add { get; set; }
 
         public String Method_decrease { get; set; }
-        public String barcode { get; set; } 
+        public String barcode { get; set; }
+        public String note { get; set; } 
+
 
 
     }
