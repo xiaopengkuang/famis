@@ -71,6 +71,31 @@ namespace FAMIS.Controllers
         }
 
 
+        public ActionResult previewImg(int? id_subPic)
+        {
+            if (id_subPic == null)
+            {
+               return View("Error");
+            }
+
+            var data = from p in DB_C.tb_Asset_sub_picture
+                       where p.flag == true
+                       where p.ID == id_subPic
+                       select p;
+
+            if (data.Count() != 1)
+            {
+                return View("Error");
+            }
+
+            foreach (var item in data)
+            {
+                ViewBag.path = ".." + item.path_file;
+                return View();
+            }
+            return View("Error");
+        }
+
 
         public ActionResult Asset_Subdocument_add(int? id_asset) 
         {
@@ -389,7 +414,8 @@ namespace FAMIS.Controllers
                                    unit_price = p.unit_price.ToString(),
                                    value = p.value.ToString(),
                                    YearService_month = p.YearService_month.ToString(),
-                                   barcode=BC.code128
+                                   barcode=BC.code128,
+                                   note=p.note
                                };
                     data = data.OrderByDescending(a => a.Time_Operated);
                     if (exportFlag != null && exportFlag == true)
@@ -624,7 +650,9 @@ namespace FAMIS.Controllers
                                    unit_price = p.unit_price.ToString(),
                                    value = p.value.ToString(),
                                    YearService_month = p.YearService_month.ToString(),
-                                   barcode=BC.code128
+                                   barcode=BC.code128,
+                                   note=p.note
+                                   
                                };
                     data = data.OrderByDescending(a => a.Time_Operated);
 
@@ -1090,8 +1118,8 @@ namespace FAMIS.Controllers
                         value=p.value,
                         YearService_month=p.YearService_month,
                         Owener=p.Owener,
-                        name_owner=US.true_Name,
-                        note=p.note
+                        name_owner=US.true_Name==null?"":US.true_Name,
+                        note=p.note==null?"":p.note
                        };
             if (data.Count() > 0)
             {
@@ -1182,7 +1210,8 @@ namespace FAMIS.Controllers
                            ID = p.ID,
                            date_add = p.date_add,
                            id_download = p.ID,
-                           filePath=p.path_file,
+                           id_view=p.ID,
+                           filePath=".."+p.path_file,
                            fileNmae = p.Name_picture,
                            user_add = us.true_Name
                        };

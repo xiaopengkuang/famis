@@ -16,7 +16,6 @@ namespace FAMIS.DTO
         public String type_Name { get; set; }
         public bool? isTree { get;set;}
 
-        [StringLength(20)]
         public string value { get; set; }
     }
 }

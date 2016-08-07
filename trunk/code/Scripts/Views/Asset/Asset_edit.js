@@ -19,7 +19,7 @@ var cattrs = new Array();
 //==================================global data==========================================//
 
 $(function () {
-
+   
     loadInitDate();
     $("#Num_PLTJ_add").hide();
     $("#LABEL_PL").hide();
@@ -39,7 +39,7 @@ $(function () {
     });
     update_Value();
 
-
+  
     $(window).resize(function () {
         var win_width = $(window).width();
         $("#TableList_WJ").datagrid('resize', { width: win_width });
@@ -67,11 +67,17 @@ function loadInitDate() {
     load_Other_ZJFS_add();
 
 }
+var timeID;
+
+function loadBindData(id)
+{
+    timeID=setTimeout("bindData("+id+")", 1000);
+
+}
+
 
 function bindData(id)
 {
-
-
     ID_Asset_Current = id;
     //获取数据
     $.ajax({
@@ -128,6 +134,7 @@ function bindData(id)
             }
         }
     });
+    clearTimeout(timeID);
 }
 
 function load_ZCLB_add() {
@@ -147,15 +154,14 @@ function load_ZCLB_add() {
 
            } else {
                load_ZCXH_add(node.id);
+               update_ZDY_attr(node.id)
            }
 
-           update_ZDY_attr(node.id)
            updateZCXZ(tree, node);
        }, //全部折叠
        onLoadSuccess: function (node, data) {
            $('#ZCLB_add').combotree('tree').tree("collapseAll");
            flag_load_XH = true;
-
            var lb_s = $('#ZCLB_add').combotree('getValue')
            var zxch_c = $("#ZCXH_add").combobox('getValue');
            load_ZCXH_add(lb_s);
@@ -262,7 +268,7 @@ function initAttr(data) {
             }
         } else {
             //设置成number
-            initNumberBox(id_a, ca_checked);
+            initNumberStrBox(id_a, ca_checked);
             cattr_item.InputType = 3;
         }
         arry_CAttr.push(cattr_item);
@@ -337,7 +343,7 @@ function initcombotree(id_combotree, id_dic, requiredFlag, ca_checked)
   });
 }
 
-function initNumberBox(id_Numbox, ca_checked)
+function initNumberStrBox(id_Numbox, ca_checked)
 {
     //$('#'+id_Numbox).numberbox({
     //    min: 0,
@@ -563,9 +569,17 @@ function load_sub_picture(datagrid, id_asset) {
             { field: 'fileNmae', title: '文件名', width: 50 },
             { field: 'user_add', title: '登记人', width: 50 },
             {
+                field: 'filePath', title: '预览', width: 50,
+                formatter: function (data) {
+                    var btn = "<img  src='" + data + "' height='100' width='100'></img>";
+                    //var btn = "<a  onclick='preViewImg('" + data + "')' href='javascript:void(0)' >预览</a>";
+                    return btn;
+                }
+            },
+            {
                 field: 'id_download', title: '附件', width: 50,
-                formatter: function (date) {
-                    var btn = "<a  onclick='downloadFile_TP(" + date + ")' href='javascript:void(0)'>下载</a>";
+                formatter: function (data) {
+                    var btn = "<a  onclick='downloadFile_TP(" + data + ")' href='javascript:void(0)'>下载</a>";
                     return btn;
                 }
             }
@@ -576,6 +590,14 @@ function load_sub_picture(datagrid, id_asset) {
     });
     loadPageTool_Picture(datagrid);
 }
+
+function preViewImg(id_subPic) {
+    var url = "/Asset/previewImg?id_subPic=" + id_subPic;
+    var titleName = "预览";
+    openModelWindow_PIC(url, titleName);
+}
+
+
 function loadPageTool_Picture(datagrid) {
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
@@ -609,6 +631,21 @@ function loadPageTool_Picture(datagrid) {
                 }
                 var id_delete = rows[0].ID;
                 deteteItem("TP", id_delete, datagrid);
+            }
+        }
+        , {
+            text: '查看大图',
+            height: 50,
+            iconCls: 'icon-info',
+            handler: function () {
+                //获取选择行
+                var rows = $('#' + datagrid).datagrid('getSelections');
+                if (rows.length != 1) {
+                    MessShow("请选择1项数据！");
+                    return;
+                }
+                var id_subPic = rows[0].ID;
+                preViewImg(id_subPic);
             }
         }
         ],
@@ -861,6 +898,40 @@ function openModelWindow(url, titleName) {
 }
 
 
+function openModelWindow_PIC(url, titleName) {
+    //获取当前页面的Width和高度
+    var winWidth = (document.body.clientWidth - 20) < 0 ? 0 : (document.body.clientWidth - 20);
+    var winheight = (document.body.clientHeight - 20) < 0 ? 0 : (document.body.clientHeight - 20);
+
+
+    try {
+        $("#modalwindow_PIC").window("close");
+    } catch (e) { }
+    var $winADD;
+    $winADD = $('#modalwindow_PIC').window({
+        title: titleName,
+        //width: 700,
+        //height: 450,
+        //top: (($(window).height() - 450) > 0 ? ($(window).height() - 450) : 200) * 0.5,
+        //left: (($(window).width() - 700) > 0 ? ($(window).width() - 700) : 100) * 0.5,
+        width: winWidth,
+        height: winheight,
+        left: 10,
+        top: 10,
+        shadow: true,
+        modal: true,
+        iconCls: 'icon-add',
+        closed: true,
+        minimizable: false,
+        maximizable: false,
+        collapsible: false,
+        onClose: function () {
+        }
+    });
+    $("#modalwindow_PIC").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
+    $winADD.window('open');
+}
+
 
 function submitForm(id_asset) {
 
@@ -960,7 +1031,8 @@ function submitForm(id_asset) {
                 new_attr.value = $("#" + arry_CAttr[i].id).combobox("getValue");
             }; break;
             case 3: {
-                new_attr.value = $("#" + arry_CAttr[i].id).val();
+                new_attr.value = "'" + $("#" + arry_CAttr[i].id).val() + "'";
+                //new_attr.value = $("#" + arry_CAttr[i].id).val();
             }; break;
             default:;break;
         }

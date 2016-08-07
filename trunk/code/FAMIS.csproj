@@ -2086,6 +2086,7 @@
     <Content Include="Views\SysSetting\Login.cshtml" />
     <Content Include="Views\SysSetting\RightManage.cshtml" />
     <Content Include="Views\SysSetting\Rule.cshtml" />
+    <Content Include="Views\Asset\previewImg.cshtml" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <Content Include="Views\User\EditPassWord.cshtml" />

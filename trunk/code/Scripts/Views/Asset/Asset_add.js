@@ -186,8 +186,8 @@ function initAttr(data) {
                 cattr_item.InputType = 2;
             }
         } else {
-            //设置成number
-            initNumberBox(id_a);
+            //设置成Str
+            initNumberStrBox(id_a);  //设置为数字字符串类型
             cattr_item.InputType = 3;
         }
         arry_CAttr.push(cattr_item);
@@ -231,7 +231,7 @@ function initcombotree(id_combotree, id_dic,requiredFlag)
   });
 }
 
-function initNumberBox(id_Numbox)
+function initNumberStrBox(id_Numbox)
 {
     //$('#'+id_Numbox).numberbox({
     //    min: 0,
@@ -518,36 +518,41 @@ function submitForm() {
     var d_ZCBH_add = $("#ZCBH_add").val();
     //获取资产性质
     var zcxz = $("#ZCXZ_add").val();
-    var d_ZCXZ_ID_add;
-    if (d_ZCLB_add == "" || d_ZCLB_add == null) {
+    //var d_ZCXZ_ID_add;
+    //if (d_ZCLB_add == "" || d_ZCLB_add == null) {
 
-        d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
-        if (d_ZCLB_add == "" || d_ZCLB_add == undefined) {
-            //$.messager.alert('提示', "调皮的肖金龙", 'info'); return;
-        }
-    }
+    //    d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
+    //    if (d_ZCLB_add == "" || d_ZCLB_add == undefined) {
+    //        //$.messager.alert('提示', "调皮的肖金龙", 'info'); return;
+    //    }
+    //}
+    d_ZCLB_add = $("#ZCLB_add").combotree("getValue");
+
     var d_ZCMC_add = $("#ZCMC_add").val();
 
     var d_ZCXH_add = $('#ZCXH_add').combobox("getValue");
     var d_JLDW_add = $("#JLDW_add").combobox("getValue");
 
+    d_SZBM_add = $("#SZBM_add").combotree("getValue");
 
-    if (d_SZBM_add == "" || d_SZBM_add == null) {
+    //if (d_SZBM_add == "" || d_SZBM_add == null) {
 
-        d_SZBM_add = $("#SZBM_add").combotree("getValue");
-        if (d_SZBM_add == "" || d_SZBM_add == undefined) {
-        }
-    }
+    //    d_SZBM_add = $("#SZBM_add").combotree("getValue");
+    //    if (d_SZBM_add == "" || d_SZBM_add == undefined) {
+    //    }
+    //}
 
 
     var d_SYRY_add = $("#SYRY_add").combobox("getValue");
 
-    if (d_CFDD_add == "" || d_CFDD_add == null) {
-        d_CFDD_add = $("#CFDD_add").combotree("getValue");
-        if (d_CFDD_add == "" || d_CFDD_add == undefined) {
-        }
-    }
-    d_CFDD_add = d_CFDD_add == "" ? -1 : parseInt(d_CFDD_add);
+    //if (d_CFDD_add == "" || d_CFDD_add == null) {
+    //    d_CFDD_add = $("#CFDD_add").combotree("getValue");
+    //    if (d_CFDD_add == "" || d_CFDD_add == undefined) {
+    //    }
+    //}
+    d_CFDD_add = $("#CFDD_add").combotree("getValue");
+
+    //d_CFDD_add = d_CFDD_add == "" ? -1 : parseInt(d_CFDD_add);
 
 
     var d_ZJFS_add = $("#ZJFS_add").combobox("getValue") == "" ? -1 : parseInt($("#ZJFS_add").combobox("getValue"));
@@ -560,7 +565,7 @@ function submitForm() {
 
     var d_GYSDD_add = $("#GYSDD_add").val();
 
-    var d_note_add = $("#node_add").val();
+    var d_note_add = $("#note_add").val();
 
     var d_Check_PLZJ_add = $("#Num_PLTJ_add").is(":hidden");  //true表示未被选选中  false表示选择
 
@@ -617,24 +622,30 @@ function submitForm() {
     };
 
     var data_cattr = new Array();
+    var data_cattr_STR = "";
     //获取自定义属性
     for (var i = 0; i < arry_CAttr.length;i++)
     {
         var new_attr = new Object();
         new_attr.ID_customAttr = arry_CAttr[i].id_cattr;
+
         switch (arry_CAttr[i].InputType)
         {
             case 1: {
                 //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combotree("getValue") + "\t";
                 new_attr.value = $("#" + arry_CAttr[i].id).combotree("getValue");
+                data_cattr_STR = data_cattr_STR + "{'ID_customAttr':" + new_attr.ID_customAttr + ",'value':" + new_attr.value + "}";
+
             }; break;
             case 2: {
                 //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).combobox("getValue") + "\t";
                 new_attr.value = $("#" + arry_CAttr[i].id).combobox("getValue");
+                data_cattr_STR = data_cattr_STR + "{'ID_customAttr':" + new_attr.ID_customAttr + ",'value':" + new_attr.value + "}";
             }; break;
             case 3: {
                 //valuesss += arry_CAttr[i].id_cattr + "-" + $("#" + arry_CAttr[i].id).val() + "\t";
-                new_attr.value = $("#" + arry_CAttr[i].id).val();
+                new_attr.value = "'" + $("#" + arry_CAttr[i].id).val() + "'";
+                data_cattr_STR = data_cattr_STR + "{'ID_customAttr':" + new_attr.ID_customAttr + ",'value':'" + new_attr.value + "'}";
             }; break;
             default:;break;
         }
@@ -646,9 +657,11 @@ function submitForm() {
     $.ajax({
         url: "/Asset/Handler_addNewAsset",
         type: 'POST',
+        dataType:"json",
         data: {
             "Asset_add": JSON.stringify(Asset_add),
             "data_cattr":JSON.stringify(data_cattr)
+            //"data_cattr": data_cattr_STR
         },
         beforeSend: ajaxLoading,
         success: function (data) {
@@ -756,6 +769,7 @@ function checkFormat() {
             default:; break;
         }
     }
+
     submitForm();
    
 }

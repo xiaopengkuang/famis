@@ -243,8 +243,8 @@ function LoadInitData_Detail() {
                                 return data;
                             }
                         }
-                    }
-                    //{ field: 'supplierID', title: '供应商', width: 50 }
+                    },
+                    { field: 'note', title: '备注', width: 50 }
                 ]],
                 singleSelect: true, //允许选择多行
                 selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项

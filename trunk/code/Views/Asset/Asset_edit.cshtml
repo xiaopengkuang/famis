@@ -20,7 +20,7 @@
     <script type="text/javascript" src="../../Scripts/Views/Asset/Asset_edit.js"></script>
 
     <script type="text/javascript">
-        bindData('@ViewBag.id');
+        loadBindData('@ViewBag.id');
     </script>
     <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
@@ -194,6 +194,8 @@
         </div>
     </div>
     <div id="modalwindow2" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
+    <div id="modalwindow_PIC" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
+  
     <iframe name='hidden_frame' id="hidden_frame" style='width:150px; height:50px; display:none;'> </iframe>
 
 </body>
