@@ -930,7 +930,7 @@ function loadPageTool_Detail(dataRight) {
                 if (!dataRight.newDeatails_able)
                     return;
                 if (AssetState != "未盘点") {
-                    $.messager.alert("提示", "只能对未盘点的盘点单新增盘点明细！请重新选择盘点单！", "error");
+                    $.messager.alert("提示", "该操作仅针对未盘点的盘点单，您可以通过微信端添加明细并盘点!", "error");
 
                     return;
                 }
