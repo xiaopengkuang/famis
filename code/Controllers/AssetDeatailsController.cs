@@ -103,7 +103,7 @@ namespace FAMIS.Controllers
                           difference=0-asset.amount,
                           serial_number_Asset=asset.serial_number,
                           
-                         flag=true
+                          flag=true
                      };
 
                      db.tb_Asset_inventory_Details.Add(rule_tb);

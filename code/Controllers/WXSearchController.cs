@@ -68,9 +68,41 @@ namespace FAMIS.Controllers
                 ViewBag.jump = 0;
             }
             ViewBag.openid = openid;
+            ViewBag.code=getSrialNumByCODE(code);
+            SetPD_Asset_To_View(code);
+            SetPDoperator_To_View(openid);
             return View();
         }
+        public string SetPD_Asset_To_View(string code)
+        {
+            var p = from o in DB_C.tb_Asset
+                    join c in DB_C.tb_Asset_code128 on o.ID equals c.ID_Asset
+                    where c.code128 == code
+                    select new
+                    {
+                        serial = o.serial_number,
+                        amount = o.amount
+                    };
+            foreach (var q in p)
+            {
+                ViewBag.Asset_Serial = q.serial;
+                ViewBag.Asset_Amount = q.amount;
 
+            }
+            return "";
+        }
+        public string SetPDoperator_To_View(string openid)
+        {
+            var p = from o in DB_C.tb_user
+                    where o.openid_WX == openid
+                    select o;
+            foreach (var q in p)
+            {
+
+                ViewBag.PDUserID = q.ID;
+            }
+            return "";
+        }
         public ActionResult WX_Userbinding(String openid) 
         {
             if (openidExist(openid))
@@ -96,7 +128,7 @@ namespace FAMIS.Controllers
                 ViewBag.jump = 0;
             }
 
-            ViewBag.code = getCode128ByCODE(code);
+            ViewBag.code = code;
             ViewBag.openid = openid;
             Json_WXSearch_detail data = getAssetByBH(code);
             if (data != null)
@@ -131,7 +163,7 @@ namespace FAMIS.Controllers
                 ViewBag.jump = 0;
             }
 
-            ViewBag.code = getCode128ByCODE(code);
+            ViewBag.code = code;
             ViewBag.openid = openid;
             Json_WXSearch_detail data = getAssetByBH(code);
             if (data != null)
@@ -143,7 +175,7 @@ namespace FAMIS.Controllers
                 ViewBag.peopleUsing = data.peopleUsing;
                 ViewBag.zcxh = data.zcxh;
                 ViewBag.measurement = data.measurement;
-                ViewBag.note = data.note;
+                ViewBag.supplier = data.supplier;
                 ViewBag.dj = data.dj;
                 ViewBag.sl = data.sl;
                 ViewBag.zj = data.zj;
@@ -228,7 +260,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public String getCode128ByCODE(String code)
+        public String getSrialNumByCODE(String code)
         {
             if(code==null||code=="")
             {
@@ -284,7 +316,7 @@ namespace FAMIS.Controllers
         {
 
             //将编号处理一下
-            code = getCode128ByCODE(code);
+            code = getSrialNumByCODE(code);
 
             var data=from tb_code in DB_C.tb_Asset_code128
                      where tb_code.code128 == code
@@ -311,8 +343,7 @@ namespace FAMIS.Controllers
                          state=ST.name_para,
                          supplier=SP.name_supplier,
                          zcxh=p.specification,
-                         zj=p.value,
-                         note=p.note
+                         zj=p.value
                      };
 
             if (data.Count() > 0)
