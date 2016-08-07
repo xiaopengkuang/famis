@@ -494,12 +494,82 @@ namespace FAMIS.Controllers
 
         }
 
+
         [HttpPost]
-        public string Getbase64()
-        {
-            return print.Base_64("D:\test.jpg");
+        public String WX_Set_PD_Data(string Json) {
+            
+            string serialPD=Json.Split(',')[0];
+            string Asset_Serail = Json.Split(',')[1];
+            int number =int.Parse(Json.Split(',')[2]);
+            string pdstate="";
+            if(1-number==0)
+             
+                pdstate="持平";
+               if(number-1<0)
+                   pdstate="盘亏";
+                       if(number-1>0)
+                           pdstate="盘盈";
+              
+             
+            var rule_tb = new tb_Asset_inventory_Details
+            {
+                serial_number = serialPD,
+                
+                amountOfSys = number,
+                amountOfInv = 1,
+                
+                state = pdstate,
+                difference = 1 - number,
+                serial_number_Asset = Asset_Serail,
+
+                flag = true
+            };
+
+            db.tb_Asset_inventory_Details.Add(rule_tb);
+            db.SaveChanges();
+            AddPDList(serialPD);
+            ChangePDState(serialPD);
+            return "success";
         }
-        //[HttpPost]
+        public void ChangePDState(string pdserial)
+        {
+            var q = from o in db.tb_Asset_inventory
+                    
+
+                    where o.serial_number==pdserial
+                    select o;
+            foreach (var p in q)
+            {
+                if (p.state == "未盘点")
+
+                    p.state =this.GetStateID("盘点中");
+                
+                
+            }
+            db.SaveChanges();
+        }
+      
+ 
+        [HttpPost]
+        public String LoadPD(string Json)
+        {
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            string uid = Json;
+            var q = from o in db.tb_Asset_inventory
+                    join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
+                    where o._operator == uid&&d.name_para!="已盘点"
+                    select new
+                    {
+                        serial = o.serial_number,
+                        ps = o.ps
+                    };
+
+            String json = jss.Serialize(q).ToString().Replace("\\", "");
+
+
+            return json;
+        
+        }
         [HttpPost]
         public string AddDP(string JSdata)//添加盘点单
         {
