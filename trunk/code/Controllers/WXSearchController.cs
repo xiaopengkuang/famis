@@ -96,7 +96,7 @@ namespace FAMIS.Controllers
                 ViewBag.jump = 0;
             }
 
-            ViewBag.code = code;
+            ViewBag.code = getCode128ByCODE(code);
             ViewBag.openid = openid;
             Json_WXSearch_detail data = getAssetByBH(code);
             if (data != null)
@@ -131,7 +131,7 @@ namespace FAMIS.Controllers
                 ViewBag.jump = 0;
             }
 
-            ViewBag.code = code;
+            ViewBag.code = getCode128ByCODE(code);
             ViewBag.openid = openid;
             Json_WXSearch_detail data = getAssetByBH(code);
             if (data != null)
@@ -228,7 +228,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public String getSrialNumByCODE(String code)
+        public String getCode128ByCODE(String code)
         {
             if(code==null||code=="")
             {
@@ -284,7 +284,7 @@ namespace FAMIS.Controllers
         {
 
             //将编号处理一下
-            code = getSrialNumByCODE(code);
+            code = getCode128ByCODE(code);
 
             var data=from tb_code in DB_C.tb_Asset_code128
                      where tb_code.code128 == code
