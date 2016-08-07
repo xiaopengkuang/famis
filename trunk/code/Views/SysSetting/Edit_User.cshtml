@@ -1,4 +1,4 @@
-﻿    @{
+﻿ @{
     Layout = null;
 
 }
@@ -27,8 +27,8 @@
         var rid="0";
         $(function () {
 
-            loadInitDate();
-
+            
+            GetEID();
 
 
 
@@ -37,23 +37,15 @@
         function cancelForm() {
             parent.$("#modalwindow").window("close");
         }
-        function loadInitDate() {
-            load_Operator();
-            load_SZBM_add();
-
-        }
-
-
-
 
         function load_SZBM_add() {
-           // alert(rid);
+            // alert(rid);
             $('#SZBM_add').combotree
             ({
-                url: '/Dict/load_SZBM?RoleID='+rid+'',
+                url: '/Dict/load_SZBM?RoleID=' + rid + '',
                 valueField: 'id',
                 textField: 'nameText',
-               
+
                 method: 'POST',
                 editable: false,
                 //选择树节点触发事件
@@ -85,8 +77,60 @@
 
             });
         }
+
+        function setdata(arr) {
+           
+           
+            $('#yhm').val(arr[0]);
+            $('#mm').val(arr[1]);
+            $('#zsxm').val(arr[2]);
+            $('#R_add').combobox('select', arr[3]);
+            $('#SZBM_add').combotree('setValue', arr[4]);
+        }
+
+
+       
+        function GetEID() {
+            load_Operator();
+            load_SZBM_add();
+            $.ajax({
+
+                type: "post",
+                url: "/Depreciation/GetEditID",
+
+                datatype: "json",//数据类型
+
+                success: function (result) {
+
+                    var obj = result + "," + "YH";
+
+                    $.ajax({
+
+                        type: "post",
+                        url: "/Depreciation/GetEditData",
+
+                        datatype: "json",//数据类型
+                        data: { Json: obj },
+                        success: function (result) {
+
+                            userdata = String(result);
+                            // alert(pddate);
+                            var arr = userdata.split(',');
+                            setdata(arr);
+
+                        }, error: function (msg) {
+                            alert("Error");
+                        }
+                    });
+
+                }, error: function (msg) {
+                    alert("Error");
+                }
+            });
+        }
+      
         function adduser(){
-            var Id="-100000"
+            var Id="update"
             var myname = $("#yhm").val();
             var pwd = $("#mm").val();
             var truename = $("#zsxm").val();
