@@ -68,6 +68,7 @@ namespace FAMIS.DTO
 
 
         public String d_note_add { get; set; }
+        public String code_oldSYS { get; set; }
   
 
 

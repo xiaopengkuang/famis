@@ -2306,7 +2306,6 @@
     <Content Include="Views\ZC_View\ZC_View.cshtml" />
     <Content Include="Views\ZC_View\AddRight.cshtml" />
     <Content Include="Views\Repair\Repair_add.cshtml" />
-    <Content Include="Views\WXSearch\WX_detail2.cshtml" />
     <Content Include="Views\WXSearch\WX_Search.cshtml" />
     <Content Include="Views\Verify\AddExcel.cshtml" />
     <Content Include="Views\Verify\Add_Inventory.cshtml" />
@@ -2364,7 +2363,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
+      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -566,6 +566,7 @@ function submitForm() {
     var d_GYSDD_add = $("#GYSDD_add").val();
 
     var d_note_add = $("#note_add").val();
+    var code_oldSYS = $("#code_oldSYS").val();
 
     var d_Check_PLZJ_add = $("#Num_PLTJ_add").is(":hidden");  //true表示未被选选中  false表示选择
 
@@ -615,7 +616,8 @@ function submitForm() {
         "d_Other_ZCDJ_add": d_Other_ZCDJ_add,
         "d_Other_ZCSL_add": d_Other_ZCSL_add,
         "d_Other_ZCJZ_add": d_Other_ZCJZ_add,
-        "d_note_add": d_note_add
+        "d_note_add": d_note_add,
+        "code_oldSYS": code_oldSYS
         //"d_Other_YTZJ_add": d_Other_YTZJ_add,
         //"d_Other_LJZJ_add": d_Other_LJZJ_add,
         //"d_Other_JZ_add": d_Other_JZ_add
@@ -670,10 +672,12 @@ function submitForm() {
             if (data > 0) {
                 parent.$("#TableList_0_1").datagrid("reload");
                 parent.$("#modalwindow").window("close");
-            } else {
-                result = "系统正忙，请稍后继续！";
-                $.messager.alert('警告', result, 'warning');
-            }
+            }  else if(data==-11) {
+                MessShow("请勿插入重复编号！");
+            }else {
+                result = "保存数据失败！";
+            $.messager.alert('警告', result, 'warning');
+        }
 
 
         }

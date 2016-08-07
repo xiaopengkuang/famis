@@ -65,5 +65,8 @@ namespace FAMIS.Models
 
         [StringLength(300)]
         public string note { get; set; }
+
+        [StringLength(50)]
+        public string code_OLDSYS { get; set; }
     }
 }

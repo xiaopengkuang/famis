@@ -121,6 +121,7 @@ function bindData(id)
                 $("#Other_LJZJ_add").val(data.depreciation_tatol);
                 $("#Other_JZ_add").val(data.Net_value);
                 $("#note_add").val(data.note);
+                $("#code_oldSYS").val(data.note);
 
                 //自定义属性
                 cattrs = data.cattrs;
@@ -988,6 +989,7 @@ function submitForm(id_asset) {
 
     var d_note_add = $("#note_add").val();
 
+    var code_oldSYS = $("#code_oldSYS").val();
 
     //===============================自定义属性===================================//
 
@@ -1012,7 +1014,8 @@ function submitForm(id_asset) {
         "d_Other_ZCDJ_add": d_Other_ZCDJ_add,
         "d_Other_ZCSL_add": d_Other_ZCSL_add,
         "d_Other_ZCJZ_add": d_Other_ZCJZ_add,
-        "d_note_add":d_note_add,
+        "d_note_add": d_note_add,
+        "code_oldSYS": code_oldSYS,
         "ID":id_asset
     };
 
@@ -1055,8 +1058,10 @@ function submitForm(id_asset) {
             if (data > 0) {
                 parent.$('#TableList_0_1').datagrid("reload");
                 parent.$("#modalwindow").window("close");
-            } else {
-                result = "系统正忙，请稍后继续！";
+            } else if(data==-11) {
+                MessShow("请勿插入重复编号！");
+            }else {
+                result = "保存数据失败！";
                 $.messager.alert('警告', result, 'warning');
             }
 
