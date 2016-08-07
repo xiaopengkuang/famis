@@ -143,7 +143,7 @@ namespace FAMIS.Controllers
                 ViewBag.peopleUsing = data.peopleUsing;
                 ViewBag.zcxh = data.zcxh;
                 ViewBag.measurement = data.measurement;
-                ViewBag.supplier = data.supplier;
+                ViewBag.note = data.note;
                 ViewBag.dj = data.dj;
                 ViewBag.sl = data.sl;
                 ViewBag.zj = data.zj;
@@ -311,7 +311,8 @@ namespace FAMIS.Controllers
                          state=ST.name_para,
                          supplier=SP.name_supplier,
                          zcxh=p.specification,
-                         zj=p.value
+                         zj=p.value,
+                         note=p.note
                      };
 
             if (data.Count() > 0)
