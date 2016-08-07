@@ -1,6 +1,11 @@
 ﻿
 var searchCondtiion = "0";
 //alert(searchCondtiion+"55568");
+$(window).resize(function () {
+    var win_width = document.body.clientWidth;
+   // alert(win_width);
+    $("#TableList_0_1").datagrid('resize', { width: win_width - 220 });
+});
 function depreciation() {
 
     $.ajax({
@@ -222,14 +227,10 @@ function LoadInitData_Detail(searchCondtiion) {
     $('#TableList_0_1').datagrid({
         url: '/Depreciation/Load_Asset?JSdata=' + searchCondtiion + '', //+ , 
         //  url: '/SysSetting/getpageOrder?role=1&tableType=1',
-        method: 'post', //默认是post,不允许对静态文件访问
+        method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',
-        height: '300px',
-    
-         fit:true ,
         iconCls: 'icon-save',
         dataType: "json",
-
         fitColumns: true,
         pagePosition: 'top',
         rownumbers: true, //是否加行号 

@@ -23,6 +23,25 @@ function tt() {
         }
     });
 }
+function SetEditID(obj) {
+
+    $.ajax({
+
+        type: "post",
+        url: "/Depreciation/SetEditID",
+        data: { Json: obj },
+        datatype: "json",//数据类型
+
+        success: function (result) {
+
+
+        }, error: function (msg) {
+
+            alert("Error");
+        }
+    });
+
+}
 function load_SZBM_add() {
     $('#SZBM_add').combotree
     ({
@@ -199,170 +218,29 @@ function LoadMain() {
                  {
                      text: '修改', iconCls: 'icon-edit', disabled: !dataRight.edit_able, handler: function () {
                          //修改时要获取选择到的行
-                         try {
-                             var rows = datagrid.datagrid("getSelections");
-                             if (rows.length == 0) {
-                                 $.messager.alert("提示", "请选择要编辑的行!", "error");
-                                 return;
-                             }
-                             var index = datagrid.datagrid("getRowIndex", rows[0]);
-                             $("#dd").datagrid('selectRow', index);
-                             //如果只选择了一行则可以进行修改，否则不操作
-                             if (rows.length == 1) {
-                                 //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
-                                 if (editRow != undefined) {
-                                     datagrid.datagrid("endEdit", editRow);
-                                     var index = datagrid.datagrid("getRowIndex", rows[0]);
-                                     $("#dd").datagrid('selectRow', index);
-                                 }
-                                 //当无编辑行时
-                                 if (editRow == undefined) {
-                                     //获取到当前选择行的下标
-                                     var index = datagrid.datagrid("getRowIndex", rows[0]);
-
-                                     //开启编辑
-                                     datagrid.datagrid("beginEdit", index);
-                                     //把当前开启编辑的行赋值给全局变量editRow
-                                     editRow = index;
-                                     //当开启了当前选择行的编辑状态之后，
-                                     //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
-                                     //  datagrid.datagrid("unselectAll");
-
-                                 }
-                             }
-                         }
-                         catch (e)
-                         { };
-
-                     }
-                 }, '-',
-                 {
-                     text: '保存', iconCls: 'icon-save', disabled: !dataRight.add_able && !dataRight.add_able, handler: function () {
-                      
-                         datagrid.datagrid("endEdit", editRow);
                          var row = $('#dd').datagrid('getSelected');
-                         var data="";
-                     
+                          
+                            
+                         
                          if (row) {
+
                              var index = $('#dd').datagrid('getRowIndex', row);
                              var rowdata = $('#dd').datagrid('getData');
-                             var Id = rowdata.rows[index].ID;
-                             var myname = rowdata.rows[index].name_User;
-                             var pwd = rowdata.rows[index].password_User;
-                             var truename = rowdata.rows[index].true_Name;
-                             var rid = rowdata.rows[index].roleID_User;
-                         
-                             var dp = rowdata.rows[index].ID_DepartMent;
-                             //alert(dp);
-                             if (dptid != "o")
+                             // alert("xiugai "+index);
+                             var EID = rowdata.rows[index].ID;
+                             //alert(EID);
+                             SetEditID(EID);
 
-                                 data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + dp+","+"False";
-                             else
-                                 data = Id + "," + myname + "," + pwd + "," + truename + "," + rid + "," + dp + "," + "True";
-                      
-                             if (myname == "" || myname == null) {
-                             
-                                 $.messager.alert("提示", "用户名不能为空！", "error");
-                                 edit();
-                                 return;
-                             }
-                             if (pwd == "" || pwd== null) {
+                             openModelWindow("/SysSetting/Edit_User", "修改用户");
 
-                                 $.messager.alert("提示", "密码不能为空！", "error");
-                                 edit();
-                                 return;
-                             }
-                             if (truename == "" || truename == null) {
-
-                                 $.messager.alert("提示", "真实姓名不能为空！", "error");
-                                 edit();
-                                 return;
-                             }
-                             if (rid == "" || rid == null) {
-
-                                 $.messager.alert("提示", "所属角色不能为空！", "error");
-                                 edit();
-                                 return;
-                             }
-                             if (dp == "" || dp == null) {
-
-                                 $.messager.alert("提示", "所属部门不能为空！", "error");
-                                 edit();
-                                 return;
-                             }
-                             function edit()
-                             {
-
-                                 var rows = datagrid.datagrid("getSelections");
-                                 var index = datagrid.datagrid("getRowIndex", rows[0]);
-                                 $("#dd").datagrid('selectRow', index);
-                                 //如果只选择了一行则可以进行修改，否则不操作
-                                 if (rows.length == 1) {
-                                     //修改之前先关闭已经开启的编辑行，当调用endEdit该方法时会触发onAfterEdit事件
-                                     if (editRow != undefined) {
-                                         datagrid.datagrid("endEdit", editRow);
-                                         var index = datagrid.datagrid("getRowIndex", rows[0]);
-                                         $("#dd").datagrid('selectRow', index);
-                                     }
-                                     //当无编辑行时
-                                     if (editRow == undefined) {
-                                         //获取到当前选择行的下标
-                                         var index = datagrid.datagrid("getRowIndex", rows[0]);
-
-                                         //开启编辑
-                                         datagrid.datagrid("beginEdit", index);
-                                         //把当前开启编辑的行赋值给全局变量editRow
-                                         editRow = index;
-                                         //当开启了当前选择行的编辑状态之后，
-                                         //应该取消当前列表的所有选择行，要不然双击之后无法再选择其他行进行编辑
-                                         //  datagrid.datagrid("unselectAll");
-
-                                     }
-                                 }
-                             }
-                             // alert(data);
-                             $.ajax({
-
-                                 type: "post",
-                                 url: "/Rule/AddUser",
-                                 data: { JSdata: data },
-                                 datatype: "json",//数据类型
-
-                                 success: function (result) {
-
-                                     if (result == "name_exist")
-                                     {
-                                         $.messager.alert("提示", "该用户已存在，不可重复添加！", "error");
-                                         $('#dd').datagrid('reload');
-                                         return;
-                                     }
-                                     //  alert("添加成功！");
-                                     $('#dd').datagrid('reload');
-
-                                 }, error: function (msg) {
-                                     alert("Error");
-                                 }
-                             });
-                             //   alert(data);
                          }
                          else {
-
-                             // alert("请选择要保存信息的用户！")
-                             $.messager.alert("提示", "请选择要保存信息的用户！", "error");
+                             $.messager.alert("提示", "请选择要编辑的行!", "error");
+                             return;
                          }
 
-
-                         //...
                      }
-                 }, '-',
-                 {
-                     text: '取消编辑', iconCls: 'icon-redo', handler: function () {
-                         //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
-                         editRow = undefined;
-                         datagrid.datagrid("rejectChanges");
-                         datagrid.datagrid("unselectAll");
-                     }
-                 }, '-',
+                 },'-',
                  {
                      text: '刷新', iconCls: 'icon-undo', handler: function () {
                          //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
@@ -395,21 +273,20 @@ function LoadMain() {
                 },
                 onDblClickRow: function (rowIndex, rowData) {
                     //双击开启编辑行
-                    try {
-                        if (!dataRight.edit_able) {
-                            return;
-                        }
-                        if (editRow != undefined) {
+                    var row = $('#dd').datagrid('getSelected');;
+                    
+                    if (row) {
 
-                            datagrid.datagrid("endEdit", editRow);
-                        }
-                        if (editRow == undefined) {
-                            datagrid.datagrid("beginEdit", rowIndex);
-                            editRow = rowIndex;
-                        }
+                        var index = $('#dd').datagrid('getRowIndex', row);
+                        var rowdata = $('#dd').datagrid('getData');
+                        // alert("xiugai "+index);
+                        var EID = rowdata.rows[index].ID;
+                        //alert(EID);
+                        SetEditID(EID);
+
+                        openModelWindow("/SysSetting/Edit_User", "修改用户");
+
                     }
-                    catch (e)
-                    { };
                 },
             
                 singleSelect: true, //允许选择多行
