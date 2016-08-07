@@ -57,13 +57,14 @@
         }
         function Confirm()
         {
-            alert("测试！");
+           
             var pdserial = $('#ps').combobox('getValue');
-            var jsdata = pdserial + "," + Asset_Serial + "," + Asset_Amount;
+            var obj = pdserial + "," + Asset_Serial + "," + Asset_Amount;
+            alert("测试！");
             $.ajax({
 
                 type: "post",
-                url: "/Depreciation/WX_Set_PD_Data?Json=" + jsdata + "",
+                url: "/Depreciation/WX_Set_PD_Data",
 
                 datatype: "json",//数据类型
                 data: { Json: obj },
