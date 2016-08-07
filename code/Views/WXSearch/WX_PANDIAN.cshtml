@@ -44,6 +44,11 @@
                 textField: 'ps',
                 required: true,
                 url: '/Depreciation/LoadPD?Json=' + U_ID + '',
+                onLoadSuccess: function () {
+                    var data = $('#ps').combobox('getData');
+                    $("#ps").combobox('select', data[0].ps);
+
+                },
                 onSelect: function (rec) {
 
                   
@@ -60,7 +65,7 @@
            
             var pdserial = $('#ps').combobox('getValue');
             var obj = pdserial + "," + Asset_Serial + "," + Asset_Amount;
-            alert("测试！");
+            
             $.ajax({
 
                 type: "post",
@@ -89,17 +94,51 @@
 
 <body>
     <div id="detail_right" style="display:none">
+        <h4 style="color:red">您扫到的资产基本信息如下：</h4>
         <table>
             <tr>
-                <td>盘点单:</td>
+                <td>资产名称：</td>
+                <td>@ViewBag.name</td>
+            </tr>
+            <tr>
+                <td>资产编号：</td>
+                <td>@ViewBag.serialNum</td>
+            </tr>
+            <tr>
+                <td>资产状态：</td>
+                <td>@ViewBag.state</td>
+            </tr>
+            <tr>
+                <td>使用部门：</td>
+                <td>@ViewBag.department</td>
+            </tr>
+            <tr>
+                <td>使用人：</td>
+                <td>@ViewBag.peopleUsing</td>
+            </tr>
+            <tr>
+                <td>资产型号：</td>
+                <td>@ViewBag.zcxh</td>
+            </tr>
+            <tr>
+                <td>计量单位：</td>
+                <td>@ViewBag.measurement</td>
+            </tr>
+           
+        </table>
+        <h4 style="color:red">选择盘点单并导入以上资产：</h4>
+        <table>
+         <tr>
+                <td >选择盘点单：</td>
+              
                 <td>
-                    <select class="easyui-combobox" id="ps" name="ps" data-options="editable:false" style="width:246px;"></select>
+                    <select class="easyui-combobox" id="ps" name="ps" data-options="editable:false" style="width:150px;"></select>
                 </td>
             </tr>
         </table>
         <div style="text-align: center; padding: 5px">
+            <a href="#" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'" id="yh_yl" onclick="Confirm()">选择并盘点</a> 
              
-            <input id="confirm" type="button" value="选择" onclick="Confirm()" />
             
         </div>
     </div>
