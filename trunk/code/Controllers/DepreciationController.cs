@@ -502,30 +502,54 @@ namespace FAMIS.Controllers
             string Asset_Serail = Json.Split(',')[1];
             int number =int.Parse(Json.Split(',')[2]);
             string pdstate="";
-            if(1-number==0)
-             
-                pdstate="持平";
-               if(1-number<0)
-                   pdstate="盘亏";
-                       if(1-number>0)
-                           pdstate="盘盈";
-              
-             
-            var rule_tb = new tb_Asset_inventory_Details
-            {
-                serial_number = serialPD,
-                
-                amountOfSys = number,
-                amountOfInv = 1,
-                
-                state = pdstate,
-                difference = 1 - number,
-                serial_number_Asset = Asset_Serail,
+            
 
-                flag = true
-            };
+                       var p = from o in db.tb_Asset_inventory_Details
+                               where o.serial_number_Asset == Asset_Serail&&o.flag==true&&o.serial_number==serialPD
+                               select o;
 
-            db.tb_Asset_inventory_Details.Add(rule_tb);
+                       if (p.Count() > 0)
+                       {
+                           foreach (var q in p)
+                           {
+                               
+                               if (q.amountOfInv + 1 - q.amountOfSys == 0)
+                                   q.state = "持平";
+                               if (q.amountOfInv + 1 - q.amountOfSys > 0)
+                                   q.state = "盘盈";
+                               if (q.amountOfInv + 1 - q.amountOfSys < 0)
+                                   q.state = "盘亏";
+                               q.difference = q.difference + 1;
+                               q.amountOfInv = q.amountOfInv + 1;
+                           }
+
+                       }
+                       else
+                       {
+                           if (1 - number == 0)
+
+                               pdstate = "持平";
+                           if (1 - number < 0)
+                               pdstate = "盘亏";
+                           if (1 - number > 0)
+                               pdstate = "盘赢";
+
+                           var rule_tb = new tb_Asset_inventory_Details
+                           {
+                               serial_number = serialPD,
+
+                               amountOfSys = number,
+                               amountOfInv = 1,
+
+                               state = pdstate,
+                               difference = 1 - number,
+                               serial_number_Asset = Asset_Serail,
+
+                               flag = true
+                           };
+
+                           db.tb_Asset_inventory_Details.Add(rule_tb);
+                       }
             db.SaveChanges();
             AddPDList(serialPD);
             ChangePDState(serialPD);
@@ -536,11 +560,11 @@ namespace FAMIS.Controllers
             var q = from o in db.tb_Asset_inventory
                     
 
-                    where o.serial_number==pdserial
+                    where o.serial_number==pdserial&&o.flag==true
                     select o;
             foreach (var p in q)
             {
-                if (p.state == "未盘点")
+                if (p.state == this.GetStateID("未盘点"))
 
                     p.state =this.GetStateID("盘点中");
                 
@@ -557,7 +581,7 @@ namespace FAMIS.Controllers
             string uid = Json;
             var q = from o in db.tb_Asset_inventory
                     join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
-                    where o._operator == uid&&d.name_para!="已盘点"
+                    where o._operator == uid&&d.name_para!="已盘点"&&o.flag==true orderby o.ID descending
                     select new
                     {
                         serial = o.serial_number,
@@ -759,7 +783,7 @@ namespace FAMIS.Controllers
             int? ivt = 0;
             int? def = 0;
             var q = from o in db.tb_Asset_inventory_Details
-                    where o.serial_number == pdsearial
+                    where o.serial_number == pdsearial&&o.flag==true
                     select o;
             foreach (var p in q)
             {
@@ -769,7 +793,7 @@ namespace FAMIS.Controllers
             }
 
             var z = from o in db.tb_Asset_inventory
-                    where o.serial_number.ToString() == pdsearial
+                    where o.serial_number.ToString() == pdsearial&&o.flag==true
                     select o;
             foreach (var p in z)
             {
