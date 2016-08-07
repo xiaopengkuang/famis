@@ -1,0 +1,37 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+    
+    </div>
+    <script>
+        function load_PD() {
+            $("#R_add").combobox({
+                valueField: 'ID',
+                method: 'POST',
+                textField: 'name',
+                required: true,
+                url: '/Rule/GetRoleID',
+                onSelect: function (rec) {
+                    rid = $('#R_add').combotree('getValue');
+                    load_SZBM_add();
+                    $('#R_add').combobox('setValue', rec.ID);
+                    $('#R_add').combobox('setText', rec.name);
+
+
+                }
+
+            });
+        }
+        </script>
+</body>
+</html>

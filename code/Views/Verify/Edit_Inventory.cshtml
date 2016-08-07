@@ -16,9 +16,12 @@
 
 
 <script type="text/javascript">
-
+    var pddate = "";
+    GetEID();
     
-    $(function () {
+    function setdata(arr)
+    {
+         
         $("#operator_add").combobox({
             valueField: 'ID',
             method: 'POST',
@@ -27,8 +30,8 @@
             onLoadSuccess: function () {
                 var data = $('#operator_add').combobox('getData');
                 for (var i = 0; i < data.length; i++)
-                    if(data[i].true_Name==arr[3])
-                $("#operator_add").combobox('select', data[i].true_Name);
+                    if (data[i].ID == arr[3])
+                        $("#operator_add").combobox('select', data[i].true_Name);
 
 
             },
@@ -37,17 +40,16 @@
                 $('#operator_add').combobox('setText', rec.true_Name);
             }
         });
-        var PDdata = String(GetEditData());
-        var arr = PDdata.split(',');
-        $('#LBMC').val(arr[0]);
-        $('#pddate').val(arr[1]);
-        var Asset_Type = $('#ZCLB').combobox('select',arr[2]);
          
-       
+        $('#LBMC').val(arr[0]);
+         
+        $("#pddate").datebox("setValue", arr[1]);
+        $('#ZCLB').combobox('select', arr[2]);
 
-        $('ps').val(arr[4]);
 
-    });
+
+        $('#ps').val(arr[4]);
+    }
     function fmt(date) {
         try {
             var pa = /.*\((.*)\)/;
@@ -59,26 +61,10 @@
             return "";
         }
     }
-    function GetEditData()
-    {
-        var eid = GetEID();
-        var obj = eid + "," + "PD";
-        $.ajax({
-
-            type: "post",
-            url: "/Depreciation/GetEditData",
-
-            datatype: "json",//数据类型
-            data: { Json: obj },
-            success: function (result) {
-                
-                return result;
-
-            }, error: function (msg) {
-                alert("Error");
-            }
-        });
-    }
+    
+        
+       
+    
     function GetEID()
     {
         $.ajax({
@@ -89,8 +75,27 @@
             datatype: "json",//数据类型
 
             success: function (result) {
+               
+                var obj = result + "," + "PD";
+                 
+                $.ajax({
 
-                return result;
+                    type: "post",
+                    url: "/Depreciation/GetEditData",
+
+                    datatype: "json",//数据类型
+                    data: { Json: obj },
+                    success: function (result) {
+                        
+                        pddate = String(result);
+                       // alert(pddate);
+                        var arr = pddate.split(',');
+                        setdata(arr);
+
+                    }, error: function (msg) {
+                        alert("Error");
+                    }
+                });
 
             }, error: function (msg) {
                 alert("Error");
@@ -98,7 +103,7 @@
         });
     }
     function Add_PD() {
-        var ID = "-1000";
+        var ID = "update";
         var operator = $('#operator_add').combobox('getValue');
         // alert(operator);
         var ps = $('#ps').val();
@@ -158,7 +163,7 @@
                     <select id="ZCLB" class="easyui-combobox" style="width: 250px; height: 18px" data-options="editable: false">
 
                         <option value="固定资产">固定资产</option>
-                        <option value="固定资产">低值易耗品</option>
+                        <option value="低值易耗品">低值易耗品</option>
                     </select>
                 </td>
 
