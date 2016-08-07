@@ -569,10 +569,10 @@ function load_sub_picture(datagrid, id_asset) {
             { field: 'fileNmae', title: '文件名', width: 50 },
             { field: 'user_add', title: '登记人', width: 50 },
             {
-                field: 'filePath', title: '预览', width: 50,
+                field: 'id_view', title: '预览', width: 50,
                 formatter: function (data) {
-                    var btn = "<img  src='" + data + "' height='100' width='100'></img>";
-                    //var btn = "<a  onclick='preViewImg('" + data + "')' href='javascript:void(0)' >预览</a>";
+                    //var btn = "<img  src='" + data + "' height='100' width='100'></img>";
+                    var btn = "<a  onclick='preViewImg("+ data + ")' href='javascript:void(0);' >预览</a>";
                     return btn;
                 }
             },
@@ -900,8 +900,8 @@ function openModelWindow(url, titleName) {
 
 function openModelWindow_PIC(url, titleName) {
     //获取当前页面的Width和高度
-    var winWidth = (document.body.clientWidth - 20) < 0 ? 0 : (document.body.clientWidth - 20);
-    var winheight = (document.body.clientHeight - 20) < 0 ? 0 : (document.body.clientHeight - 20);
+    var winWidth = (document.body.clientWidth - 100) < 0 ? 0 : (document.body.clientWidth - 100);
+    var winheight = (document.body.clientHeight - 100) < 0 ? 0 : (document.body.clientHeight - 100);
 
 
     try {
@@ -916,8 +916,8 @@ function openModelWindow_PIC(url, titleName) {
         //left: (($(window).width() - 700) > 0 ? ($(window).width() - 700) : 100) * 0.5,
         width: winWidth,
         height: winheight,
-        left: 10,
-        top: 10,
+        left: 50,
+        top: 50,
         shadow: true,
         modal: true,
         iconCls: 'icon-add',
