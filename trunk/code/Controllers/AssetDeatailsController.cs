@@ -269,6 +269,22 @@ namespace FAMIS.Controllers
 
            return json;
        }
+       
+        
+        [HttpPost]
+       public string Get_Edit_Row()
+       {
+           string json = "";
+           try
+           {
+               json = Session["EdtRow"].ToString();
+           }
+           catch
+           {
+               return json;
+           }
+           return json;
+       }
        [HttpPost]
        public string Get_Current_Row()
        {
@@ -277,7 +293,7 @@ namespace FAMIS.Controllers
            {
                json = Session["CurrentRow"].ToString();
            }
-           catch 
+           catch
            {
                return json;
            }

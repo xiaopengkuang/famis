@@ -346,6 +346,12 @@ namespace FAMIS.Controllers
             Session["Searial"] = Json;
             return "";
         }
+        [HttpPost]
+        public string SetEditRow(string Json)
+        {
+            Session["EdtRow"] = Json;
+            return "";
+        }
           [HttpPost]
         public string SetPDsearialSession(string Json)
         {
@@ -397,12 +403,20 @@ namespace FAMIS.Controllers
                   case "YH":
                       {
                           var q = from o in db.tb_user
+                                  join r in db.tb_role on o.roleID_User equals r.ID
+                                  join d in db.tb_department on o.ID_DepartMent equals d.ID
                                   where o.ID.ToString() == ID
-                                  select o;
+                                  select new { 
+                                   name=o.name_User,
+                                   pwd=o.password_User,
+                                   tname=o.true_Name,
+                                   role=r.name,
+                                   dpt=d.name_Department
+                                  };
                           foreach (var p in q)
                           {
 
-                              data += p.name_User + "," + p.password_User + "," + p.true_Name+","+p.roleID_User+","+p.ID_DepartMent;
+                              data += p.name + "," + p.pwd + "," + p.tname+","+p.role+","+p.dpt;
                           }
                           return data;
                       }
@@ -425,7 +439,9 @@ namespace FAMIS.Controllers
          [HttpPost]
         public string SetCurrentRow(string Json)//用session记录一下当前用户所编辑的行
         {
-             
+            StreamWriter sw = new StreamWriter("D:\\ddddddj.txt",true);
+            sw.WriteLine(Json);
+            sw.Close();
             Session["CurrentRow"] = Json;
             return "";
         }
@@ -490,7 +506,8 @@ namespace FAMIS.Controllers
             ArrayList mysearial = serial.ReturnNewSearial("PD", 1);//生成一个盘点单
             Session["CurrentRow"] = 0;
             int id = 0;
-            
+            if (JSdata.Split(',')[0] == "update")
+                id = int.Parse(Session["EditID"].ToString());
             try
             {
                 id = int.Parse(JSdata.Split(',')[0]);

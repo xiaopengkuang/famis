@@ -152,8 +152,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
        
             List<tb_role> list = mydb.tb_role.OrderBy(a => a.ID).ToList();
             JavaScriptSerializer jss = new JavaScriptSerializer();
+           bool issuper= commonConversion.isSuperUser(commonConversion.getRoleID());
             var result = (from r in list
-                          where r.flag==true&&r.isSuperUser==false
+                          where (r.flag==true&&r.isSuperUser==false)||(r.flag==true&&issuper)
                           select new tb_role()
                           {
                               ID = r.ID,
@@ -383,13 +384,17 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             GetRule model = new GetRule();
             string temprid = JSdata.Split(',')[4];
             int id = 0;
+           
             try
             {
                 id = int.Parse(JSdata.Split(',')[0]);
             }
             catch(Exception e) {
-                Console.WriteLine(e.Message);
+                ;
             }
+            if (JSdata.Split(',')[0] == "update")
+                id = int.Parse(Session["EditID"].ToString());
+           
             int rid=0;
             int did=0;
             try
@@ -407,13 +412,13 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                 }
             }
 
-             string deptemp = JSdata.Split(',')[5];
+            string deptemp = JSdata.Split(',')[5];
             string name = JSdata.Split(',')[1];
             string pwd = JSdata.Split(',')[2];
             string tname = JSdata.Split(',')[3];
             string isText =JSdata.Split(',')[6];
             var validate = from o in mydb.tb_user
-                           where o.name_User == name&&o.flag==true
+                           where o.name_User == name&&o.flag==true&&o.ID!=id
                            select o;
             foreach(var v in validate)
             {
@@ -430,7 +435,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             catch (Exception e)
             {
                 var z = from o in mydb.tb_department
-                        where o.name_Department == deptemp
+                        where o.name_Department == deptemp&&o.effective_Flag==true
                         select o.ID;
                 foreach (int a in z)
                 {
@@ -441,7 +446,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                
             
             var q = from o in mydb.tb_user
-                                          where o.ID == id
+                                          where o.ID == id&&o.flag==true
                                           select o;
 
             if (q.Count() == 0)
@@ -485,6 +490,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             GetRule model = new GetRule();
             bool? flag=false;
             int id = 0;
+            if (JSdata.Split(',')[0] == "update")
+                id = int.Parse(Session["EditID"].ToString());
+           
             try
             {
                 id = int.Parse(JSdata.Split(',')[0]);
