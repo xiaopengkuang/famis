@@ -20,6 +20,14 @@ namespace FAMIS.Controllers
         {
             return View();
         }
+        public ActionResult Edit_User()
+        {
+            return View();
+        }
+        public ActionResult EditRole()
+        {
+            return View();
+        }
         public ActionResult SysConfig()
         {
             return View();
