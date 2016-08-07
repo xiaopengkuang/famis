@@ -505,9 +505,9 @@ namespace FAMIS.Controllers
             if(1-number==0)
              
                 pdstate="持平";
-               if(number-1<0)
+               if(1-number<0)
                    pdstate="盘亏";
-                       if(number-1>0)
+                       if(1-number>0)
                            pdstate="盘盈";
               
              
