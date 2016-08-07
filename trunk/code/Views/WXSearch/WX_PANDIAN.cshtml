@@ -57,6 +57,7 @@
         }
         function Confirm()
         {
+            alert("测试！");
             var pdserial = $('#ps').combobox('getValue');
             var jsdata = pdserial + "," + Asset_Serial + "," + Asset_Amount;
             $.ajax({
@@ -96,7 +97,8 @@
             </tr>
         </table>
         <div style="text-align: center; padding: 5px">
-            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="Confirm()">选择</a>
+             
+            <input id="confirm" type="button" value="选择" onclick="Confirm()" />
             
         </div>
     </div>
