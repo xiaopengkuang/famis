@@ -784,6 +784,16 @@ namespace FAMIS.Controllers
             int insertNum = 0;
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_Asset_add dto_aa = serializer.Deserialize<Json_Asset_add>(Asset_add);
+
+            if (dto_aa == null)
+            {
+                return -1;
+            }
+            if (exist_codeOldSys(dto_aa.code_oldSYS))
+            {
+                return -11;
+            }
+
             //先判断是添加单个函数批量添加
             if (dto_aa.d_Check_PLZJ_add == true)//单数添加
             {
@@ -806,6 +816,11 @@ namespace FAMIS.Controllers
                     dto_aa.OperateTime =DateTime.Now;
                     tb_Asset newItem = JTM.ConverJsonToTable(dto_aa);
                     newItem.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_free);
+                    if(dto_aa.code_oldSYS==null||dto_aa.code_oldSYS=="")
+                    {
+                        newItem.code_OLDSYS=serailNums[i].ToString().Trim();
+                    }
+
                     DB_C.tb_Asset.Add(newItem); 
                 }
                 DB_C.tb_Asset.AddRange(datasToadd);
@@ -873,7 +888,10 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-
+            if (exist_codeOldSys(json_data.code_oldSYS))
+            {
+                return -11;
+            }
             try
             {
                 //获取tb_Asset
@@ -905,6 +923,12 @@ namespace FAMIS.Controllers
                     item.Net_residual_rate = json_data.d_Other_JCZL_add;
                     item.Method_add = json_data.d_ZJFS_add;
                     item.note = json_data.d_note_add;
+                    if(json_data.code_oldSYS==null||json_data.code_oldSYS=="")
+                    {
+                    item.code_OLDSYS = item.serial_number;
+                    }else{
+                    item.code_OLDSYS = json_data.code_oldSYS;
+                    }
                 }
                 var data_detail = from p in DB_C.tb_Asset_CustomAttr
                                   where p.flag == true
@@ -929,7 +953,14 @@ namespace FAMIS.Controllers
 
         }
 
-
+        public bool exist_codeOldSys(String codeOldSys)
+        {
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true
+                       where p.code_OLDSYS == codeOldSys
+                       select p;
+            return data.Count() > 0 ? true : false;
+        }
 
 
         //根据barcode获取资产信息
@@ -1119,7 +1150,8 @@ namespace FAMIS.Controllers
                         YearService_month=p.YearService_month,
                         Owener=p.Owener,
                         name_owner=US.true_Name==null?"":US.true_Name,
-                        note=p.note==null?"":p.note
+                        note=p.note==null?"":p.note,
+                        code_oldSYS=p.code_OLDSYS==null?"":p.code_OLDSYS
                        };
             if (data.Count() > 0)
             {

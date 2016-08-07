@@ -29,7 +29,7 @@
 
     <div class="easyui-layout" style="width: 100%; height: 700px;" fit="true">
 
-        <div data-options="region:'west',split:true" title="查询条件" style="width: 210px; height: 100%">
+        <div data-options="region:'west',split:false,collapsible:false" title="查询条件" style="width: 210px; height: 100%">
             <div style="margin: 5px 0;" data-options="border:true,region:'west'">
                 <div class="easyui-panel" style="padding: 5px;">
                     <a href="javascript:void(0);" class="easyui-linkbutton" onclick="C_query()">刷新</a>
@@ -59,7 +59,7 @@
             <!--查询条件-->
             <div style="width: 100%!important; border-spacing: 2px; left: 10px">
                 <div style="float: left; border-spacing: 2px">
-                    <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC" data-options="editable: false" >
+                    <select class="easyui-combobox" name="state" style="width: 150px;" id="Accounting_SC" data-options="editable: false">
                         <option value="DJRQ" selected="selected">登记日期</option>
                         <option value="GZRQ">购置日期</option>
                         <option value="ZCBH">资产编号</option>
@@ -101,7 +101,7 @@
                         <td>
                             <a href="javascript:void(0);" class="easyui-linkbutton" onclick="resetSC()" data-options="iconCls:'icon-reload'">重置</a>
                         </td>
-                      
+
 
                         <td>
                             <input type="radio" name="table_TYPE" onclick="chanegeTableType_Radio()" value="0" />汇总
@@ -113,5 +113,6 @@
             <table id="TableList_0_1" class="easyui-datagrid" style="height: 500px" data-options="border:false,singleSelect:true,fitcolumns:true"></table>
             <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
         </div>
+    </div>
 </body>
 </html>

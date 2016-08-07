@@ -228,14 +228,64 @@ namespace FAMIS.Controllers
         }
 
 
+        public String getSrialNumByCODE(String code)
+        {
+            if(code==null||code=="")
+            {
+                return code;
+            }
+
+            if (code.Contains("{") )
+            {
+
+                String[] codeStrList = code.Split('{');
+                if (codeStrList.Length > 1)
+                {
+                    var data = from p in DB_C.tb_Asset
+                               where p.code_OLDSYS == codeStrList[1]
+                               join tb_code128 in DB_C.tb_Asset_code128 on p.ID equals tb_code128.ID_Asset
+                               select new {
+                               code=tb_code128.code128
+                               };
+                    if (data.Count() ==1)
+                    {
+                        foreach (var item in data)
+                        {
+                            return item.code;
+                        }
+                        return "";
+                    }
+                    return "";
+
+                }
+                else {
+                    return "";
+                }
+ 
+
+            }
+            else {
+                return code;
+            }
+
+        }
 
 
 
 
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public Json_WXSearch_detail getAssetByBH(String code)
         {
+
+            //将编号处理一下
+            code = getSrialNumByCODE(code);
+
             var data=from tb_code in DB_C.tb_Asset_code128
                      where tb_code.code128 == code
                      join p in DB_C.tb_Asset on tb_code.ID_Asset equals p.ID
