@@ -18,6 +18,7 @@ namespace FAMIS.DTO
         public Double? dj { get; set; }
         public Double? sl { get; set; }
         public Double? zj { get; set; }
+        public String note { get; set; }
 
     }
 }
