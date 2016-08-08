@@ -75,7 +75,7 @@
                 datatype: "json",//数据类型
                 data: { Json: obj },
                 success: function (result) {
-                    alert(result);
+                   // alert(result);
                     if (result == "deny")
                        alert("不可重复盘点该资产，或者当前扫描资产未录入系统，请核对!");
                     if (result == "success")
