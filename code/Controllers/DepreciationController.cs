@@ -520,7 +520,7 @@ namespace FAMIS.Controllers
                                if (q.amountOfInv + 1 - q.amountOfSys > 0)
                                {
                                    return "deny";
-                                   q.state = "盘盈";
+                                  // q.state = "盘盈";
                                }
                                if (q.amountOfInv + 1 - q.amountOfSys < 0)
                                    q.state = "盘亏";
