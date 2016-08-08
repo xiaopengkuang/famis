@@ -510,17 +510,23 @@ namespace FAMIS.Controllers
 
                        if (p.Count() > 0)
                        {
+                           
+                           //这里先禁掉，因为当时需求变为每个资产编号对应一个实物资产。
                            foreach (var q in p)
                            {
                                
                                if (q.amountOfInv + 1 - q.amountOfSys == 0)
                                    q.state = "持平";
                                if (q.amountOfInv + 1 - q.amountOfSys > 0)
+                               {
+                                   return "deny";
                                    q.state = "盘盈";
+                               }
                                if (q.amountOfInv + 1 - q.amountOfSys < 0)
                                    q.state = "盘亏";
                                q.difference = q.difference + 1;
                                q.amountOfInv = q.amountOfInv + 1;
+                              
                            }
 
                        }
