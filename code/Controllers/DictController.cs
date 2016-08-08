@@ -1010,7 +1010,7 @@ namespace FAMIS.Controllers
             Json_AssetType_add json_data = serializer.Deserialize<Json_AssetType_add>(data);
             if (json_data != null)
             {
-                if (existAssetType(json_data.lbmc))
+                if (existAssetType(json_data.lbmc,null))
                 {
                     return -2;
                 }
@@ -1038,11 +1038,12 @@ namespace FAMIS.Controllers
 
 
 
-        public bool existAssetType(String typeName)
+        public bool existAssetType(String typeName,int? id)
         {
             var data = from p in DB_C.tb_AssetType
                        where p.flag == true
                        where p.name_Asset_Type == typeName
+                       where p.ID != id
                        select p;
             return data.Count() > 0 ? true : false;
         }
@@ -1054,7 +1055,7 @@ namespace FAMIS.Controllers
             if(dp!=null)
             {
 
-                if (existDepartment(dp.bmmc))
+                if (existDepartment(dp.bmmc,null))
                 {
                     return -2;
                 }
@@ -1083,11 +1084,12 @@ namespace FAMIS.Controllers
             return 0;
         }
 
-        public bool existDepartment(String name)
+        public bool existDepartment(String name,int? id)
         {
             var data = from p in DB_C.tb_department
                        where p.effective_Flag == true
                        where p.name_Department == name
+                       where p.ID!=id
                        select p;
             return data.Count() > 0 ? true : false;
         }
@@ -1101,7 +1103,7 @@ namespace FAMIS.Controllers
             if (json_data != null && json_data.zclb != null)
             {
                 //TODO：优化 先判断 是否存在该资产类型
-                if (existCAttr(json_data.zclb, json_data.sxbt))
+                if (existCAttr(json_data.zclb, json_data.sxbt,null))
                 {
                     return -2;
                 }
@@ -1127,11 +1129,12 @@ namespace FAMIS.Controllers
 
         }
 
-        public bool existCAttr(int? zclb, String Name)
+        public bool existCAttr(int? zclb, String Name,int? id)
         {
             var data = from p in DB_C.tb_customAttribute
                        where p.flag == true
                        where p.title == Name && p.assetTypeID == zclb
+                       where p.ID!=id
                        select p;
             return data.Count() > 0 ? true : false;
         }
@@ -1143,7 +1146,7 @@ namespace FAMIS.Controllers
             Json_dataDict json_data = serializer.Deserialize<Json_dataDict>(data);
             if (json_data != null && json_data.cslx != null)
             {
-                if (existDataDic(json_data.csmc))
+                if (existDataDic(json_data.csmc,null))
                 {
                     return -2;
                 }
@@ -1169,19 +1172,21 @@ namespace FAMIS.Controllers
             return 0;
         }
 
-        public bool existDataDic(String name)
+        public bool existDataDic(String name,int? id)
         {
             var data = from p in DB_C.tb_dataDict
                        where p.active_flag == true
                        where p.name_dataDict == name
+                       where p.ID!=id
                        select p;
             return data.Count() > 0 ? true : false;
         }
-        public bool existDataDic_Para(String name,int? ID_dataDict)
+        public bool existDataDic_Para(String name,int? ID_dataDict,int? id)
         {
             var data = from p in DB_C.tb_dataDict_para
                        where p.activeFlag == true
                        where p.name_para == name && p.ID_dataDict==ID_dataDict
+                       where p.ID!=id
                        select p;
             return data.Count() > 0 ? true : false;
         }
@@ -1192,7 +1197,7 @@ namespace FAMIS.Controllers
             Json_dataDict_Para json_data = serializer.Deserialize<Json_dataDict_Para>(data);
             if (json_data != null && json_data.cslx != null)
             {
-                if (existDataDic_Para(json_data.csmc,json_data.cslx))
+                if (existDataDic_Para(json_data.csmc,json_data.cslx,null))
                 {
                     return -2;
                 }
@@ -1226,7 +1231,7 @@ namespace FAMIS.Controllers
             Json_supplier json_data = serializer.Deserialize<Json_supplier>(data);
             if (json_data != null && json_data.GYSMC != null && json_data.GYSMC != "")
             {
-                if (existSupplier(json_data.GYSMC))
+                if (existSupplier(json_data.GYSMC,null))
                 {
                     return -2;
                 }
@@ -1249,11 +1254,13 @@ namespace FAMIS.Controllers
             return 0;
         }
 
-        public bool existSupplier(String name)
+
+        public bool existSupplier(String name,int? id)
         {
             var data = from p in DB_C.tb_supplier
                        where p.flag == true
                        where p.name_supplier == name
+                       where p.ID!=id
                        select p;
             return data.Count() > 0 ? true : false;
         }
@@ -1478,7 +1485,7 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-            if (existDepartment(json_data.bmmc))
+            if (existDepartment(json_data.bmmc,id))
             {
                 return -2;
             }
@@ -1574,12 +1581,10 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-            if (existAssetType(json_data.lbmc))
+            if (existAssetType(json_data.lbmc,id))
             {
                 return -2;
             }
-
-
             var q = from p in DB_C.tb_AssetType
                     where p.ID == id
                     select p;
@@ -1615,7 +1620,7 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-            if (existDataDic(json_data.csmc))
+            if (existDataDic(json_data.csmc,id))
             {
                 return -2;
             }
@@ -1661,7 +1666,7 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
-            if (existDataDic_Para(json_data.csmc, json_data.cslx))
+            if (existDataDic_Para(json_data.csmc, json_data.cslx,id))
             {
                 return -2;
             }
@@ -1700,7 +1705,7 @@ namespace FAMIS.Controllers
             {
                 return 0;
             }
-            if (existSupplier(json_data.GYSMC))
+            if (existSupplier(json_data.GYSMC,id))
             {
                 return -2;
             }

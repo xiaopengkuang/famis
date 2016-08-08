@@ -224,7 +224,7 @@ function initAttr(data) {
              tr = document.createElement("tr");
         }
         var td1 = document.createElement("td");
-        td1.style.width = "80px";
+        //td1.style.width = "80px";
         var td2 = document.createElement("td");
         td2.style.width = "170px";
 
@@ -1112,8 +1112,8 @@ function checkFormat(id_asset) {
         MessShow("资产名称不能为空");
         return;
     } else if (isNull(check_obj_ZCXH)) {
-        MessShow("规格型号不能为空");
-        return;
+        //MessShow("规格型号不能为空");
+        //return;
     } else if (isNull(check_obj_JLDW)) {
         MessShow("计量单位不能为空");
         return;
@@ -1121,14 +1121,14 @@ function checkFormat(id_asset) {
         MessShow("存放地点不能为空");
         return;
     } else if (isNull(check_obj_GYS)) {
-        MessShow("供应商不能为空");
-        return;
+        //MessShow("供应商不能为空");
+        //return;
     } else if (isNull(check_obj_GZRQ)) {
         MessShow("购置日期不能为空");
         return;
     } else if (isNull(check_obj_Other_JCZL)) {
-        MessShow("净残值率不能为空");
-        return;
+        //MessShow("净残值率不能为空");
+        //return;
     } else if (check_obj_Other_ZCDJ <= 0) {
         MessShow("资产单价不能为0");
         return;
@@ -1136,8 +1136,8 @@ function checkFormat(id_asset) {
         MessShow("资产数量不能为0");
         return;
     } else if (check_obj_Other_SYNX <= 0) {
-        MessShow("使用年限不能为0.");
-        return;
+        //MessShow("使用年限不能为0.");
+        //return;
     }
 
     //alert(check_obj_GZRQ);

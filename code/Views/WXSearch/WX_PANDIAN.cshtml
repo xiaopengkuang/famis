@@ -18,7 +18,7 @@
         var U_ID = "@ViewBag.PDUserID";
         var Asset_Serial = "@ViewBag.Asset_Serial";
         var Asset_Amount = "@ViewBag.Asset_Amount";
-
+        var PDserial = "";
         $(function () {
 
             //数据跳转
@@ -51,7 +51,7 @@
                 },
                 onSelect: function (rec) {
 
-                  
+                    pdserial=$('#ps').combobox('getValue');
                     $('#ps').combobox('setValue', rec.serial);
                     $('#ps').combobox('setText', rec.ps);
 
@@ -63,7 +63,7 @@
         function Confirm()
         {
            
-            var pdserial = $('#ps').combobox('getValue');
+            
             var obj = pdserial + "," + Asset_Serial + "," + Asset_Amount;
             
             $.ajax({
