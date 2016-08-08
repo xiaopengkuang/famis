@@ -584,16 +584,19 @@ namespace FAMIS.Controllers
         public String LoadPD(string Json)
         {
             JavaScriptSerializer jss = new JavaScriptSerializer();
-            string uid = Json;
+            string uid = Json.Split(',')[0];
+            string Asset_Serial = Json.Split(',')[1];
             var q = from o in db.tb_Asset_inventory
                     join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
-                    where o._operator == uid&&d.name_para!="已盘点"&&o.flag==true orderby o.ID descending
+                    join aid in db.tb_Asset_inventory_Details on o.serial_number equals aid.serial_number
+                    where o._operator == uid&&d.name_para!="已盘点"&&o.flag==true&&!(aid.serial_number==Asset_Serial&&aid.difference>=0) orderby o.ID descending
                     select new
                     {
+                        
                         serial = o.serial_number,
                         ps = o.ps
                     };
-
+             
             String json = jss.Serialize(q).ToString().Replace("\\", "");
 
 
