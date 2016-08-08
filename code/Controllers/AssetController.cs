@@ -799,6 +799,9 @@ namespace FAMIS.Controllers
             {
                 dto_aa.d_Num_PLTJ_add = 1;
             }
+            else {
+                dto_aa.code_oldSYS = "";
+            }
             try
             {
                 int num = (int)dto_aa.d_Num_PLTJ_add;
