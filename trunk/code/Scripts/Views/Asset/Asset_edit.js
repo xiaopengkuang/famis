@@ -121,7 +121,7 @@ function bindData(id)
                 $("#Other_LJZJ_add").val(data.depreciation_tatol);
                 $("#Other_JZ_add").val(data.Net_value);
                 $("#note_add").val(data.note);
-                $("#code_oldSYS").val(data.note);
+                $("#code_oldSYS").val(data.code_oldSYS);
 
                 //自定义属性
                 cattrs = data.cattrs;
