@@ -43,7 +43,7 @@
                 method: 'POST',
                 textField: 'ps',
                 required: true,
-                url: '/Depreciation/LoadPD?Json=' + U_ID + '',
+                url: '/Depreciation/LoadPD?Json=' + U_ID +","+Asset_Serial+ '',
                 onLoadSuccess: function () {
                     var data = $('#ps').combobox('getData');
                     $("#ps").combobox('select', data[0].serial);
