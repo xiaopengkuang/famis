@@ -27,6 +27,11 @@ namespace FAMIS.Helper_Class
             this.fileName = fileName;
             disposed = false;
         }
+        public void FileDelete(string path)
+        {
+            File.Delete(path);
+         
+        }   
         public DataTable ImportExcelFile(string filePath)
         {
             XSSFWorkbook hssfworkbook;
