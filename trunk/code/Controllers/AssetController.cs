@@ -789,7 +789,7 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-            if (exist_codeOldSys(dto_aa.code_oldSYS))
+            if (exist_codeOldSys(dto_aa.code_oldSYS,null))
             {
                 return -11;
             }
@@ -891,7 +891,7 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-            if (exist_codeOldSys(json_data.code_oldSYS))
+            if (exist_codeOldSys(json_data.code_oldSYS,json_data.ID))
             {
                 return -11;
             }
@@ -956,11 +956,12 @@ namespace FAMIS.Controllers
 
         }
 
-        public bool exist_codeOldSys(String codeOldSys)
+        public bool exist_codeOldSys(String codeOldSys,int? id)
         {
             var data = from p in DB_C.tb_Asset
                        where p.flag == true
                        where p.code_OLDSYS == codeOldSys
+                       where p.ID!=id
                        select p;
             return data.Count() > 0 ? true : false;
         }
