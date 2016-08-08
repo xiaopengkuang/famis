@@ -583,25 +583,32 @@ namespace FAMIS.Controllers
         [HttpPost]
         public String LoadPD(string Json)
         {
+            String json ="";
             JavaScriptSerializer jss = new JavaScriptSerializer();
             string uid = Json.Split(',')[0];
             string Asset_Serial = Json.Split(',')[1];
+            List<string> tu = new List<string>();
+            var temp_deatail = from o in db.tb_Asset_inventory_Details
+                               where o.serial_number_Asset == Asset_Serial && o.difference >= 0
+                               select o;
+            foreach (var k in temp_deatail)
+            {
+                tu.Add(k.serial_number);
+            }
+
             var q = from o in db.tb_Asset_inventory
                     join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
-                    join aid in db.tb_Asset_inventory_Details on o.serial_number equals aid.serial_number into temp_aid
-                    from aaid in temp_aid.DefaultIfEmpty()
-                    where o._operator == uid && d.name_para!= "已盘点" && o.flag == true && !(aaid.serial_number_Asset == Asset_Serial && aaid.difference >= 0) 
                    
+                    where o._operator == uid && d.name_para != "已盘点" && o.flag == true && !tu.Contains(o.serial_number)
+
                     orderby o.ID descending
                     select new
                     {
-                        
+
                         serial = o.serial_number,
                         ps = o.ps
                     };
-             
-            String json = jss.Serialize(q).ToString().Replace("\\", "");
-
+            json = jss.Serialize(q).ToString().Replace("\\", "");
 
             return json;
         
@@ -914,31 +921,9 @@ namespace FAMIS.Controllers
                     else
                     {
                         Session["ErrorFile"] = "FileUploaded";
-//<<<<<<< .mine
-                       /* String existFile = System.AppDomain.CurrentDomain.BaseDirectory + "Tempory_Files";
-                        StreamWriter sw = new StreamWriter("D:\\tt.txt");
-                        sw.Write(existFile);
-||||||| .r370
-                        String existFile = System.AppDomain.CurrentDomain.BaseDirectory + "/Tempory_Files";
-                        StreamWriter sw = new StreamWriter("D:\\tt.txt");
-                        sw.Write(existFile);
-=======
-                        String existFile = System.AppDomain.CurrentDomain.BaseDirectory + "Tempory_Files";
-                       // StreamWriter sw = new StreamWriter("D:\\tt.txt");
-                        //sw.Write(existFile);
->>>>>>> .r373
-                        
-                             
-                     /*   if (!System.IO.File.Exists(existFile))
-                        {
-                            
-                                Directory.CreateDirectory(Server.MapPath(existFile));
-                                sw.Write(" :::: "+Server.MapPath(existFile).ToString());
-                                sw.Close();
-                            
-                        }*/
+
                         string imgName = DateTime.Now.ToString("yyyyMMddhhmmss");
-                        string imgPath = "/Tempory_Files"+"/" + imgName + FileSave.FileName;  
+                        string imgPath =  "/"+imgName + FileSave.FileName;  
                         //通过此对象获取文件名
                         string AbsolutePath = Server.MapPath(imgPath);
                       
@@ -952,6 +937,8 @@ namespace FAMIS.Controllers
                         FileSave.SaveAs(AbsolutePath);
                         //将上传的东西保存
                         bool is_right=ReadExcel(Session["Deatails_Searial"].ToString(), AbsolutePath);
+                        //删除
+                        excel.FileDelete(AbsolutePath);
                         if (is_right)
 
                             Response.Redirect("/Verify/AddExcel");
@@ -961,6 +948,7 @@ namespace FAMIS.Controllers
                             Response.Redirect("/Verify/AddExcel");
                             return "no";
                         }
+
                         
                     }
                    
@@ -970,7 +958,7 @@ namespace FAMIS.Controllers
            
             return "盘点数据提交成功！";
         }
-        
+         
         public bool ReadExcel(string pd,string path)
         {
            
