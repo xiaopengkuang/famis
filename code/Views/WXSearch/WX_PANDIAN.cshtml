@@ -77,6 +77,8 @@
 
                     if (result == "success")
                         alert("成功！");
+                    if(result=="deny")
+                        $.messager.alert("已存在于当前盘点单", "不可重复盘点该资产，或者当前扫描资产未录入系统，请核对。", "error");
 
                 }, error: function (msg) {
                     alert("Error");
