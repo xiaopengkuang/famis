@@ -588,8 +588,10 @@ namespace FAMIS.Controllers
             string Asset_Serial = Json.Split(',')[1];
             var q = from o in db.tb_Asset_inventory
                     join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
-                    join aid in db.tb_Asset_inventory_Details on o.serial_number equals aid.serial_number
-                    where o._operator == uid && d.name_para != "已盘点" && o.flag == true && !(aid.serial_number_Asset == Asset_Serial && aid.difference >= 0)
+                    join aid in db.tb_Asset_inventory_Details on o.serial_number equals aid.serial_number into temp_aid
+                    from aaid in temp_aid.DefaultIfEmpty()
+                    where o._operator == uid && d.name_para!= "已盘点" && o.flag == true && !(aaid.serial_number_Asset == Asset_Serial && aaid.difference >= 0) 
+                   
                     orderby o.ID descending
                     select new
                     {
