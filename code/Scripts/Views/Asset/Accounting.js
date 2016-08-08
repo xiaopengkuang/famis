@@ -221,7 +221,7 @@ function LoadInitData_Detail() {
                     { field: 'serial_number', title: '资产编号', width: 50 },
                     { field: 'name_Asset', title: '资产名称', width: 50 },
                     { field: 'type_Asset', title: '资产类型', width: 50 },
-                    { field: 'specification', title: '型号规范', width: 50 },
+                    { field: 'specification', title: '型号规格', width: 50 },
                     { field: 'unit_price', title: '单价', width: 50 },
                     { field: 'amount', title: '数量', width: 50 },
                     { field: 'department_Using', title: '使用部门', width: 50 },
@@ -468,7 +468,7 @@ function LoadInitData_Summary() {
                 { field: 'RowNo', checkbox: true, width: 50 },
                 { field: 'AssetName', title: '资产名称', width: 50 },
                 { field: 'AssetType', title: '资产类型', width: 50 },
-                { field: 'specification', title: '型号规范', width: 50 },
+                { field: 'specification', title: '型号规格', width: 50 },
                 { field: 'measurement', title: '计量单位', width: 50 },
                 { field: 'amount', title: '数量', width: 50 },
                 { field: 'value', title: '资产价值', width: 50 }
