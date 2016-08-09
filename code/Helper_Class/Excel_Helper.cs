@@ -57,7 +57,7 @@ namespace FAMIS.Helper_Class
             for (int j = 0; j < (sheet.GetRow(0).LastCellNum); j++)
             {
                 //dt.Columns.Add(Convert.ToChar(((int)'A') + j).ToString());  
-                //将第一列作为列表头  
+                //将第一列作为列表头,这里第一列是指带有汉字的表头  
                 dt.Columns.Add(row.GetCell(j).ToString());
             }
             while (rows.MoveNext())
