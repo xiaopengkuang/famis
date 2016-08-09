@@ -39,7 +39,12 @@ function update_Value()
 {
     var sl = $('#Other_ZCSL_add').numberbox('getValue')
     var dj = $('#Other_ZCDJ_add').numberbox('getValue')
-    var value_f = parseFloat(sl) * parseFloat(dj);
+    var value_f = "";
+    if (dj == "") {
+    } else {
+        var value_f = parseFloat(sl) * parseFloat(dj);
+    }
+
     $('#Other_ZCJZ_add').val(value_f);
 }
  
@@ -728,8 +733,8 @@ function checkFormat() {
         //MessShow("净残值率不能为空");
         //return;
     } else if (check_obj_Other_ZCDJ <= 0) {
-        MessShow("资产单价只能为正值");
-        return;
+        //MessShow("资产单价只能为正值");
+        //return;
     } else if (check_obj_Other_ZCSL <= 0) {
         MessShow("资产数量只能为正值");
         return;
