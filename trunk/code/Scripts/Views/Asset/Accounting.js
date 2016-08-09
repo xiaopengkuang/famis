@@ -222,7 +222,12 @@ function LoadInitData_Detail() {
                     { field: 'name_Asset', title: '资产名称', width: 50 },
                     { field: 'type_Asset', title: '资产类型', width: 50 },
                     { field: 'specification', title: '型号规格', width: 50 },
-                    { field: 'unit_price', title: '单价', width: 50 },
+                    {
+                        field: 'unit_price', title: '单价', width: 50,
+                        formatter: function (data) {
+                            return StringToNUM(data);
+                        }
+                    },
                     { field: 'amount', title: '数量', width: 50 },
                     { field: 'department_Using', title: '使用部门', width: 50 },
                     { field: 'addressCF', title: '地址', width: 50 },
@@ -471,7 +476,12 @@ function LoadInitData_Summary() {
                 { field: 'specification', title: '型号规格', width: 50 },
                 { field: 'measurement', title: '计量单位', width: 50 },
                 { field: 'amount', title: '数量', width: 50 },
-                { field: 'value', title: '资产价值', width: 50 }
+                {
+                    field: 'value', title: '资产价值', width: 50,
+                    formatter: function (data) {
+                        return StringToNUM(data);
+                    }
+                }
             ]],
             singleSelect: false, //允许选择多行
             selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
@@ -552,6 +562,17 @@ function openModelWindow(url, titleName) {
     $winADD.window('open');
 }
 
+function StringToNUM(datainfo)
+{
+
+    return datainfo;
+    if (datainfo == null || datainfo == "") {
+        return "";
+    } else {
+        var numNew = new Number(datainfo);
+        return numNew;
+    }
+}
 
 
 //采用jquery easyui loading css效果

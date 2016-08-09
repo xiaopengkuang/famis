@@ -859,7 +859,7 @@ namespace FAMIS.Controllers
                     p.state = "盘亏";
                 if (int.Parse(inventory_amount) - p.amountOfSys > 0)
                     p.state = "盘盈";
-                else
+                if (int.Parse(inventory_amount) - p.amountOfSys==0)
                     p.state = "持平";
             }
 

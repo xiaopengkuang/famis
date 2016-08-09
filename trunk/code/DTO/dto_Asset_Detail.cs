@@ -25,7 +25,7 @@ namespace FAMIS.DTO
 
         public String measurement { get; set; }
 
-        public String unit_price { get; set; }
+        public double? unit_price { get; set; }
 
         public String amount { get; set; }
 

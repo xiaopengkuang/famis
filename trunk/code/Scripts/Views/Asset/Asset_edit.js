@@ -1130,8 +1130,8 @@ function checkFormat(id_asset) {
         //MessShow("净残值率不能为空");
         //return;
     } else if (check_obj_Other_ZCDJ <= 0) {
-        MessShow("资产单价不能为0");
-        return;
+        //MessShow("资产单价不能为0");
+        //return;
     } else if (check_obj_Other_ZCSL <= 0) {
         MessShow("资产数量不能为0");
         return;

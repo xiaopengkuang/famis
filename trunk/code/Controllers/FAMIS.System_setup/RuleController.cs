@@ -351,7 +351,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     int Stored_ID = 0;
                     bool mflag = false;
                     IEnumerable<tb_department> department= from f in mydb.tb_department
-                                   where f.ID.ToString() == id
+                                   where f.ID.ToString() == id where f.effective_Flag==true
                                    select f;
                     if (department.Count() > 0)
                     {

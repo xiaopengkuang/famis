@@ -100,7 +100,7 @@ namespace FAMIS.DataConversion
                            supplierID = SP.name_supplier,
                            Time_Purchase = p.Time_Purchase,
                            type_Asset = AT.name_Asset_Type,
-                           unit_price = p.unit_price.ToString(),
+                           unit_price = p.unit_price,
                            value = p.value.ToString(),
                            YearService_month = p.YearService_month.ToString()
                        };
