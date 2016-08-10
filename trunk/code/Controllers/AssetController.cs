@@ -1420,6 +1420,12 @@ namespace FAMIS.Controllers
            
         }
 
+        public ActionResult Handler_downloadExcelModel()
+        {
+            String excelModelPath = Server.MapPath(SystemConfig.FOLDER_SYSTEM_FILE) + "EXCEL导入数据模板.xlsx";
+            return downloadFileByURL(excelModelPath);
+        }
+
 
         /// <summary>
         /// 根据文件路径下载文件
@@ -1772,20 +1778,10 @@ namespace FAMIS.Controllers
                      foreach (DataColumn dc in tb_asset_excel.Columns)
                      {
                          columns.Add(dc.ColumnName);
-
                      }
-                     //生成空壳数据：不带
+                     //生成空壳数据
                      DTM.ExcelDTToTB(tb_asset_excel, columns, ColumnListConf.TB_Static_Column);
-                     ////获取序列号
-                     //int numSerial = tb_asset_excel.Rows.Count;
-                     //ArrayList serailNums = comController.getNewSerialNumber(SystemConfig.serialType_ZC, numSerial);
-
-
-                    
-
-
                      Response.Write("<script>alert('导入条数据：" + tb_asset_excel.Rows.Count + "');</script>");
-
                  }
                  else
                  {

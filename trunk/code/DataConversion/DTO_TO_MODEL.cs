@@ -29,12 +29,15 @@ namespace FAMIS.DataConversion
             Hashtable suppliers = comCtro.hashtable_supplier();
             Hashtable methodDe = comCtro.hashtable_methodDe();
             Hashtable CAttrList = comCtro.hashtable_CAttr();
+            Hashtable CAttrAssetTypeList = comCtro.hashtable_CAttrAssetType();
+            Hashtable CAttrDicList = comCtro.hashtable_CAttrDicList();
 
             //设置默认属性
             int? defaultAssetType = comCtro.Get_Default_AssetType();
             int? defaultMeasurment = comCtro.Get_Default_Measurement();
             int? defaultAddress= comCtro.Get_Default_Address();
             int? defaultMethodADD = comCtro.Get_Default_MethodAdd();
+            int? defaultMethodDe = comCtro.Get_Default_MethodDe();
             int? defaultDepartment = comCtro.Get_Default_Department();
 
 
@@ -79,8 +82,7 @@ namespace FAMIS.DataConversion
                                 {
                                     tb.type_Asset = (int)assetTypes[clVlaue];
                                 }else{
-                                    tb.type_Asset=null;
-                                    //flag = false;
+                                    tb.type_Asset = defaultAssetType;
                                 }
                             }; break;
                             case ColumnListConf.Asset_ZCXH: {
@@ -92,7 +94,7 @@ namespace FAMIS.DataConversion
                                     tb.measurement = (int)measurments[clVlaue];
                                 }
                                 else {
-                                    tb.measurement = null;
+                                    tb.measurement = defaultMeasurment;
                                     //flag = false;
                                 }
                             }; break;
@@ -150,16 +152,28 @@ namespace FAMIS.DataConversion
                                 tb.code_OLDSYS = clVlaue; 
                             }; break;
                             case ColumnListConf.Asset_SYNX: {
-                                tb.YearService_month = (int?)row[cl];
+                                if (clVlaue == null || clVlaue == "")
+                                {
+
+                                }
+                                else
+                                {
+                                    tb.YearService_month = int.Parse(clVlaue);
+                                }
                             }; break;
                             case ColumnListConf.Asset_ZJFS_de: {
                                 if (methodDe.ContainsKey(clVlaue))
                                 {
                                     tb.Method_depreciation = (int)methodDe[clVlaue];
                                 }
+                                else
+                                {
+                                    tb.Method_depreciation = defaultMethodDe;
+                                }
+
                             }; break;
                             case ColumnListConf.Asset_JCZL: {
-                                tb.Net_residual_rate = (int)row[cl];
+                                //tb.Net_residual_rate = (int)row[cl];
                             }; break;
                             case ColumnListConf.Asset_ZCDJ: {
                                 if (clVlaue == null || clVlaue == "")
@@ -199,7 +213,18 @@ namespace FAMIS.DataConversion
                 tb.serial_number = serilCode;
                 tb.Time_add = DateTime.Now;
                 tb.flag = true;
+                
                 tb.state_asset = freeState;
+                if (tb.type_Asset == null)
+                {
+                    tb.type_Asset = defaultAssetType;
+                }
+
+                if (tb.measurement == null)
+                {
+                    tb.measurement = defaultMeasurment;
+                }
+
                 
                 if (tb.Time_Purchase == null)
                 {
@@ -227,9 +252,33 @@ namespace FAMIS.DataConversion
                 //获取自定义属性
                 foreach (String cl in autoCAttrListCL)
                 {
-                    if (CAttrList.ContainsKey(cl))
+                    String clVlaue = row[cl].ToString();
+                    if (CAttrList.ContainsKey(cl) && CAttrAssetTypeList.ContainsKey(cl))
                     {
-                        tb_Asset_CustomAttr tac = createAssetCAttr(id_asset, tb.type_Asset, (int?)CAttrList[cl], row[cl].ToString());
+                    }
+                    else
+                    {
+                        //添加自定义属性
+                        int? defaultCATTYPE = comCtro.Get_Default_CATTRTYPE();
+                        tb_customAttribute newCATTR = CreateCATTR(tb.type_Asset,cl,true,defaultCATTYPE);
+                        DB_C.tb_customAttribute.Add(newCATTR);
+                        DB_C.SaveChanges();
+                        //更新表
+                        CAttrList = comCtro.hashtable_CAttr();
+                        CAttrAssetTypeList = comCtro.hashtable_CAttrAssetType();
+                    }
+
+                    if (CAttrList.ContainsKey(cl) && CAttrAssetTypeList.ContainsKey(cl))
+                    {
+                        String valueT=row[cl].ToString();
+                        if (CAttrDicList.ContainsKey(cl))
+                        {
+                            Hashtable lits=(Hashtable)CAttrDicList[cl];
+                            valueT = lits[valueT].ToString();
+                        }
+
+
+                        tb_Asset_CustomAttr tac = createAssetCAttr(id_asset, (int?)CAttrAssetTypeList[cl], (int?)CAttrList[cl], valueT);
                         if (tac != null)
                         {
                             listCattt.Add(tac);
@@ -240,13 +289,27 @@ namespace FAMIS.DataConversion
                 DB_C.SaveChanges();   
                 counter++;
             }
-
             return faildString;
 
-
-           
-
         }
+
+
+        public tb_customAttribute CreateCATTR(int? assetType,String title,bool nessary,int? Type)
+        {
+            tb_customAttribute tb = new tb_customAttribute();
+            tb.assetTypeID = assetType;
+            tb.title = title;
+            tb.time = DateTime.Now;
+            tb.SYSID = title;
+            tb.operatorName = comCVT.getOperatorName();
+            tb.flag = true;
+            tb.length = 20;
+            tb.necessary = nessary;
+            tb.type = Type;
+            tb.type_value = null;
+            return tb;
+        }
+
 
 
         /// <summary>

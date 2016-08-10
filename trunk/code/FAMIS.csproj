@@ -2089,6 +2089,7 @@
     <Content Include="Views\SysSetting\Rule.cshtml" />
     <Content Include="Views\Asset\previewImg.cshtml" />
     <Content Include="Views\Asset\Asset_addByExcel.cshtml" />
+    <Content Include="SystemFile\EXCEL导入数据模板.xlsx" />
     <None Include="Views\User\actions.cshtml" />
     <Content Include="Views\User\Index_BOOTSTRAP.cshtml" />
     <Content Include="Views\User\EditPassWord.cshtml" />
@@ -2137,8 +2138,10 @@
     <Compile Include="DAL\SQLRunner.cs" />
     <Compile Include="DataConversion\ColumnListConf.cs" />
     <Compile Include="DataConversion\CommonConversion.cs" />
-    <Compile Include="DataConversion\DTO_TO_MODEL.cs" />
     <Compile Include="DataConversion\BarCode.cs" />
+    <Compile Include="DataConversion\DTO_TO_MODEL.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DataConversion\JSON_TO_MODEL.cs" />
     <Compile Include="DataConversion\MODEL_TO_JSON.cs" />
     <Compile Include="DataConversion\SystemConfig.cs" />
@@ -2152,6 +2155,7 @@
     <Compile Include="DTO\dto_collar_detail.cs" />
     <Compile Include="DTO\dto_allocation_edit.cs" />
     <Compile Include="DTO\dto_collar_edit.cs" />
+    <Compile Include="DTO\dto_EXCEL_CATTR.cs" />
     <Compile Include="DTO\dto_null.cs" />
     <Compile Include="DTO\dto_state_List.cs" />
     <Compile Include="DTO\Json_allocation.cs" />
@@ -2366,7 +2370,7 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Content_2jsonData_2tree6__data_1json__JSONSchema="" LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" />
+      <UserProperties LIB_2jquery-easyui-1_13_12_2demo_2treegrid_2treegrid__data2_1json__JSONSchema="" Content_2jsonData_2tree6__data_1json__JSONSchema="" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

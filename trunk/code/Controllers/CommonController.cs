@@ -1083,7 +1083,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.name_Asset_Type))
+                if (!list.ContainsKey(item.name_Asset_Type))
                 {
                     list.Add(item.name_Asset_Type, item.ID);
                 }
@@ -1107,7 +1107,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.name_para))
+                if (!list.ContainsKey(item.name_para))
                 {
                     list.Add(item.name_para, item.ID);
                 }
@@ -1129,7 +1129,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.name_para))
+                if (!list.ContainsKey(item.name_para))
                 {
                     list.Add(item.name_para, item.ID);
                 }
@@ -1151,7 +1151,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.name_para))
+                if (!list.ContainsKey(item.name_para))
                 {
                     list.Add(item.name_para, item.ID);
                 }
@@ -1168,7 +1168,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.name_para))
+                if (!list.ContainsKey(item.name_para))
                 {
                     list.Add(item.name_para, item.ID);
                 }
@@ -1188,7 +1188,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach(var item in data)
             {
-                if (list.ContainsKey(item.name_Department))
+                if (!list.ContainsKey(item.name_Department))
                 {
                     list.Add(item.name_Department, item.ID);
                 }
@@ -1210,7 +1210,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.true_Name))
+                if (!list.ContainsKey(item.true_Name))
                 {
                     list.Add(item.true_Name, item.ID);
                 }
@@ -1228,7 +1228,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.name_supplier))
+                if (!list.ContainsKey(item.name_supplier))
                 {
                     list.Add(item.name_supplier, item.ID);
                 }
@@ -1244,7 +1244,7 @@ namespace FAMIS.Controllers
                        select p;
             foreach (var item in data)
             {
-                if (list.ContainsKey(item.title))
+                if (!list.ContainsKey(item.title))
                 {
                     list.Add(item.title, item.ID);
                 }
@@ -1252,7 +1252,48 @@ namespace FAMIS.Controllers
             return list;
         }
 
+        public Hashtable hashtable_CAttrAssetType()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_customAttribute
+                       where p.flag == true
+                       select p;
+            foreach (var item in data)
+            {
+                if (!list.ContainsKey(item.title))
+                {
+                    list.Add(item.title, item.assetTypeID);
+                }
+            }
+            return list;
+        }
 
+        public Hashtable hashtable_CAttrDicList()
+        {
+            Hashtable tb = new Hashtable();
+            var data_Memu = from p in DB_C.tb_dataDict
+                            where p.active_flag == true
+                            where p.isSysSet != true
+                            select p;
+
+            foreach(var item in data_Memu)
+            {
+                var data_List = from p in DB_C.tb_dataDict_para
+                                where p.activeFlag == true
+                                where p.ID_dataDict == item.ID
+                                select p;
+                Hashtable tb_list = new Hashtable();
+                foreach(var ite in data_List)
+                {
+                    if (!tb_list.ContainsKey(ite.name_para))
+                    {
+                        tb_list.Add(ite.name_para,ite.ID);
+                    }
+                }
+                tb.Add(item.name_dataDict, tb_list);
+            }
+            return tb;
+        }
 
         public int? Get_Default_AssetType()
         {
@@ -1311,6 +1352,45 @@ namespace FAMIS.Controllers
                        join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
                        where tb_DIC.name_flag == SystemConfig.nameFlag_2_CFDD || tb_DIC.name_dataDict == "存放地址" || tb_DIC.name_dataDict == "存放地点"
                        where p.fatherid==0
+                       select p;
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+            return null;
+        }
+
+
+        public int? Get_Default_CATTRTYPE()
+        {
+            var data = from p in DB_C.tb_customAttribute_Type
+                       where p.name == "字符类型"
+                       select p;
+            if (data.Count() > 0)
+            {
+                return data.First().ID;
+            }
+            else
+            {
+                var data2 = from p in DB_C.tb_customAttribute_Type
+                            where p.name != "字典类型"
+                            select p;
+                if (data2.Count() > 0)
+                {
+                    return data2.First().ID;
+                }
+                return null;
+            }
+        }
+
+        public int? Get_Default_MethodDe()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_ZJFS_JIU || tb_DIC.name_dataDict == "折旧方式"
+                       where p.name_para == "不计提折旧"
                        select p;
             foreach (var item in data)
             {
