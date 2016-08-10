@@ -623,8 +623,8 @@ namespace FAMIS.Controllers
 
             var q = from o in db.tb_Asset_inventory
                     join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
-
-                    where o._operator == openid && d.name_para != "已盘点" && o.flag == true 
+                    join u in db.tb_user on o._operator equals  u.ID.ToString()
+                    where u.openid_WX == openid && d.name_para != "已盘点" && o.flag == true 
 
                     orderby o.ID descending
                     select new
