@@ -107,7 +107,7 @@
 
                         $('#lefttree').tree('reload');
                         // Innitial_Right();
-                        $.messager.alert("提示", "保存成功！", "ok");
+                        $.messager.alert("提示", "保存成功！");
                       
                         window.parent.$('#modalwindow').window('close');
 
@@ -155,7 +155,7 @@
                         $('#righttree').tree('reload');
                         //  InnitialAT_Right();
                       
-                        $.messager.alert("提示", "保存成功！", "ok");
+                        $.messager.alert("提示", "保存成功！");
                         window.parent.$('#modalwindow').window('close');
 
 
@@ -192,7 +192,7 @@
                 else
                     var JS_Data = RoleID + "," + s;
 
-               // alert(JS_Data);
+               //alert(JS_Data);
                 $.ajax({
 
                     type: "post",
@@ -204,7 +204,7 @@
 
                         $('#mtree').tree('reload');
                        // InnitialDP_Right();
-                        $.messager.alert("提示", "保存成功！", "ok");
+                        $.messager.alert("提示", "保存成功！");
                         window.parent.$('#modalwindow').window('close');
                     }, error: function (msg) {
                        // alert("Error 3");
