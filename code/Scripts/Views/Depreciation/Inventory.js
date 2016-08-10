@@ -950,8 +950,11 @@ function loadPageTool_Detail(dataRight) {
                     collapsible: false,
                     onClose: function () {
                         AssetState = "";
-                      //  $('#TableList_0_1').datagrid('reload');
-                         $('#TableList_0_2').datagrid('reload');
+                        isQ = false;
+                        EditFlag = false;
+                        flag = 0;
+                        $('#TableList_0_1').datagrid('reload');
+                         //$('#TableList_0_2').datagrid('reload');
                         //    var resultAlert = "成功插入记录！";
                         //    $.messager.show({
                         //        title: '提示',
