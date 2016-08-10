@@ -74,7 +74,8 @@ namespace FAMIS.Controllers
             WX_Search_getPara(code, openid);
            string result=PD_Iterface.WX_Set_PD_Data(PDserial,ViewBag.Asset_Serial,ViewBag.Asset_Amount);
            if (result == "success")
-               Response.Write("<script></script>");
+               Response.Write("<script>alert('success')</script>");
+            
             return View();
         }
         public string SetPD_Asset_To_View(string code)
