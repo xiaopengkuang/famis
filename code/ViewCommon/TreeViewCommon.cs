@@ -15,7 +15,7 @@ namespace FAMIS.ViewCommon
 
         public string GetModule(String  role)
         {
-            StreamWriter sw = new StreamWriter("D:\\ty111.txt");
+            
            
             DataTable dt = createDT();
             string txt = "";
@@ -30,11 +30,11 @@ namespace FAMIS.ViewCommon
                 }
                 if (txt != null)
                 {
-                    sw.WriteLine(txt);
+                     
                     txt = "";
                 }
             }
-            sw.Close();
+           
             string json = GetTreeJsonByTable(dt, "module_id", "module_name", "module_url", "module_fatherid", "0");
             return json;
         }
@@ -199,7 +199,7 @@ namespace FAMIS.ViewCommon
 
 
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
-            SqlDataAdapter sda = new SqlDataAdapter("select ID,name_Asset_Type,father_MenuID_Type,url,orderID from tb_AssetType  order by ID", con);
+            SqlDataAdapter sda = new SqlDataAdapter("select ID,name_Asset_Type,father_MenuID_Type,url,orderID from tb_AssetType where flag='true' order by ID", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
             con.Close();
@@ -249,7 +249,7 @@ namespace FAMIS.ViewCommon
 
         
             SqlConnection con = new SqlConnection(CommonConnecting.connectionstring);
-            SqlDataAdapter sda = new SqlDataAdapter("select ID,name_Department,ID_Father_Department,url,treeLevel from tb_department order by ID", con);
+            SqlDataAdapter sda = new SqlDataAdapter("select ID,name_Department,ID_Father_Department,url,treeLevel from tb_department where effective_Flag='true' order by ID_Father_Department", con);
             DataTable dtt = new DataTable();
             sda.Fill(dtt);
             con.Close();
