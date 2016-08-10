@@ -34,20 +34,38 @@ namespace FAMIS.Helper_Class
         }   
         public DataTable ImportExcelFile(string filePath)
         {
-            XSSFWorkbook hssfworkbook;
+             
+
             #region//初始化信息
             try
             {
                 using (FileStream file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
-                    hssfworkbook = new XSSFWorkbook(file);
+                   if (filePath.IndexOf(".xlsx") > 0) // 2007版本
+                    {
+                          return    GetDTby_XSSF_WorkBook(new XSSFWorkbook(file));
+                   }
+                    else if (filePath.IndexOf(".xls") > 0) // 2003版本
+                   {
+                      return GetDTby_HSSF_WorkBook(new HSSFWorkbook(file));
+                    }
+                    else
+                       return GetDTby_XSSF_WorkBook(new XSSFWorkbook(file));
+                    
                 }
             }
             catch (Exception e)
             {
                 throw e;
             }
-            #endregion
+            
+            return null;
+            #endregion;
+
+        }
+        public DataTable GetDTby_XSSF_WorkBook(XSSFWorkbook excel2007)
+        {
+            XSSFWorkbook hssfworkbook = excel2007;
 
             NPOI.SS.UserModel.ISheet sheet = hssfworkbook.GetSheetAt(0);
             System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
@@ -79,6 +97,43 @@ namespace FAMIS.Helper_Class
                 dt.Rows.Add(dr);
             }
             return dt;
+
+        }
+        public DataTable GetDTby_HSSF_WorkBook(HSSFWorkbook excel2003)
+        {
+            HSSFWorkbook hssfworkbook = excel2003;
+
+            NPOI.SS.UserModel.ISheet sheet = hssfworkbook.GetSheetAt(0);
+            System.Collections.IEnumerator rows = sheet.GetRowEnumerator();
+            DataTable dt = new DataTable();
+            rows.MoveNext();
+            HSSFRow row = (HSSFRow)rows.Current;
+            for (int j = 0; j < (sheet.GetRow(0).LastCellNum); j++)
+            {
+                //dt.Columns.Add(Convert.ToChar(((int)'A') + j).ToString());  
+                //将第一列作为列表头,这里第一列是指带有汉字的表头  
+                dt.Columns.Add(row.GetCell(j).ToString());
+            }
+            while (rows.MoveNext())
+            {
+                row = (HSSFRow)rows.Current;
+                DataRow dr = dt.NewRow();
+                for (int i = 0; i < row.LastCellNum; i++)
+                {
+                    NPOI.SS.UserModel.ICell cell = row.GetCell(i);
+                    if (cell == null)
+                    {
+                        dr[i] = null;
+                    }
+                    else
+                    {
+                        dr[i] = cell.ToString();
+                    }
+                }
+                dt.Rows.Add(dr);
+            }
+            return dt;
+           
         }
         public static DataTable ToDataTable<T>(IEnumerable<T> varlist)
         {
