@@ -439,9 +439,7 @@ namespace FAMIS.Controllers
          [HttpPost]
         public string SetCurrentRow(string Json)//用session记录一下当前用户所编辑的行
         {
-            StreamWriter sw = new StreamWriter("D:\\ddddddj.txt",true);
-            sw.WriteLine(Json);
-            sw.Close();
+           
             Session["CurrentRow"] = Json;
             return "";
         }
@@ -971,19 +969,22 @@ namespace FAMIS.Controllers
             {
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-                    
+                    StreamWriter sw = new StreamWriter("D:\\testtt.txt",true);
+                    sw.WriteLine(dt.Rows[i][j].ToString());
+                    sw.Close();
                     if (j != dt.Columns.Count-1)
                     temp = dt.Rows[i][j].ToString();
                     else
                     {
+
                         bool is_right_uploaded = Upadate_Inventory_Deatails(pd, temp, dt.Rows[i][j].ToString());
                         if (!is_right_uploaded)
                         
                             return false;
                     };
-
+                   
                 } 
-               
+              
             }
 
              return true;
