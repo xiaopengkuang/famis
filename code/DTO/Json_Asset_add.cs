@@ -53,7 +53,7 @@ namespace FAMIS.DTO
 
 
         public int? d_Other_JCZL_add { get; set; }
-        public int? d_Other_ZCDJ_add { get; set; }
+        public double? d_Other_ZCDJ_add { get; set; }
         public int? d_Other_ZCSL_add { get; set; }
         public double? d_Other_ZCJZ_add { get; set; }
 
