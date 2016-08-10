@@ -324,7 +324,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         {
             GetRule model = new GetRule();
 
-            string[] Rightdetail = JSON.Split('o');
+            string[] Rightdetail = JSON.Split(',');
 
             int Roleid = int.Parse(Rightdetail[0]);
             
@@ -340,18 +340,17 @@ namespace FAMIS.Controllers.FAMIS.System_setup
 
             }
             mydb.SaveChanges();
-            if (JSON.Contains('o'))
-            {
+             
 
                 for (int i = 1; i < Rightdetail.Count(); i++)
                 {
-                    string[] name_id = Rightdetail[i].Split(',');
-                    string name = name_id[0];
-                    string id = name_id[1];
+                     
+                   
+                    string id = Rightdetail[i];
                     int Stored_ID = 0;
                     bool mflag = false;
                     IEnumerable<tb_department> department= from f in mydb.tb_department
-                                   where f.ID.ToString() == id where f.effective_Flag==true
+                                   where f.ID.ToString() == id&&f.effective_Flag==true
                                    select f;
                     if (department.Count() > 0)
                     {
@@ -371,7 +370,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     mydb.tb_role_authorization.Add(role_au_tb);
                 }
                 mydb.SaveChanges();
-            }
+           
 
 
 
