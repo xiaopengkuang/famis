@@ -493,12 +493,15 @@ namespace FAMIS.Controllers
         }
 
 
-        [HttpPost]
-        public String WX_Set_PD_Data(string Json) {
+       // [HttpPost]
+        public string WX_Set_PD_Data(string pdserial,string asset_Serial,string num) {
             
-            string serialPD=Json.Split(',')[0];
-            string Asset_Serail = Json.Split(',')[1];
-            int number =int.Parse(Json.Split(',')[2]);
+           // string serialPD=Json.Split(',')[0];
+           // string Asset_Serail = Json.Split(',')[1];
+           // int number =int.Parse(Json.Split(',')[2]);
+            string serialPD = pdserial;
+            string Asset_Serail = asset_Serial;
+            int number = int.Parse(num);
             string pdstate="";
             
 
@@ -610,6 +613,36 @@ namespace FAMIS.Controllers
 
             return json;
         
+        }
+        public String WX_LoadPD(string uid)
+        {
+            String json = "";
+            int temp=0;
+          
+            
+
+            var q = from o in db.tb_Asset_inventory
+                    join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
+
+                    where o._operator == uid && d.name_para != "已盘点" && o.flag == true 
+
+                    orderby o.ID descending
+                    select new
+                    {
+
+                        serial = o.serial_number,
+                        ps = o.ps
+                    };
+            foreach (var p in q)
+            {
+                if (temp != q.Count() - 1)
+                    json += p.serial + "," + p.ps + SystemConfig.NullString_Replace;
+                else
+                    json += p.serial + "," + p.ps;
+            }
+
+            return json;
+
         }
         [HttpPost]
         public string AddDP(string JSdata)//添加盘点单
@@ -969,9 +1002,7 @@ namespace FAMIS.Controllers
             {
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-                    StreamWriter sw = new StreamWriter("D:\\testtt.txt",true);
-                    sw.WriteLine(dt.Rows[i][j].ToString());
-                    sw.Close();
+                   
                     if (j != dt.Columns.Count-1)
                     temp = dt.Rows[i][j].ToString();
                     else
