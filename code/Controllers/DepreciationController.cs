@@ -614,7 +614,7 @@ namespace FAMIS.Controllers
             return json;
         
         }
-        public String WX_LoadPD(string uid)
+        public String WX_LoadPD(string openid)
         {
             String json = "";
             int temp=0;
