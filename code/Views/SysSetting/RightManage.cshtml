@@ -126,21 +126,21 @@
                     //if (s != '') s += ',';
                    
                    
-                        s += fnodes[i].text + "," + fnodes[i].id + "o";
+                        s +=  fnodes[i].id + ",";
                 }
                 for (var i = 0; i < nodes.length; i++) {
 
  
                     if (i != nodes.length - 1)
 
-                        s += nodes[i].text + "," + nodes[i].id + "o";
+                        s +=  nodes[i].id + ",";
                     else
-                        s += nodes[i].text + "," + nodes[i].id;
+                        s +=  nodes[i].id;
                 }
                 if (s == "")
                     var JS_Data = RoleID;
                 else
-                    var JS_Data = RoleID + "o" + s;
+                    var JS_Data = RoleID + "," + s;
               //  alert(JS_Data);
 
                 $.ajax({
@@ -173,24 +173,24 @@
               for (var i = 0; i < fnodes.length; i++) {
                  
                   
-                        s += fnodes[i].text + "," + fnodes[i].id + "o"
+                        s +=  fnodes[i].id + ","
                         
                     
                 }
                 for (var i = 0; i < nodes.length; i++) {
 
 
-                    //   s +=// fnodes[i].id + "," + fnodes[i].text+"o"+nodes[i].text + "," + nodes[i].id;
+                    
                     if (i != nodes.length - 1)
 
-                        s += nodes[i].text + "," + nodes[i].id + "o";
+                        s +=  nodes[i].id + ",";
                     else
-                        s += nodes[i].text + "," + nodes[i].id;
+                        s +=  nodes[i].id;
                 }
                 if (s == "")
                     var JS_Data = RoleID;
                 else
-                    var JS_Data = RoleID + "o" + s;
+                    var JS_Data = RoleID + "," + s;
 
                // alert(JS_Data);
                 $.ajax({
@@ -297,9 +297,7 @@
                         try {
                             for (var i = 0; i <= str.split(",").length; i++) {
 
-                               // if(IsFather(arr[i]))
-                                 //   continue;
-
+                               // 
 
                                 var node = $('#righttree').tree('find', arr[i]);
                                 $('#righttree').tree('check', node.target);
