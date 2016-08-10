@@ -8,14 +8,14 @@ using FAMIS.Models;
 using FAMIS.DTO;
 using System.Web.Script.Serialization;
 using FAMIS.DataConversion;
-
+using FAMIS.Controllers;
 namespace FAMIS.Controllers
 {
     public class WXSearchController : Controller
     {
 
         FAMISDBTBModels DB_C=new FAMISDBTBModels();
-        
+        DepreciationController PD_Iterface = new DepreciationController();
         // GET: WXSearch
         public ActionResult WX_Search(String openid) 
         {
@@ -57,7 +57,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public ActionResult WX_PANDIAN(String code, String openid)
+        public ActionResult WX_PANDIAN(String code, String openid,String PDserial)
         {
             if (openidExist(openid))
             {
@@ -72,6 +72,9 @@ namespace FAMIS.Controllers
             SetPD_Asset_To_View(code);
             SetPDoperator_To_View(openid);
             WX_Search_getPara(code, openid);
+           string result=PD_Iterface.WX_Set_PD_Data(PDserial,ViewBag.Asset_Serial,ViewBag.Asset_Amount);
+           if (result == "success")
+               Response.Write("<script></script>");
             return View();
         }
         public string SetPD_Asset_To_View(string code)
