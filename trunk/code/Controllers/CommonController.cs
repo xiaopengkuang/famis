@@ -1052,7 +1052,278 @@ namespace FAMIS.Controllers
             
         }
 
-       
+
+        /// <summary>
+        /// 根据资产类型名称获得资产ID
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public int? getAssetTypeIDByName(String name)
+        {
+            var data = from p in DB_C.tb_AssetType
+                       where p.flag == true
+                       where p.name_Asset_Type == name
+                       select p;
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 根据资产类型名称获得资产ID
+        /// </summary>
+        /// <returns></returns>
+        public Hashtable hashtable_assetType()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_AssetType
+                       where p.flag == true
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.name_Asset_Type))
+                {
+                    list.Add(item.name_Asset_Type, item.ID);
+                }
+            }
+            return list;
+
+        }
+
+
+        /// <summary>
+        /// 获取计量单位
+        /// </summary>
+        /// <returns></returns>
+        public Hashtable hashtable_measurment()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag==SystemConfig.nameFlag_2_JLDW ||tb_DIC.name_dataDict=="计量单位"
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.name_para))
+                {
+                    list.Add(item.name_para, item.ID);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 获取存放地点
+        /// </summary>
+        /// <returns></returns>
+        public Hashtable hashtable_address()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_CFDD || tb_DIC.name_dataDict == "存放地点"
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.name_para))
+                {
+                    list.Add(item.name_para, item.ID);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 获取增加方式
+        /// </summary>
+        /// <returns></returns>
+        public Hashtable hashtable_methodAdd()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_ZJFS_JIA || tb_DIC.name_dataDict == "增加方式"
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.name_para))
+                {
+                    list.Add(item.name_para, item.ID);
+                }
+            }
+            return list;
+        }
+        public Hashtable hashtable_methodDe()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_ZJFS_JIU || tb_DIC.name_dataDict == "折旧方式"
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.name_para))
+                {
+                    list.Add(item.name_para, item.ID);
+                }
+            }
+            return list;
+        }
+
+        /// <summary>
+        /// 获取部门
+        /// </summary>
+        /// <returns></returns>
+        public Hashtable hashtable_department()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_department
+                       where p.effective_Flag == true
+                       select p;
+            foreach(var item in data)
+            {
+                if (list.ContainsKey(item.name_Department))
+                {
+                    list.Add(item.name_Department, item.ID);
+                }
+            }
+            return list;
+        }
+
+
+        /// <summary>
+        /// 获取用户
+        /// </summary>
+        /// <returns></returns>
+        public Hashtable hashtable_users()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_user
+                       where p.flag == true
+                       where p.true_Name!=null
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.true_Name))
+                {
+                    list.Add(item.true_Name, item.ID);
+                }
+            }
+            return list;
+        }
+
+
+
+        public Hashtable hashtable_supplier()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_supplier
+                       where p.flag == true
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.name_supplier))
+                {
+                    list.Add(item.name_supplier, item.ID);
+                }
+            }
+            return list;
+        }
+
+        public Hashtable hashtable_CAttr()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_customAttribute
+                       where p.flag == true
+                       select p;
+            foreach (var item in data)
+            {
+                if (list.ContainsKey(item.title))
+                {
+                    list.Add(item.title, item.ID);
+                }
+            }
+            return list;
+        }
+
+
+
+        public int? Get_Default_AssetType()
+        {
+            return getAssetTypeIDByName(SystemConfig.Index_AssetAttr_GDZC_name);
+        }
+
+        public int? Get_Default_Department()
+        {
+            var data = from p in DB_C.tb_department
+                       where p.effective_Flag == true
+                       where p.ID_Father_Department == 0
+                       select p;
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+            return null;
+        }
+
+        public int? Get_Default_Measurement()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_JLDW || tb_DIC.name_dataDict == "计量单位"
+                       select p;
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+            return null;
+        }
+
+        public int? Get_Default_MethodAdd()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_ZJFS_JIA || tb_DIC.name_dataDict == "增加方式"
+                       select p;
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+            return null;
+        }
+
+
+        public int? Get_Default_Address()
+        {
+            Hashtable list = new Hashtable();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_CFDD || tb_DIC.name_dataDict == "存放地址" || tb_DIC.name_dataDict == "存放地点"
+                       where p.fatherid==0
+                       select p;
+            foreach (var item in data)
+            {
+                return item.ID;
+            }
+            return null;
+        }
+
+
+
+
+
+
 
     }
 }

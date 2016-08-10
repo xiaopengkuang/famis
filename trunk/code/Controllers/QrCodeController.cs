@@ -41,7 +41,7 @@ namespace FAMIS.Controllers
             {
                 int towidth = 925;
                 int toheight = 295;
-                Font font_text = new Font("黑体",30);
+                Font font_text = new Font("黑体",28);
                 System.Drawing.Image bitmap_back= new System.Drawing.Bitmap(towidth, toheight);
                 //新建一个画板  
                 Graphics g = System.Drawing.Graphics.FromImage(bitmap_back);
@@ -118,6 +118,8 @@ namespace FAMIS.Controllers
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_DW in DB_C.tb_dataDict_para on p.measurement equals tb_DW.ID into  temp_DW
                        from DW in temp_DW.DefaultIfEmpty()
+                       join tb_AD in DB_C.tb_dataDict_para on p.addressCF equals tb_AD.ID into temp_AD
+                       from AD in temp_AD.DefaultIfEmpty()
                        where ean13.code128 == null || rebuilt == true
                        select new { 
                        ID=p.ID,
@@ -125,6 +127,7 @@ namespace FAMIS.Controllers
                        serial_number=p.serial_number,
                        specification=p.specification,
                        department=DP.name_Department==null?"":DP.name_Department,
+                       address=AD.name_para,
                        measurment=DW.name_para==null?"":DW.name_para
                        };
             List<String> createCodeCurrent = new List<String>();
@@ -146,7 +149,7 @@ namespace FAMIS.Controllers
                     if (!System.IO.File.Exists(existFile))
                     {
                         String str_ean13 = code_ex.code128;
-                        String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification+"\r\n使用部门："+item.department+"\r\n计量单位："+item.measurment;
+                        String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification+"\r\n使用部门："+item.department+"\r\n存放地点："+item.address;
                         String filePath_item = CreateQRCodeWithText(str_ean13, str_ean13, info_Asset);
                         if (filePath_item != null)
                         {
@@ -166,7 +169,7 @@ namespace FAMIS.Controllers
                 else
                 {
                     String str_ean13 = createCode128String(createCodeCurrent);
-                    String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification + "\r\n使用部门：" + item.department + "\r\n计量单位：" + item.measurment;
+                    String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification + "\r\n使用部门：" + item.department + "\r\n存放地点：" + item.address;
                     String filePath_item = CreateQRCodeWithText(str_ean13, str_ean13, info_Asset);
                     if (filePath_item != null)
                     {

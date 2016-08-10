@@ -274,11 +274,22 @@ function loadPageTool_Detail(dataRight) {
             height: 50,
             disabled: !dataRight.add_able,
             handler: function () {
+                if (!dataRight.add_able) {
+                    return;
+                }
+                openModelWindow("/Asset/Asset_add", "添加资产");
+            }
+        }, {
+            text: 'Excel导入',
+            iconCls: 'icon-add',
+            height: 50,
+            disabled: !dataRight.add_able,
+            handler: function () {
                 if (!dataRight.add_able)
                 {
                     return;
                 }
-              openModelWindow("/Asset/Asset_add", "添加资产");
+              openModelWindow("/Asset/Asset_addByExcel", "批量添加资产");
             }
         }, {
             text: '编辑',

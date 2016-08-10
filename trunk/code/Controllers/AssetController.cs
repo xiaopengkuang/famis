@@ -20,6 +20,7 @@ using FAMIS.DataConversion;
 using System.IO;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.Checksums;
+using FAMIS.Helper_Class;
 namespace FAMIS.Controllers
 {
     public class AssetController : Controller
@@ -30,6 +31,7 @@ namespace FAMIS.Controllers
         CommonController comController = new CommonController();
         MODEL_TO_JSON MTJ = new MODEL_TO_JSON();
         JSON_TO_MODEL JTM = new JSON_TO_MODEL();
+        DTO_TO_MODEL DTM = new DTO_TO_MODEL();
 
         // GET: Asset
 
@@ -41,6 +43,15 @@ namespace FAMIS.Controllers
        
 
         public ActionResult Asset_add()
+        {
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_add))
+            {
+                return View("Error");
+            }
+            return View();
+        }
+
+        public ActionResult Asset_addByExcel()
         {
             if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_add))
             {
@@ -1725,21 +1736,117 @@ namespace FAMIS.Controllers
                 try {
                     DB_C.tb_Asset_sub_document.Add(newItem);
                     DB_C.SaveChanges();
-                    resultInfo = "<script>alert('上传成功');</script>";
+                    resultInfo = "<script>alert('上传成功!');</script>";
                 }
                 catch (Exception e)
                 {
-                    resultInfo = "<script>alert('save failed')</script>";
+                    resultInfo = "<script>alert('save failed!')</script>";
                 }
-
-
             }
             else {
-                resultInfo = "<script>alert('no file!')</script>";
+                resultInfo = "<script>alert('" + fileSavedPath + "')</script>";
             }
             Response.Write(resultInfo);
 
         }
+
+
+        /// <summary>
+        /// Excel 导入数据
+        /// </summary>
+         [HttpPost]
+         public void Handler_addAssetByExcel()
+         {
+             HttpRequest request = System.Web.HttpContext.Current.Request;
+             HttpFileCollection FileCollect = System.Web.HttpContext.Current.Request.Files;
+             if (FileCollect.Count > 0)
+             {
+                 String fileName =Server.MapPath(SystemConfig.FOLDER_Download_TEMP)+ System.IO.Path.GetFileName(FileCollect[0].FileName);
+                 String filePath=uploadTempFile(FileCollect[0], fileName);
+                 if (System.IO.File.Exists(filePath))
+                 {
+
+                     Excel_Helper excelHelper = new Excel_Helper();
+                     DataTable tb_asset_excel = excelHelper.ImportExcelFile(filePath);
+                     HashSet<String> columns = new HashSet<string>();
+                     foreach (DataColumn dc in tb_asset_excel.Columns)
+                     {
+                         columns.Add(dc.ColumnName);
+
+                     }
+                     //生成空壳数据：不带
+                     DTM.ExcelDTToTB(tb_asset_excel, columns, ColumnListConf.TB_Static_Column);
+                     ////获取序列号
+                     //int numSerial = tb_asset_excel.Rows.Count;
+                     //ArrayList serailNums = comController.getNewSerialNumber(SystemConfig.serialType_ZC, numSerial);
+
+
+                    
+
+
+                     Response.Write("<script>alert('导入条数据：" + tb_asset_excel.Rows.Count + "');</script>");
+
+                 }
+                 else
+                 {
+                     Response.Write("<script>alert('" + filePath + "');</script>");
+                 }
+             }
+         }
+
+
+
+
+
+
+         [HttpPost]
+         public String uploadTempFile(HttpPostedFile file,String FileName)
+         {
+             string infos = "";
+             bool fileOK = false;
+             string fileName, fileExtension;
+             fileName = System.IO.Path.GetFileName(file.FileName);
+             if (fileName != "")
+             {
+                 if (file.ContentLength >= 1024 * 1024 * 8)
+                 {
+                     infos = "上传文件太大，目前仅支持8M以内的图片上传！";
+                 }
+                 else
+                 {
+                     fileExtension = System.IO.Path.GetExtension(fileName).ToLower();
+                     String[] allowedExtensions = { ".xls", ".xlsx"};
+                     for (int i = 0; i < allowedExtensions.Length; i++)
+                     {
+                         if (fileExtension == allowedExtensions[i])
+                         {
+                             fileOK = true;
+                             break;
+                         }
+                     }
+                     if (!fileOK)
+                     {
+                         infos = "不支持上传此类型文件！目前支持的图片格式有：xls|xlsx";
+                     }
+                     else
+                     {
+                         DeleteFiles(Server.MapPath(SystemConfig.FOLDER_Download_TEMP));
+                         if (!Directory.Exists(Server.MapPath(SystemConfig.FOLDER_Download_TEMP)))
+                         {
+                             Directory.CreateDirectory(Server.MapPath(SystemConfig.FOLDER_Download_TEMP));
+                         }
+
+                         file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_Download_TEMP) + fileName);
+                         infos = FileName;
+                     }
+                 }
+             }
+             else
+             {
+                 infos = "没有读取到文件！";
+             }
+             return infos;
+         }
 
 
         /// <summary>
@@ -1780,18 +1887,18 @@ namespace FAMIS.Controllers
                  {
                      DB_C.tb_Asset_sub_picture.Add(newItem);
                      DB_C.SaveChanges();
-                     resultInfo = "<script>alert('上传成功');</script>";
+                     resultInfo = "<script>alert('上传成功!');</script>";
                  }
                  catch (Exception e)
                  {
-                     resultInfo = "<script>alert('save failed')</script>";
+                     resultInfo = "<script>alert('save failed!')</script>";
                  }
 
 
              }
              else
              {
-                 resultInfo = "<script>alert('no file!')</script>";
+                 resultInfo = "<script>alert('" + fileSavedPath + "')</script>";
              }
 
              Response.Write(resultInfo);
@@ -1867,7 +1974,7 @@ namespace FAMIS.Controllers
             {
                 if (file.ContentLength >= 1024 * 1024 * 4)
                 {
-                 infos = "上传文件太大，目前仅支持4M以内的图片上传！";
+                 infos = "上传文件太大，目前仅支持4M以内的文件上传！";
                 }
                 else
                 {
@@ -1883,7 +1990,7 @@ namespace FAMIS.Controllers
                         }
                         if (!fileOK)
                         {
-                            infos = "不支持上传此类型文件！目前支持的图片格式有：jpg|jpeg|gif|bmp|png|icon|doc|docx|pdf|xls|txt|ppt|pptx";
+                            infos = "不支持上传此类型文件！目前支持的文件格式有：jpg|jpeg|gif|bmp|png|icon|doc|docx|pdf|xls|txt|ppt|pptx";
                         }
                         else
                         {
