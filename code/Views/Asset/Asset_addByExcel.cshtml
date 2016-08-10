@@ -8,7 +8,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title></title>
-    
+
     <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
     <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
     <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
@@ -19,17 +19,27 @@
     <script type="text/javascript" src="../../Scripts/Views/Asset/Asset_addByExcel.js"></script>
 </head>
 <body>
-    <iframe name='hidden_frame' id="hidden_frame" style='width:150px; height:50px; display:none;'> </iframe>
-     <table>
-            <tr>
-                <td>Excel数据：</td>
-                <td>
-                    <input type="file" id="subFile" name="subFile"  style="width: 146px;"  />
-                </td>
-            </tr>
-        </table>
-        <div>
-            <a href="#" class="easyui-linkbutton" onclick="submitData()" data-options="iconCls:'icon-add'">提交</a>
-        </div>
+    <iframe name='hidden_frame' id="hidden_frame" style='width: 150px; height: 50px; display: none;'></iframe>
+
+    <table>
+        <tr>
+            <td>批量导入EXCEL模板:</td>
+            <td>
+                <a href="#" class="easyui-linkbutton" onclick="downloadModelEXCEL()" data-options="iconCls:'icon-save'">点击下载</a>
+            </td>
+        </tr>
+        <tr>
+            <td>Excel数据：</td>
+            <td>
+                <input type="file" id="subFile" name="subFile" style="width: 146px;" />
+            </td>
+        </tr>
+    </table>
+    <div>
+        <p>批量添加暂不支持关联字典类型的自定义属性</p>
+    </div>
+    <div>
+        <a href="#" class="easyui-linkbutton" onclick="submitData()" data-options="iconCls:'icon-add'">提交</a>
+    </div>
 </body>
 </html>
