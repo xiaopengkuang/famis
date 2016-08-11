@@ -6,26 +6,35 @@ $(window).resize(function () {
    // alert(win_width);
     $("#TableList_0_1").datagrid('resize', { width: win_width - 220 });
 });
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在折旧，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
 function depreciation() {
-
+   
+   
     $.ajax({
 
         type: "post",
         url: "/Depreciation/Dep_JT",
 
         datatype: "json",//数据类型
-
+        beforeSend:ajaxLoading,
         success: function (result) {
-
-            $('#p').show();
-            start();
+            
+            ajaxLoadEnd();
+            MessShow("折旧完成！");
 
         }, error: function (msg) {
             alert("无资产信息或资产信息有误!");
             return null;
         }
     });
-
+    
 
    
 }
@@ -279,6 +288,8 @@ function LoadInitData_Detail(searchCondtiion) {
             {
                 field: 'Net_residual_rate', title: '净残值率', width: 30,
                 formatter: function (rate) {
+                    if (rate == null)
+                        return "0%";
                     return rate + "%";
 
 
