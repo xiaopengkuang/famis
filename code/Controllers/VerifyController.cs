@@ -46,7 +46,12 @@ namespace FAMIS.Controllers
         {
             return View();
         }
-        
+        public ActionResult WX_Load(string openid)
+        {
+            Response.Write("<script>" + openid + "</script>");
+            return View();
+        }
+
         [HttpPost]
         public ActionResult ExportStu2(string JSdata)
         {
