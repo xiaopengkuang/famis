@@ -391,7 +391,7 @@ namespace FAMIS.Controllers
                   case "PD":
                       {
                           var q = from o in db.tb_Asset_inventory
-                                  where o.ID.ToString() == ID
+                                  where o.ID.ToString() == ID 
                                   select o;
                           foreach (var p in q)
                           {
@@ -405,7 +405,7 @@ namespace FAMIS.Controllers
                           var q = from o in db.tb_user
                                   join r in db.tb_role on o.roleID_User equals r.ID
                                   join d in db.tb_department on o.ID_DepartMent equals d.ID
-                                  where o.ID.ToString() == ID
+                                  where o.ID.ToString() == ID where r.flag==true &&d.effective_Flag==true
                                   select new { 
                                    name=o.name_User,
                                    pwd=o.password_User,
@@ -614,14 +614,13 @@ namespace FAMIS.Controllers
             return json;
         
         }
-        public String WX_LoadPD(string openid)
+        public string  WX_LoadPD(string openid)
         {
-            String json = "";
+            string json = "";
             int temp=0;
-          
-            
+         
 
-            var q = from o in db.tb_Asset_inventory
+           var q = from o in db.tb_Asset_inventory
                     join d in db.tb_dataDict_para on o.state equals d.ID.ToString()
                     join u in db.tb_user on o._operator equals  u.ID.ToString()
                     where u.openid_WX == openid && d.name_para != "已盘点" && o.flag == true 

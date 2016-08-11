@@ -57,7 +57,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public ActionResult WX_PANDIAN(String code, String openid,String PDserial)
+        public ActionResult WX_PANDIAN(String code, String openid)
         {
             if (openidExist(openid))
             {
@@ -72,9 +72,9 @@ namespace FAMIS.Controllers
             SetPD_Asset_To_View(code);
             SetPDoperator_To_View(openid);
             WX_Search_getPara(code, openid);
-           string result=PD_Iterface.WX_Set_PD_Data(PDserial,ViewBag.Asset_Serial,ViewBag.Asset_Amount);
-           if (result == "success")
-               Response.Write("<script>alert('success')</script>");
+           //string result=PD_Iterface.WX_Set_PD_Data(PDserial,ViewBag.Asset_Serial,ViewBag.Asset_Amount);
+         //  if (result == "success")
+              // Response.Write("<script>alert('success')</script>");
             
             return View();
         }
