@@ -18,7 +18,7 @@ namespace FAMIS.ashx
             string callback = context.Request["callback"];
             string openid = context.Request["openid"];
             context.Response.AppendHeader("Access-Control-Allow-Origin", "*");
-            string response = string.Format("\"value1\":\"{"+openid+"}\",\"value2\":\"{1}\"");
+            string response = string.Format("'value1':'1','value2':'1'");
             string call = callback + "({" + response + "})";
             context.Response.Write(call);
         }
