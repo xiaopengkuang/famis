@@ -502,5 +502,28 @@ namespace FAMIS.Controllers
             return result;
         }
 
+
+        public String ProcessCallback(String openid) 
+        {
+            if (Request.QueryString != null)
+            {
+                string jsonpCallback = Request.QueryString["jsonpcallback"];
+
+                var data = from p in DB_C.tb_user
+                           where p.flag == true
+                           select new { 
+                           id=p.ID,
+                           name=p.true_Name
+                           };
+
+                return jsonpCallback + "(" + new JavaScriptSerializer().Serialize(data.ToList()) + ")";
+            }
+            return "error";
+        }
+
+
+
+
+
     }
 }
