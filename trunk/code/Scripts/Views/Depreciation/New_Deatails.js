@@ -2,7 +2,14 @@
 
 //alert("asd");
  
- 
+function ajaxLoading() {
+    $("<div class=\"datagrid-mask\"></div>").css({ display: "block", width: "100%", height: $(window).height() }).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在导入资产明细，请稍候。。。").appendTo("body").css({ display: "block", left: ($(document.body).outerWidth(true) - 190) / 2, top: ($(window).height() - 45) / 2 });
+}
+function ajaxLoadEnd() {
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
 function start() {
 
 
@@ -113,11 +120,11 @@ function Add_Invention_Deatails()
         url: "/AssetDeatails/Get_Serial_Deatails",
 
         datatype: "json",//数据类型
-
+        beforeSend: ajaxLoading,
         success: function (result) {
            
             deatails = searchCondtiion + "o" + result;
-            $.messager.alert("提示", "添加明细成功！", "info");
+          
             $.ajax({
 
                 type: "post",
@@ -126,8 +133,8 @@ function Add_Invention_Deatails()
                 datatype: "json",//数据类型
 
                 success: function (result) {
-
-                   // alert("添加明细成功！");
+                    ajaxLoadEnd();
+                    $.messager.alert("提示", "添加明细成功！", "info");
                    
                     window.parent.$('#modalwindow').window('close');
                     
@@ -270,12 +277,11 @@ function LoadInitData_Detail(searchCondtiion) {
                 datatype: "json",//数据类型
 
                 success: function (result) {
-                    // excel = eval('(' + result + ')');
-                  
+                   
                    
 
                 }, error: function (msg) {
-                    alert("未能传出资产编号的值!");
+                   // alert("未能传出资产编号的值!");
                 }
             });
             Next_Page();

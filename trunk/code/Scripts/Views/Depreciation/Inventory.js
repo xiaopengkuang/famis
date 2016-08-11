@@ -487,7 +487,7 @@ function LoadInitData(searchCondtiion) {
 
                                  }, error: function (msg) {
 
-                                     alert("盘点单索引传递失败！");
+                                    // alert("盘点单索引传递失败！");
                                  }
                              });
                              openModelWindow("/Verify/Edit_Inventory", "修改盘点单");
