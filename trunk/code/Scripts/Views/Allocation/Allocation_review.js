@@ -362,11 +362,32 @@ function cancelData() {
 
 }
 
+//function dateString(date) {
+//    var pa = /.*\((.*)\)/;
+//    var unixtime = date.match(pa)[1].substring(0, 10);
+//    return getTime(unixtime);
+//}
 function dateString(date) {
-    var pa = /.*\((.*)\)/;
-    var unixtime = date.match(pa)[1].substring(0, 10);
-    return getTime(unixtime);
+    try {
+        var NewDtime = new Date(parseInt(date.slice(6, 19)));
+        return formatDate(NewDtime);
+    } catch (e) {
+        return "";
+    }
+
 }
+
+
+function formatDate(dt) {
+    var year = dt.getFullYear();
+    var month = dt.getMonth() + 1;
+    var date = dt.getDate();
+    var hour = dt.getHours();
+    var minute = dt.getMinutes();
+    var second = dt.getSeconds();
+    return year + "-" + month + "-" + date;
+}
+
 
 function getTime(/** timestamp=0 **/) {
     var ts = arguments[0] || 0;

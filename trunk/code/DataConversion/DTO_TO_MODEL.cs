@@ -58,6 +58,9 @@ namespace FAMIS.DataConversion
             ArrayList serailNums = comCtro.getNewSerialNumber(SystemConfig.serialType_ZC, numSerial);
             int counter = 0;
             bool flag=true;
+
+            List<int?> ids_check = new List<int?>();
+
             foreach (DataRow row in dt.Rows)
             {
                 tb_Asset tb = new tb_Asset();
@@ -72,7 +75,8 @@ namespace FAMIS.DataConversion
                     if (columns.Contains(cl))
                     {
                         
-                        String clVlaue=row[cl].ToString();
+                        String clVlaue=row[cl].ToString().Trim();
+                       
                         
                         switch (cl)
                         {
@@ -146,7 +150,13 @@ namespace FAMIS.DataConversion
                                 }
                             }; break;
                             case ColumnListConf.Asset_note: {
-                                tb.note = clVlaue;
+                                if (clVlaue == null || clVlaue == "")
+                                {
+                                    tb.note = "";
+                                }
+                                else {
+                                    tb.note = clVlaue;
+                                }
                             }; break;
                             case ColumnListConf.Asset_YYBH: {
                                 tb.code_OLDSYS = clVlaue; 
@@ -238,12 +248,16 @@ namespace FAMIS.DataConversion
                 {
                     tb.value = tb.unit_price * tb.amount;
                 }
-
+                //if (tb.note == "?")
+                //{
+                //    tb.note = null;
+                //}
 
                 DB_C.tb_Asset.Add(tb);
                 DB_C.SaveChanges();
                 //获取ID
                 int? id_asset = getAssetIDBySerialNum(serilCode);
+                ids_check.Add(id_asset);
                 if (id_asset == null)
                 {
                     continue;
@@ -260,7 +274,7 @@ namespace FAMIS.DataConversion
                     {
                         //添加自定义属性
                         int? defaultCATTYPE = comCtro.Get_Default_CATTRTYPE();
-                        tb_customAttribute newCATTR = CreateCATTR(tb.type_Asset,cl,true,defaultCATTYPE);
+                        tb_customAttribute newCATTR = CreateCATTR(tb.type_Asset,cl,false,defaultCATTYPE);
                         DB_C.tb_customAttribute.Add(newCATTR);
                         DB_C.SaveChanges();
                         //更新表
@@ -289,10 +303,28 @@ namespace FAMIS.DataConversion
                 DB_C.SaveChanges();   
                 counter++;
             }
+            //removeQInfo(ids_check);
             return faildString;
 
         }
 
+
+
+        public void removeQInfo(List<int?> ids)
+        {
+            var data = from p in DB_C.tb_Asset
+                       where ids.Contains(p.ID)
+                       where p.note=="?"
+                       select p;
+            foreach(var item in data)
+            {
+                if (item.note == "?")
+                {
+                    item.note = null;
+                }
+            }
+            DB_C.SaveChanges();
+        }
 
         public tb_customAttribute CreateCATTR(int? assetType,String title,bool nessary,int? Type)
         {
