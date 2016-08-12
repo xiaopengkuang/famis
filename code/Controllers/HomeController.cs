@@ -183,7 +183,7 @@ namespace FAMIS.Controllers
         [HttpPost]
         public String Get_Json_Memu(string JSON)
         {
-            StreamWriter sw = new StreamWriter("D:\\msda.txt");
+             
             string Menu_JSON = "";
             int rid = int.Parse(JSON);
             int indexof_menu_ID = 1;
@@ -234,8 +234,7 @@ namespace FAMIS.Controllers
 
                 indexof_menu_ID++;
             }
-            sw.Write(Menu_JSON);
-            sw.Close();
+          
             return Menu_JSON;
 
 

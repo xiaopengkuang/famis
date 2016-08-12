@@ -9,6 +9,7 @@ using FAMIS.DTO;
 using System.Web.Script.Serialization;
 using FAMIS.DataConversion;
 using FAMIS.Controllers;
+using System.IO;
 namespace FAMIS.Controllers
 {
     public class WXSearchController : Controller
@@ -149,8 +150,6 @@ namespace FAMIS.Controllers
                 ViewBag.dj = data.dj;
                 ViewBag.sl = data.sl;
                 ViewBag.zj = data.zj;
-                ViewBag.ID = data.ID;
-                ViewBag.note = data.note;
             }
 
 
@@ -161,7 +160,6 @@ namespace FAMIS.Controllers
         [HttpGet]
         public ActionResult WX_detail(String code,String openid)
         {
-
             if (openidExist(openid))
             {
                 ViewBag.jump = 1;
@@ -174,10 +172,8 @@ namespace FAMIS.Controllers
             ViewBag.code = code;
             ViewBag.openid = openid;
             Json_WXSearch_detail data = getAssetByBH(code);
-
             if (data != null)
             {
-                ViewBag.ID = data.ID;
                 ViewBag.name = data.name;
                 ViewBag.serialNum = data.serialNum;
                 ViewBag.state = data.state;
@@ -189,7 +185,6 @@ namespace FAMIS.Controllers
                 ViewBag.dj = data.dj;
                 ViewBag.sl = data.sl;
                 ViewBag.zj = data.zj;
-                ViewBag.note = data.note;
             }
 
             HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
@@ -197,27 +192,7 @@ namespace FAMIS.Controllers
         }
 
 
-        public JsonResult PictureToload(int? id)
-        {
-            var data = from p in DB_C.tb_Asset_sub_picture
-                       where p.flag == true
-                       join tb_AS in DB_C.tb_Asset on p.ID_Asset equals tb_AS.ID
-                       where tb_AS.flag == true
-                       where tb_AS.ID == id
-                       select new { 
-                          path=p.path_file
-                       };
-            List<String> files=new List<string> ();
-            foreach (var item in data)
-            {
-                if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory+item.path))
-                {
-                    files.Add(".."+item.path);
-                }
-            }
-            return Json(files, JsonRequestBehavior.AllowGet);
-                            
-        }
+
 
 
 
@@ -364,8 +339,6 @@ namespace FAMIS.Controllers
                      from US in temp_US.DefaultIfEmpty()
                      select new Json_WXSearch_detail
                      {
-                         ID=p.ID,
-                         note=p.note,
                          department=DP.name_Department==null?"暂无部门使用":DP.name_Department,
                          measurement=DW.name_para==null?"无计量单位":DW.name_para,
                          peopleUsing=US.true_Name==null?"暂无使用人":US.true_Name,
@@ -533,25 +506,71 @@ namespace FAMIS.Controllers
 
         public String ProcessCallback(String openid) 
         {
+
+
+
             if (Request.QueryString != null)
             {
                 string jsonpCallback = Request.QueryString["jsonpcallback"];
 
-                var data = from p in DB_C.tb_user
-                           where p.flag == true
-                           select new { 
-                           id=p.ID,
-                           name=p.true_Name
+                var data = from o in DB_C.tb_Asset_inventory
+                           join d in DB_C.tb_dataDict_para on o.state equals d.ID.ToString()
+                           join u in DB_C.tb_user on o._operator equals u.ID.ToString()
+                           where u.openid_WX == openid && d.name_para != "已盘点" && o.flag == true
+
+                           orderby o.ID descending
+                           select new
+                           {
+
+                               id = o.serial_number,
+                               name = o.ps
                            };
 
                 return jsonpCallback + "(" + new JavaScriptSerializer().Serialize(data.ToList()) + ")";
             }
-            return "error";
+            return "error"; 
         }
 
+        public String WX_PDADD(String openid,String PDserial,String code)
+        {
+           
+            if (Request.QueryString != null)
+            {
+                
+                string jsonpCallback = Request.QueryString["jsonpcallback"];
+                ViewBag.openid = openid;
+                ViewBag.code = getSrialNumByCODE(code);
+                
+                WX_Search_getPara(code, openid);
+                Json_WXSearch_detail data = getAssetByBH(code);
+                string result = PD_Iterface.WX_Set_PD_Data(PDserial, data.serialNum, data.sl.ToString());
+              
+                
+                return jsonpCallback+ "(" + new JavaScriptSerializer().Serialize(result) + ")";
+            }
+            return "error";
+            
+        }
+        public String GetAsset_Detail(String code)
+        {
+           
+            if (Request.QueryString != null)
+            {
+                
+                string jsonpCallback = Request.QueryString["jsonpcallback"];
+                 
+                
+               
+                Json_WXSearch_detail data = getAssetByBH(code);
+                
+                
+                return jsonpCallback+ "(" + new JavaScriptSerializer().Serialize(data.name) + ")";
+            }
+            return "error";
+            
+        }
 
-
-
+      
 
     }
 }

@@ -51,7 +51,7 @@ namespace FAMIS.Controllers
             }
         
 
-            return "";
+            return "success!";
         }
         public void UpdateAsset_table(List<String> list)
         {
@@ -403,7 +403,8 @@ namespace FAMIS.Controllers
                   case "YH":
                       {
                           var q = from o in db.tb_user
-                                  join r in db.tb_role on o.roleID_User equals r.ID
+                                  join r in db.tb_role on o.roleID_User equals r.ID  
+
                                   join d in db.tb_department on o.ID_DepartMent equals d.ID
                                   where o.ID.ToString() == ID where r.flag==true &&d.effective_Flag==true
                                   select new { 
@@ -614,6 +615,7 @@ namespace FAMIS.Controllers
             return json;
         
         }
+        [HttpPost]
         public string  WX_LoadPD(string openid)
         {
             string json = "";
@@ -997,6 +999,10 @@ namespace FAMIS.Controllers
            
             string temp = "";
             DataTable dt = excel.ImportExcelFile(path);
+            if (dt == null)
+            {
+                return false;
+            }
              for(int i = 0 ; i < dt.Rows.Count ; i++) 
             {
                 for (int j = 0; j < dt.Columns.Count; j++)
