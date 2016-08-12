@@ -77,10 +77,19 @@ namespace FAMIS.Controllers
                                  group a by new {DP.name_Department} into b
                                  select new Json_Pie_info
                                  {
-                                     name = b.Key.name_Department == null ? "未有使用部门" + ":[" + b.Sum(a => a.amount) + "]" : b.Key.name_Department + ":[" + b.Sum(a => a.amount) + "]",
+                                     name = b.Key.name_Department == null ? "未有使用部门" : b.Key.name_Department,
                                     value=b.Sum(a=>a.amount)
                                  };
-                        return Json(data, JsonRequestBehavior.AllowGet);
+                        data = data.OrderByDescending(a => a.value);
+
+                        List<Json_Pie_info> dataR = new List<Json_Pie_info>();
+                        dataR = data.ToList();
+                        foreach (Json_Pie_info item in dataR)
+                        {
+                            item.name = item.name + ":[" +((Double)item.value).ToString("G") + "]";
+                        }
+
+                        return Json(dataR, JsonRequestBehavior.AllowGet);
                     }
                     else if (cond.groupByInfo == SystemConfig.Index_ValueType_value)
                     {
@@ -90,10 +99,17 @@ namespace FAMIS.Controllers
                                    group a by new { DP.name_Department } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_Department == null ? "未有使用部门" + ":[" + b.Sum(a => a.value) + "]" : b.Key.name_Department + ":[" + b.Sum(a => a.value) + "]",
+                                       name = b.Key.name_Department == null ? "未有使用部门" : b.Key.name_Department ,
                                        value = b.Sum(a => a.value)
                                    };
-                        return Json(data, JsonRequestBehavior.AllowGet);
+                        data = data.OrderByDescending(a => a.value);
+                        List<Json_Pie_info> dataR = new List<Json_Pie_info>();
+                        dataR = data.ToList();
+                        foreach (Json_Pie_info item in dataR)
+                        {
+                            item.name = item.name + ":[" + ((Double)item.value).ToString("G") + "]";
+                        }
+                        return Json(dataR, JsonRequestBehavior.AllowGet);
                     }
                 }; break;
                 case SystemConfig.Index_SearchType_ZCLB: {
@@ -105,10 +121,17 @@ namespace FAMIS.Controllers
                                    group a by new { LB.name_Asset_Type } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别" + ":[" + b.Sum(a => a.amount) + "]" : b.Key.name_Asset_Type + ":[" + b.Sum(a => a.amount) + "]",
+                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别": b.Key.name_Asset_Type ,
                                        value = b.Sum(a => a.amount)
                                    };
-                        return Json(data, JsonRequestBehavior.AllowGet);
+                        data = data.OrderByDescending(a => a.value);
+                        List<Json_Pie_info> dataR = new List<Json_Pie_info>();
+                        dataR = data.ToList();
+                        foreach (Json_Pie_info item in dataR)
+                        {
+                            item.name = item.name + ":[" + ((Double)item.value).ToString("G") + "]";
+                        }
+                        return Json(dataR, JsonRequestBehavior.AllowGet);
                     }
                     else if (cond.groupByInfo == SystemConfig.Index_ValueType_value)
                     {
@@ -118,10 +141,18 @@ namespace FAMIS.Controllers
                                    group a by new { LB.name_Asset_Type } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别" + ":[" + b.Sum(a => a.value) + "]" : b.Key.name_Asset_Type + ":[" + b.Sum(a => a.value) + "]",
+                                       name = b.Key.name_Asset_Type == null ? "未分配资产类别" : b.Key.name_Asset_Type ,
                                        value = b.Sum(a => a.value)
                                    };
-                        return Json(data, JsonRequestBehavior.AllowGet);
+
+                        data = data.OrderByDescending(a => a.value);
+                        List<Json_Pie_info> dataR = new List<Json_Pie_info>();
+                        dataR = data.ToList();
+                        foreach (Json_Pie_info item in dataR)
+                        {
+                            item.name = item.name + ":[" + ((Double)item.value).ToString("G") + "]";
+                        }
+                        return Json(dataR, JsonRequestBehavior.AllowGet);
                     }
 
                 }; break;
@@ -134,10 +165,17 @@ namespace FAMIS.Controllers
                                    group a by new { ST.name_para } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_para == null ? "非系统规定状态" + ":[" + b.Sum(a => a.amount) + "]" : b.Key.name_para + ":[" + b.Sum(a => a.amount) + "]",
+                                       name = b.Key.name_para == null ? "非系统规定状态" : b.Key.name_para ,
                                        value = b.Sum(a => a.amount)
                                    };
-                        return Json(data, JsonRequestBehavior.AllowGet);
+                        data = data.OrderByDescending(a => a.value);
+                        List<Json_Pie_info> dataR = new List<Json_Pie_info>();
+                        dataR = data.ToList();
+                        foreach (Json_Pie_info item in dataR)
+                        {
+                            item.name = item.name + ":[" + ((Double)item.value).ToString("G") + "]";
+                        }
+                        return Json(dataR, JsonRequestBehavior.AllowGet);
                     }
                     else if (cond.groupByInfo == SystemConfig.Index_ValueType_value)
                     {
@@ -147,10 +185,17 @@ namespace FAMIS.Controllers
                                    group a by new { ST.name_para } into b
                                    select new Json_Pie_info
                                    {
-                                       name = b.Key.name_para == null ? "非系统规定状态" + ":[" + b.Sum(a => a.value) + "]" : b.Key.name_para + ":[" + b.Sum(a => a.value) + "]",
+                                       name = b.Key.name_para == null ? "非系统规定状态": b.Key.name_para,
                                        value = b.Sum(a => a.value)
                                    };
-                        return Json(data, JsonRequestBehavior.AllowGet);
+                        data = data.OrderByDescending(a => a.value);
+                        List<Json_Pie_info> dataR = new List<Json_Pie_info>();
+                        dataR = data.ToList();
+                        foreach (Json_Pie_info item in dataR)
+                        {
+                            item.name = item.name + ":[" + ((Double)item.value).ToString("G") + "]";
+                        }
+                        return Json(dataR, JsonRequestBehavior.AllowGet);
                     }
                 }; break;
                 default: ; break;

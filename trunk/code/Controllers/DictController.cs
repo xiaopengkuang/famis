@@ -361,6 +361,23 @@ namespace FAMIS.Controllers
         }
 
         [HttpPost]
+        public String load_Type_AssetType()
+        {
+            var data = from p in DB_C.tb_AssetType
+                       where p.flag == true
+                       where p.father_MenuID_Type == 0
+                       select new dto_DataDict_para
+                       {
+                           ID = p.ID,
+                           name_para = p.name_Asset_Type
+                       };
+            JavaScriptSerializer jss = new JavaScriptSerializer();
+            String json = jss.Serialize(data).ToString().Replace("\\", "");
+            return json;
+
+        }
+
+        [HttpPost]
         public JsonResult load_User_add(int? id_DP)
         {
             if (id_DP != null)

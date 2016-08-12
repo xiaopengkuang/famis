@@ -43,7 +43,7 @@ function loadData()
         },
         legend: {
             orient: 'vertical',
-            left: 'left',
+            left: 'right',
             data: []
         },
         series: [
@@ -76,15 +76,26 @@ function loadData()
         beforeSend: ajaxLoading,
         success: function (result) {
             ajaxLoadEnd()
+            var legendFlag = true;
             var name = new Array();
+            //if (result.length > 20)
+            //{
+            //    legendFlag = false;
+            //}
+
             for (var i = 0; i < result.length; i++) {
-                name.push(result[i].name);
+                if (i >50) {
+                    name.push(false);
+                } else {
+                    name.push(result[i].name);
+
+                }
             }
             mycharts.setOption({ //加载数据<a href="/catalog.asp?tags=ECharts%E6%95%99%E7%A8%8B" class="keylink" title=" 图表" target="_blank">图表</a>
                 title: {
                     text: '资产数据一览',
                     subtext: '',
-                    x: 'center'
+                    x: 'left'
                 },
                 legend: { data: name },
                 series: [{
