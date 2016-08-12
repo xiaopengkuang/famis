@@ -448,10 +448,10 @@ function load_ZJFS_add() {
         },
         onLoadSuccess: function () {
             var data = $('#ZJFS_add').combobox('getData');
-            if (data.length > 0)
-            {
-                $('#ZJFS_add').combobox('select', data[0].ID);
-            }
+            //if (data.length > 0)
+            //{
+            //    $('#ZJFS_add').combobox('select', data[0].ID);
+            //}
         }
     });
 }
@@ -560,7 +560,7 @@ function submitForm() {
     //d_CFDD_add = d_CFDD_add == "" ? -1 : parseInt(d_CFDD_add);
 
 
-    var d_ZJFS_add = $("#ZJFS_add").combobox("getValue") == "" ? -1 : parseInt($("#ZJFS_add").combobox("getValue"));
+    var d_ZJFS_add = $("#ZJFS_add").combobox("getValue") == "" ? "" : parseInt($("#ZJFS_add").combobox("getValue"));
 
     var d_GYS_add = $("#GYS_add").combogrid("getValue");
 

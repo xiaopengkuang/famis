@@ -968,6 +968,11 @@ namespace FAMIS.Controllers
 
         public bool exist_codeOldSys(String codeOldSys,int? id)
         {
+            if (codeOldSys==null||codeOldSys == "")
+            {
+                return false;
+            }
+
             var data = from p in DB_C.tb_Asset
                        where p.flag == true
                        where p.code_OLDSYS == codeOldSys

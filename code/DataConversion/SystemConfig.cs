@@ -218,6 +218,14 @@ namespace FAMIS.DataConversion
         //==============Index Pie====================//
 
 
+
+
+        //==============================================//
+        public static String ORDER_TYPE_DEPARTMENT = "department";
+        public static String ORDER_TYPE_ASSETTYPE = "assetType"; 
+        //==============================================//
+
+
        
 
 
