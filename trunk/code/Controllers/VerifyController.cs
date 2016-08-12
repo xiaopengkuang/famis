@@ -362,6 +362,16 @@ namespace FAMIS.Controllers
             return Excel_Exp(data_table, SystemConfig.Export_File_Name_PDDetails);
         }
         [HttpPost]
+        public ActionResult Exportmodel()
+        {
+            string imgPath = "/" + "测试1.xls";
+            //通过此对象获取文件名
+            string AbsolutePath = Server.MapPath(imgPath);
+           DataTable data= excel.ImportExcelFile(AbsolutePath);
+
+           return Excel_Exp(data, "");
+        }
+        [HttpPost]
         public ActionResult ExportStuPDMain(string JSON)
         {
             JSON = JSON.Trim();
@@ -376,9 +386,7 @@ namespace FAMIS.Controllers
             {
                 if (temp[i] != SystemConfig.NullString_Replace)
                 {
-                    StreamWriter sw = new StreamWriter("D:\\zhuadaole.txt",true);
-                    sw.WriteLine(temp[i] + " = " + SystemConfig.NullString_Replace);
-                    sw.Close();
+                   
                     Effective_Query_Num++;
                 }
             }
