@@ -1,4 +1,5 @@
-﻿function signOut()
+﻿
+function signOut()
 {
     $.ajax({
         url: "/User/LoginOut",

@@ -1,6 +1,10 @@
 ﻿var _menus;
 var url = document.URL
-var rid=2;
+var rid = 2;
+ 
+ function goback(){
+     window.location.href="Login?Invalidate";
+ }
 $.ajax({
 
     type: "post",
@@ -8,8 +12,11 @@ $.ajax({
     datatype: "string",//数据类型
 
     success: function (rid) {
-       
-        
+        if (rid == "Invalidate") {
+          
+
+            goback();
+        }
         $.ajax({
 
             type: "post",
@@ -36,19 +43,7 @@ $.ajax({
 
                                 menulist += '<li><div ><a ref="' + o.menuid + '" href="#" rel="' + o.url + '" ><span class="icon ' + o.icon + '" >&nbsp;</span><span class="nav">' + o.menuname + '</span></a></div> ';
                             }
-                            /*if (o.child && o.child.length > 0) {
-                                //li.find('div').addClass('icon-arrow');
-                                alert("哪来的child?");
-                                menulist += '<ul class="third_ul">';
-                                $.each(o.child, function (k, p) {
-                                    if (p.menuid != "") {
-            
-                                        menulist += '<li><div><a ref="' + p.menuid + '" href="#" rel="' + p.url + '" ><span class="icon ' + p.icon + '" >&nbsp;</span><span class="nav">' + p.menuname + '</span></a></div> </li>'
-                                    }
-            
-                                });
-                                menulist += '</ul>';
-                            }*/
+                          
 
                             menulist += '</li>';
                         })
@@ -102,11 +97,11 @@ $.ajax({
                 tabClose();
                 tabCloseEven();
             }, error: function (msg) {
-                alert("Error");
+                goback();
             }
         });
     }, error: function (msg) {
-        alert("Error");
+        //alert("Error2");
     }
 });
 
