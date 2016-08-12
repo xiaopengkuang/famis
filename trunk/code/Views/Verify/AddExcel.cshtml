@@ -73,12 +73,12 @@
                         alert("Error");
                     }
                 });
-                $.messager.alert("提示", "您导入的文件内容有误，请核对您的 ‘盘点数量’ 是否存在非法字符，如字母等！", "error");
+                $.messager.alert("提示", "您导入的文件内容有误，请核对您的 ‘盘点数量’ 是否存在非法字符，如字母等！另外，您可以参考' 模板excel。'", "error");
 
             }
             if (result == "FileUploaded")
             {
-                $.messager.alert("提示", "盘点数据导入成功！", "error");
+                $.messager.alert("提示", "盘点数据导入成功！", "ok");
                  
                 $.ajax({
 

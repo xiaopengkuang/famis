@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/default/easyui.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="../../LIB/jquery-easyui-1.3.2/demo/demo.css" />
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="../../LIB/jquery-easyui-1.3.2/jquery.easyui.min.js"></script>
+ 
+     
+    
+    <script type="text/javascript">
+        var openid = "oJ8kuxP5ub_2KmkX7dpP61ia_Arg";//你那里获得opendid
+        $(function () {
+          
+            // 第一种方式
+            $.ajax({
+
+                type: "get",
+
+                url: "http://10.10.65.6:8080/WXSearch/ProcessCallback", // 这个就是不同于当前域的一个URL地址，这里单纯演示，所以同域
+                //url: "/WXSearch/ProcessCallback",
+                dataType: "jsonp",
+
+                jsonp: "jsonpcallback",  // 指定回调函数，这里名字可以为其他任意你喜欢的，比如callback，不过必须与下一行的GET参数一致
+
+                data: "openid="+openid+"&jsonpcallback=?", // jsonpcallback与上面的jsonp值一致
+
+                success: function (json) {
+
+                   // alert(json.length);
+                    var sel = document.getElementById("pdserial");
+                    for (var i = 0; i < json.length; i++) {
+                        var op = document.createElement("option");
+                        op.value = json[i].id;
+                        op.text = json[i].name;
+                        sel.appendChild(op);
+                    }
+                  
+                }
+            });
+            
+           
+        });
+        function Confirm()
+        {
+             
+            var t = document.getElementById("pdserial")
+            var pdserial = t.options[t.selectedIndex].value;
+           
+            var code = "5179975325183";//测试
+
+            
+
+            $.ajax({
+
+                type: "get",
+
+                url: "http://10.10.65.6:8080/WXSearch/GetAsset_Detail", 
+
+                dataType: "jsonp",
+
+                jsonp: "jsonpcallback",   
+
+                data: "code=" + code + "&jsonpcallback=?", 
+
+                success: function (json) {
+
+                    $.messager.confirm("确定要盘点该资产吗？", "资产名称： "+json, function (r) {
+                        if (r)
+                            PDData_Set(openid, pdserial, code)
+
+
+
+                    });
+                }
+                });
+           
+           //扫描并获得code
+           
+        }
+        function PDData_Set(openid,pdserial,code)
+        {
+        
+            $.ajax({
+
+                type: "get",
+
+                url: "http://10.10.65.6:8080/WXSearch/WX_PDADD", // 这个就是不同于当前域的一个URL地址，这里单纯演示，所以同域
+
+                dataType: "jsonp",
+
+                jsonp: "jsonpcallback",  // 指定回调函数，这里名字可以为其他任意你喜欢的，比如callback，不过必须与下一行的GET参数一致
+
+                data: "openid=" + openid + "&PDserial="+pdserial+"&code="+code+"&jsonpcallback=?", // jsonpcallback与上面的jsonp值一致
+
+                success: function (json) {
+                    //alert(json);
+                    if (json == "success")
+                        $.messager.alert("提示", "盘点成功！", "ok");
+                    if (json == "deny")
+                        $.messager.alert("提示", "不可重复盘点该资产，或者当前扫描资产未录入系统，请核对!", "error");
+                   
+                   
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+   
+    <table>
+        <tr>
+            <td>
+                <span style="color:red">请选择盘点单： </span>
+            <td>
+                <select class="easyui-combobox" id="pdserial" style="width:150px;"></select>
+            </td>
+        </tr>
+    
+        <tr>
+            <td style="align-content:center">
+                <a href="#" class="easyui-linkbutton" data-options="menu:'#mm1',iconCls:'icon-search'" id="yh_yl" onclick="Confirm()">扫描并盘点</a> 
+                </td>
+            </tr>
+        </table>
+</body>
+</html>
