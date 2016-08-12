@@ -161,8 +161,6 @@ namespace FAMIS.Controllers
         [HttpGet]
         public ActionResult WX_detail(String code,String openid)
         {
-            openid = "oJ8kuxBfb7HCx4-VzfDAqS0o00sE";
-            code = "6923277752415";
 
             if (openidExist(openid))
             {
