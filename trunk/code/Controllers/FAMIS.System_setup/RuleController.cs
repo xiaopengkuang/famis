@@ -419,7 +419,9 @@ namespace FAMIS.Controllers.FAMIS.System_setup
             string tname = JSdata.Split(',')[3];
             string isText =JSdata.Split(',')[6];
             var validate = from o in mydb.tb_user
-                           where o.name_User == name&&o.flag==true&&o.ID!=id
+                           join d in mydb.tb_department on o.ID_DepartMent equals d.ID
+                           join r in mydb.tb_role on o.roleID_User equals r.ID
+                           where o.name_User == name&&o.flag==true&&o.ID!=id&&d.effective_Flag==true&&r.flag==true
                            select o;
             foreach(var v in validate)
             {

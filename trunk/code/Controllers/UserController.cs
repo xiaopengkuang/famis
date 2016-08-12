@@ -101,14 +101,24 @@ namespace FAMIS.Controllers
             ViewBag.LoginUser = "";
             Session.RemoveAll();
             //jump
-            Response.Redirect("/User/Login");
+            Response.Redirect("Login");
         }
-       [HttpPost]
+        [HttpPost]
         public string GetRole()
         {
-            return commonConversion.getRoleID().ToString();
+            int? roleid = commonConversion.getRoleID();
+            var q = from o in DBConnecting.tb_role
+                    where roleid == o.ID && o.flag == true
+                    select o;
+            if (q.Count() > 0)
+                return roleid.ToString();
+            else
+            {
+                Session.Remove("Logined");
+               
+                return "Invalidate";
+            }
         }
-
         public String signOut()
         {
             ViewBag.LoginUser = "";

@@ -198,7 +198,11 @@ namespace FAMIS.Controllers
             foreach (var p in q)
             {
                 if (!(bool)p.isSuperUser)
+                {
                     p.flag = false;
+                    p.name = p.name + "(已删除)";
+
+                }
                 else
                     return "Supper";
             }
@@ -215,7 +219,9 @@ namespace FAMIS.Controllers
                     select o;
             foreach (var p in q)
             {
-               
+                p.true_Name = p.true_Name + "(已删除)";
+
+                   
                     p.flag = false;
            
             }
@@ -239,7 +245,7 @@ namespace FAMIS.Controllers
                 var data = from u in db.tb_user
                         join r in db.tb_role on u.roleID_User equals r.ID
                         join d in db.tb_department on u.ID_DepartMent equals d.ID
-                        where u.flag==true
+                        where u.flag==true&&r.flag==true&&d.effective_Flag==true
                         select new  
                         {
                              ID=u.ID,
