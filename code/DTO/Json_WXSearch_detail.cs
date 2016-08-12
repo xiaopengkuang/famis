@@ -7,6 +7,8 @@ namespace FAMIS.DTO
 {
     public class Json_WXSearch_detail
     {
+
+        public int? ID { get; set; }
         public String name { get; set; }
         public String serialNum { get; set; }
         public String state { get; set; }

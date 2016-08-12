@@ -27,6 +27,30 @@
             }
           
 
+            //加载相应的图片
+            $.ajax({
+                url: "/WXSearch/PictureToload",
+                type: 'POST',
+                data: {
+                    "id": "@ViewBag.ID"
+                },
+                success: function (data) {
+                    if (data)
+                    {
+                        var pidiv=document.getElementById("PICDIV");
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            var picI = document.createElement("img");
+                            picI.width = "300";
+                            picI.height = "300";
+                            picI.src = data[i];
+                            pidiv.appendChild(picI);
+
+                        }
+                    }
+                }
+            });
+
         })
     </script>
      <style type="text/css">
@@ -85,6 +109,9 @@
                 <td>@ViewBag.note</td>
             </tr>
         </table>
+        <div id="PICDIV">
+
+        </div>
     </div>
     <div id="reminderDIV" style="display:none" class="font_Phone">
         <p>请先绑定系统用户！</p>
