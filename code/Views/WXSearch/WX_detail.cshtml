@@ -35,18 +35,21 @@
                     "id": "@ViewBag.ID"
                 },
                 success: function (data) {
-                    if (data)
-                    {
-                        var pidiv=document.getElementById("PICDIV");
-                        for (var i = 0; i < data.length; i++)
-                        {
+                    if (data) {
+                        var pidiv = document.getElementById("PICDIV");
+                        for (var i = 0; i < data.length; i++) {
                             var picI = document.createElement("img");
-                            picI.width = "300";
-                            picI.height = "300";
+                            picI.width = document.body.clientWidth - 50;
+                            picI.height = document.body.clientWidth - 50;
                             picI.src = data[i];
                             pidiv.appendChild(picI);
 
                         }
+                        if (data.length == 0) {
+                            document.getElementById("info_PP").style.display = "block";
+                        }
+                    } else {
+                        document.getElementById("info_PP").style.display = "block";
                     }
                 }
             });
@@ -109,8 +112,12 @@
                 <td>@ViewBag.note</td>
             </tr>
         </table>
-        <div id="PICDIV">
+        <p><span style="color:red">附属图片：</span></p>
+        <div id="PICDIV" style="text-align:center">
 
+        </div>
+        <div id="info_PP"  style="display:none">
+        <p><span style="color:red">暂无图片！</span></p>
         </div>
     </div>
     <div id="reminderDIV" style="display:none" class="font_Phone">
