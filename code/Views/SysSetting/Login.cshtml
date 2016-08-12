@@ -50,6 +50,15 @@
 
     </div>
     <!-- 代码 结束 -->
-
+    <script>
+        try {
+            var validation = document.URL.split('?')[1];
+            alert(validation);
+            if (validation == "Invalidate")
+                $.messager.alert("提示", "该用户所属角色已删除，不可使用，请联系超级管理员。", "error");
+        }
+        catch (e)
+        { };
+    </script>
 </body>
 </html>
