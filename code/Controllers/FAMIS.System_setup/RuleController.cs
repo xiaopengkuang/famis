@@ -263,9 +263,10 @@ namespace FAMIS.Controllers.FAMIS.System_setup
         {
             GetRule model = new GetRule();
 
-            string[] Rightdetail = JSON.Split('o');
+            string[] Rightdetail = JSON.Split(',');
 
             int Roleid = int.Parse(Rightdetail[0]);
+            
 
 
             /* var q = from p in mydb.tb_Menu
@@ -282,18 +283,16 @@ namespace FAMIS.Controllers.FAMIS.System_setup
 
             }
             mydb.SaveChanges();
-            if (JSON.Contains('o'))
-            {
-
+          
                 for (int i = 1; i < Rightdetail.Count(); i++)
                 {
-                    string[] name_id = Rightdetail[i].Split(',');
-                    string name = name_id[0];
-                    string id = name_id[1];
+                    string name_id = Rightdetail[i];
+                   
+                    string id = name_id;
                     int Stored_ID = 0;
                     bool mflag = false;
                     IEnumerable<tb_AssetType> Assettype = from f in mydb.tb_AssetType
-                                                            where f.ID.ToString() == id
+                                                            where f.ID.ToString() == id && f.flag==true
                                                             select f;
                     if (Assettype.Count() > 0)
                     {
@@ -313,7 +312,7 @@ namespace FAMIS.Controllers.FAMIS.System_setup
                     mydb.tb_role_authorization.Add(role_au_tb);
                 }
                 mydb.SaveChanges();
-            }
+         
 
 
 
