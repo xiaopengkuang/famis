@@ -858,9 +858,10 @@ namespace FAMIS.Controllers
         }
         public bool Upadate_Inventory_Deatails(string serial, string para1, string para2)
         {
-            if ((!para1.Contains("ZC") && !para2.Contains("ZC")) || (!para1.Contains("YH") && !para2.Contains("YH")))
+            if(!para1.Contains("ZC") && !para2.Contains("ZC")) 
 
                 return false;
+            
             string searailnum=Session["Deatails_Searial"].ToString();
             string Asset_serial = "";
             string inventory_amount = "";
