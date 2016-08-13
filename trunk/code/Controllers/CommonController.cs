@@ -47,6 +47,17 @@ namespace FAMIS.Controllers
             ViewBag.menuName = menuName;
             return View();
         }
+        public String GetUserID()
+        { 
+        
+            int ? rid= commonConversion.getRoleID();
+            if (Session["userID"] == null)
+                return "nulluser";
+            else if (commonConversion.isSuperUser(rid))
+                return "supper";
+            else
+                return Session["userID"].ToString(); 
+        }
 
 
         public ActionResult Error()

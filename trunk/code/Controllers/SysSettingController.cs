@@ -197,6 +197,11 @@ namespace FAMIS.Controllers
                     select o;
             foreach (var p in q)
             {
+                var u = from o in db.tb_user
+                        where o.roleID_User == p.ID
+                        select o;
+                foreach (var t in u)
+                    t.flag = false;
                 if (!(bool)p.isSuperUser)
                 {
                     p.flag = false;
@@ -206,6 +211,7 @@ namespace FAMIS.Controllers
                 else
                     return "Supper";
             }
+
             db.SaveChanges();
             return "OK";
         }

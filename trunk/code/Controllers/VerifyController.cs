@@ -364,12 +364,12 @@ namespace FAMIS.Controllers
         [HttpPost]
         public ActionResult Exportmodel()
         {
-            string imgPath = "/" + "测试1.xls";
+            string imgPath = "/" + "模板Excel.xlsx";
             //通过此对象获取文件名
             string AbsolutePath = Server.MapPath(imgPath);
            DataTable data= excel.ImportExcelFile(AbsolutePath);
 
-           return Excel_Exp(data, "");
+           return Excel_Exp(data, "模板Excel");
         }
         [HttpPost]
         public ActionResult ExportStuPDMain(string JSON)
