@@ -258,7 +258,9 @@ function cancelData() {
     $.messager.confirm('警告', '数据还未保存，您确定要取消吗?', function (r) {
         if (r) {
             try {
-                window.parent.$('#tabs').tabs('close', '添加领用单');
+                window.close();
+
+                window.parent.$('#tabs').tabs('close', "添加归还单");
             } catch (e) { }
         }
     });

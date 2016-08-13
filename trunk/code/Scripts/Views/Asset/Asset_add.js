@@ -788,6 +788,7 @@ function checkFormat() {
 function cancelFormSubmit()
 {
     try {
+
         parent.$("#modalwindow").window("close");
     } catch (e) {
 
