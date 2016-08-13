@@ -56,7 +56,8 @@ namespace FAMIS.Helper_Class
             }
             catch (Exception e)
             {
-                throw e;
+                File.Delete(filePath);
+                return null;
             }
             
             return null;
