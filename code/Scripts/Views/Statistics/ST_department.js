@@ -43,8 +43,13 @@ $(function () {
     jsonSC = {
         "orderType": "department"
     }
+    $(window).resize(function () {
+        var win_width = $(window).width();
+        $("#datagrid_ST_DE").datagrid('resize', { width: win_width - 20 });
+    });
     searchCondition = JSON.stringify(jsonSC);
     loadInitData();
+  
 });
 function loadInitData()
 {

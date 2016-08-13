@@ -1,5 +1,5 @@
 ﻿//==============================================================================//
-var searchCondition = null;
+var searchCondition = "";
 
 //==============================================================================//
 
@@ -21,7 +21,8 @@ function updateData()
         "searchTypeInfo": searchTypeInfo,
         "AttrOfAsset": AttrOfAsset,
         "groupByInfo": groupByInfo
-    }
+    };
+    //searchCondition = jQuery.stringify(dataInfo)
     searchCondition = JSON.stringify(dataInfo);
     loadData();
 }
@@ -29,6 +30,8 @@ function updateData()
 function loadData()
 {
     var dom = document.getElementById('contanis');
+    dom.style.width = document.body.clientWidth;
+   
     var mycharts = echarts.init(dom);
    
     option = {
@@ -50,8 +53,8 @@ function loadData()
             {
                 name: '资产数据',
                 type: 'pie',
-                radius: '55%',
-                center: ['50%', '60%'],
+                radius: '50%',
+                center: ['30%', '50%'],
                 data: [],
                 itemStyle: {
                     emphasis: {
