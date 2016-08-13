@@ -98,7 +98,20 @@ namespace FAMIS.Controllers
                 Response.Redirect("/User/ErrorLogin");
             }
         }
-
+        public String GetUser_ID()
+        {
+            if (Session["userID"] == null)
+                return "nulluser";
+            else
+                return Session["userID"].ToString();
+        }
+        public String GetUser_name()
+        {
+            if (Session["userName"] == null)
+                return "nulluser";
+            else
+                return Session["userName"].ToString();
+        }
         public void LoginOut()
         {
             //清除登录信息再跳转
