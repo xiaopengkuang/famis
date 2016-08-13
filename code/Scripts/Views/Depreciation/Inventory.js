@@ -19,29 +19,53 @@ var isQ = "false";
 var ss = document.getElementById("operator")
 var operflag = false;
 var EditFlag = false;
-/*$.ajax({
-
-    type: "post",
-    url: "/Common/GetUserID",
+ 
     
-    datatype: "json",//数据类型
 
-    success: function (result) {
-        if (result == "supper") {
-            alert(result);
-            ss.disabled = false;
+function SetUID() {
+    $.ajax({
+
+        type: "post",
+        url: "/User/GetUser_ID",
+
+        datatype: "test",//数据类型
+
+        success: function (uid) {
+            $.ajax({
+
+                type: "post",
+                url: "/Common/IsSuper",
+
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                    if (result == "supper") {
+                      
+                        
+                        LoadInitData(searchCondtiion);
+                    }
+
+                    else {
+                        // alert(uid);
+                      
+                        searchCondtiion = "o,o,o,o," + uid;
+                        LoadInitData(searchCondtiion);
+                    }
+
+                }, error: function (msg) {
+
+                    alert("Error2");
+                }
+            });
+          
+
+        }, error: function (msg) {
+
+            alert("Error1");
         }
-        else if (result = "nulluser")
-            alert("No user");
-        else
-            searchCondtiion = "o,o,o,o," + result;
-            
-
-    }, error: function (msg) {
-
-        alert("Error");
-    }
-});*/
+    });
+}
+ 
 try {
     window.onbeforeunload = onclose;
 }
@@ -149,14 +173,16 @@ function printExcel(obj) {
 }
 $(document).ready(function () {
     //多选框
+   
     GetIsQueried();
     extend();
     loadOperator();
     //loadmyOperator();
     loadPDState();
 
-
-    LoadInitData(searchCondtiion);
+    //alert(searchCondtiion);
+    SetUID();
+   
 
 
 
@@ -210,22 +236,96 @@ function extend() {
 
 }
 function loadOperator() {
+    $.ajax({
 
-    $("#operator").combobox({
-        valueField: 'true_Name',
-        method: 'POST',
-        textField: 'true_Name',
-        url: '/Rule/GetUserID',
-        onLoadSuccess: function () {
-            var data = $('#operator').combobox('getData');
-            $("#operator").combobox('select', "全部");
+        type: "post",
+        url: "/User/GetUser_ID",
 
-        },
-        onSelect: function (rec) {
-            $('#operator').combobox('setValue', rec.ID);
-            $('#operator').combobox('setText', rec.true_Name);
+        datatype: "test",//数据类型
+
+        success: function (uid) {
+            $.ajax({
+
+                type: "post",
+                url: "/Common/IsSuper",
+
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                    if (result == "supper") {
+                        $("#operator").combobox({
+                            valueField: 'true_Name',
+                            method: 'POST',
+                            textField: 'true_Name',
+                            url: '/Rule/GetUserID',
+                            onLoadSuccess: function () {
+                                var data = $('#operator').combobox('getData');
+                                $("#operator").combobox('select', "全部");
+
+                            },
+                            onSelect: function (rec) {
+                                $('#operator').combobox('setValue', rec.ID);
+                                $('#operator').combobox('setText', rec.true_Name);
+                            }
+                        });
+                    }
+
+                    else {
+                        GetName();
+                    }
+
+                }, error: function (msg) {
+
+                    alert("Error2");
+                }
+            });
+
+
+        }, error: function (msg) {
+
+            alert("Error1");
         }
     });
+
+   
+
+}
+function GetName() {
+    $.ajax({
+
+        type: "post",
+        url: "/User/GetUser_ID",
+
+        datatype: "test",//数据类型
+
+        success: function (uid) {
+
+            $.ajax({
+
+                type: "post",
+                url: "/User/GetUser_name",
+
+                datatype: "test",//数据类型
+
+                success: function (uname) {
+
+                    $('#operator').combobox('setValue', uid);
+                    $('#operator').combobox('setText', uname);
+
+                }, error: function (msg) {
+
+                    alert("Error3");
+                }
+            });
+
+
+        }, error: function (msg) {
+
+            alert("Error1");
+        }
+    });
+
+
 
 }
 function loadPDState() {
@@ -253,35 +353,103 @@ function loadPDState() {
 function LoadBYSearchCondition() {
 
     // alert("kais!");
-    searial = "o";
-    begin = "o";
-    end = "o";
-    state = "o";
-    person = "o";
-    if ($('#Invention_Code').val() != "")
-        searial = $('#Invention_Code').val();
+    $.ajax({
 
-    if ($('#BeginDate_SC').datebox('getValue') != "")
-        begin = $('#BeginDate_SC').datebox('getValue');
+        type: "post",
+        url: "/User/GetUser_ID",
+
+        datatype: "test",//数据类型
+
+        success: function (uid) {
+            $.ajax({
+
+                type: "post",
+                url: "/Common/IsSuper",
+
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                    if (result == "supper") {
+                       
+                        searial = "o";
+                        begin = "o";
+                        end = "o";
+                        state = "o";
+
+                        person = "o";
+                        if ($('#Invention_Code').val() != "")
+                            searial = $('#Invention_Code').val();
+
+                        if ($('#BeginDate_SC').datebox('getValue') != "")
+                            begin = $('#BeginDate_SC').datebox('getValue');
 
 
-    if ($('#EndDate_SC').datebox('getValue') != "")
-        end = $('#EndDate_SC').datebox('getValue');
+                        if ($('#EndDate_SC').datebox('getValue') != "")
+                            end = $('#EndDate_SC').datebox('getValue');
 
-    if ($('#Invention_State').combobox('getValue') != "全部")
-        state = $('#Invention_State').combobox('getValue');
+                        if ($('#Invention_State').combobox('getValue') != "全部")
+                            state = $('#Invention_State').combobox('getValue');
+                        if ($('#operator').combobox('getValue') != "全部")
+                            person = $('#operator').combobox('getValue');
 
-    if ($('#operator').combobox('getValue') != "全部")
-        person = $('#operator').combobox('getValue');
 
 
-    searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
-    SetIsQueryied("true");
-    // alert(searchCondtiion);
+                        searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
+                        SetIsQueryied("true");
+                        // alert(searchCondtiion);
 
-    flag = 1;
-    LoadInitData(searchCondtiion);
+                        flag = 1;
+                        LoadInitData(searchCondtiion);
+                       
 
+
+                    }
+
+                    else {
+                        searial = "o";
+                        begin = "o";
+                        end = "o";
+                        state = "o";
+
+                        person =uid;
+                        if ($('#Invention_Code').val() != "")
+                            searial = $('#Invention_Code').val();
+
+                        if ($('#BeginDate_SC').datebox('getValue') != "")
+                            begin = $('#BeginDate_SC').datebox('getValue');
+
+
+                        if ($('#EndDate_SC').datebox('getValue') != "")
+                            end = $('#EndDate_SC').datebox('getValue');
+
+                        if ($('#Invention_State').combobox('getValue') != "全部")
+                            state = $('#Invention_State').combobox('getValue');
+
+                        
+
+
+                        searchCondtiion = searial + "," + begin + "," + end + "," + state + "," + person;
+                        SetIsQueryied("true");
+                        // alert(searchCondtiion);
+
+                        flag = 1;
+                        LoadInitData(searchCondtiion);
+
+                    }
+
+                }, error: function (msg) {
+
+                    alert("Error2");
+                }
+            });
+
+
+        }, error: function (msg) {
+
+            alert("Error1");
+        }
+    });
+   
 }
 
 function LoadInitData(searchCondtiion) {
