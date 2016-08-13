@@ -51,9 +51,14 @@ namespace FAMIS.Controllers
             String password = fc["password"];
 
             //验证处理
-            String sql_check = UserActionSQL.getSQL_Select_User_CheckCount(userName, password);
-            SQLRunner runner = new SQLRunner();
-            int count = runner.runSelectSQL_Counter(sql_check, "total");
+            var data = from p in DBConnecting.tb_user
+                       where p.name_User == userName && p.password_User == password
+                       where p.flag == true
+                       join tb_DP in DBConnecting.tb_department on p.ID_DepartMent equals tb_DP.ID
+                       where tb_DP.effective_Flag == true
+                       select p;
+
+            int count = data.Count();
             
 
 
