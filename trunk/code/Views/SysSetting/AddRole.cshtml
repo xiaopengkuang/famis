@@ -44,7 +44,6 @@
                 success: function (result) {
                     if (result == "name_exist") {
                         $.messager.alert("提示", "该角色名已存在！", "error");
-                        cancelForm();
                         
                         return;
                     }
