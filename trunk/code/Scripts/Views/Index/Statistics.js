@@ -5,6 +5,7 @@ var searchCondition = "";
 
 $(function () {
     updateData();
+
 });
 
 
@@ -16,7 +17,6 @@ function updateData()
     var searchTypeInfo = $('#searchType option:selected').val();//选中的值
     var AttrOfAsset = $('#Attr_asset option:selected').val();//选中的值
     var groupByInfo = $("input[name='value_Type']:checked").val();
-    //alert(searchTypeInfo+":"+AttrOfAsset+":"+groupByInfo);
     var dataInfo = {
         "searchTypeInfo": searchTypeInfo,
         "AttrOfAsset": AttrOfAsset,
@@ -27,47 +27,14 @@ function updateData()
     loadData();
 }
 
+
+
 function loadData()
 {
+    $("#contanis").empty();
     var dom = document.getElementById('contanis');
-    dom.style.width = document.body.clientWidth;
-   
+    dom.style.width = document.body.clientWidth-40;
     var mycharts = echarts.init(dom);
-   
-    option = {
-        title: {
-            text: '资产数据一览',
-            subtext: '有效数据',
-            x: 'center'
-        },
-        tooltip: {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-            orient: 'vertical',
-            left: 'right',
-            data: []
-        },
-        series: [
-            {
-                name: '资产数据',
-                type: 'pie',
-                radius: '50%',
-                center: ['30%', '50%'],
-                data: [],
-                itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)' //这怎么会有个.5呢？ 看来还是要看看H5哟
-                    }
-                }
-            }
-        ]
-    };
-    mycharts.setOption(option);
-
     // 接下来就是 ajax部分了 动态加载数据才是根本的 数据固定多没意思
 
     $.ajax({
@@ -94,17 +61,51 @@ function loadData()
 
                 }
             }
-            mycharts.setOption({ //加载数据<a href="/catalog.asp?tags=ECharts%E6%95%99%E7%A8%8B" class="keylink" title=" 图表" target="_blank">图表</a>
+            option = {
                 title: {
                     text: '资产数据一览',
                     subtext: '',
                     x: 'left'
                 },
-                legend: { data: name },
-                series: [{
-                    data: result
-                }]
-            });
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'right',
+                    data: name
+                },
+                series: [
+                    {
+                        name: '资产数据',
+                        type: 'pie',
+                        radius: '50%',
+                        center: ['30%', '50%'],
+                        data: result,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)' //这怎么会有个.5呢？ 看来还是要看看H5哟
+                            }
+                        }
+                    }
+                ]
+            };
+            mycharts.setOption(option);
+
+            //mycharts.setOption({ //加载数据<a href="/catalog.asp?tags=ECharts%E6%95%99%E7%A8%8B" class="keylink" title=" 图表" target="_blank">图表</a>
+            //    title: {
+            //        text: '资产数据一览',
+            //        subtext: '',
+            //        x: 'left'
+            //    },
+            //    legend: { data: name },
+            //    series: [{
+            //        data: result
+            //    }]
+            //});
 
         },
         error: function (errorMsg) {

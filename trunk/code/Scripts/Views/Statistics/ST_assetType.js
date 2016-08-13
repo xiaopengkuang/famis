@@ -44,10 +44,10 @@ $(function () {
         "orderType": "assetType"
     }
     searchCondition = JSON.stringify(jsonSC);
-    $(window).resize(function () {
-        var win_width = $(window).width();
-        $("#datagrid_ST_DE").datagrid('resize', { width: win_width - 20 });
-    });
+    //$(window).resize(function () {
+    //    var win_width = $(window).width();
+    //    $("#datagrid_ST_DE").datagrid('resize', { width: win_width - 20 });
+    //});
     loadInitData();
 
   
