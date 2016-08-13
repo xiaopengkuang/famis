@@ -45,7 +45,7 @@ function load_SC_Tree() {
         animate: true,
         checkbox: false,
         method: 'POST', //默认是post,不允许对静态文件访问
-        url: '/Dict/loadSearchTreeByRole?treeType=BorrowSearch',
+        url: '/Dict/loadSearchTreeByRole?treeType=BorrowSearch&allde=all',
         onClick: function (node) {
             var tree = $(this).tree;
             //选中的节点是否为叶子节点,如果不是叶子节点,清除选中  
@@ -75,7 +75,7 @@ function LoadInitData_Detail() {
     }
 
     $('#tableList_borrow').datagrid({
-        url: '/Common/LoadAsset_ByState?stateID=2&searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
+        url: '/Common/LoadAsset_ByState?isall=all&stateID=2&searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
         //url: '/Common/LoadAsset_Collor?searchCondtiion=' + searchCondtiion + "&selectedIDs=" + _list,
         method: 'POST', //默认是post,不允许对静态文件访问
         width: 'auto',

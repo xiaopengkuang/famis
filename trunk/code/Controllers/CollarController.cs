@@ -168,7 +168,7 @@ namespace FAMIS.Controllers
             
             //获取该用户可以去审核的单据
             var data_1= from p in DB_C.tb_ReviewReminding
-                        where p.flag==true && p.Type_Review_TB==SystemConfig.TB_Collar
+                        where p.Type_Review_TB==SystemConfig.TB_Collar
                         where p.ID_reviewer==userID
                         join tb_Collar in DB_C.tb_Asset_collar on p.ID_review_TB equals tb_Collar.ID
                         join tb_DP in DB_C.tb_department on tb_Collar.department_collar equals tb_DP.ID into temp_DP
@@ -181,7 +181,7 @@ namespace FAMIS.Controllers
                         from US in temp_US.DefaultIfEmpty()
                         join tb_USC in DB_C.tb_user on tb_Collar.user_collar equals tb_USC.ID into temp_USC
                         from USC in temp_USC.DefaultIfEmpty()
-                        where ST.Name==SystemConfig.state_List_DSH
+                        //where ST.Name==SystemConfig.state_List_DSH
                         orderby tb_Collar.date_Operated descending
                         select new Json_collar
                         {

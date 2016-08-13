@@ -99,14 +99,14 @@ namespace FAMIS.Controllers
             bool isAllUser = commonConversion.isSuperUser(roleID);
             //获取该用户可以去审核的单据
             var data_1 = from p in DB_C.tb_ReviewReminding
-                         where p.flag == true && p.Type_Review_TB == SystemConfig.TB_Borrow
+                         where  p.Type_Review_TB == SystemConfig.TB_Borrow
                          where p.ID_reviewer == userID
                          join tb_rt in DB_C.tb_Asset_Return on p.ID_review_TB equals tb_rt.ID
                          join tb_ST in DB_C.tb_State_List on tb_rt.state_list equals tb_ST.id into temp_ST
                          from ST in temp_ST.DefaultIfEmpty()
                          join tb_UOP in DB_C.tb_user on tb_rt.userID_operated equals tb_UOP.ID into temp_UOP
                          from UOP in temp_UOP.DefaultIfEmpty()
-                         where ST.Name == SystemConfig.state_List_DSH
+                         //where ST.Name == SystemConfig.state_List_DSH
                          orderby tb_rt.date_operated descending
                          select new Json_Return
                          {
@@ -194,7 +194,7 @@ namespace FAMIS.Controllers
         /// <param name="selectedIDs"></param>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult LoadAsset_ByState(int? page, int? rows, String searchCondtiion, String selectedIDs, String stateID)
+        public JsonResult LoadAsset_ByState(int? page, int? rows, String searchCondtiion, String selectedIDs, String stateID, String isall)
         {
             List<int?> ids_Gone = commonConversion.StringToIntList(selectedIDs);
             JavaScriptSerializer serializer = new JavaScriptSerializer();
@@ -211,27 +211,33 @@ namespace FAMIS.Controllers
             List<String> stateName_asset = commonConversion.getAssetStateNameListByJsonID(ids_state);
             if (dto_condition == null)
             {
-                return loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset);
+                return loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset,isall);
             }
             else
             {
                 switch (dto_condition.typeFlag)
                 {
-                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset); break;
-                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset); break;
+                    case SystemConfig.searchPart_letf: json = loadAssetByDataDict(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset, isall); break;
+                    case SystemConfig.searchPart_right: json = loadAssetByLikeCondition(page, rows, role, dto_condition, idsRight_assetType, idsRight_deparment, ids_Gone, stateName_asset, isall); break;
                     default: ; break;
                 }
             }
             return json;
         }
 
-        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset)
+        public JsonResult loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset, String isall)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
+            bool allF = false;
+            if (isall != null&&isall.ToLower()=="all")
+            {
+                allF = true;
+            }
+
             var data_ORG = from p in DB_C.tb_Asset
                            where p.flag == true
-                           where p.department_Using == null || idsRight_deparment.Contains(p.department_Using)
+                           where p.department_Using == null || idsRight_deparment.Contains(p.department_Using) || allF==true
                            where idsRight_assetType.Contains(p.type_Asset)
                            where !selectedIDs.Contains(p.ID)
                            join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
@@ -376,19 +382,27 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset)
+        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_assetType, List<int?> idsRight_deparment, List<int?> selectedIDs, List<String> stateName_asset, String isall)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
+            bool allF = false;
+            if (isall != null && isall.ToLower() == "all")
+            {
+                allF = true;
+            }
+
             var data_ORG = from p in DB_C.tb_Asset
                            where p.flag == true
-                           where p.department_Using == null || idsRight_deparment.Contains(p.department_Using)
+                           where p.department_Using == null || idsRight_deparment.Contains(p.department_Using) ||allF==true
                            where idsRight_assetType.Contains(p.type_Asset)
                            where !selectedIDs.Contains(p.ID)
                            join tb_ST in DB_C.tb_dataDict_para on p.state_asset equals tb_ST.ID into temp_ST
                            from ST in temp_ST.DefaultIfEmpty()
                            where stateName_asset.Contains(ST.name_para)
                            select p;
+        
+
             if (data_ORG == null)
             {
                 return NULL_dataGrid();

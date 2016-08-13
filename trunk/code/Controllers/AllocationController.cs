@@ -179,7 +179,7 @@ namespace FAMIS.Controllers
 
             //获取该用户可以去审核的单据
             var data_1= from p in DB_C.tb_ReviewReminding
-                        where p.flag==true && p.Type_Review_TB==SystemConfig.TB_Allocation
+                        where  p.Type_Review_TB==SystemConfig.TB_Allocation
                         where p.ID_reviewer==userID
                         join tb_allocation in DB_C.tb_Asset_allocation on p.ID_review_TB equals tb_allocation.ID
                         join tb_DP in DB_C.tb_department on tb_allocation.department_allocation equals tb_DP.ID into temp_DP
@@ -192,7 +192,7 @@ namespace FAMIS.Controllers
                         from US in temp_US.DefaultIfEmpty()
                         join tb_USC in DB_C.tb_user on tb_allocation.user_allocation equals tb_USC.ID into temp_USC
                         from USC in temp_USC.DefaultIfEmpty()
-                        where ST.Name==SystemConfig.state_List_DSH
+                        //where ST.Name==SystemConfig.state_List_DSH
                         orderby tb_allocation.date_Operated descending
                         select new Json_allocation
                         {

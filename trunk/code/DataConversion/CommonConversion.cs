@@ -156,22 +156,23 @@ namespace FAMIS.DataConversion
             
             HttpSessionState session = HttpContext.Current.Session;
             int? roleID=null;
-            //先读取Session  判断Session是否存在
-            if(session["userRole"]!=null)
-            {
-                 roleID = int.Parse(session["userRole"].ToString());
-            }
-
+            ////先读取Session  判断Session是否存在
+            //if(session["userRole"]!=null)
+            //{
+            //     roleID = int.Parse(session["userRole"].ToString());
+            //}
+            int? userID=getUSERID();
             //校对数据库
-            var data =from p in DB_C.tb_role
+            var data =from p in DB_C.tb_user
                       where p.flag==true
-                      where p.ID==roleID
+                      where p.ID==userID
+                      join tb_RO in DB_C.tb_role on p.roleID_User equals tb_RO.ID
+                      where p.flag==true
                       select p;
-            if(data.Count()<1)
+            foreach(var item in data)
             {
-                roleID=null;
+                return item.roleID_User;
             }
-
             return roleID;
         }
 

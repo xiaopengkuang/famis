@@ -459,14 +459,14 @@ namespace FAMIS.Controllers
 
 
          [HttpPost]
-        public String load_SZBM(string RoleID)
+        public String load_SZBM(string RoleID,string isall)
         {
 
              if(RoleID==null)
-                 return GenerateTree_Department(0);
+                 return GenerateTree_Department(0,isall);
             int rid = int.Parse(RoleID);
-             
-            return GenerateTree_Department(rid);
+
+            return GenerateTree_Department(rid, isall);
         }
 
         [HttpPost]
@@ -507,7 +507,7 @@ namespace FAMIS.Controllers
              return TreeListToString(data.ToList());
          }
          [HttpPost]
-         public String loadSearchTreeByRole(String treeType)
+         public String loadSearchTreeByRole(String treeType, String allde)
          {
              //获取用户权限
              int? roleID = commonConversion.getRoleID();
@@ -516,7 +516,7 @@ namespace FAMIS.Controllers
                  return "{}";
              }
              List<dto_TreeNode> tree = new List<dto_TreeNode>();
-             tree = getTreeSearchNodes(roleID,treeType);
+             tree = getTreeSearchNodes(roleID,treeType,allde);
              return TreeListToString(tree);
          }
 
@@ -762,7 +762,7 @@ namespace FAMIS.Controllers
              }
          }
 
-         public List<dto_TreeNode> getTreeSearchNodes(int? roleID,String treeType)
+         public List<dto_TreeNode> getTreeSearchNodes(int? roleID, String treeType, String allde)
          {
              var idList = from p in DB_C.tb_dataDict
                         where p.active_flag == true
@@ -845,7 +845,7 @@ namespace FAMIS.Controllers
                      List<dto_TreeNode> tmp = new List<dto_TreeNode>();
                      switch(item.tb_Ref){
                          case SystemConfig.treeTB_deparment: {
-                             tmp = getSZBMNodes(fathernode, roleID);
+                             tmp = getSZBMNodes(fathernode, roleID, allde);
                          }; break;
                          case SystemConfig.treeTB_AssetType:
                          {
@@ -940,16 +940,20 @@ namespace FAMIS.Controllers
         /// <param name="fathernode"></param>
         /// <param name="roleID"></param>
         /// <returns></returns>
-         public List<dto_TreeNode> getSZBMNodes(dto_TreeNode fathernode,int? roleID)
+         public List<dto_TreeNode> getSZBMNodes(dto_TreeNode fathernode,int? roleID,String allDe)
          {
 
              //获取部门权限ID_List
              List<int?> ids = commonConversion.getids_departmentByRole(roleID);
-
+             bool allDF = false;
+             if (allDe != null && allDe.ToLower() == "all")
+             {
+                 allDF = true;
+             }
 
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
-                        where ids.Contains(p.ID)
+                        where ids.Contains(p.ID) ||allDF==true
                         select new dto_TreeNode {
                             id =(int)(fathernode.id+p.ID),
                             nameText=p.name_Department,
@@ -2139,9 +2143,10 @@ namespace FAMIS.Controllers
 
 
        
-         public String GenerateTree_Department(int? rid)
+         public String GenerateTree_Department(int? rid,String isall)
          {
              List<int?> ids_de;
+
              if (!result_tree_department.Equals(""))
              {
                  Thread.Sleep(1000);
@@ -2160,11 +2165,17 @@ namespace FAMIS.Controllers
 
              }
 
+             bool isallDe = false;
+             if (isall!=null&&isall.ToLower() == "all")
+             {
+                 isallDe = true;
+             }
+
              result_tree_department.Clear();
              sb_tree_department.Clear();
              var data = from p in DB_C.tb_department
                         where p.effective_Flag == true
-                        where ids_de.Contains(p.ID)
+                        where ids_de.Contains(p.ID) ||isallDe==true
                         select new dto_TreeNode { 
                         id=(int)p.ID,
                         fatherID=(int)p.ID_Father_Department,
