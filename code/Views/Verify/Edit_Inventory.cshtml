@@ -21,25 +21,60 @@
     
     function setdata(arr)
     {
-         
-        $("#operator_add").combobox({
-            valueField: 'ID',
-            method: 'POST',
-            textField: 'true_Name',
-            url: '/Rule/GetUserID',
-            onLoadSuccess: function () {
-                var data = $('#operator_add').combobox('getData');
-                for (var i = 0; i < data.length; i++)
-                    if (data[i].ID == arr[3])
-                        $("#operator_add").combobox('select', data[i].ID);
+        $.ajax({
+
+            type: "post",
+            url: "/User/GetUser_ID",
+
+            datatype: "test",//数据类型
+
+            success: function (uid) {
+                $.ajax({
+
+                    type: "post",
+                    url: "/Common/IsSuper",
+
+                    datatype: "json",//数据类型
+
+                    success: function (result) {
+                        if (result == "supper") {
+                            $("#operator_add").combobox({
+                                valueField: 'ID',
+                                method: 'POST',
+                                textField: 'true_Name',
+                                url: '/Rule/GetUserID',
+                                onLoadSuccess: function () {
+                                    var data = $('#operator_add').combobox('getData');
+                                    for (var i = 0; i < data.length; i++)
+                                        if (data[i].ID == arr[3])
+                                            $("#operator_add").combobox('select', data[i].ID);
 
 
-            },
-            onSelect: function (rec) {
-                $('#operator_add').combobox('setValue', rec.ID);
-                $('#operator_add').combobox('setText', rec.true_Name);
+                                },
+                                onSelect: function (rec) {
+                                    $('#operator_add').combobox('setValue', rec.ID);
+                                    $('#operator_add').combobox('setText', rec.true_Name);
+                                }
+                            });
+                        }
+
+                        else {
+                            GetName();
+                        }
+
+                    }, error: function (msg) {
+
+                        alert("Error2");
+                    }
+                });
+
+
+            }, error: function (msg) {
+
+                alert("Error1");
             }
         });
+        
          
         $('#LBMC').val(arr[0]);
          
@@ -49,6 +84,44 @@
 
 
         $('#ps').val(arr[4]);
+    }
+    function GetName() {
+        $.ajax({
+
+            type: "post",
+            url: "/User/GetUser_ID",
+
+            datatype: "test",//数据类型
+
+            success: function (uid) {
+
+                $.ajax({
+
+                    type: "post",
+                    url: "/User/GetUser_name",
+
+                    datatype: "test",//数据类型
+
+                    success: function (uname) {
+
+                        $('#operator_add').combobox('setValue', uid);
+                        $('#operator_add').combobox('setText', uname);
+
+                    }, error: function (msg) {
+
+                        alert("Error3");
+                    }
+                });
+
+
+            }, error: function (msg) {
+
+                alert("Error1");
+            }
+        });
+
+
+
     }
     function fmt(date) {
         try {
