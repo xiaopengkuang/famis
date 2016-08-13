@@ -773,7 +773,7 @@ function LoadInitData(searchCondtiion) {
                             datatype: "json",//数据类型
 
                             success: function (result) {
-                                 alert(result);
+                                 //alert(result);
                                 $('#TableList_0_1').datagrid('selectRow', result);
 
                             }, error: function (msg) {
