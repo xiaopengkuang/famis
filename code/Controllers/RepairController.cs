@@ -135,7 +135,7 @@ namespace FAMIS.Controllers
             bool isAllUser = commonConversion.isSuperUser(roleID);
 
               var data_1= from p in DB_C.tb_ReviewReminding
-                        where p.flag==true && p.Type_Review_TB==SystemConfig.TB_Repair
+                        where p.Type_Review_TB==SystemConfig.TB_Repair
                         where p.ID_reviewer==userID
                         join tb_rep in DB_C.tb_Asset_Repair on p.ID_review_TB equals tb_rep.ID
                           join tb_ST in DB_C.tb_State_List on tb_rep.state_list equals tb_ST.id into temp_ST
@@ -148,7 +148,7 @@ namespace FAMIS.Controllers
                         from UAT in temp_UAT.DefaultIfEmpty()
                           join tb_UCT in DB_C.tb_user on tb_rep.userID_create equals tb_UCT.ID into temp_UCT
                         from UCT in temp_UCT.DefaultIfEmpty()
-                        where ST.Name==SystemConfig.state_List_DSH
+                        //where ST.Name==SystemConfig.state_List_DSH
                           orderby tb_rep.date_create descending
                         select new Json_repair
                         {

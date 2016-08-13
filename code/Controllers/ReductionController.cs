@@ -101,7 +101,7 @@ namespace FAMIS.Controllers
 
             //获取该用户可以去审核的单据
             var data_1 = from p in DB_C.tb_ReviewReminding
-                         where p.flag == true && p.Type_Review_TB == SystemConfig.TB_Reduction
+                         where p.Type_Review_TB == SystemConfig.TB_Reduction
                          where p.ID_reviewer == userID
                          join tb_red in DB_C.tb_Asset_Reduction on p.ID_review_TB equals tb_red.ID
                          join tb_UAP in DB_C.tb_user on tb_red.userID_apply equals tb_UAP.ID into temp_UAP
@@ -114,7 +114,7 @@ namespace FAMIS.Controllers
                          from ST in temp_ST.DefaultIfEmpty()
                          join tb_UOP in DB_C.tb_user on tb_red.userID_operate equals tb_UOP.ID into temp_UOP
                          from UOP in temp_UOP.DefaultIfEmpty()
-                         where ST.Name==SystemConfig.state_List_DSH
+                         //where ST.Name==SystemConfig.state_List_DSH
                          orderby tb_red.date_Operated descending
                          select new Json_reduction
                          {

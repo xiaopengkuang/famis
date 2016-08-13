@@ -16,6 +16,7 @@ $.ajax({
           
 
             goback();
+            return;
         }
         $.ajax({
 

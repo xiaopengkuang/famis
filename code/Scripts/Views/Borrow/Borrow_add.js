@@ -58,7 +58,7 @@ function load_DateReturn_add() {
 function load_Department(ID_department_INPUT,ID_User_INP) {
     $('#' + ID_department_INPUT).combotree
      ({
-         url: '/Dict/load_SZBM',
+         url: '/Dict/load_SZBM?isall=all',
          valueField: 'id',
          textField: 'nameText',
          required: true,

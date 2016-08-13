@@ -118,7 +118,7 @@ namespace FAMIS.Controllers
             bool isAllUser = commonConversion.isSuperUser(roleID);
             //获取该用户可以去审核的单据
             var data_1 = from p in DB_C.tb_ReviewReminding
-                         where p.flag == true && p.Type_Review_TB == SystemConfig.TB_Borrow
+                         where p.Type_Review_TB == SystemConfig.TB_Borrow
                          where p.ID_reviewer == userID
                          join tb_bor in DB_C.tb_Asset_Borrow on p.ID_review_TB equals tb_bor.ID
                          join tb_UB in DB_C.tb_user on tb_bor.userID_borrow equals tb_UB.ID into temp_UB
@@ -129,7 +129,7 @@ namespace FAMIS.Controllers
                          from ST in temp_ST.DefaultIfEmpty()
                          join tb_UOP in DB_C.tb_user on tb_bor.userID_operated equals tb_UOP.ID into temp_UOP
                          from UOP in temp_UOP.DefaultIfEmpty()
-                         where ST.Name == SystemConfig.state_List_DSH
+                         //where ST.Name == SystemConfig.state_List_DSH
                          orderby tb_bor.date_operated descending
                          select new Json_borrow
                          {
