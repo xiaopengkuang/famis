@@ -16,7 +16,32 @@ var CurrentRow = "3";
 var flag = "0";
 var sysamount = 0;
 var isQ = "false";
+var ss = document.getElementById("operator")
+var operflag = false;
 var EditFlag = false;
+/*$.ajax({
+
+    type: "post",
+    url: "/Common/GetUserID",
+    
+    datatype: "json",//数据类型
+
+    success: function (result) {
+        if (result == "supper") {
+            alert(result);
+            ss.disabled = false;
+        }
+        else if (result = "nulluser")
+            alert("No user");
+        else
+            searchCondtiion = "o,o,o,o," + result;
+            
+
+    }, error: function (msg) {
+
+        alert("Error");
+    }
+});*/
 try {
     window.onbeforeunload = onclose;
 }
@@ -748,12 +773,12 @@ function LoadInitData(searchCondtiion) {
                             datatype: "json",//数据类型
 
                             success: function (result) {
-                                 //alert(result);
+                                 alert(result);
                                 $('#TableList_0_1').datagrid('selectRow', result);
 
                             }, error: function (msg) {
 
-                                alert("盘点单索引传递失败！");
+                              //  alert("盘点单索引传递失败！");
                             }
                         });
 
@@ -986,8 +1011,9 @@ function loadPageTool_Detail(dataRight) {
                      $.messager.alert("提示", "盘点明细为空！", "error");
                      return;
                  }
-
-
+                 isQ = false;
+                 flag = 0;
+                  EditFlag = false;
 
                  if (AssetState == "未盘点")
 
