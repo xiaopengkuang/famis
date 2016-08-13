@@ -1,5 +1,5 @@
 ﻿$(function () {
-
+    load_SZBM_add();
 });
 
 
@@ -18,22 +18,35 @@ function dataBind(bmbh) {
             if (data != null) {
                 $("#BMBH").val(data[0].bmbh);
                 $("#BMMC").val(data[0].bmmc);
-
-
                 if (data[0].sjbm == null || data[0].sjbm == "") {
-
-                    $("#SJBM").combobox("setValue", 0);
-                    $("#SJBM").combobox("setText", "");
+                    //$("#SJBM").combobox("setValue", 0);
+                    //$("#SJBM").combobox("setText", "");
                 } else {
-                    $("#SJBM").combobox("setValue", data[0].sjbm);
-                    $("#SJBM").combobox("setText", data[0].sjbm_Name);
+                    $("#SJBM").combotree("setValue", data[0].sjbm);
+                    $("#SJBM").combotree("setText", data[0].sjbm_Name);
                 }
-
-
 
             }
         }
     });
+}
+
+function load_SZBM_add() {
+    $('#SJBM').combotree
+    ({
+        url: '/Dict/load_SZBM',
+        valueField: 'id',
+        textField: 'nameText',
+        required: true,
+        method: 'POST',
+        editable: false,
+        //选择树节点触发事件  
+        onSelect: function (node) {
+        }, //全部折叠
+        onLoadSuccess: function (node, data) {
+        }
+    });
+
 }
 
 
@@ -43,10 +56,12 @@ function submitForm(id) {
     //var bmbh = $("#BMBH").val();
     var bmmc = $("#BMMC").val();
     //var sjbm = $("#SJBM").combobox("getValue");
+    var sjbm = $('#SJBM').combotree("getValue");
 
     var data = {
         //"bmbh": bmbh,
         "bmmc": bmmc,
+        "sjbm": sjbm
         //"level": level,
         //"sjbm": sjbm
     };
@@ -71,7 +86,10 @@ function submitForm(id) {
                 }
             } else if (data == -2) {
                 MessShow("已存在同名称部门！");
-            } else {
+            } else if(data==-11)
+            {
+                MessShow("上级部门不能为该部门及其子部门");
+            }else {
                 MessShow("添加数据失败，请稍后继续！");
             }
         }

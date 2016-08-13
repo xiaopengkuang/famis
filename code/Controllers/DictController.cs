@@ -1498,10 +1498,22 @@ namespace FAMIS.Controllers
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_department json_data = serializer.Deserialize<Json_department>(data);
-            if (json_data == null)
+            if (json_data == null||json_data.sjbm==null)
             {
                 return -1;
             }
+
+            List<int?> ids = commonController.GetSonIDs_Department(id);
+            if (!ids.Contains(id))
+            {
+                ids.Add(id);
+            }
+
+            if (ids.Contains(json_data.sjbm))
+            {
+                return -11;
+            }
+
             if (existDepartment(json_data.bmmc,id))
             {
                 return -2;
@@ -1520,6 +1532,7 @@ namespace FAMIS.Controllers
                     //TODO
                     //p._operator="KXP";
                     p.name_Department = json_data.bmmc;
+                    p.ID_Father_Department = json_data.sjbm;
                     p.create_TIME = DateTime.Now;
                 }
                 DB_C.SaveChanges();
@@ -1594,7 +1607,7 @@ namespace FAMIS.Controllers
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
             Json_AssetType_add json_data = serializer.Deserialize<Json_AssetType_add>(data);
-            if (json_data == null)
+            if (json_data == null||json_data.sjlb==null)
             {
                 return -1;
             }
@@ -1602,6 +1615,19 @@ namespace FAMIS.Controllers
             {
                 return -2;
             }
+
+            List<int?> ids = commonController.GetSonID_AsseType(id);
+            if (!ids.Contains(id))
+            {
+                ids.Add(id);
+            }
+
+            if (ids.Contains(json_data.sjlb))
+            {
+                return -11;
+            }
+
+
             var q = from p in DB_C.tb_AssetType
                     where p.ID == id
                     select p;
@@ -1617,6 +1643,7 @@ namespace FAMIS.Controllers
                     p.period_Depreciation = json_data.zjnx;
                     p.method_Depreciation = json_data.zjfs;
                     p.Net_residual_rate = json_data.jczl;
+                    p.father_MenuID_Type = json_data.sjlb;
                     p.lastEditTime = DateTime.Now;
                 }
                 DB_C.SaveChanges();

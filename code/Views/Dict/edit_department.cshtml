@@ -17,7 +17,7 @@
     <script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="../../Scripts/Views/Dict/edit_department.js"></script>
     <script type="text/javascript">
-        dataBind("@ViewBag.id");
+      //dataBind("@ViewBag.id");
     </script>
 
         <!--[if lte IE 9]>
@@ -26,7 +26,7 @@
     <![endif]-->
 
 </head>
-<body>
+<body onload="dataBind('@ViewBag.id')">
    
     <div fit="true" class="easyui-panel">
         <table style="text-align: center; padding: 5px">
@@ -41,14 +41,16 @@
                 <td style="width: 100px">
                     <label>上级部门:</label></td>
                 <td style="width: 250px">
-                    <input id="SJBM" class="easyui-combobox" style="width: 250px; height: 18px" readonly="readonly"></td>
-                <script>
+                    <select id="SJBM" class="easyui-combotree" style="width: 250px; height: 18px" >
+                </select>        
+                </td>
+               <!-- <script>
                     $(function () {
                         //$('#SJLB').combobox('setValue', "@ViewBag.fatherID");
                         //$('#SJLB').combobox('setText', "@ViewBag.fatherName");
                         $('#SJBM').combobox('disable');
                     });
-                </script>
+                </script>-->
             </tr>
             <tr>
                 <td style="width: 100px">

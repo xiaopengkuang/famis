@@ -6,8 +6,26 @@ function loadintiData() {
 
     loadinit_JLDW();
     loadinit_ZJFS();
+    load_ZCLB_add();
 }
-
+function load_ZCLB_add() {
+    $('#SJLB').combotree
+   ({
+       url: '/Dict/load_ZCLB',
+       valueField: 'id',
+       textField: 'nameText',
+       required: true,
+       method: 'POST',
+       editable: false,
+       //选择树节点触发事件  
+       onSelect: function (node) {
+         
+       }, //全部折叠
+       onLoadSuccess: function (node, data) {
+         
+       }
+   });
+}
 
 function loadinit_JLDW() {
     $("#JLDW").combobox({
@@ -70,14 +88,14 @@ function dataBind(id)
                 $("#ZJNX").numberbox("setValue", data[0].zjnx)//赋值
                 $("#JCZL").numberbox("setValue", data[0].jczl)//赋值
                 if (data[0].sjlb == null || data[0].sjlb == "") {
-                    $("#SJLB").combobox("setValue", 0);
-                    $("#SJLB").combobox("setText", "");
+                    //$("#SJLB").combobox("setValue", 0);
+                    //$("#SJLB").combobox("setText", "");
                 } else {
-                    $("#SJLB").combobox("setValue", data[0].sjlb);
-                    $("#SJLB").combobox("setText", data[0].sjlb);
+                    $("#SJLB").combotree("setValue", data[0].sjlb);
+                    $("#SJLB").combotree("setText", data[0].sjlb);
                 }
                 
-                $("#SJLB").combobox("disable");
+                //$("#SJLB").combobox("disable");
                 $("#JLDW").combobox("select", data[0].jldw);
                 $("#ZJFS").combobox("select", data[0].zjfs);
 
@@ -98,7 +116,7 @@ function submitForm(id) {
     var zjnx = $("#ZJNX").val();
     var jczl = $("#JCZL").val();
 
-    //var sjlb = $("#SJLB").combobox("getValue");
+    var sjlb = $("#SJLB").combotree("getValue");
     var jldw = $("#JLDW").combobox("getValue");
     var zjfs = $("#ZJFS").combobox("getValue");
 
@@ -107,7 +125,7 @@ function submitForm(id) {
         "lbmc": lbmc,
         "zjnx": zjnx,
         "jczl": jczl,
-        //"sjlb": sjlb,
+        "sjlb": sjlb,
         "jldw": jldw,
         "zjfs": zjfs
     };
@@ -127,6 +145,8 @@ function submitForm(id) {
                 parent.$("#treegrid").treegrid('reload');
             } else if (data == -2) {
                 MessShow("存在同名称的资产类别！");
+            } else if (data == -11) {
+                MessShow("禁止将上级类别改为其节点以及其子节点！");
             } else {
                 MessShow("插入数据失败，请稍后再试！");
             }

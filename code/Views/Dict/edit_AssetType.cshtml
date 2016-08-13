@@ -21,7 +21,6 @@
 
      <script type="text/javascript">
          //获取后台数据       
-         dataBind("@ViewBag.id");
      </script>
         <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
@@ -29,7 +28,7 @@
     <![endif]-->
 
 </head>
-<body>
+<body onload="dataBind('@ViewBag.id')">
     <div fit="true" class="easyui-panel">
         <table style="text-align: center; padding: 5px">
             <tr style="padding: 5px">
@@ -43,7 +42,9 @@
                 <td style="width: 100px">
                     <label>上级类别:</label></td>
                 <td style="width: 250px">
-                    <input id="SJLB" class="easyui-combobox" style="width: 250px; height: 18px" readonly="readonly"></td>
+                    <select id="SJLB" class="easyui-combotree" style="width: 250px; height: 18px" >
+                        </select>
+                        </td>
                
             </tr>
             <tr>
