@@ -149,9 +149,9 @@ function ReSetSeachCondition() {
     $('#BeginDate_SC').datebox('setValue', '');
     $('#EndDate_SC').datebox('setValue', '');
     $("#Invention_State").combobox('select', "全部");
-    $("#operator").combobox('select', "全部");
-    var searchCondtiion = "o,o,o,o,o";
-    LoadInitData(searchCondtiion);
+   // $("#operator").combobox('select', "全部");
+    //var searchCondtiion = "o,o,o,o,o";
+   // LoadInitData(searchCondtiion);
 }
 function printExcel(obj) {
 
