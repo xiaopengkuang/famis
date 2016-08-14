@@ -1406,6 +1406,21 @@ namespace FAMIS.Controllers
             }
         }
 
+        public List<int?> GET_IDS_REDUCTION()
+        {
+            List<int?> ids = new List<int?>();
+            var data = from p in DB_C.tb_dataDict_para
+                       where p.activeFlag == true
+                       join tb_DIC in DB_C.tb_dataDict on p.ID_dataDict equals tb_DIC.ID
+                       where tb_DIC.name_flag == SystemConfig.nameFlag_2_JSFS
+                       select p;
+            foreach (var item in data)
+            {
+                ids.Add(item.ID);
+            }
+            return ids;
+        }
+
         public int? Get_Default_MethodDe()
         {
             Hashtable list = new Hashtable();
