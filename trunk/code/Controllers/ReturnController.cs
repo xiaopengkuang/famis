@@ -99,7 +99,7 @@ namespace FAMIS.Controllers
             bool isAllUser = commonConversion.isSuperUser(roleID);
             //获取该用户可以去审核的单据
             var data_1 = from p in DB_C.tb_ReviewReminding
-                         where  p.Type_Review_TB == SystemConfig.TB_Borrow
+                         where  p.Type_Review_TB == SystemConfig.TB_Return
                          where p.ID_reviewer == userID
                          join tb_rt in DB_C.tb_Asset_Return on p.ID_review_TB equals tb_rt.ID
                          join tb_ST in DB_C.tb_State_List on tb_rt.state_list equals tb_ST.id into temp_ST

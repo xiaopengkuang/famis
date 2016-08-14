@@ -566,6 +566,7 @@ namespace FAMIS.Controllers
                             {
                                 //TODO:这里需要将Asset设置为False吗
                                 //item_as.flag = false;
+                                item_as.Method_decrease = reduc.method_reduction;
                                 item_as.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_bad);
                             }
                             //将提醒标记为false

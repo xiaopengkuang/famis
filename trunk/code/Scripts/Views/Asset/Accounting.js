@@ -249,6 +249,7 @@ function LoadInitData_Detail() {
                             }
                         }
                     },
+                    { field: 'Method_decrease', title: '减少方式', width: 50 },
                     { field: 'note', title: '备注', width: 50 }
                 ]],
                 singleSelect: true, //允许选择多行
