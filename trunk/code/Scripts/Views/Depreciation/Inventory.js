@@ -145,11 +145,58 @@ function GetIsQueried() {
 
 }
 function ReSetSeachCondition() {
-    $("#Invention_Code").val("");
-    $('#BeginDate_SC').datebox('setValue', '');
-    $('#EndDate_SC').datebox('setValue', '');
-    $("#Invention_State").combobox('select', "全部");
-   // $("#operator").combobox('select', "全部");
+
+    $.ajax({
+
+        type: "post",
+        url: "/User/GetUser_ID",
+
+        datatype: "test",//数据类型
+
+        success: function (uid) {
+            $.ajax({
+
+                type: "post",
+                url: "/Common/IsSuper",
+
+                datatype: "json",//数据类型
+
+                success: function (result) {
+                    if (result == "supper") {
+                        $("#Invention_Code").val("");
+                        $('#BeginDate_SC').datebox('setValue', '');
+                        $('#EndDate_SC').datebox('setValue', '');
+                        $("#Invention_State").combobox('select', "全部");
+                        $("#operator").combobox('select', "全部");
+                        searchCondtiion="o,o,o,o,o"
+                        LoadInitData(searchCondtiion);
+                    }
+
+                    else {
+                        // alert(uid);
+                        $("#Invention_Code").val("");
+                        $('#BeginDate_SC').datebox('setValue', '');
+                        $('#EndDate_SC').datebox('setValue', '');
+                        $("#Invention_State").combobox('select', "全部");
+                      //  $("#operator").combobox('select', uid);
+                        searchCondtiion = "o,o,o,o," + uid;
+                        LoadInitData(searchCondtiion);
+                    }
+
+                }, error: function (msg) {
+
+                    alert("Error2");
+                }
+            });
+
+
+        }, error: function (msg) {
+
+            alert("Error1");
+        }
+    });
+
+   
     //var searchCondtiion = "o,o,o,o,o";
    // LoadInitData(searchCondtiion);
 }
