@@ -25,6 +25,8 @@ namespace FAMIS.Controllers
     public class NoticeController : Controller
     {
         FAMISDBTBModels db = new FAMISDBTBModels();
+        AssetDeatailsController adc = new AssetDeatailsController();
+        CommonConversion com = new CommonConversion();
         public ActionResult Index()
         {
             return View();
@@ -49,9 +51,7 @@ namespace FAMIS.Controllers
             int yearnow = int.Parse(DateTime.Now.ToString("yyyy"));
             int monthnow = int.Parse(DateTime.Now.ToString("yyyy"));
             int totalmonth = (yearnow - year_purchase) * 12 + monthnow - month_purchase;
-            StreamWriter sw = new StreamWriter("D:\\sw.txt",true);
-            sw.WriteLine(year_purchase+","+month_purchase+","+yearnow+","+monthnow+","+totalmonth+","+MonthService+","+(MonthService-totalmonth));
-            sw.Close();
+            
             if ((MonthService - totalmonth) <= 1)
                 return true;
             else return false;
@@ -114,7 +114,9 @@ namespace FAMIS.Controllers
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
             List<tb_Asset> asset = new List<tb_Asset>();
-
+            int ? rid=com.getRoleID();
+            List<int?> dids = adc.IDs(rid, "department"); 
+            List<int?> ATids = adc.IDs(rid, "Assettype");
             var data = from r in db.tb_Asset
 
                        join t in db.tb_AssetType on r.type_Asset equals t.ID into temp_t
@@ -131,7 +133,7 @@ namespace FAMIS.Controllers
                        from ss in temp_s.DefaultIfEmpty()
                        join sp in db.tb_supplier on r.supplierID equals sp.ID into temp_sp
                        from ssp in temp_sp.DefaultIfEmpty()
-                       where DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month <= SystemConfig.Days_To_Notice
+                       where DbFunctions.DiffDays(DateTime.Now, r.Time_Purchase) + 30 * r.YearService_month <= SystemConfig.Days_To_Notice&&ATids.Contains(r.type_Asset)&&dids.Contains(r.department_Using)
                        select new
                        {
 
@@ -174,6 +176,9 @@ namespace FAMIS.Controllers
             List<tb_Asset_Repair> repair = new List<tb_Asset_Repair>();
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
+            int? rid = com.getRoleID();
+            List<int?> dids = adc.IDs(rid, "department");
+            List<int?> ATids = adc.IDs(rid, "Assettype");
             var data = from r in db.tb_Asset_Repair
                         join s in db.tb_State_List on r.state_list equals s.id into temp_s
                         from ss in temp_s.DefaultIfEmpty()
@@ -189,8 +194,8 @@ namespace FAMIS.Controllers
                         from uucreat in temp_ucreat.DefaultIfEmpty()
                         join uview in db.tb_user on r.userID_review equals uview.ID into temp_uview
                         from uuview in temp_uview.DefaultIfEmpty()
-                        
-                        where DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn) <= SystemConfig.Days_To_Notice&&r.flag==true&&ss.Name==SystemConfig.state_List_YSH
+
+                       where DbFunctions.DiffDays(DateTime.Now, r.date_ToReturn) <= SystemConfig.Days_To_Notice && r.flag == true && ss.Name == SystemConfig.state_List_YSH && ATids.Contains(aass.type_Asset) && dids.Contains(aass.department_Using)
                         //&& ss.Name!=SystemConfig.state_List_TH
                         select new
                         {
@@ -241,7 +246,9 @@ namespace FAMIS.Controllers
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
             List<tb_Asset_Borrow> repair = new List<tb_Asset_Borrow>();
-
+            int? rid = com.getRoleID();
+            List<int?> dids = adc.IDs(rid, "department");
+            List<int?> ATids = adc.IDs(rid, "Assettype");
             var data = from r in db.tb_Asset_Borrow
                        join s in db.tb_State_List on r.state_list equals s.id into temp_s
                        from ss in temp_s.DefaultIfEmpty()
@@ -253,7 +260,7 @@ namespace FAMIS.Controllers
                        from uuo in temp_uo.DefaultIfEmpty()
                        join ur in db.tb_user on r.userID_review equals ur.ID into temp_ur
                        from uur in temp_ur.DefaultIfEmpty()
-
+                      
                        where DbFunctions.DiffDays(DateTime.Now, r.date_return) <= SystemConfig.Days_To_Notice && r.flag == true && ss.Name == SystemConfig.state_List_YSH
                        select new
                        {
