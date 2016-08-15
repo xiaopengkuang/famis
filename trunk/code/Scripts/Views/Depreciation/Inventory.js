@@ -248,7 +248,7 @@ function setPDserail(PDsearial) {
 
         }, error: function (msg) {
 
-            alert("盘点单号传递失败！");
+          //  alert("盘点单号传递失败！");
         }
     });
 
@@ -352,7 +352,7 @@ function GetName() {
                 type: "post",
                 url: "/User/GetUser_name",
 
-                datatype: "test",//数据类型
+                datatype: "text",//数据类型
 
                 success: function (uname) {
 
@@ -875,7 +875,7 @@ function LoadInitData(searchCondtiion) {
 
                         }, error: function (msg) {
 
-                            alert("盘点单索引传递失败！");
+                            //alert("盘点单索引传递失败！");
                         }
                     });
                     try {
@@ -935,7 +935,7 @@ function LoadInitData(searchCondtiion) {
 
                             }, error: function (msg) {
 
-                                alert("盘点单索引传递失败！");
+                               // alert("盘点单索引传递失败！");
                             }
                         });
                         openModelWindow("/Verify/Edit_Inventory", "修改盘点单");
