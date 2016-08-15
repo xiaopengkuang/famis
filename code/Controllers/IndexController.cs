@@ -78,7 +78,7 @@ namespace FAMIS.Controllers
                                  select new Json_Pie_info
                                  {
                                      name = b.Key.name_Department == null ? "未有使用部门" : b.Key.name_Department,
-                                    value=b.Sum(a=>a.amount)
+                                     value = b.Sum(a => a.amount) == null ? 0 : b.Sum(a => a.amount)
                                  };
                         data = data.OrderByDescending(a => a.value);
 
@@ -100,7 +100,7 @@ namespace FAMIS.Controllers
                                    select new Json_Pie_info
                                    {
                                        name = b.Key.name_Department == null ? "未有使用部门" : b.Key.name_Department ,
-                                       value = b.Sum(a => a.value)
+                                       value = b.Sum(a => a.value) == null ? 0 : b.Sum(a => a.value)
                                    };
                         data = data.OrderByDescending(a => a.value);
                         List<Json_Pie_info> dataR = new List<Json_Pie_info>();
@@ -122,7 +122,7 @@ namespace FAMIS.Controllers
                                    select new Json_Pie_info
                                    {
                                        name = b.Key.name_Asset_Type == null ? "未分配资产类别": b.Key.name_Asset_Type ,
-                                       value = b.Sum(a => a.amount)
+                                       value = b.Sum(a => a.amount) == null ? 0 : b.Sum(a => a.amount)
                                    };
                         data = data.OrderByDescending(a => a.value);
                         List<Json_Pie_info> dataR = new List<Json_Pie_info>();
@@ -142,7 +142,7 @@ namespace FAMIS.Controllers
                                    select new Json_Pie_info
                                    {
                                        name = b.Key.name_Asset_Type == null ? "未分配资产类别" : b.Key.name_Asset_Type ,
-                                       value = b.Sum(a => a.value)
+                                       value = b.Sum(a => a.value) == null ? 0 : b.Sum(a => a.value)
                                    };
 
                         data = data.OrderByDescending(a => a.value);
@@ -166,7 +166,7 @@ namespace FAMIS.Controllers
                                    select new Json_Pie_info
                                    {
                                        name = b.Key.name_para == null ? "非系统规定状态" : b.Key.name_para ,
-                                       value = b.Sum(a => a.amount)
+                                       value = b.Sum(a => a.amount) == null ? 0 : b.Sum(a => a.amount)
                                    };
                         data = data.OrderByDescending(a => a.value);
                         List<Json_Pie_info> dataR = new List<Json_Pie_info>();
@@ -186,7 +186,7 @@ namespace FAMIS.Controllers
                                    select new Json_Pie_info
                                    {
                                        name = b.Key.name_para == null ? "非系统规定状态": b.Key.name_para,
-                                       value = b.Sum(a => a.value)
+                                       value = b.Sum(a => a.value) == null ? 0 : b.Sum(a => a.value)
                                    };
                         data = data.OrderByDescending(a => a.value);
                         List<Json_Pie_info> dataR = new List<Json_Pie_info>();

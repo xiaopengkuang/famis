@@ -48,10 +48,7 @@ function loadData()
             ajaxLoadEnd()
             var legendFlag = true;
             var name = new Array();
-            //if (result.length > 20)
-            //{
-            //    legendFlag = false;
-            //}
+            
 
             for (var i = 0; i < result.length; i++) {
                 if (i >50) {
@@ -65,7 +62,7 @@ function loadData()
                 title: {
                     text: '资产数据一览',
                     subtext: '',
-                    x: 'left'
+                    x: 'center'
                 },
                 tooltip: {
                     trigger: 'item',
@@ -80,8 +77,8 @@ function loadData()
                     {
                         name: '资产数据',
                         type: 'pie',
-                        radius: '50%',
-                        center: ['30%', '50%'],
+                        radius: '30%',
+                        center: ['40%', '50%'],
                         data: result,
                         itemStyle: {
                             emphasis: {
@@ -95,17 +92,6 @@ function loadData()
             };
             mycharts.setOption(option);
 
-            //mycharts.setOption({ //加载数据<a href="/catalog.asp?tags=ECharts%E6%95%99%E7%A8%8B" class="keylink" title=" 图表" target="_blank">图表</a>
-            //    title: {
-            //        text: '资产数据一览',
-            //        subtext: '',
-            //        x: 'left'
-            //    },
-            //    legend: { data: name },
-            //    series: [{
-            //        data: result
-            //    }]
-            //});
 
         },
         error: function (errorMsg) {
