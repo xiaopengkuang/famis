@@ -27,7 +27,11 @@ function loadInitData()
         columns: [[
             { field: 'ID', checkbox: true, width: 50 },
             { field: 'serialNum', title: '待处理单据号', width: 50 },
-            { field: 'reminderType', title: '单据类型', width: 50 },
+            { field: 'reminderType', title: '单据类型', width: 50},
+            {
+                field: 'idOperate', title: '处理', width: 50,hidden:true
+               
+            },
             {
                 field: 'Time_add', title: '创建日期', width: 50,
                 formatter: function (date) {
@@ -46,10 +50,33 @@ function loadInitData()
     });
     loadPageTool("dataGrid_myReminder");
 }
+
+
+
+
+
 function loadPageTool(datagrid) {
     var pager = $('#' + datagrid).datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
-        buttons: [],
+        buttons: [{
+            text: '审核',
+            iconCls: 'icon-tip',
+            height: 50,
+            handler: function () {
+                //获取选择行
+                var rows = $('#dataGrid_myReminder').datagrid('getSelections');
+                if (rows.length != 1) {
+                    MessShow("请选择1项数据进行编辑！");
+                    return;
+                }
+                var id = rows[0].idOperate;
+                var serialNUM = rows[0].serialNum;
+                var url = "/Index/ReviewMidPage?id=" + id + "&serialNUM=" + serialNUM;
+                var titleName = "审核";
+                openModelWindow(url, titleName);
+             
+            }
+        }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
@@ -68,6 +95,37 @@ function MessShow(mess) {
     });
 }
 
+function openModelWindow(url, titleName) {
+    //获取当前页面的Width和高度
+    var winWidth = (document.body.clientWidth - 20) < 0 ? 0 : (document.body.clientWidth - 20);
+    var winheight = (document.body.clientHeight - 20) < 0 ? 0 : (document.body.clientHeight - 20);
+
+
+    try {
+        $("#modalwindow").window("close");
+    } catch (e) { }
+    var $winADD;
+    $winADD = $('#modalwindow').window({
+        title: titleName,
+        width: winWidth,
+        height: winheight,
+        left: 10,
+        top: 10,
+        //top: (($(window).height() - 650) > 0 ? ($(window).height() - 650) : 650) * 0.5,
+        //left: (($(window).width() - 1028) > 0 ? ($(window).width() - 1028) : 100) * 0.5,
+        shadow: true,
+        modal: true,
+        iconCls: 'icon-add',
+        closed: true,
+        minimizable: false,
+        maximizable: false,
+        collapsible: false,
+        onClose: function () {
+        }
+    });
+    $("#modalwindow").html("<iframe width='100%' height='99%'  frameborder='0' src='" + url + "'></iframe>");
+    $winADD.window('open');
+}
 
 function getTime(/** timestamp=0 **/) {
     var ts = arguments[0] || 0;
