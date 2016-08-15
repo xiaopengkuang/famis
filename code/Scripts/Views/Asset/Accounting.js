@@ -175,7 +175,7 @@ function SearchByCondition_right() {
 
 //表数据重载
 function reloadTable_Condition() {
-    //alert(searchCondtiion);
+    
     //先判断类型
     var selectType = $("input[name='table_TYPE']:checked").val();
     if (selectType == "0") {

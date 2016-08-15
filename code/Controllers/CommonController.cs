@@ -939,17 +939,28 @@ namespace FAMIS.Controllers
                 return Json(right, JsonRequestBehavior.AllowGet);
             }
             else {
-                var data = from p in DB_C.tb_Menu
-                           where p.father_Menu == menu
-                           join tb_at in DB_C.tb_role_authorization on p.ID equals tb_at.Right_ID into temp_at
-                           from at in temp_at.DefaultIfEmpty()
-                           where at.role_ID==roleID
+                var data = from p in DB_C.tb_role_authorization
+                           where p.role_ID==roleID
+                           where p.flag == true && p.type == SystemConfig.role_menu
+                           join tb_me in DB_C.tb_Menu on p.Right_ID equals tb_me.ID
+                           where tb_me.father_Menu == menu
                            select new
                            {
-                               id=p.father_Menu,
-                               operation = p.operation,
-                               flag = at.flag == true ? true : false,
+                               id = tb_me.father_Menu,
+                               operation = tb_me.operation,
+                               flag = true
                            };
+                //var data = from p in DB_C.tb_Menu
+                //           where p.father_Menu == menu
+                //           join tb_at in DB_C.tb_role_authorization on p.ID equals tb_at.Right_ID into temp_at
+                //           from at in temp_at.DefaultIfEmpty()
+                //           where at.role_ID==roleID
+                //           select new
+                //           {
+                //               id=p.father_Menu,
+                //               operation = p.operation,
+                //               flag = at.flag == true ? true : false,
+                //           };
                 foreach (var item in data)
                 {
                     
