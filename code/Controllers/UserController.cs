@@ -74,7 +74,7 @@ namespace FAMIS.Controllers
                     //往Session里面保存用户信息
                     //用户名
                     Session["userName"] = userInfo.name_User;
-
+                   Session["TrueName"]= userList[0].true_Name;
                     Session["userID"] = userInfo.ID;
                     ////用户名
                     Session["password"] = userInfo.password_User;
@@ -108,10 +108,13 @@ namespace FAMIS.Controllers
         }
         public String GetUser_name()
         {
-            if (Session["userName"] == null)
+            string temp = "";
+            if (Session["TrueName"] == null)
                 return "nulluser";
-            else
-                return Session["userName"].ToString();
+              
+           
+          else
+                return Session["TrueName"].ToString();
         }
         public void LoginOut()
         {

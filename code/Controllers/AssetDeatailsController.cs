@@ -84,7 +84,7 @@ namespace FAMIS.Controllers
                                            from ee in temp_e.DefaultIfEmpty()
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
                                            from ssp in temp_sp.DefaultIfEmpty()
-                                           where Depart_Asset_Type_Id.Contains(a.department_Using)||item_id==0
+                                           where  Depart_Asset_Type_Id.Contains(a.department_Using)||item_id==0
                                            select a;
                 
                  foreach (tb_Asset asset in q)
@@ -299,12 +299,49 @@ namespace FAMIS.Controllers
            }
            return json;
        }
+       public List<int?> IDs(int ? roleid,string type)
+       {
+           List<int?> list = new List<int?>();
+           if (commonConversion.isSuperUser(roleid) && type == "AssetType")
+           {
+               var qq = from o in db.tb_AssetType
+                        where o.flag==true
+                       select o;
+
+               foreach (var p in qq)
+                   list.Add(p.ID);
+               return list;
+
+           }
+           if (commonConversion.isSuperUser(roleid) && type == "department")
+           {
+               var qq = from o in db.tb_department
+                        where o.effective_Flag == true
+                        select o;
+
+               foreach (var p in qq)
+                   list.Add(p.ID);
+               return list;
+
+           }
+           var q = from o in db.tb_role_authorization
+                   where o.role_ID == roleid && o.type == type
+                   select o;
+           foreach (var p in q)
+           {
+               list.Add(p.Right_ID);
+           }
+           return list;
+       
+       }
         [HttpPost]
         public JsonResult Load_Asset(int? page, int? rows, string JSdata)//添加盘点明细的资产索引表
         {
            page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
-            
+            int? roid=commonConversion.getRoleID();
+            List<int?> DepIDs = IDs(roid, "department");
+            List<int?> ATIDs = IDs(roid, "AssetType");
             int flagnum = int.Parse(JSdata);
             if (flagnum == 0)
                 flagnum = 11000000;
@@ -344,7 +381,7 @@ namespace FAMIS.Controllers
                              join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
                              from ee in temp_ee.DefaultIfEmpty()
 
-                            where Depart_Asset_Type_Id.Contains(a.department_Using)||item_id == 0
+                             where Depart_Asset_Type_Id.Contains(a.department_Using) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
                             select new
                             {
                                 ID = a.ID,
@@ -404,7 +441,7 @@ namespace FAMIS.Controllers
                                join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
                                from ee in temp_ee.DefaultIfEmpty()
 
-                            where AssetassettypeId.Contains(a.type_Asset)|| item_id == 0 
+                               where AssetassettypeId.Contains(a.type_Asset) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
                             select new
                             {
                                 ID = a.ID,
@@ -462,7 +499,7 @@ namespace FAMIS.Controllers
                             join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
                             from ee in temp_ee.DefaultIfEmpty()
 
-                            where ZTassettypeId.Contains(a.state_asset) || item_id == 0
+                                where ZTassettypeId.Contains(a.state_asset) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
                             select new
                             {
                                 ID = a.ID,

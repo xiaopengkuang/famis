@@ -25,6 +25,7 @@ namespace FAMIS.Controllers
     public class DepreciationController : Controller
     {
         //
+        AssetDeatailsController Asset_Deatial = new AssetDeatailsController();
         CommonController comController = new CommonController();
         DictController dc = new DictController();
         FAMISDBTBModels db = new FAMISDBTBModels();
@@ -202,9 +203,10 @@ namespace FAMIS.Controllers
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
-
-            
-          
+            CommonConversion con=new CommonConversion();
+            int? rrid = con.getRoleID();
+            List<int?> DepIds = Asset_Deatial.IDs(rrid,"department");
+            List<int?> ATIds = Asset_Deatial.IDs(rrid, "AssetType");
             int flagnum = int.Parse(JSdata);
             if (flagnum == 0)
                 flagnum = 11000000;
@@ -233,8 +235,8 @@ namespace FAMIS.Controllers
                            from DD in temp_D.DefaultIfEmpty()
                            join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID into temp_k
                            from kk in temp_k.DefaultIfEmpty()
-                           
-                           where Depart_Asset_Type_Id.Contains(r.department_Using)||item_id==0
+
+                              where Depart_Asset_Type_Id.Contains(r.department_Using) && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset) || item_id == 0 && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset)
                            select new
                            {
                                ID = r.ID,
@@ -284,8 +286,8 @@ namespace FAMIS.Controllers
                            from DD in temp_D.DefaultIfEmpty()
                            join k in db.tb_dataDict_para on r.Method_depreciation equals k.ID into temp_k
                            from kk in temp_k.DefaultIfEmpty()
-                            
-                           where AssetassettypeId.Contains(r.type_Asset)||item_id==0
+
+                           where AssetassettypeId.Contains(r.type_Asset) && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset) || item_id == 0 && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset)
                            select new
                            {
                                ID = r.ID,
