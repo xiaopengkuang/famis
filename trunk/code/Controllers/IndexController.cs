@@ -16,6 +16,7 @@ namespace FAMIS.Controllers
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
         CommonConversion commonConversion = new CommonConversion();
         CommonController comContro = new CommonController();
+        CollarController collarCTR = new CollarController();
         // GET: Index
         public ActionResult myReminder()
         {
@@ -30,6 +31,66 @@ namespace FAMIS.Controllers
         public ActionResult AssetReminder()
         {
             return View();
+        }
+
+
+
+        public ActionResult ReviewMidPage(int? id,String serialNum)
+        {
+
+            if (serialNum == null || serialNum == "" || id == null)
+            {
+                return View("Error");
+            }
+            if (serialNum.Contains("LY"))
+            {
+                //Json_collar data = collarCTR.getCollarByID(id);
+                //if (data != null)
+                //{
+                //    ViewBag.id = id;
+                //    ViewBag.serialNumber = data.serialNumber;
+                //    ViewBag.address = data.address;
+                //    ViewBag.data_collar = data.date_collar;
+                //    ViewBag.department = data.department;
+                //    ViewBag.operatorUser = data.operatorUser;
+                //    ViewBag.reason = data.reason;
+                //    ViewBag.ps = data.ps;
+                //    ViewBag.user_collar = data.user_collar;
+                //}
+                //Response.Redirect("/Collar/review_collar?id="+id);
+                @ViewBag.url = "/Collar/review_collar?id=" + id;
+                return View();
+
+            }
+            else if (serialNum.Contains("DB"))
+            {
+                @ViewBag.url = "/Allocation/Allocation_review?id=" + id;
+                return View();
+            }
+            else if (serialNum.Contains("WX"))
+            {
+                @ViewBag.url = "/Repair/Repair_review?id=" + id;
+                return View();
+            }
+            else if (serialNum.Contains("JC"))
+            {
+                @ViewBag.url = "/Borrow/Borrow_review?id=" + id;
+                return View();
+            }
+            else if (serialNum.Contains("GH"))
+            {
+                @ViewBag.url = "/Return/Return_review?id=" + id;
+                return View();
+            }
+            else if (serialNum.Contains("JS"))
+            {
+                @ViewBag.url = "/Reduction/Reduction_review?id=" + id;
+                return View();
+            }
+
+
+            return View("Error");
+ 
         }
 
         [HttpPost]
@@ -226,6 +287,7 @@ namespace FAMIS.Controllers
                                   ID=p.ID,
                                   reminderType="领用单据",
                                   Time_add=p.time_add,
+                                  idOperate = co.ID,
                                   serialNum=co.serial_number
                               };
             var data_allocation = from p in data_ORG
@@ -237,6 +299,7 @@ namespace FAMIS.Controllers
                                       ID = p.ID,
                                       reminderType = "调拨单据",
                                       Time_add = p.time_add,
+                                      idOperate = tar.ID,
                                       serialNum = tar.serial_number
                                   };
             var data_Borrow = from p in data_ORG
@@ -248,6 +311,7 @@ namespace FAMIS.Controllers
                                       ID = p.ID,
                                       reminderType = "借出单据",
                                       Time_add = p.time_add,
+                                      idOperate = tar.ID,
                                       serialNum = tar.serialNum
                                   };
             var data_Return = from p in data_ORG
@@ -259,6 +323,7 @@ namespace FAMIS.Controllers
                                   ID = p.ID,
                                   reminderType = "归还单据",
                                   Time_add = p.time_add,
+                                  idOperate = tar.ID,
                                   serialNum = tar.serialNum
                               };
             var data_Repair = from p in data_ORG
@@ -270,6 +335,7 @@ namespace FAMIS.Controllers
                                   ID = p.ID,
                                   reminderType = "维修单据",
                                   Time_add = p.time_add,
+                                  idOperate = tar.ID,
                                   serialNum = tar.serialNumber
                               };
             var data_Reduction = from p in data_ORG
@@ -281,6 +347,7 @@ namespace FAMIS.Controllers
                                   ID = p.ID,
                                   reminderType = "减少单据",
                                   Time_add = p.time_add,
+                                  idOperate = tar.ID,
                                   serialNum = tar.Serial_number
                               };
 

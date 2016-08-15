@@ -10,6 +10,7 @@ namespace FAMIS.DTO
         public int ID { get; set; }
         public String serialNum { get;set;}
         public String reminderType { get; set; }
-        public DateTime?  Time_add { get; set; }
+        public DateTime? Time_add { get; set; }
+        public int? idOperate { get; set; } 
     }
 }
