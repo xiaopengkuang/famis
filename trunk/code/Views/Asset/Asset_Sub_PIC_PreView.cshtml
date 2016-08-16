@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <!--<link href="../../LIB/UIlib/css/default.css" rel="stylesheet" type="text/css" />-->
+    <!--<link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/default/easyui.css" />-->
+    <!--<link rel="stylesheet" type="text/css" href="../../LIB/UIlib/js/themes/icon.css" />-->
+    <script type="text/javascript" src="../../LIB/UIlib/js/jquery-1.7.2.min.js"></script>
+    <!--<script type="text/javascript" src="../../LIB/UIlib/js/jquery.easyui.min.js"></script>-->
+    <!--<script type="text/javascript" src="../../Scripts/UI/easyui-lang-zh_CN.js"></script>-->
+    <script type="text/javascript">
+        $(function () {
+            ////数据跳转
+            //if ("@ViewBag.id" == 1 || "@ViewBag.jump" == "1") {
+            //    document.getElementById("detail_right").style.display = "block";
+            //    document.getElementById("reminderDIV").style.display = "none";
+            //} else {
+            //    document.getElementById("detail_right").style.display = "none";
+            //    document.getElementById("reminderDIV").style.display = "block";
+            //}
+
+
+            //加载相应的图片
+            $.ajax({
+                url: "/WXSearch/PictureToload",
+                type: 'POST',
+                data: {
+                    "id": "@ViewBag.id"
+                },
+                success: function (data) {
+                    if (data) {
+                        var pidiv = document.getElementById("picDIV");
+                        for (var i = 0; i < data.length; i++) {
+                            var picI = document.createElement("img");
+                            picI.style.minHeight = 100;
+                            picI.style.minWidth = 100;
+                            picI.style.maxWidth = (document.body.clientWidth - 200)>0?(document.body.clientWidth - 200):100;
+                            picI.style.maxHeight = (document.body.clientWidth - 200) > 0 ? (document.body.clientWidth - 200) : 100;
+                            picI.src = data[i];
+                            pidiv.appendChild(picI);
+                            var picBR = document.createElement("br");
+                            pidiv.appendChild(picBR);
+                            var picBR1 = document.createElement("br");
+                            pidiv.appendChild(picBR1);
+                            //var picBR2 = document.createElement("br");
+                            //pidiv.appendChild(picBR2);
+
+
+                        }
+                        if (data.length == 0) {
+                            document.getElementById("info_PP").style.display = "block";
+                        }
+                    } else {
+                        document.getElementById("info_PP").style.display = "block";
+                    }
+                }
+            });
+
+        })
+
+    </script>
+</head>
+<body>
+    <div id="picDIV">
+    </div>
+    <div id="info_PP" style="display: none">
+        <p><span style="color: red">暂无图片！</span></p>
+    </div>
+</body>
+</html>
