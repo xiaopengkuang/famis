@@ -51,7 +51,288 @@ namespace FAMIS.Controllers
             Response.Write("<script>" + openid + "</script>");
             return View();
         }
+        [HttpPost]
+        public ActionResult Export(string serial, string DJ_type)
+        {
+            switch(DJ_type)
+            {
+                case "LY": 
+                    {
+                        var data = from o in db.tb_Asset_collar
+                                   join od in db.tb_Asset_collar_detail on o.ID equals od.ID_collar
+                                   join depp in db.tb_department on o.department_collar equals depp.ID  
+                                   join asset in db.tb_Asset on od.ID_asset equals asset.ID
+                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   from ddep in temp_dep.DefaultIfEmpty()
+                                   join op in db.tb_user on o._operator equals op.ID
+                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
+                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
+                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
+                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   where o.serial_number == serial && o.flag == true
+                                   select new
+                                   {
+                                       单据号 = o.serial_number,
+                                       领用日期 = o.date,
+                                       领用原因 = o.reason,
+                                       领用部门 = depp.name_Department,
+                                       领用人 = op.true_Name,
+                                       存放地点 = o.addree_Storage,
+                                       资产编号 = asset.serial_number,
+                                       资产名称 = asset.name_Asset,
+                                       资产类型 = at.name_Asset_Type,
+                                       型号规范 = asset.specification,
+                                       单价 = asset.unit_price,
+                                       数量 = asset.amount,
+                                       使用部门 = ddep.name_Department,
+                                       地址 = cf.name_para,
+                                       添加方式 = zjfs.name_para,
+                                       资产状态 = zczt.name_para,
+                                       供应商 = gys.name_para,
+                                       备注 = o.ps
 
+
+                                   };
+
+                        DataTable data_table = Excel_Helper.ToDataTable(data);
+                        return Excel_Exp(data_table, "领用明细");    
+                              
+                              
+                     }
+
+                case "JC":
+                    {
+                        var data = from o in db.tb_Asset_Borrow
+                                   join depp in db.tb_department on o.department_borrow equals depp.ID  
+                                    
+                                   join od in db.tb_Asset_Borrow_detail on o.ID equals od.ID_borrow
+                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID
+                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   from ddep in temp_dep.DefaultIfEmpty()
+                                   join op in db.tb_user on o.userID_operated equals op.ID
+                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
+                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
+                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
+                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   where o.serialNum == serial && o.flag == true
+                                   select new
+                                   {
+                                       单据号 = o.serialNum,
+                                       借出日期 = o.date_borrow,
+                                       借出原因 = o.reason_borrow,
+                                       预计归还时间=o.date_return,
+                                       借出部门 = depp.name_Department,
+                                       借出人 = op.true_Name,
+                                       
+                                       资产编号 = asset.serial_number,
+                                       资产名称 = asset.name_Asset,
+                                       资产类型 = at.name_Asset_Type,
+                                       型号规范 = asset.specification,
+                                       单价 = asset.unit_price,
+                                       数量 = asset.amount,
+                                       使用部门 = ddep.name_Department,
+                                       地址 = cf.name_para,
+                                       添加方式 = zjfs.name_para,
+                                       资产状态 = zczt.name_para,
+                                       供应商 = gys.name_para,
+                                       备注=o.note_borrow
+
+
+                                   };
+
+                        DataTable data_table = Excel_Helper.ToDataTable(data);
+                        return Excel_Exp(data_table, "借出明细");
+
+
+                    }
+
+
+                case "DB":
+                    {
+                        var data = from o in db.tb_Asset_allocation
+                                   join depp in db.tb_department on o.department_allocation equals depp.ID  
+                                   join od in db.tb_Asset_allocation_detail on o.ID equals od.ID_allocation
+                                   join asset in db.tb_Asset on od.ID_asset equals asset.ID
+                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   from ddep in temp_dep.DefaultIfEmpty()
+                                   join op in db.tb_user on o._operator equals op.ID
+                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
+                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
+                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
+                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   join dz in db.tb_dataDict_para on o.addree_Storage equals dz.ID
+                                   where o.serial_number == serial && o.flag == true
+                                   select new
+                                   {
+                                       单据号 = o.serial_number,
+                                       调拨日期 = o.date,
+                                       调拨原因 = o.reason,
+                                       调入地址 = dz.name_para,
+                                       调入部门 = depp.name_Department,
+                                       操作人 = op.true_Name,
+
+                                       资产编号 = asset.serial_number,
+                                       资产名称 = asset.name_Asset,
+                                       资产类型 = at.name_Asset_Type,
+                                       型号规范 = asset.specification,
+                                       单价 = asset.unit_price,
+                                       数量 = asset.amount,
+                                       使用部门 = ddep.name_Department,
+                                       地址 = cf.name_para,
+                                       添加方式 = zjfs.name_para,
+                                       资产状态 = zczt.name_para,
+                                       供应商 = gys.name_para,
+                                       备注=o.ps
+
+
+                                   };
+
+                        DataTable data_table = Excel_Helper.ToDataTable(data);
+                        return Excel_Exp(data_table, "调拨明细");
+
+
+                    }
+
+                case "WX":
+                    {
+                        var data = from o in db.tb_Asset_Repair
+                                   
+                                  
+                                   join asset in db.tb_Asset on o.ID_Asset equals asset.ID
+                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   from ddep in temp_dep.DefaultIfEmpty()
+                                  
+                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
+                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
+                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
+                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                    
+                                   where o.serialNumber == serial && o.flag == true
+                                   select new
+                                   {
+                                       单据号 = o.serialNumber,
+                                       维修日期 = o.date_ToRepair,
+                                       归还日期 = o.date_ToReturn,
+
+                                       资产编号 = asset.serial_number,
+                                       资产名称 = asset.name_Asset,
+                                       资产类型 = at.name_Asset_Type,
+                                       型号规范 = asset.specification,
+                                       单价 = asset.unit_price,
+                                       数量 = asset.amount,
+                                       使用部门 = ddep.name_Department,
+                                       地址 = cf.name_para,
+                                       添加方式 = zjfs.name_para,
+                                       资产状态 = zczt.name_para,
+                                       供应商 = gys.name_para,
+                                       备注=o.note_repair
+
+
+                                   };
+
+                        DataTable data_table = Excel_Helper.ToDataTable(data);
+                        return Excel_Exp(data_table, "维修明细");
+
+
+                    }
+
+                case "GH":
+                    {
+                        var data = from o in db.tb_Asset_Return
+
+                                   join od in db.tb_Asset_Return_detail  on o.ID equals od.ID_Return
+                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID
+                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   from ddep in temp_dep.DefaultIfEmpty()
+
+                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
+                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
+                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
+                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+
+                                   where o.serialNum == serial && o.flag == true
+                                   select new
+                                   {
+                                       单据号 = o.serialNum,
+                                     
+                                       预计归还日期 = o.date_return,
+                                       原因=o.reason_return,
+                                       资产编号 = asset.serial_number,
+                                       资产名称 = asset.name_Asset,
+                                       资产类型 = at.name_Asset_Type,
+                                       型号规范 = asset.specification,
+                                       单价 = asset.unit_price,
+                                       数量 = asset.amount,
+                                       使用部门 = ddep.name_Department,
+                                       地址 = cf.name_para,
+                                       添加方式 = zjfs.name_para,
+                                       资产状态 = zczt.name_para,
+                                       供应商 = gys.name_para,
+                                       备注=o.note_return
+
+
+                                   };
+
+                        DataTable data_table = Excel_Helper.ToDataTable(data);
+                        return Excel_Exp(data_table, "归还明细");
+
+
+                    }
+                case "JS":
+                    {
+                        var data = from o in db.tb_Asset_Reduction
+                                   join u in db.tb_user on  o.userID_apply equals u.ID
+                                   join uu in db.tb_user on  o.userID_approver equals uu.ID
+                                   join od in db.tb_Asset_Reduction_detail on o.ID equals od.ID_reduction
+                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID
+                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   from ddep in temp_dep.DefaultIfEmpty()
+                                   join jsfs in db.tb_dataDict_para on o.method_reduction equals jsfs.ID
+                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
+                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
+                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
+                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+
+                                   where o.Serial_number == serial && o.flag == true
+                                   select new
+                                   {
+                                       单据号 = o.Serial_number,
+                                       减少日期 = o.date_reduction,
+                                       减少方式 = jsfs.name_para,
+                                       申请人=u.true_Name,
+                                       批准人=uu.true_Name,
+                                       减少原因=o.reason_reduce,
+                                       资产编号 = asset.serial_number,
+                                       资产名称 = asset.name_Asset,
+                                       资产类型 = at.name_Asset_Type,
+                                       型号规范 = asset.specification,
+                                       单价 = asset.unit_price,
+                                       数量 = asset.amount,
+                                       使用部门 = ddep.name_Department,
+                                       地址 = cf.name_para,
+                                       添加方式 = zjfs.name_para,
+                                       资产状态 = zczt.name_para,
+                                       供应商 = gys.name_para,
+                                       备注=o.note_reduce
+
+
+                                   };
+
+                        DataTable data_table = Excel_Helper.ToDataTable(data);
+                        return Excel_Exp(data_table, "减少明细");
+
+
+                    }          
+            }
+
+            return View();
+        }
         [HttpPost]
         public ActionResult ExportStu2(string JSdata)
         {
