@@ -304,8 +304,8 @@ function submitForm(id_allocation, id_state) {
             var result
             if (data > 0) {
                 try {
-                    parent.$("#modalwindow").window("close");
                     parent.loadInitData();
+                    parent.$("#modalwindow").window("close");
                 } catch (e) {
                     $.messager.alert('警告', "系统正忙，请稍后继续！", 'warning');
                 }

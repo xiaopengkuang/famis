@@ -67,7 +67,7 @@ function load_DBRQ_add() {
 function load_Department() {
     $('#LYBM_add').combotree
      ({
-         url: '/Dict/load_SZBM',
+         url: '/Dict/load_SZBM?isall=all',
          valueField: 'id',
          textField: 'nameText',
          required: true,

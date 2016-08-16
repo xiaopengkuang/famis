@@ -51,6 +51,7 @@ namespace FAMIS.Controllers
         {
             if (id == null)
             {
+                ViewBag.info = "无法获取单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;
@@ -62,6 +63,7 @@ namespace FAMIS.Controllers
         {
             if (id == null)
             {
+                ViewBag.info = "无法获取单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;
@@ -69,8 +71,11 @@ namespace FAMIS.Controllers
         }
         public ActionResult Return_review(int? id)
         {
+          
+
             if (id == null)
             {
+                ViewBag.info = "无法获取单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;

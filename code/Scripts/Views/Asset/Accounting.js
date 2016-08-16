@@ -250,6 +250,13 @@ function LoadInitData_Detail() {
                         }
                     },
                     { field: 'Method_decrease', title: '减少方式', width: 50 },
+                    {
+                        field: 'id_viewPIC', title: '图片预览', width: 50,
+                        formatter: function (data,row,index) {
+                            var btn = "<a  onclick='preViewImg(" + row.ID + ")' href='javascript:void(0);' >预览</a>";
+                            return btn;
+                        }
+                    },
                     { field: 'note', title: '备注', width: 50 }
                 ]],
                 singleSelect: true, //允许选择多行
@@ -262,7 +269,12 @@ function LoadInitData_Detail() {
 
 }
 
-
+function preViewImg(id)
+{
+    var url = "/Asset/Asset_Sub_PIC_PreView?id="+id;
+    var titleName = "图片预览"
+    openModelWindow(url, titleName);
+}
 
 function loadPageTool_Detail(dataRight) {
     //alert(dataRight.add);

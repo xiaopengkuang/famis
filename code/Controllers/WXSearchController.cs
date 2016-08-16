@@ -160,6 +160,9 @@ namespace FAMIS.Controllers
         [HttpGet]
         public ActionResult WX_detail(String code,String openid)
         {
+
+            //openid='';
+
             if (openidExist(openid))
             {
                 ViewBag.jump = 1;
@@ -196,6 +199,28 @@ namespace FAMIS.Controllers
 
 
 
+        
+        public JsonResult PictureToload(int? id)
+        {
+            var data = from p in DB_C.tb_Asset_sub_picture
+                       where p.flag == true
+                       join tb_AS in DB_C.tb_Asset on p.ID_Asset equals tb_AS.ID
+                       where tb_AS.flag == true
+                       where tb_AS.ID == id
+                       select new { 
+                          path=p.path_file
+                       };
+            List<String> files=new List<string> ();
+            foreach (var item in data)
+            {
+                if (System.IO.File.Exists(System.AppDomain.CurrentDomain.BaseDirectory+item.path))
+                {
+                    files.Add(".."+item.path);
+                }
+            }
+            return Json(files, JsonRequestBehavior.AllowGet);
+                            
+        }
 
 
         public bool openidExist(String openid)

@@ -201,7 +201,7 @@ namespace FAMIS.Controllers
                        where p.flag == true
                        where p._operator!=null
                        where  p._operator==userID || isAllUser==true
-                       where p.department_collar == null || idsRight_department.Contains(p.department_collar)
+                       where idsRight_department.Contains(p.department_collar) || p._operator == userID 
                        join tb_DP in DB_C.tb_department on p.department_collar equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_ST in DB_C.tb_State_List on p.state_List equals tb_ST.id into temp_ST

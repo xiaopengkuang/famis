@@ -82,3 +82,30 @@ function reloadDataGrid_reduction(title) {
         }
     }
 }
+
+
+
+
+function reloadMyReMindTabs()
+{
+    if ($("#tabs").tabs('exists', "首页")) {
+        //$('#tabs').tabs('select', "首页");
+        //MessShow("要刷新了！");
+        try {
+            window.top.reload_Index_MYRED.call();
+        } catch (e) {
+        }
+    }
+}
+function MessShow(mess) {
+    $.messager.show({
+        title: '提示',
+        msg: mess,
+        showType: 'slide',
+        style: {
+            right: '',
+            top: document.body.scrollTop + document.documentElement.scrollTop,
+            bottom: ''
+        }
+    });
+}

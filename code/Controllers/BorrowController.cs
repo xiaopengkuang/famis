@@ -41,13 +41,24 @@ namespace FAMIS.Controllers
 
         public ActionResult Borrow_add()
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCJC, SystemConfig.operation_add))
+            {
+                ViewBag.info = "暂无权限添加！";
+                return View("Error");
+            }
             return View();
         }
 
         public ActionResult Borrow_edit(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCJC, SystemConfig.operation_edit))
+            {
+                ViewBag.info = "暂无权限编辑！";
+                return View("Error");
+            }
             if (id == null)
             {
+                ViewBag.info = "无法获取单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;
@@ -55,8 +66,14 @@ namespace FAMIS.Controllers
         }
         public ActionResult Borrow_detail(int? id)
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCJC, SystemConfig.operation_view))
+            {
+                ViewBag.info = "暂无权限查看！";
+                return View("Error");
+            }
             if (id == null)
             {
+                ViewBag.info = "无法获取单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;
@@ -64,8 +81,15 @@ namespace FAMIS.Controllers
         }
         public ActionResult Borrow_review(int? id) 
         {
+            if (!commonController.isRightToOperate(SystemConfig.Menu_ZCJC, SystemConfig.operation_review))
+            {
+                ViewBag.info = "暂无权限审核！";
+                return View("Error");
+            }
+
             if (id == null)
             {
+                ViewBag.info = "无法获取单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;
@@ -149,7 +173,7 @@ namespace FAMIS.Controllers
                        where p.flag == true
                        where p.userID_operated != null
                        where p.userID_operated == userID || isAllUser == true
-                       where idsRight_department.Contains(p.department_borrow)
+                       where idsRight_department.Contains(p.department_borrow) || p.userID_operated == userID 
                        join tb_UB in DB_C.tb_user on p.userID_borrow equals tb_UB.ID into temp_UB
                        from UB in temp_UB.DefaultIfEmpty()
                        join tb_DP in DB_C.tb_department on p.department_borrow equals tb_DP.ID into temp_DP
