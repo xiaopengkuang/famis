@@ -75,10 +75,12 @@ namespace FAMIS.Controllers
 
             if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_edit))
             {
+                ViewBag.info = "暂无权限审核！";
                 return View("Error");
             }
             if (id == null)
             {
+                ViewBag.info = "无法获取到单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;
@@ -96,11 +98,13 @@ namespace FAMIS.Controllers
         {
             if (!commonController.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_view))
             {
+                ViewBag.info = "暂无权限审核！";
                 return View("Error");
             }
 
             if (id == null)
             {
+                ViewBag.info = "无法获取到单据信息！";
                 return View("Error");
             }
             ViewBag.id = id;
@@ -210,7 +214,7 @@ namespace FAMIS.Controllers
                        where p.flag == true
                        where p._operator!=null
                        where  p._operator==userID || isAllUser==true
-                       where p.department_allocation == null || idsRight_department.Contains(p.department_allocation)
+                      where idsRight_department.Contains(p.department_allocation) || p._operator == userID 
                        join tb_DP in DB_C.tb_department on p.department_allocation equals tb_DP.ID into temp_DP
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_ST in DB_C.tb_State_List on p.state_List equals tb_ST.id into temp_ST

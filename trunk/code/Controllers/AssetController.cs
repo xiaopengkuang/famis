@@ -132,6 +132,18 @@ namespace FAMIS.Controllers
             return View();
         }
 
+        public ActionResult Asset_Sub_PIC_PreView(int? id)
+        {
+
+            if (id == null)
+            {
+                ViewBag.id = -1;
+            }
+            else {
+                ViewBag.id = id;
+            }
+            return View();
+        }
 
 
         public ActionResult Asset_detail(int? id)

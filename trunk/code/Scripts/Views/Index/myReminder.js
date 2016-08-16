@@ -1,11 +1,67 @@
-﻿$(function () {
+﻿window.top["reload_Index_MYRED"] = function () {
+    $('#dataGrid_myReminder').datagrid("reload");
+    updateCounterInfo();
+};
+
+
+
+
+
+$(function () {
     loadInitData();
+
+    updateCounterInfo();
     //$(window).resize(function () {
     //    var win_width = $(window).width();
     //    $("#dataGrid_myReminder").datagrid('resize', { width: win_width - 20 });
     //});
 
 });
+
+function updateCounterInfo()
+{
+    //加载相应的图片
+    $.ajax({
+        url: "/Index/load_myreminder?counterInfo=counterInfo",
+        type: 'POST',
+        data: {
+            "id": "@ViewBag.id"
+        },
+        success: function (data) {
+            if (data) {
+                var tab = parent.$('#sy_index').tabs('getTab', 1); // 取得第一个tab 
+                if (data.total > 0) {
+                    parent.$('#sy_index').tabs('update', {
+                        tab: tab,
+                        options: {
+                            title: "我的提醒" + "<span style='color:red'>[" + data.total + "]<span>"
+                        }
+                    });
+                } else {
+                    parent.$('#sy_index').tabs('update', {
+                        tab: tab,
+                        options: {
+                            title: "我的提醒[0]"
+                        }
+                    });
+
+                }
+
+
+               
+            } else {
+                var tab = parent.$('#sy_index').tabs('getTab', 1); // 取得第一个tab 
+                parent.$('#sy_index').tabs('update', {
+                    tab: tab,
+                    options: {
+                        title: "我的提醒[0]"
+                    }
+                });
+
+            }
+        }
+    });
+}
 
 
 function loadInitData()
@@ -75,6 +131,16 @@ function loadPageTool(datagrid) {
                 var titleName = "审核";
                 openModelWindow(url, titleName);
              
+            }
+        }, {
+            text: '刷新',
+            iconCls: 'icon-reload',
+            height: 50,
+            handler: function () {
+                $('#dataGrid_myReminder').datagrid('reload');
+                updateCounterInfo();
+                    
+
             }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  

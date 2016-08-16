@@ -34,6 +34,122 @@ namespace FAMIS.Controllers
         }
 
 
+        //========================================review=======================//
+        public ActionResult Index_Collar_review(int? id)
+        {
+            if (!comContro.isRightToOperate(SystemConfig.Menu_ZCLY, SystemConfig.operation_view))
+            {
+                ViewBag.info = "暂无权限审核！";
+                return View("Error");
+            }
+            Json_collar data = collarCTR.getCollarByID(id);
+
+            if (data != null)
+            {
+                ViewBag.id = id;
+                ViewBag.serialNumber = data.serialNumber;
+                ViewBag.address = data.address;
+                ViewBag.data_collar = data.date_collar;
+                ViewBag.department = data.department;
+                ViewBag.operatorUser = data.operatorUser;
+                ViewBag.reason = data.reason;
+                ViewBag.ps = data.ps;
+                ViewBag.user_collar = data.user_collar;
+            }
+            return View();
+        }
+
+
+
+        public ActionResult Index_Allocation_review(int? id)
+        {
+            if (!comContro.isRightToOperate(SystemConfig.Menu_ZCDB, SystemConfig.operation_review))
+            {
+                ViewBag.info = "暂无权限审核！";
+                return View("Error");
+            }
+            if (id == null)
+            {
+                ViewBag.info = "无法获取单据信息！";
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+
+
+
+        public ActionResult Index_Repair_review(int? id)
+        {
+            if (!comContro.isRightToOperate(SystemConfig.Menu_ZCWX, SystemConfig.operation_review))
+            {
+                ViewBag.info = "暂无权限审核！";
+                return View("Error");
+            }
+
+            if (id == null)
+            {
+                ViewBag.info = "无法获取单据信息！";
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+
+        public ActionResult Index_Borrow_review(int? id)
+        {
+            if (!comContro.isRightToOperate(SystemConfig.Menu_ZCJC, SystemConfig.operation_review))
+            {
+                ViewBag.info = "暂无权限审核！";
+                return View("Error");
+            }
+
+            if (id == null)
+            {
+                ViewBag.info = "无法获取单据信息！";
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+
+        public ActionResult Index_Return_review(int? id)
+        {
+            if (!comContro.isRightToOperate(SystemConfig.Menu_ZCGH, SystemConfig.operation_review))
+            {
+                ViewBag.info = "暂无权限审核！";
+                return View("Error");
+            }
+
+            if (id == null)
+            {
+                ViewBag.info = "无法获取单据信息！";
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+        public ActionResult Index_Reduction_review(int? id)
+        {
+            if (!comContro.isRightToOperate(SystemConfig.Menu_ZCJS, SystemConfig.operation_review))
+            {
+                ViewBag.info = "暂无权限审核！";
+                return View("Error");
+            }
+
+            if (id == null)
+            {
+                ViewBag.info = "无法获取单据信息！";
+                return View("Error");
+            }
+            ViewBag.id = id;
+            return View();
+        }
+        //========================================review=======================//
+
+
+
+
 
         public ActionResult ReviewMidPage(int? id,String serialNum)
         {
@@ -44,51 +160,34 @@ namespace FAMIS.Controllers
             }
             if (serialNum.Contains("LY"))
             {
-                //Json_collar data = collarCTR.getCollarByID(id);
-                //if (data != null)
-                //{
-                //    ViewBag.id = id;
-                //    ViewBag.serialNumber = data.serialNumber;
-                //    ViewBag.address = data.address;
-                //    ViewBag.data_collar = data.date_collar;
-                //    ViewBag.department = data.department;
-                //    ViewBag.operatorUser = data.operatorUser;
-                //    ViewBag.reason = data.reason;
-                //    ViewBag.ps = data.ps;
-                //    ViewBag.user_collar = data.user_collar;
-                //}
-                //Response.Redirect("/Collar/review_collar?id="+id);
-                @ViewBag.url = "/Collar/review_collar?id=" + id;
+                @ViewBag.url = "/Index/Index_Collar_review?id=" + id;
                 return View();
-
             }
             else if (serialNum.Contains("DB"))
             {
-                @ViewBag.url = "/Allocation/Allocation_review?id=" + id;
+                @ViewBag.url = "/Index/Index_Allocation_review?id=" + id;
                 return View();
             }
             else if (serialNum.Contains("WX"))
             {
-                @ViewBag.url = "/Repair/Repair_review?id=" + id;
+                @ViewBag.url = "/Index/Index_Repair_review?id=" + id;
                 return View();
             }
             else if (serialNum.Contains("JC"))
             {
-                @ViewBag.url = "/Borrow/Borrow_review?id=" + id;
+                @ViewBag.url = "/Index/Index_Borrow_review?id=" + id;
                 return View();
             }
             else if (serialNum.Contains("GH"))
             {
-                @ViewBag.url = "/Return/Return_review?id=" + id;
+                @ViewBag.url = "/Index/Index_Return_review?id=" + id;
                 return View();
             }
             else if (serialNum.Contains("JS"))
             {
-                @ViewBag.url = "/Reduction/Reduction_review?id=" + id;
+                @ViewBag.url = "/Index/Index_Reduction_review?id=" + id;
                 return View();
             }
-
-
             return View("Error");
  
         }
@@ -264,7 +363,7 @@ namespace FAMIS.Controllers
             return null;
          }
 
-        public JsonResult load_myreminder(int? page,int? rows)
+        public JsonResult load_myreminder(int? page,int? rows,String counterInfo)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -359,6 +458,16 @@ namespace FAMIS.Controllers
             data = data.OrderBy(a => a.reminderType);
             int skipindex = ((int)page - 1) * (int)rows;
             int rowsNeed = (int)rows;
+
+            if (counterInfo != null && counterInfo.Trim() != "" && counterInfo.Trim() == "counterInfo")
+            {
+                var json_CF = new
+                {
+                    total = data.Count()
+                };
+                return Json(json_CF, JsonRequestBehavior.AllowGet);
+            }
+
             var json = new
             {
                 total = data.Count(),

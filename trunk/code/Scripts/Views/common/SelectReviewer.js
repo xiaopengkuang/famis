@@ -39,6 +39,7 @@ function loadPageTool() {
                 {
                     try{
                         parent.SubmitToUser(row.id);
+                        parent.parent.reloadMyReMindTabs();
                         parent.$('#modalwindow').window(close);
                     }catch(e)
                     {
