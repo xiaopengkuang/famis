@@ -52,15 +52,16 @@ namespace FAMIS.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Export(string serial, string DJ_type)
+        public ActionResult Export(string serial, string type)
         {
-            switch(DJ_type)
+            switch(type)
             {
                 case "LY": 
                     {
                         var data = from o in db.tb_Asset_collar
                                    join od in db.tb_Asset_collar_detail on o.ID equals od.ID_collar
                                    join depp in db.tb_department on o.department_collar equals depp.ID  
+                                   join dd in db.tb_dataDict_para on o.addree_Storage equals dd.ID
                                    join asset in db.tb_Asset on od.ID_asset equals asset.ID
                                    join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
@@ -69,7 +70,8 @@ namespace FAMIS.Controllers
                                    join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
                                    join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
                                    join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID into temp_gys
+                                   from ggys in temp_gys.DefaultIfEmpty()
                                    where o.serial_number == serial && o.flag == true
                                    select new
                                    {
@@ -78,7 +80,7 @@ namespace FAMIS.Controllers
                                        领用原因 = o.reason,
                                        领用部门 = depp.name_Department,
                                        领用人 = op.true_Name,
-                                       存放地点 = o.addree_Storage,
+                                       存放地点 =dd.name_para,
                                        资产编号 = asset.serial_number,
                                        资产名称 = asset.name_Asset,
                                        资产类型 = at.name_Asset_Type,
@@ -89,7 +91,7 @@ namespace FAMIS.Controllers
                                        地址 = cf.name_para,
                                        添加方式 = zjfs.name_para,
                                        资产状态 = zczt.name_para,
-                                       供应商 = gys.name_para,
+                                       供应商 = ggys.name_para,
                                        备注 = o.ps
 
 
@@ -115,7 +117,8 @@ namespace FAMIS.Controllers
                                    join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
                                    join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
                                    join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID into temp_gys
+                                   from ggys in temp_gys.DefaultIfEmpty()
                                    where o.serialNum == serial && o.flag == true
                                    select new
                                    {
@@ -136,7 +139,7 @@ namespace FAMIS.Controllers
                                        地址 = cf.name_para,
                                        添加方式 = zjfs.name_para,
                                        资产状态 = zczt.name_para,
-                                       供应商 = gys.name_para,
+                                       供应商 = ggys.name_para,
                                        备注=o.note_borrow
 
 
@@ -162,7 +165,8 @@ namespace FAMIS.Controllers
                                    join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
                                    join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
                                    join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID into temp_gys
+                                   from ggys in temp_gys.DefaultIfEmpty()
                                    join dz in db.tb_dataDict_para on o.addree_Storage equals dz.ID
                                    where o.serial_number == serial && o.flag == true
                                    select new
@@ -184,7 +188,7 @@ namespace FAMIS.Controllers
                                        地址 = cf.name_para,
                                        添加方式 = zjfs.name_para,
                                        资产状态 = zczt.name_para,
-                                       供应商 = gys.name_para,
+                                       供应商 = ggys.name_para,
                                        备注=o.ps
 
 
@@ -209,7 +213,8 @@ namespace FAMIS.Controllers
                                    join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
                                    join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
                                    join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID into temp_gys
+                                   from ggys in temp_gys.DefaultIfEmpty()
                                     
                                    where o.serialNumber == serial && o.flag == true
                                    select new
@@ -228,7 +233,7 @@ namespace FAMIS.Controllers
                                        地址 = cf.name_para,
                                        添加方式 = zjfs.name_para,
                                        资产状态 = zczt.name_para,
-                                       供应商 = gys.name_para,
+                                       供应商 = ggys.name_para,
                                        备注=o.note_repair
 
 
@@ -253,8 +258,8 @@ namespace FAMIS.Controllers
                                    join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
                                    join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
                                    join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
-
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID into temp_gys
+                                   from ggys in temp_gys.DefaultIfEmpty()
                                    where o.serialNum == serial && o.flag == true
                                    select new
                                    {
@@ -272,7 +277,7 @@ namespace FAMIS.Controllers
                                        地址 = cf.name_para,
                                        添加方式 = zjfs.name_para,
                                        资产状态 = zczt.name_para,
-                                       供应商 = gys.name_para,
+                                       供应商 = ggys.name_para,
                                        备注=o.note_return
 
 
@@ -297,7 +302,8 @@ namespace FAMIS.Controllers
                                    join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
                                    join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
                                    join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID
+                                   join gys in db.tb_dataDict_para on asset.supplierID equals gys.ID into temp_gys
+                                   from ggys in temp_gys.DefaultIfEmpty()
 
                                    where o.Serial_number == serial && o.flag == true
                                    select new
@@ -318,7 +324,7 @@ namespace FAMIS.Controllers
                                        地址 = cf.name_para,
                                        添加方式 = zjfs.name_para,
                                        资产状态 = zczt.name_para,
-                                       供应商 = gys.name_para,
+                                       供应商 = ggys.name_para,
                                        备注=o.note_reduce
 
 
