@@ -59,18 +59,29 @@ namespace FAMIS.Controllers
                 case "LY": 
                     {
                         var data = from o in db.tb_Asset_collar
-                                   join od in db.tb_Asset_collar_detail on o.ID equals od.ID_collar
-                                   join depp in db.tb_department on o.department_collar equals depp.ID  
-                                   join dd in db.tb_dataDict_para on o.addree_Storage equals dd.ID
-                                   join asset in db.tb_Asset on od.ID_asset equals asset.ID
-                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   join od in db.tb_Asset_collar_detail on o.ID equals od.ID_collar into temp_od
+                                   from ood in temp_od.DefaultIfEmpty()
+                                   join depp in db.tb_department on o.department_collar equals depp.ID  into temp_depp
+                                   from ddepp in temp_depp.DefaultIfEmpty()
+                                   join dd in db.tb_dataDict_para on o.addree_Storage equals dd.ID into temp_dd
+                                   from ddd in temp_dd.DefaultIfEmpty()
+                                   join asset in db.tb_Asset on ood.ID_asset equals asset.ID into temp_asset
+                                   from aasset in temp_asset.DefaultIfEmpty()
+                                   join dep in db.tb_department on aasset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
-                                   join op in db.tb_user on o._operator equals op.ID
-                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
-                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
-                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
-                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_supplier on asset.supplierID equals gys.ID into temp_gys
+                                   join op in db.tb_user on o._operator equals op.ID into temp_op
+                                   from oop in temp_op.DefaultIfEmpty()
+                                   join at in db.tb_AssetType on aasset.type_Asset equals at.ID into temp_at
+                                   from aat in temp_at.DefaultIfEmpty()
+                                   join cf in db.tb_dataDict_para on aasset.addressCF equals cf.ID into temp_cf
+                                   from  ccf in temp_cf.DefaultIfEmpty()
+                                   join zjfs in db.tb_dataDict_para on aasset.Method_add equals zjfs.ID into temp_zjfs
+                                   from zzjfs in temp_zjfs.DefaultIfEmpty()
+                                    
+                                   join zczt in db.tb_dataDict_para on aasset.state_asset equals zczt.ID into temp_zczt
+                                   from zzczt in temp_zczt.DefaultIfEmpty()
+
+                                   join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
                                    where o.serial_number == serial && o.flag == true
                                    select new
@@ -78,19 +89,19 @@ namespace FAMIS.Controllers
                                        单据号 = o.serial_number,
                                        领用日期 = o.date,
                                        领用原因 = o.reason,
-                                       领用部门 = depp.name_Department,
-                                       领用人 = op.true_Name,
-                                       存放地点 =dd.name_para,
-                                       资产编号 = asset.serial_number,
-                                       资产名称 = asset.name_Asset,
-                                       资产类型 = at.name_Asset_Type,
-                                       型号规范 = asset.specification,
-                                       单价 = asset.unit_price,
-                                       数量 = asset.amount,
+                                       领用部门 = ddepp.name_Department,
+                                       领用人 = oop.true_Name,
+                                       存放地点 =ddd.name_para,
+                                       资产编号 = aasset.serial_number,
+                                       资产名称 = aasset.name_Asset,
+                                       资产类型 = aat.name_Asset_Type,
+                                       型号规范 = aasset.specification,
+                                       单价 = aasset.unit_price,
+                                       数量 = aasset.amount,
                                        使用部门 = ddep.name_Department,
-                                       地址 = cf.name_para,
-                                       添加方式 = zjfs.name_para,
-                                       资产状态 = zczt.name_para,
+                                       地址 = ccf.name_para,
+                                       添加方式 = zzjfs.name_para,
+                                       资产状态 = zzczt.name_para,
                                        供应商 = ggys.name_supplier,
                                        备注 = o.ps
 
@@ -109,15 +120,23 @@ namespace FAMIS.Controllers
                                    join depp in db.tb_department on o.department_borrow equals depp.ID  
                                     
                                    join od in db.tb_Asset_Borrow_detail on o.ID equals od.ID_borrow
-                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID
-                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID into temp_asset
+                                   from aasset in temp_asset.DefaultIfEmpty()
+                                   join dep in db.tb_department on aasset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
-                                   join op in db.tb_user on o.userID_operated equals op.ID
-                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
-                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
-                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
-                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_supplier on asset.supplierID equals gys.ID into temp_gys
+                                   join op in db.tb_user on o.userID_operated equals op.ID into temp_op
+                                   from oop in temp_op.DefaultIfEmpty()
+                                   join at in db.tb_AssetType on aasset.type_Asset equals at.ID into temp_at
+                                   from aat in temp_at.DefaultIfEmpty()
+                                   join cf in db.tb_dataDict_para on aasset.addressCF equals cf.ID into temp_cf
+                                   from ccf in temp_cf.DefaultIfEmpty()
+                                   join zjfs in db.tb_dataDict_para on aasset.Method_add equals zjfs.ID into temp_zjfs
+                                   from zzjfs in temp_zjfs.DefaultIfEmpty()
+
+                                   join zczt in db.tb_dataDict_para on aasset.state_asset equals zczt.ID into temp_zczt
+                                   from zzczt in temp_zczt.DefaultIfEmpty()
+
+                                   join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
                                    where o.serialNum == serial && o.flag == true
                                    select new
@@ -127,18 +146,18 @@ namespace FAMIS.Controllers
                                        借出原因 = o.reason_borrow,
                                        预计归还时间=o.date_return,
                                        借出部门 = depp.name_Department,
-                                       借出人 = op.true_Name,
+                                       借出人 = oop.true_Name,
                                        
-                                       资产编号 = asset.serial_number,
-                                       资产名称 = asset.name_Asset,
-                                       资产类型 = at.name_Asset_Type,
-                                       型号规范 = asset.specification,
-                                       单价 = asset.unit_price,
-                                       数量 = asset.amount,
+                                       资产编号 = aasset.serial_number,
+                                       资产名称 = aasset.name_Asset,
+                                       资产类型 = aat.name_Asset_Type,
+                                       型号规范 = aasset.specification,
+                                       单价 = aasset.unit_price,
+                                       数量 = aasset.amount,
                                        使用部门 = ddep.name_Department,
-                                       地址 = cf.name_para,
-                                       添加方式 = zjfs.name_para,
-                                       资产状态 = zczt.name_para,
+                                       地址 = ccf.name_para,
+                                       添加方式 = zzjfs.name_para,
+                                       资产状态 = zzczt.name_para,
                                        供应商 = ggys.name_supplier,
                                        备注=o.note_borrow
 
@@ -157,37 +176,46 @@ namespace FAMIS.Controllers
                         var data = from o in db.tb_Asset_allocation
                                    join depp in db.tb_department on o.department_allocation equals depp.ID  
                                    join od in db.tb_Asset_allocation_detail on o.ID equals od.ID_allocation
-                                   join asset in db.tb_Asset on od.ID_asset equals asset.ID
-                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   join asset in db.tb_Asset on od.ID_asset equals asset.ID into temp_asset
+                                   from aasset in temp_asset.DefaultIfEmpty()
+                                   join dep in db.tb_department on aasset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
-                                   join op in db.tb_user on o._operator equals op.ID
-                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
-                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
-                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
-                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_supplier on asset.supplierID equals gys.ID into temp_gys
+                                   join op in db.tb_user on o._operator equals op.ID into temp_op
+                                   from oop in temp_op.DefaultIfEmpty()
+                                   join at in db.tb_AssetType on aasset.type_Asset equals at.ID into temp_at
+                                   from aat in temp_at.DefaultIfEmpty()
+                                   join cf in db.tb_dataDict_para on aasset.addressCF equals cf.ID into temp_cf
+                                   from ccf in temp_cf.DefaultIfEmpty()
+                                   join zjfs in db.tb_dataDict_para on aasset.Method_add equals zjfs.ID into temp_zjfs
+                                   from zzjfs in temp_zjfs.DefaultIfEmpty()
+
+                                   join zczt in db.tb_dataDict_para on aasset.state_asset equals zczt.ID into temp_zczt
+                                   from zzczt in temp_zczt.DefaultIfEmpty()
+
+                                   join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
-                                   join dz in db.tb_dataDict_para on o.addree_Storage equals dz.ID
+                                   join dz in db.tb_dataDict_para on o.addree_Storage equals dz.ID into temp_dz
+                                   from ddz in temp_dz.DefaultIfEmpty()
                                    where o.serial_number == serial && o.flag == true
                                    select new
                                    {
                                        单据号 = o.serial_number,
                                        调拨日期 = o.date,
                                        调拨原因 = o.reason,
-                                       调入地址 = dz.name_para,
+                                       调入地址 = ddz.name_para,
                                        调入部门 = depp.name_Department,
-                                       操作人 = op.true_Name,
+                                       操作人 = oop.true_Name,
 
-                                       资产编号 = asset.serial_number,
-                                       资产名称 = asset.name_Asset,
-                                       资产类型 = at.name_Asset_Type,
-                                       型号规范 = asset.specification,
-                                       单价 = asset.unit_price,
-                                       数量 = asset.amount,
+                                       资产编号 = aasset.serial_number,
+                                       资产名称 = aasset.name_Asset,
+                                       资产类型 = aat.name_Asset_Type,
+                                       型号规范 = aasset.specification,
+                                       单价 = aasset.unit_price,
+                                       数量 = aasset.amount,
                                        使用部门 = ddep.name_Department,
-                                       地址 = cf.name_para,
-                                       添加方式 = zjfs.name_para,
-                                       资产状态 = zczt.name_para,
+                                       地址 = ccf.name_para,
+                                       添加方式 = zzjfs.name_para,
+                                       资产状态 = zzczt.name_para,
                                        供应商 = ggys.name_supplier,
                                        备注=o.ps
 
@@ -250,15 +278,23 @@ namespace FAMIS.Controllers
                         var data = from o in db.tb_Asset_Return
 
                                    join od in db.tb_Asset_Return_detail  on o.ID equals od.ID_Return
-                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID
-                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID into temp_asset
+                                   from aasset in temp_asset.DefaultIfEmpty()
+                                   join dep in db.tb_department on aasset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
+                                   join op in db.tb_user on o.userID_operated equals op.ID into temp_op
+                                   from oop in temp_op.DefaultIfEmpty()
+                                   join at in db.tb_AssetType on aasset.type_Asset equals at.ID into temp_at
+                                   from aat in temp_at.DefaultIfEmpty()
+                                   join cf in db.tb_dataDict_para on aasset.addressCF equals cf.ID into temp_cf
+                                   from ccf in temp_cf.DefaultIfEmpty()
+                                   join zjfs in db.tb_dataDict_para on aasset.Method_add equals zjfs.ID into temp_zjfs
+                                   from zzjfs in temp_zjfs.DefaultIfEmpty()
 
-                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
-                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
-                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
-                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_supplier on asset.supplierID equals gys.ID into temp_gys
+                                   join zczt in db.tb_dataDict_para on aasset.state_asset equals zczt.ID into temp_zczt
+                                   from zzczt in temp_zczt.DefaultIfEmpty()
+
+                                   join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
                                    where o.serialNum == serial && o.flag == true
                                    select new
@@ -267,16 +303,16 @@ namespace FAMIS.Controllers
                                      
                                        预计归还日期 = o.date_return,
                                        原因=o.reason_return,
-                                       资产编号 = asset.serial_number,
-                                       资产名称 = asset.name_Asset,
-                                       资产类型 = at.name_Asset_Type,
-                                       型号规范 = asset.specification,
-                                       单价 = asset.unit_price,
-                                       数量 = asset.amount,
+                                       资产编号 = aasset.serial_number,
+                                       资产名称 = aasset.name_Asset,
+                                       资产类型 = aat.name_Asset_Type,
+                                       型号规范 = aasset.specification,
+                                       单价 = aasset.unit_price,
+                                       数量 = aasset.amount,
                                        使用部门 = ddep.name_Department,
-                                       地址 = cf.name_para,
-                                       添加方式 = zjfs.name_para,
-                                       资产状态 = zczt.name_para,
+                                       地址 = ccf.name_para,
+                                       添加方式 = zzjfs.name_para,
+                                       资产状态 = zzczt.name_para,
                                        供应商 = ggys.name_supplier,
                                        备注=o.note_return
 
@@ -294,15 +330,24 @@ namespace FAMIS.Controllers
                                    join u in db.tb_user on  o.userID_apply equals u.ID
                                    join uu in db.tb_user on  o.userID_approver equals uu.ID
                                    join od in db.tb_Asset_Reduction_detail on o.ID equals od.ID_reduction
-                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID
-                                   join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
+                                   join asset in db.tb_Asset on od.ID_Asset equals asset.ID into temp_asset
+                                   from aasset in temp_asset.DefaultIfEmpty()
+                                   join dep in db.tb_department on aasset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
-                                   join jsfs in db.tb_dataDict_para on o.method_reduction equals jsfs.ID
-                                   join at in db.tb_AssetType on asset.type_Asset equals at.ID
-                                   join cf in db.tb_dataDict_para on asset.addressCF equals cf.ID
-                                   join zjfs in db.tb_dataDict_para on asset.Method_add equals zjfs.ID
-                                   join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
-                                   join gys in db.tb_supplier on asset.supplierID equals gys.ID into temp_gys
+                                   join op in db.tb_user on o.userID_operate equals op.ID into temp_op
+                                   from oop in temp_op.DefaultIfEmpty()
+                                   join at in db.tb_AssetType on aasset.type_Asset equals at.ID into temp_at
+                                   from aat in temp_at.DefaultIfEmpty()
+                                   join cf in db.tb_dataDict_para on aasset.addressCF equals cf.ID into temp_cf
+                                   from ccf in temp_cf.DefaultIfEmpty()
+                                   join zjfs in db.tb_dataDict_para on aasset.Method_add equals zjfs.ID into temp_zjfs
+                                   from zzjfs in temp_zjfs.DefaultIfEmpty()
+                                   join jsfs in db.tb_dataDict_para on o.method_reduction equals jsfs.ID into temp_js
+                                   from jjsfs in temp_js.DefaultIfEmpty()
+                                   join zczt in db.tb_dataDict_para on aasset.state_asset equals zczt.ID into temp_zczt
+                                   from zzczt in temp_zczt.DefaultIfEmpty()
+
+                                   join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
 
                                    where o.Serial_number == serial && o.flag == true
@@ -310,20 +355,20 @@ namespace FAMIS.Controllers
                                    {
                                        单据号 = o.Serial_number,
                                        减少日期 = o.date_reduction,
-                                       减少方式 = jsfs.name_para,
+                                       减少方式 = jjsfs.name_para,
                                        申请人=u.true_Name,
                                        批准人=uu.true_Name,
                                        减少原因=o.reason_reduce,
-                                       资产编号 = asset.serial_number,
-                                       资产名称 = asset.name_Asset,
-                                       资产类型 = at.name_Asset_Type,
-                                       型号规范 = asset.specification,
-                                       单价 = asset.unit_price,
-                                       数量 = asset.amount,
+                                       资产编号 = aasset.serial_number,
+                                       资产名称 = aasset.name_Asset,
+                                       资产类型 = aat.name_Asset_Type,
+                                       型号规范 = aasset.specification,
+                                       单价 = aasset.unit_price,
+                                       数量 = aasset.amount,
                                        使用部门 = ddep.name_Department,
-                                       地址 = cf.name_para,
-                                       添加方式 = zjfs.name_para,
-                                       资产状态 = zczt.name_para,
+                                       地址 = ccf.name_para,
+                                       添加方式 = zzjfs.name_para,
+                                       资产状态 = zzczt.name_para,
                                        供应商 = ggys.name_supplier,
                                        备注=o.note_reduce
 
