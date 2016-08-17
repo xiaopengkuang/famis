@@ -64,22 +64,21 @@ namespace FAMIS.Controllers
 
             if (count == 1)//存在用户
             {
-                //List<tb_user> userList = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(f=>f.flag==true).ToList();
-                tb_user userInfo = data.First();
-                if (userInfo != null)
+                List<tb_user> userList = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(f=>f.flag==true).ToList();
+                if (userList != null && userList.Count == 1)
                 {
 
                     Session["Logined"] = "OK";
-                    ViewBag.LoginUser = userInfo.true_Name;
+                    ViewBag.LoginUser = userList[0].true_Name;
                     //往Session里面保存用户信息
                     //用户名
-                    Session["userName"] = userInfo.name_User;
+                    Session["userName"] = userList[0].name_User;
                     Session["TrueName"] = userInfo.true_Name;
-                    Session["userID"] = userInfo.ID;
+                    Session["userID"] = userList[0].ID;
                     ////用户名
-                    Session["password"] = userInfo.password_User;
+                    Session["password"] = userList[0].password_User;
                     //用户角色
-                    Session["userRole"] = userInfo.roleID_User;
+                    Session["userRole"] = userList[0].roleID_User;
                     
                     //更新用户登录时间
 
@@ -129,16 +128,15 @@ namespace FAMIS.Controllers
         public string GetRole()
         {
             int? roleid = commonConversion.getRoleID();
-
             var q = from o in DBConnecting.tb_role
-                    where o.ID==roleid  && o.flag == true
+                    where roleid == o.ID && o.flag == true
                     select o;
             if (q.Count() > 0)
                 return roleid.ToString();
             else
             {
                 Session.Remove("Logined");
-                Session.RemoveAll();
+               
                 return "Invalidate";
             }
         }
@@ -271,7 +269,12 @@ namespace FAMIS.Controllers
             int rid = int.Parse(JSON);
             int indexof_menu_ID = 1;
             int ArgeFlag = 0;
-             var menu_ID = !supU? from o in DBConnecting.tb_role_authorization
+             
+              
+
+            
+            
+                var menu_ID = !supU? from o in DBConnecting.tb_role_authorization
                               join m in DBConnecting.tb_Menu on o.Right_ID equals m.ID
                                      where o.role_ID == rid && o.type == "menu" && m.isMenu == true
                               orderby m.ID_Menu
