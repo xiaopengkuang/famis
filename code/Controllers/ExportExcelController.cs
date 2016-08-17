@@ -21,6 +21,7 @@ using FAMIS.Helper_Class;
 using System.Collections;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using NPOI.SS.Util;
 
 namespace FAMIS.Controllers
 {
@@ -80,9 +81,11 @@ namespace FAMIS.Controllers
                     }; break;
                 default: ; break;
             }
+            String titleName = "拙政园管理处固定新增资产确认单";
             string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
             fileName += dateTime+".xls";
-            return ExportDataTable(data_TB, fileName, columeNames);
+            fileName = "拙政园管理处固定新增资产确认单_" + fileName;
+            return ExportDataTable(data_TB, fileName, columeNames,titleName);
         }
 
 
@@ -109,7 +112,7 @@ namespace FAMIS.Controllers
             columeNames = ColumnListConf.dto_Collar;
             string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
             fileName += dateTime + ".xls";
-            return ExportDataTable(data_TB, fileName, columeNames);
+            return ExportDataTable(data_TB, fileName, columeNames, null);
         }
 
         public ActionResult ExportExcel_Allocation(int? page, int? rows, String searchCondtiion, bool? exportFlag) 
@@ -135,7 +138,7 @@ namespace FAMIS.Controllers
             columeNames = ColumnListConf.dto_Collar;
             string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
             fileName += dateTime + ".xls";
-            return ExportDataTable(data_TB, fileName, columeNames);
+            return ExportDataTable(data_TB, fileName, columeNames, null);
         }
         public ActionResult ExportExcel_Repair(int? page, int? rows, String searchCondtiion, bool? exportFlag)
         {
@@ -162,7 +165,7 @@ namespace FAMIS.Controllers
             columeNames = ColumnListConf.dto_Repair;
             string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
             fileName += dateTime + ".xls";
-            return ExportDataTable(data_TB, fileName, columeNames);
+            return ExportDataTable(data_TB, fileName, columeNames,null);
         }
 
         public ActionResult ExportExcel_Borrow(int? page, int? rows, String searchCondtiion, bool? exportFlag)
@@ -189,7 +192,7 @@ namespace FAMIS.Controllers
             columeNames = ColumnListConf.dto_Borrow;
             string dateTime = DateTime.Now.ToString("yyMMddHHmmssfff");
             fileName += dateTime + ".xls";
-            return ExportDataTable(data_TB, fileName, columeNames);
+            return ExportDataTable(data_TB, fileName, columeNames,null);
         }
 
         /// <summary>
@@ -247,7 +250,7 @@ namespace FAMIS.Controllers
             }
             return result;
         }
-        public ActionResult ExportDataTable(DataTable data, String FileName, List<String> columeNames)
+        public ActionResult ExportDataTable(DataTable data, String FileName, List<String> columeNames, String titleExcel)
         {
             //创建Excel文件的对象
             NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
@@ -261,24 +264,64 @@ namespace FAMIS.Controllers
             try
             {
 
+                //这边加入标题
+                if (true&&titleExcel!=null)
+                {
+                    IRow row = sheet.CreateRow(count);
+                    row.HeightInPoints = 30;
+                    for (int j = 0; j < data.Columns.Count; j++)
+                    {
+                        if (j == 0)
+                        {
+                            row.CreateCell(j).SetCellValue("");
+                            //row.CreateCell(j).SetCellValue(titleExcel);
+                        }
+                        else
+                        {
+                            row.CreateCell(j).SetCellValue("");
+                        }
+                    }
+                    SetCellRangeAddress(sheet, 0, 0, 0, data.Columns.Count - 1);
+
+                    ICellStyle cellStyle = book.CreateCellStyle();
+                    //设置单元格的样式：水平对齐居中
+                    cellStyle.VerticalAlignment = VerticalAlignment.Justify;//垂直对齐(默认应该为center，如果center无效则用justify)
+                    cellStyle.Alignment = HorizontalAlignment.Center;//水平对齐
+                    IFont font = book.CreateFont();
+                    font.FontHeightInPoints = 16;
+                    font.Boldweight = (short)NPOI.SS.UserModel.FontBoldWeight.Bold;
+                    font.FontName = "黑体";
+                    cellStyle.SetFont(font);
+
+                    ICell cell = row.Cells[0];
+                    cell.CellStyle = cellStyle;
+
+                    //ICellStyle cellstyle = book.CreateCellStyle();//设置垂直居中格式
+                    //cellstyle.VerticalAlignment = VerticalAlignment.Center;//垂直居中
+                    //cell.CellStyle = cellstyle;
+                    row.Cells[0].SetCellValue(titleExcel);
+                    ++count;
+                }
+
+
 
                 if (columeNames.Count > 0) //写入DataTable的列名
                 {
-                    IRow row = sheet.CreateRow(0);
+                    IRow row = sheet.CreateRow(count);
                     for (int j = 0; j < columeNames.Count; ++j)
                     {
                         row.CreateCell(j).SetCellValue(columeNames[j]);
                     }
-                    count = 1;
+                    count++;
                 }
                 else
                 {
-                    IRow row = sheet.CreateRow(0);
+                    IRow row = sheet.CreateRow(count);
                     for (int j = 0; j < data.Columns.Count; ++j)
                     {
                         row.CreateCell(j).SetCellValue(data.Columns[j].ColumnName);
                     }
-                    count = 1;
+                    count ++;
                 }
 
 
@@ -291,11 +334,61 @@ namespace FAMIS.Controllers
                     }
                     ++count;
                 }
+                if (true)
+                {
+                    IRow row_temp = sheet.CreateRow(count);
+                    ++count;
+                    IRow row_temp2 = sheet.CreateRow(count);
+                    ++count;
+                    IRow row = sheet.CreateRow(count);
+                    if (data.Columns.Count - 3 < 0)
+                    {
+                        row.CreateCell(0).SetCellValue("经办人：");
+                    }
+                    else
+                    {
+                        row.CreateCell(data.Columns.Count - 3).SetCellValue("经办人：");
+                    }
+                    count++;
+                }
+                if (true)
+                {
+                    IRow row = sheet.CreateRow(count);
+                    if (data.Columns.Count - 3 < 0)
+                    {
+                        row.CreateCell(0).SetCellValue("日期：");
+                    }
+                    else
+                    {
+                        row.CreateCell(data.Columns.Count - 3).SetCellValue("日期：");
+                    }
+                    count++;
+                }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+
+            for (int columnNum = 0; columnNum < data.Columns.Count; columnNum++)
+            {
+                int columnWidth = sheet.GetColumnWidth(columnNum) / 256;//获取当前列宽度  
+                for (int rowNum = 1; rowNum < count; rowNum++)//在这一列上循环行  
+                {
+                    IRow currentRow = sheet.GetRow(rowNum);
+                    ICell currentCell = currentRow.GetCell(columnNum);
+                    if (currentCell == null || currentCell.ToString().Trim() == "")
+                    {
+                        continue;
+                    }
+                    int length = Encoding.UTF8.GetBytes(currentCell.ToString()).Length;//获取当前单元格的内容宽度  
+                    if (columnWidth < length + 1)
+                    {
+                        columnWidth = length + 1;
+                    }//若当前单元格内容宽度大于列宽，则调整列宽为当前单元格宽度，后面的+1是我人为的将宽度增加一个字符  
+                }
+                sheet.SetColumnWidth(columnNum, columnWidth * 256);
             }
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
@@ -317,7 +410,19 @@ namespace FAMIS.Controllers
             return File(ms, "application/vnd.ms-excel", FileName);
         }
 
-
+        /// <summary>
+        /// 合并单元格
+        /// </summary>
+        /// <param name="sheet">要合并单元格所在的sheet</param>
+        /// <param name="rowstart">开始行的索引</param>
+        /// <param name="rowend">结束行的索引</param>
+        /// <param name="colstart">开始列的索引</param>
+        /// <param name="colend">结束列的索引</param>
+        public static void SetCellRangeAddress(ISheet sheet, int rowstart, int rowend, int colstart, int colend)
+        {
+            CellRangeAddress cellRangeAddress = new CellRangeAddress(rowstart, rowend, colstart, colend);
+            sheet.AddMergedRegion(cellRangeAddress);
+        }
         public String FormatDateTime(String dateStr_org)
         {
 

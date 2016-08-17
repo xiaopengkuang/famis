@@ -316,25 +316,26 @@ function loadPageTool(datagrid, dataRight) {
                    } else {
                    }
                }
-           },{
-               text: '导出',
-               height: 50,
-               iconCls: 'icon-save',
-               disabled: !dataRight.export_able,
-               handler: function () {
-                   if (!dataRight.export_able) {
-                       return;
-                   }
-                   ajaxLoading();
-                   var url = '/ExportExcel/ExportExcel_Allocation?exportFlag=true&searchCondtiion=' + searchCondtiion;
-                   //'/Collar/LoadCollars?searchCondtiion=' + searchCondtiion
-                   exportData(url);
-                   ajaxLoadEnd();
-
-                   //var filename = getNowFormatDate_FileName();
-                   //Export(filename, $('#' + datagrid));
-               }
-           }],
+           }
+           //, {
+           //    text: '导出',
+           //    height: 50,
+           //    iconCls: 'icon-save',
+           //    disabled: !dataRight.export_able,
+           //    handler: function () {
+           //        if (!dataRight.export_able) {
+           //            return;
+           //        }
+           //        ajaxLoading();
+           //        var url = '/ExportExcel/ExportExcel_Allocation?exportFlag=true&searchCondtiion=' + searchCondtiion;
+           //        //'/Collar/LoadCollars?searchCondtiion=' + searchCondtiion
+           //        exportData(url);
+           //        ajaxLoadEnd();
+           //        //var filename = getNowFormatDate_FileName();
+           //        //Export(filename, $('#' + datagrid));
+           //    }
+           //}
+        ],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
