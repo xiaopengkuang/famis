@@ -1029,14 +1029,17 @@ namespace FAMIS.Controllers
 
             }
 
-            for (int columnNum = 0; columnNum <data.Columns.Count; columnNum++)
+
+
+
+            for (int columnNum = 0; columnNum < data.Columns.Count; columnNum++)
             {
                 int columnWidth = sheet.GetColumnWidth(columnNum) / 256;//获取当前列宽度  
                 for (int rowNum = 1; rowNum < count; rowNum++)//在这一列上循环行  
                 {
                     IRow currentRow = sheet.GetRow(rowNum);
                     ICell currentCell = currentRow.GetCell(columnNum);
-                    if (currentCell==null||currentCell.ToString().Trim() == "")
+                    if (currentCell == null || currentCell.ToString().Trim() == "")
                     {
                         continue;
                     }
@@ -1048,7 +1051,6 @@ namespace FAMIS.Controllers
                 }
                 sheet.SetColumnWidth(columnNum, columnWidth * 256);
             }
-            //SetCellRangeAddress(sheet,0,0,0,data.Columns.Count-1);
 
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
