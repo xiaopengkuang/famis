@@ -819,10 +819,7 @@ function LoadInitData(searchCondtiion) {
                          if (!dataRight.export_able) {
                              return;
                          }
-                         if (PDsearial == "" || PDsearial == null) {
-                             $.messager.alert("提示", "盘点明细为空！", "error");
-                             return;
-                         }
+                         
                          var form = $("<form>");//定义一个form表单
                          form.attr("style", "display:none");
                          form.attr("target", "");
