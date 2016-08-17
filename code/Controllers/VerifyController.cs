@@ -696,6 +696,7 @@ namespace FAMIS.Controllers
 
 
                        var data = from r in db.tb_Asset_inventory
+                                  join zctt in db.tb_dataDict_para on r.state equals zctt.ID.ToString()
                                   where r.flag == true
                                   select new
                                   {
@@ -707,7 +708,7 @@ namespace FAMIS.Controllers
                                       盘点数量 = r.amountOfInv,
                                       差异 = r.difference,
                                       资产性质 = r.property,
-                                      资产状态 = r.state,
+                                      资产状态 = zctt.name_para,
                                       创建日期 = r.date_Create,
                                       备注 = r.ps
                                   };
@@ -844,11 +845,9 @@ namespace FAMIS.Controllers
             //貌似这里可以设置各种样式字体颜色背景等，但是不是很方便，这里就不设置了
 
             //给sheet1添加第一行的头部标题
-            for (int i = 0; i <= data.Rows.Count; i++)
-            {
-                sheet.AutoSizeColumn(i);
-            }
+            
             int count = 0;
+
             try
             {
 
@@ -883,6 +882,40 @@ namespace FAMIS.Controllers
             {
                 ;
 
+            }
+
+            for (int i = 0; i <= data.Rows.Count; i++)
+            {
+                sheet.AutoSizeColumn(i);
+            }
+
+            for (int columnNum = 0; columnNum <= data.Columns.Count; columnNum++)
+            {
+                int columnWidth = sheet.GetColumnWidth(columnNum) / 256;
+                for (int rowNum = 1; rowNum <= sheet.LastRowNum; rowNum++)
+                {
+                    IRow currentRow;
+                    //当前行未被使用过
+                    if (sheet.GetRow(rowNum) == null)
+                    {
+                        currentRow = sheet.CreateRow(rowNum);
+                    }
+                    else
+                    {
+                        currentRow = sheet.GetRow(rowNum);
+                    }
+
+                    if (currentRow.GetCell(columnNum) != null)
+                    {
+                        ICell currentCell = currentRow.GetCell(columnNum);
+                        int length = Encoding.Default.GetBytes(currentCell.ToString()).Length;
+                        if (columnWidth < length)
+                        {
+                            columnWidth = length;
+                        }
+                    }
+                }
+                sheet.SetColumnWidth(columnNum, columnWidth * 256);
             }
             // 写入到客户端 
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
