@@ -52,7 +52,7 @@ namespace FAMIS.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Export(string serial, string type)
+        public ActionResult Export(List<int?> ids_s, string type)
         {
             switch(type)
             {
@@ -83,7 +83,7 @@ namespace FAMIS.Controllers
 
                                    join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
-                                   where o.serial_number == serial && o.flag == true 
+                                   where ids_s.Contains(o.ID) && o.flag == true 
                                    select new
                                    {
                                        单据号 = o.serial_number,
@@ -140,7 +140,7 @@ namespace FAMIS.Controllers
 
                                    join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
-                                   where o.serialNum == serial && o.flag == true
+                                   where ids_s.Contains(o.ID) && o.flag == true
                                    select new
                                    {
                                        单据号 = o.serialNum,
@@ -200,7 +200,7 @@ namespace FAMIS.Controllers
                                    from ggys in temp_gys.DefaultIfEmpty()
                                    join dz in db.tb_dataDict_para on o.addree_Storage equals dz.ID into temp_dz
                                    from ddz in temp_dz.DefaultIfEmpty()
-                                   where o.serial_number == serial && o.flag == true
+                                   where ids_s.Contains(o.ID) && o.flag == true
                                    select new
                                    {
                                        单据号 = o.serial_number,
@@ -247,8 +247,8 @@ namespace FAMIS.Controllers
                                    join zczt in db.tb_dataDict_para on asset.state_asset equals zczt.ID
                                    join gys in db.tb_supplier on asset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
-                                    
-                                   where o.serialNumber == serial && o.flag == true
+
+                                   where ids_s.Contains(o.ID) && o.flag == true
                                    select new
                                    {
                                        单据号 = o.serialNumber,
@@ -300,7 +300,7 @@ namespace FAMIS.Controllers
 
                                    join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
-                                   where o.serialNum == serial && o.flag == true
+                                   where ids_s.Contains(o.ID) && o.flag == true
                                    select new
                                    {
                                        单据号 = o.serialNum,
@@ -356,7 +356,7 @@ namespace FAMIS.Controllers
                                    join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
 
-                                   where o.Serial_number == serial && o.flag == true
+                                   where ids_s.Contains(o.ID) && o.flag == true
                                    select new
                                    {
                                        单据号 = o.Serial_number,
