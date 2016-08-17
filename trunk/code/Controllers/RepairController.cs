@@ -27,6 +27,8 @@ namespace FAMIS.Controllers
         CommonController commonController = new CommonController();
         MODEL_TO_JSON MTJ = new MODEL_TO_JSON();
         JSON_TO_MODEL JTM = new JSON_TO_MODEL();
+        VerifyController ExcelExport = new VerifyController();
+        DownloadController downCTr = new DownloadController();
         // GET: Repair
         public ActionResult Index()
         {
@@ -813,6 +815,28 @@ namespace FAMIS.Controllers
 
         }
 
+        public ActionResult downloadDetialByIDS(String ids)
+        {
+            if (ids == null || ids.Trim() == "")
+            {
+                return null;
+            }
+            else
+            {
 
+                ids = ids.Trim();
+                List<int?> ids_select = commonConversion.StringToIntList(ids);
+                if (ids_select.Count == 1)
+                {
+                    return downCTr.Export_Detail(ids_select, "WX");
+                }
+                else
+                {
+                    return ExcelExport.Export(ids_select, "WX");
+                }
+
+
+            }
+        }
     }
 }
