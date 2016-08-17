@@ -1008,6 +1008,19 @@ namespace FAMIS.Controllers
                     }
                     count++;
                 }
+                if (true)
+                {
+                    IRow row = sheet.CreateRow(count);
+                    if (data.Columns.Count - 3 < 0)
+                    {
+                        row.CreateCell(0).SetCellValue("日期：");
+                    }
+                    else
+                    {
+                        row.CreateCell(data.Columns.Count - 3).SetCellValue("日期：");
+                    }
+                    count++;
+                }
 
             }
             catch (Exception ex)

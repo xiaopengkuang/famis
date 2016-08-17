@@ -73,7 +73,7 @@ namespace FAMIS.Controllers
                     //往Session里面保存用户信息
                     //用户名
                     Session["userName"] = userList[0].name_User;
-                    Session["TrueName"] = userInfo.true_Name;
+                    Session["TrueName"] = userList[0].true_Name;
                     Session["userID"] = userList[0].ID;
                     ////用户名
                     Session["password"] = userList[0].password_User;
