@@ -233,7 +233,7 @@ namespace FAMIS.Controllers
                                        地址 = cf.name_para,
                                        添加方式 = zjfs.name_para,
                                        资产状态 = zczt.name_para,
-                                       供应商 = ggys.name_supplier
+                                       供应商 = ggys.name_supplier,
                                        备注=o.note_repair
 
 
