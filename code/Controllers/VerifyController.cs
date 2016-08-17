@@ -83,7 +83,7 @@ namespace FAMIS.Controllers
 
                                    join gys in db.tb_supplier on aasset.supplierID equals gys.ID into temp_gys
                                    from ggys in temp_gys.DefaultIfEmpty()
-                                   where o.serial_number == serial && o.flag == true
+                                   where o.serial_number == serial && o.flag == true 
                                    select new
                                    {
                                        单据号 = o.serial_number,
@@ -117,7 +117,9 @@ namespace FAMIS.Controllers
                 case "JC":
                     {
                         var data = from o in db.tb_Asset_Borrow
-                                   join depp in db.tb_department on o.department_borrow equals depp.ID  
+                                   join depp in db.tb_department on o.department_borrow equals depp.ID
+                                   into temp_depp
+                                   from ddepp in temp_depp.DefaultIfEmpty()
                                     
                                    join od in db.tb_Asset_Borrow_detail on o.ID equals od.ID_borrow
                                    join asset in db.tb_Asset on od.ID_Asset equals asset.ID into temp_asset
@@ -145,7 +147,7 @@ namespace FAMIS.Controllers
                                        借出日期 = o.date_borrow,
                                        借出原因 = o.reason_borrow,
                                        预计归还时间=o.date_return,
-                                       借出部门 = depp.name_Department,
+                                       借出部门 = ddepp.name_Department,
                                        借出人 = oop.true_Name,
                                        
                                        资产编号 = aasset.serial_number,
@@ -174,7 +176,9 @@ namespace FAMIS.Controllers
                 case "DB":
                     {
                         var data = from o in db.tb_Asset_allocation
-                                   join depp in db.tb_department on o.department_allocation equals depp.ID  
+                                   join depp in db.tb_department on o.department_allocation equals depp.ID
+                                   into temp_depp
+                                   from ddepp in temp_depp.DefaultIfEmpty()
                                    join od in db.tb_Asset_allocation_detail on o.ID equals od.ID_allocation
                                    join asset in db.tb_Asset on od.ID_asset equals asset.ID into temp_asset
                                    from aasset in temp_asset.DefaultIfEmpty()
@@ -203,7 +207,7 @@ namespace FAMIS.Controllers
                                        调拨日期 = o.date,
                                        调拨原因 = o.reason,
                                        调入地址 = ddz.name_para,
-                                       调入部门 = depp.name_Department,
+                                       调入部门 = ddepp.name_Department,
                                        操作人 = oop.true_Name,
 
                                        资产编号 = aasset.serial_number,
@@ -327,8 +331,10 @@ namespace FAMIS.Controllers
                 case "JS":
                     {
                         var data = from o in db.tb_Asset_Reduction
-                                   join u in db.tb_user on  o.userID_apply equals u.ID
-                                   join uu in db.tb_user on  o.userID_approver equals uu.ID
+                                   join u in db.tb_user on  o.userID_apply equals u.ID into temp_u
+                                   from uuuu in temp_u.DefaultIfEmpty()
+                                   join uu in db.tb_user on  o.userID_approver equals uu.ID into temp_uu
+                                   from uuu in temp_uu.DefaultIfEmpty()
                                    join od in db.tb_Asset_Reduction_detail on o.ID equals od.ID_reduction
                                    join asset in db.tb_Asset on od.ID_Asset equals asset.ID into temp_asset
                                    from aasset in temp_asset.DefaultIfEmpty()
@@ -356,8 +362,8 @@ namespace FAMIS.Controllers
                                        单据号 = o.Serial_number,
                                        减少日期 = o.date_reduction,
                                        减少方式 = jjsfs.name_para,
-                                       申请人=u.true_Name,
-                                       批准人=uu.true_Name,
+                                       申请人=uuuu.true_Name,
+                                       批准人=uuu.true_Name,
                                        减少原因=o.reason_reduce,
                                        资产编号 = aasset.serial_number,
                                        资产名称 = aasset.name_Asset,
