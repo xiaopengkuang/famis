@@ -64,21 +64,23 @@ namespace FAMIS.Controllers
 
             if (count == 1)//存在用户
             {
-                List<tb_user> userList = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(f=>f.flag==true).ToList();
-                if (userList != null && userList.Count == 1)
+                //List<tb_user> userList = DBConnecting.tb_user.Where(a => a.name_User == userName).Where(b => b.password_User == password).Where(f=>f.flag==true).ToList();
+
+                tb_user userInfo = data.First();
+                if (userInfo != null)
                 {
 
                     Session["Logined"] = "OK";
-                    ViewBag.LoginUser = userList[0].true_Name;
+                    ViewBag.LoginUser = userInfo.true_Name;
                     //往Session里面保存用户信息
                     //用户名
-                    Session["userName"] = userList[0].name_User;
-                    Session["TrueName"] = userList[0].true_Name;
-                    Session["userID"] = userList[0].ID;
+                    Session["userName"] = userInfo.name_User;
+                    Session["TrueName"] = userInfo.true_Name;
+                    Session["userID"] = userInfo.ID;
                     ////用户名
-                    Session["password"] = userList[0].password_User;
+                    Session["password"] = userInfo.password_User;
                     //用户角色
-                    Session["userRole"] = userList[0].roleID_User;
+                    Session["userRole"] = userInfo.roleID_User;
                     
                     //更新用户登录时间
 
