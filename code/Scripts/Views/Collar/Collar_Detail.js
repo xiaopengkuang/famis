@@ -71,3 +71,4 @@ function loadPageTool_Detail() {
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
+

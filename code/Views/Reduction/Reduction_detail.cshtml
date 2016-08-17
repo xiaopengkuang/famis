@@ -17,8 +17,26 @@
 
     <script type="text/javascript" src="../../Scripts/Views/Reduction/Reduction_detail.js"></script>
     <script type="text/javascript">
-        bindData('@ViewBag.id');
-
+        //bindData('@ViewBag.id');
+        function ExportDetailExcel() {
+            var id = $("#id_C").val();
+            var url = "/Reduction/downloadDetialByIDS?ids=" + id;
+            exportData(url);
+        }
+        function exportData(url) {
+            var form = $("<form>");//定义一个form表单
+            form.attr("style", "display:none");
+            form.attr("target", "hidden_frame");
+            form.attr("method", "post");
+            form.attr("action", url);
+            var input1 = $("<input>");
+            input1.attr("type", "hidden");
+            input1.attr("name", "exportData");
+            input1.attr("value", (new Date()).getMilliseconds());
+            $("body").append(form);//将表单放置在web中
+            form.append(input1);
+            form.submit();//表单提交
+        }
     </script>
     <!--[if lte IE 9]>
     <script type="text/javascript" src="../../Scripts/html5shiv.min.js"></script>
@@ -26,8 +44,9 @@
     <![endif]-->
 
 </head>
-<body>
-
+<body onload="bindData('@ViewBag.id')">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-save'" onclick="ExportDetailExcel()">下载明细</a>
+    <input class="easyui-textbox" id="id_C" name="id_C" value="@ViewBag.id" readonly="readonly" style="width: 200px; display: none" />
     <div class="easyui-panel" style="height: 500px;" fit="true">
         <div id="jcsx_add" class="easyui-panel" title="基础信息" style="height: 150px; padding: 2px;"
             data-options="collapsible:true">
@@ -55,7 +74,7 @@
                     </td>
                     <td>批准人:</td>
                     <td>
-                        <input class="easyui-combobox" aria-readonly="true"   id="UAT_add" name="UAT_add" style="width: 200px;" />
+                        <input class="easyui-combobox" aria-readonly="true" id="UAT_add" name="UAT_add" style="width: 200px;" />
                     </td>
                 </tr>
             </table>
@@ -78,6 +97,7 @@
             <table id="datagrid_reduction_add" class="easyui-datagrid" data-options="border:false,singleSelect:true,fit:true,fitColumns:true">
             </table>
         </div>
+        <iframe name='hidden_frame' id="hidden_frame" style='width: 150px; height: 50px; display: none;'></iframe>
         <div id="modalwindow" class="easyui-window" data-options="modal:true,closed:true,minimizable:false,shadow:false"></div>
     </div>
 
