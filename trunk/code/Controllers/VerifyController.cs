@@ -844,6 +844,10 @@ namespace FAMIS.Controllers
             //貌似这里可以设置各种样式字体颜色背景等，但是不是很方便，这里就不设置了
 
             //给sheet1添加第一行的头部标题
+            for (int i = 0; i <= data.Rows.Count; i++)
+            {
+                sheet.AutoSizeColumn(i);
+            }
             int count = 0;
             try
             {
@@ -852,8 +856,12 @@ namespace FAMIS.Controllers
                 if (true) //写入DataTable的列名
                 {
                     IRow row = sheet.CreateRow(0);
+                   
                     for (int j = 0; j < data.Columns.Count; ++j)
                     {
+                       
+                           
+                        
                         row.CreateCell(j).SetCellValue(data.Columns[j].ColumnName);
                     }
                     count = 1;
