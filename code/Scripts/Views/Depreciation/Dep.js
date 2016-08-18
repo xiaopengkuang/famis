@@ -259,7 +259,9 @@ function LoadInitData_Detail(searchCondtiion) {
             {
                 field: 'unit_price', title: '单价', width: 40,
                 formatter: function (money) {
-
+                    if (money == null)
+                        return "";
+                    
                     if (String(money).split(".").length < 2)
                         return money + "¥";
                     else {
@@ -273,7 +275,9 @@ function LoadInitData_Detail(searchCondtiion) {
              {
                  field: 'Total_price', title: '资产总价', width: 50,
                  formatter: function (money) {
-
+                     if (money == null)
+                         return "";
+                    
                      if (String(money).split(".").length < 2)
                          return money + "¥";
                      else {
@@ -289,7 +293,7 @@ function LoadInitData_Detail(searchCondtiion) {
                 field: 'Net_residual_rate', title: '净残值率', width: 30,
                 formatter: function (rate) {
                     if (rate == null)
-                        return "0%";
+                        return "";
                     return rate + "%";
 
 
@@ -299,7 +303,7 @@ function LoadInitData_Detail(searchCondtiion) {
                 field: 'depreciation_Month', title: '月提折旧', width: 50,
                 formatter: function (money) {
                     if (money == null)
-                        return "0¥";
+                        return "";
                     if (String(money).split(".").length < 2)
                         return money + "¥";
                     else {
@@ -313,7 +317,7 @@ function LoadInitData_Detail(searchCondtiion) {
                  field: 'depreciation_tatol', title: '累计折旧', width: 50,
                  formatter: function (money) {
                      if (money == null)
-                         return "0¥";
+                         return "";
                      if (String(money).split(".").length < 2)
                          return money + "¥";
                      else {
@@ -327,7 +331,7 @@ function LoadInitData_Detail(searchCondtiion) {
                  field: 'Net_value', title: '净值', width: 50,
                  formatter: function (money) {
                      if (money == null)
-                         return "0¥";
+                         return "";
                      if (String(money).split(".").length < 2)
                          return money + "¥";
                      else {
