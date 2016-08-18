@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>图片批量上传</title>
+    <script type="text/javascript" src="../../Scripts/Plupupload/plupload.full.min.js"></script>
+</head>
+<body style="font: 13px Verdana; background: #eee; color: #333">
+
+    <div id="filelist">您的浏览器不支持Flash, Silverlight和 HTML5.</div>
+    <br />
+    <p>上传文件名规则：资产编号_其他标示.jpg/png/gif  最大上传限制100MB</p>
+    <div id="container">
+        <a id="pickfiles" href="javascript:;">[选择文件]</a>
+        <a id="uploadfiles" href="javascript:;">[上传文件]</a>
+    </div>
+
+    <br />
+    <pre id="console"></pre>
+
+
+    <script type="text/javascript">
+        // Custom example logic
+
+        var uploader = new plupload.Uploader({
+            runtimes: 'html5,flash,silverlight,html4',
+            browse_button: 'pickfiles', // you can pass in id...
+            container: document.getElementById('container'), // ... or DOM Element itself
+            url: '/Asset/UploadPics',
+            flash_swf_url: '../../Scripts/Moxie.swf',
+            silverlight_xap_url: '../../Scripts/Moxie.xap',
+
+            filters: {
+                max_file_size: '100mb',
+                mime_types: [
+                    { title: "Image files", extensions: "jpg,gif,png" },
+                    { title: "Zip files", extensions: "zip" }
+                ]
+            },
+
+            init: {
+                PostInit: function () {
+                    document.getElementById('filelist').innerHTML = '';
+
+                    document.getElementById('uploadfiles').onclick = function () {
+                        uploader.start();
+                        return false;
+                    };
+                },
+
+                FilesAdded: function (up, files) {
+                    plupload.each(files, function (file) {
+                        document.getElementById('filelist').innerHTML += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
+                    });
+                },
+
+                UploadProgress: function (up, file) {
+                    document.getElementById(file.id).getElementsByTagName('b')[0].innerHTML = '<span>' + file.percent + "%</span>";
+                },
+
+                Error: function (up, err) {
+                    document.getElementById('console').innerHTML += "\nError #" + err.code + ": " + err.message;
+                }
+            }
+        });
+
+        uploader.init();
+
+    </script>
+</body>
+</html>
