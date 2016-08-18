@@ -161,7 +161,7 @@ namespace FAMIS.Controllers
             int month_passed = thismonth - purchasetime;
 
             string para = "";
-            float Year_Depreciation_Rate = ((float)100 - float.Parse(rate)) / float.Parse(year)/12;//年折旧率
+            float Year_Depreciation_Rate = ((float)100 - float.Parse(rate)) / (float.Parse(year)/12)/100;//年折旧率
             float Month_Depreciation_Rate = Year_Depreciation_Rate / (float)12;
             float totalprice = float.Parse(amount) * float.Parse(unit);
             float Month_Depreciation_Amount = totalprice * Month_Depreciation_Rate;
