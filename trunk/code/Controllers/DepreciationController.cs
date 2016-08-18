@@ -237,7 +237,8 @@ namespace FAMIS.Controllers
                            from kk in temp_k.DefaultIfEmpty()
 
                               where Depart_Asset_Type_Id.Contains(r.department_Using) && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset) || item_id == 0 && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset)
-                           select new
+                              where r.flag == true
+                              select new
                            {
                                ID = r.ID,
                                department_Using = DD.name_Department,
@@ -288,6 +289,7 @@ namespace FAMIS.Controllers
                            from kk in temp_k.DefaultIfEmpty()
 
                            where AssetassettypeId.Contains(r.type_Asset) && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset) || item_id == 0 && DepIds.Contains(r.department_Using) && ATIds.Contains(r.type_Asset)
+                           where r.flag == true
                            select new
                            {
                                ID = r.ID,
@@ -762,6 +764,13 @@ namespace FAMIS.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
 
         }
+
+        public void TestWrite(string text)
+        {
+            StreamWriter sw = new StreamWriter("D:\\201608.txt", true);
+            sw.WriteLine(text);
+            sw.Close();
+        }
         [HttpPost]
         public JsonResult Load_Inventory_details(int? page,int? rows, string JSdata)
         {
@@ -770,7 +779,7 @@ namespace FAMIS.Controllers
             rows = rows == null ? 15 : rows;
 
             List<tb_Asset_inventory_Details> list = db.tb_Asset_inventory_Details.ToList();
-           var data=from r in db.tb_Asset_inventory_Details
+           var data=   from r in db.tb_Asset_inventory_Details
                         join a in db.tb_Asset on r.serial_number_Asset equals a.serial_number into temp_a
                         from aa in temp_a.DefaultIfEmpty()
 
@@ -790,7 +799,7 @@ namespace FAMIS.Controllers
                         from ss in temp_s.DefaultIfEmpty()
                         join sp in db.tb_supplier on aa.supplierID equals sp.ID into temp_sp
                         from ssp in temp_sp.DefaultIfEmpty()
-                        where r.serial_number == JSdata&&r.flag==true
+                        where r.serial_number == JSdata&&r.flag==true&&aa.flag==true
                         select new
                         {
                             ID = r.ID,
@@ -815,6 +824,7 @@ namespace FAMIS.Controllers
 
 
                         };
+          // TestWrite("我的个数： " + data.Count());
            data = data.OrderByDescending(a => a.ID);
            int skipindex = ((int)page - 1) * (int)rows;
            int rowsNeed = (int)rows;
