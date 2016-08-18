@@ -240,7 +240,7 @@ function LoadInitData_Detail(searchCondtiion) {
         width: 'auto',
         iconCls: 'icon-save',
         dataType: "json",
-        fitColumns: true,
+        fitColumns: false,
         pagePosition: 'top',
         rownumbers: true, //是否加行号 
         pagination: true, //是否显式分页 
@@ -251,13 +251,13 @@ function LoadInitData_Detail(searchCondtiion) {
        
         columns: [[
             { field: 'ID', title: '序号', width: 50 },
-            { field: 'department_Using', title: '使用部门', width: 50 },
-            { field: 'serial_number', title: '资产编号', width: 80 },
-            { field: 'name_Asset', title: '资产名称', width: 50 },
+            { field: 'department_Using', title: '使用部门', width: 130 },
+            { field: 'serial_number', title: '资产编号', width: 120 },
+            { field: 'name_Asset', title: '资产名称', width: 100 },
 
-            { field: 'specification', title: '型号规范', width: 50 },
+            { field: 'specification', title: '型号规范', width: 150 },
             {
-                field: 'unit_price', title: '单价', width: 40,
+                field: 'unit_price', title: '单价', width: 80,
                 formatter: function (money) {
                     if (money == null)
                         return "";
@@ -271,9 +271,9 @@ function LoadInitData_Detail(searchCondtiion) {
 
                 }
             },
-            { field: 'amount', title: '数量', width: 40 },
+            { field: 'amount', title: '数量', width: 80 },
              {
-                 field: 'Total_price', title: '资产总价', width: 50,
+                 field: 'Total_price', title: '资产总价', width: 150,
                  formatter: function (money) {
                      if (money == null)
                          return "";
@@ -287,10 +287,10 @@ function LoadInitData_Detail(searchCondtiion) {
 
                  }
              },
-            { field: 'Method_depreciation', title: '折旧方式', width: 50 },
-            { field: 'YearService_month', title: '使用年限（月）', width: 50 },
+            { field: 'Method_depreciation', title: '折旧方式', width: 80 },
+            { field: 'YearService_month', title: '使用年限（月）', width: 80 },
             {
-                field: 'Net_residual_rate', title: '净残值率', width: 30,
+                field: 'Net_residual_rate', title: '净残值率', width: 80,
                 formatter: function (rate) {
                     if (rate == null)
                         return "";
@@ -300,7 +300,7 @@ function LoadInitData_Detail(searchCondtiion) {
                 }
             },
             {
-                field: 'depreciation_Month', title: '月提折旧', width: 50,
+                field: 'depreciation_Month', title: '月提折旧', width: 100,
                 formatter: function (money) {
                     if (money == null)
                         return "";
@@ -314,7 +314,7 @@ function LoadInitData_Detail(searchCondtiion) {
                 }
             },
              {
-                 field: 'depreciation_tatol', title: '累计折旧', width: 50,
+                 field: 'depreciation_tatol', title: '累计折旧', width: 150,
                  formatter: function (money) {
                      if (money == null)
                          return "";
@@ -328,7 +328,7 @@ function LoadInitData_Detail(searchCondtiion) {
                  }
              },
              {
-                 field: 'Net_value', title: '净值', width: 50,
+                 field: 'Net_value', title: '净值', width: 150,
                  formatter: function (money) {
                      if (money == null)
                          return "";
@@ -342,7 +342,7 @@ function LoadInitData_Detail(searchCondtiion) {
                  }
              },
               {
-                  field: 'Time_Purchase', title: '购置日期', width: 80,
+                  field: 'Time_Purchase', title: '购置日期', width: 150,
 
                   formatter: function (date) {
                       var pa = /.*\((.*)\)/;
@@ -353,7 +353,7 @@ function LoadInitData_Detail(searchCondtiion) {
 
 
              {
-                 field: 'Time_add', title: '登记日期', width: 80,
+                 field: 'Time_add', title: '登记日期', width: 150,
                  formatter: function (date) {
                      var pa = /.*\((.*)\)/;
                      var unixtime = date.match(pa)[1].substring(0, 10);
@@ -365,8 +365,8 @@ function LoadInitData_Detail(searchCondtiion) {
         ]],
         singleSelect: false, //允许选择多行
         selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
-        checkOnSelect: true, //true选择行勾选，false选择行不勾选, 1.3以后有此选项
-        fitColumns: true
+        checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
+       
     });
     loadPageTool_Detail(dataRight);
   //  alert(dataRight.export_able);
