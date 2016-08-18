@@ -45,7 +45,9 @@ namespace FAMIS.Controllers
              string[] temp = Json.Split('o');
              string condiation = temp[0];
              string pdsearial = temp[1];
-
+             int? roid = commonConversion.getRoleID();
+             List<int?> DepIDs = IDs(roid, "department");
+             List<int?> ATIDs = IDs(roid, "AssetType");
              int flagnum = int.Parse(condiation);
              if (flagnum == 0)
                  flagnum = 11000000;
@@ -84,12 +86,16 @@ namespace FAMIS.Controllers
                                            from ee in temp_e.DefaultIfEmpty()
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
                                            from ssp in temp_sp.DefaultIfEmpty()
-                                           where  Depart_Asset_Type_Id.Contains(a.department_Using)||item_id==0
+                                           where Depart_Asset_Type_Id.Contains(a.department_Using) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
+                                           where a.flag == true
                                            select a;
-                
+
+                // TestWrite("ADD "+q.Count().ToString());
+                 
                  foreach (tb_Asset asset in q)
                  {
-                      
+
+                     //TestWrite("haha: "+count++);
                      List<tb_Asset_inventory_Details> Deatail_List = db.tb_Asset_inventory_Details.Where(a => a.serial_number_Asset == asset.serial_number&&a.serial_number==pdsearial&&a.flag==true).ToList();
                      if (Deatail_List.Count > 0)
                          continue;
@@ -118,8 +124,9 @@ namespace FAMIS.Controllers
                  AssetassettypeId=comController.GetSonID_AsseType(item_id);
 
                  IEnumerable<tb_Asset> q = from a in db.tb_Asset
-                                           join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_t
-                                           from tt in temp_t.DefaultIfEmpty()
+
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_tt
+                                           from tt in temp_tt.DefaultIfEmpty()
                                            join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
                                            from dd in temp_d.DefaultIfEmpty()
                                            join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
@@ -128,11 +135,12 @@ namespace FAMIS.Controllers
                                            from pp in temp_p.DefaultIfEmpty()
                                            join u in db.tb_user on a.Owener equals u.ID into temp_u
                                            from uu in temp_u.DefaultIfEmpty()
-                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_e
-                                           from ee in temp_e.DefaultIfEmpty()
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
                                            from ssp in temp_sp.DefaultIfEmpty()
-                                           where AssetassettypeId.Contains(a.type_Asset) || item_id == 0
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
+                                           from ee in temp_ee.DefaultIfEmpty()
+                                           where AssetassettypeId.Contains(a.type_Asset) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
+                                           where a.flag==true
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
@@ -165,8 +173,9 @@ namespace FAMIS.Controllers
 
                  ZTassettypeId = comController.GetSonIDs_dataDict_Para(item_id);
                  IEnumerable<tb_Asset> q = from a in db.tb_Asset
-                                           join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_t
-                                           from tt in temp_t.DefaultIfEmpty()
+
+                                           join t in db.tb_AssetType on a.type_Asset equals t.ID into temp_tt
+                                           from tt in temp_tt.DefaultIfEmpty()
                                            join d in db.tb_dataDict_para on a.measurement equals d.ID into temp_d
                                            from dd in temp_d.DefaultIfEmpty()
                                            join j in db.tb_dataDict_para on a.addressCF equals j.ID into temp_j
@@ -175,11 +184,11 @@ namespace FAMIS.Controllers
                                            from pp in temp_p.DefaultIfEmpty()
                                            join u in db.tb_user on a.Owener equals u.ID into temp_u
                                            from uu in temp_u.DefaultIfEmpty()
-                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_e
-                                           from ee in temp_e.DefaultIfEmpty()
                                            join sp in db.tb_supplier on a.supplierID equals sp.ID into temp_sp
                                            from ssp in temp_sp.DefaultIfEmpty()
-                                           where ZTassettypeId.Contains(a.state_asset)|| item_id == 0
+                                           join e in db.tb_dataDict_para on a.state_asset equals e.ID into temp_ee
+                                           from ee in temp_ee.DefaultIfEmpty()
+                                           where (ZTassettypeId.Contains(a.state_asset) || item_id == 0) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)&&a.flag==true
                                            select a;
                  foreach (tb_Asset asset in q)
                  {
@@ -209,6 +218,12 @@ namespace FAMIS.Controllers
              return "";
             
          
+         }
+         public void TestWrite(string text)
+         {
+             StreamWriter sw = new StreamWriter("D:\\201608.txt", true);
+             sw.WriteLine(text);
+             sw.Close();
          }
          public void AddPDList(string pdsearial)
          {
@@ -382,7 +397,8 @@ namespace FAMIS.Controllers
                              from ee in temp_ee.DefaultIfEmpty()
 
                              where Depart_Asset_Type_Id.Contains(a.department_Using) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
-                            select new
+                             where a.flag == true
+                             select new
                             {
                                 ID = a.ID,
                                 serial_number = a.serial_number,
@@ -401,6 +417,7 @@ namespace FAMIS.Controllers
                                 supllier = ssp.name_supplier
 
                             };
+                  // TestWrite(data.Count().ToString());
                  data = data.OrderByDescending(a => a.ID);
                 int skipindex = ((int)page - 1) * (int)rows;
                 int rowsNeed = (int)rows;
@@ -442,7 +459,8 @@ namespace FAMIS.Controllers
                                from ee in temp_ee.DefaultIfEmpty()
 
                                where AssetassettypeId.Contains(a.type_Asset) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
-                            select new
+                               where a.flag == true
+                               select new
                             {
                                 ID = a.ID,
                                 serial_number = a.serial_number,
@@ -500,7 +518,8 @@ namespace FAMIS.Controllers
                             from ee in temp_ee.DefaultIfEmpty()
 
                                 where ZTassettypeId.Contains(a.state_asset) && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset) || item_id == 0 && DepIDs.Contains(a.department_Using) && ATIDs.Contains(a.type_Asset)
-                            select new
+                                where a.flag == true
+                                select new
                             {
                                 ID = a.ID,
                                 serial_number = a.serial_number,
