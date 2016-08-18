@@ -61,6 +61,16 @@ namespace FAMIS.Controllers
         }
 
 
+        public ActionResult Asset_picsUpload()
+        {
+            if (!comController.isRightToOperate(SystemConfig.Menu_ZCTZ, SystemConfig.operation_add))
+            {
+                ViewBag.info = "对不起！您无添加权限！";
+                return View("Error");
+            }
+            return View();
+        }
+
         
         public ActionResult Asset_SubEquiment_add(int? id_asset)
         {
@@ -591,25 +601,28 @@ namespace FAMIS.Controllers
 
                     case SystemConfig.nameFlag_2_CFDD:
                         {
-                            List<int?> ids_dic = comController.GetSonIDs_dataDict_Para(dic_paraID);
+                            //List<int?> ids_dic = comController.GetSonIDs_dataDict_Para(dic_paraID);
                             data_ORG = from p in data_ORG
-                                       where ids_dic.Contains(p.addressCF)
+                                       //where ids_dic.Contains(p.addressCF)
+                                       where p.addressCF==dic_paraID
                                        select p;
                         }; break;
 
                     case SystemConfig.nameFlag_2_SYBM:
                         {
-                            List<int?> ids_dic =comController.GetSonIDs_Department(dic_paraID);
+                            //List<int?> ids_dic =comController.GetSonIDs_Department(dic_paraID);
                             data_ORG = from p in data_ORG
-                                       where ids_dic.Contains(p.department_Using)
+                                       //where ids_dic.Contains(p.department_Using)
+                                       where p.department_Using==dic_paraID
                                        select p;
                         }; break;
 
                     case SystemConfig.nameFlag_2_ZCLB:
                         {
-                            List<int?> ids_dic = comController.GetSonID_AsseType(dic_paraID);
+                            //List<int?> ids_dic = comController.GetSonID_AsseType(dic_paraID);
                             data_ORG = from p in data_ORG
-                                       where ids_dic.Contains(p.type_Asset)
+                                       //where ids_dic.Contains(p.type_Asset)
+                                       where p.type_Asset==dic_paraID
                                        select p;
                         }; break;
 
@@ -1111,6 +1124,33 @@ namespace FAMIS.Controllers
                 ids.Add(item.id);
             }
             return ids;
+        }
+
+        /// <summary>
+        /// 根据流水号获取资产ID
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public int? GET_AssetID_BySerialNum(String serialNum)
+        {
+
+            serialNum = serialNum.Trim();
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true
+                       where p.serial_number==serialNum
+                       select new
+                       {
+                           id = p.ID
+                       };
+            if (data.Count() == 1)
+            {
+                foreach(var item in data)
+                {
+                    return item.id;
+                }
+            }
+            return null;
         }
 
 
@@ -1859,6 +1899,110 @@ namespace FAMIS.Controllers
                  infos = "没有读取到文件！";
              }
              return infos;
+         }
+
+         public ActionResult UploadPics()
+         {
+             for (int i = 0; i < Request.Files.Count; i++)
+             {
+                 var file = Request.Files[i];
+                 //获取文件名：
+                 String fileNameWithExcep = System.IO.Path.GetFileName(file.FileName);
+                 String fileNameWithOutExcep = System.IO.Path.GetFileNameWithoutExtension(file.FileName);
+                 //获取资产编号
+                 string[] sArr = fileNameWithOutExcep.Split(new string[] { "_" }, StringSplitOptions.RemoveEmptyEntries);
+                 //默认第一个为资产编号
+                 if (sArr.Length > 0)
+                 {
+                     if (RightTOUploadSubPic(fileNameWithExcep, sArr[0].Trim(), SystemConfig.FOLDER_IMAGE_ASSET_SUB))
+                     {
+                         int? id_asset = GET_AssetID_BySerialNum(sArr[0].Trim());
+                         if (id_asset != null)
+                         {
+                             String savePath = SystemConfig.FOLDER_IMAGE_ASSET_SUB + file.FileName;
+                             savePath = savePath.Trim();
+                             var data = from p in DB_C.tb_Asset_sub_picture
+                                        where p.flag == true && p.ID_Asset == id_asset
+                                        where p.path_file==savePath
+                                        select p;
+                             if (data.Count() > 0)
+                             {
+                                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + savePath))
+                                 {
+
+                                 }
+                                 else
+                                 {
+                                     file.SaveAs(AppDomain.CurrentDomain.BaseDirectory + savePath);
+                                 }
+                             }
+                             else {
+                                 try {
+                                     file.SaveAs(AppDomain.CurrentDomain.BaseDirectory + savePath);
+                                     tb_Asset_sub_picture newItem = new tb_Asset_sub_picture();
+                                     newItem.date_add = DateTime.Now;
+                                     newItem.flag = true;
+                                     newItem.ID_Asset = id_asset;
+                                     newItem.Name_picture = fileNameWithOutExcep;
+                                     newItem.path_file = savePath;
+                                     newItem.userID_add = commonConversion.getUSERID();
+                                     DB_C.tb_Asset_sub_picture.Add(newItem);
+                                     DB_C.SaveChanges();
+                                 }catch(Exception e){
+                                 }
+                             }
+
+                         }
+
+                     }
+                 }
+
+
+
+             }
+             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+         }
+
+
+         public bool RightTOUploadSubPic(String fileName, String serialNum,String FileFolder)
+         {
+             if (FileFolder == null || FileFolder == "" || serialNum == null || serialNum == ""||fileName==null||fileName=="")
+             {
+                 return false;
+             }
+
+            serialNum=serialNum.Trim();
+             //读取数据
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true && p.serial_number == serialNum
+                       join subpic in DB_C.tb_Asset_sub_picture on p.ID equals subpic.ID_Asset
+                       where subpic.flag == true
+                       select new
+                       {
+                           path = subpic.path_file
+                       };
+             //附件没有文件
+            if (data.Count() == 0)
+            {
+                return true;
+            }
+            else
+            { 
+                foreach(var item in data)
+                {
+                    String oldPath = System.AppDomain.CurrentDomain.BaseDirectory + item.path;
+                    String oldFileName = System.IO.Path.GetFileName(oldPath);
+                    if (oldFileName.Trim() == fileName.Trim())
+                    {
+                        if (System.IO.File.Exists(oldPath))
+                        {
+                            return false;
+                        }
+                    }
+
+                }
+            }
+            return true;
          }
 
 

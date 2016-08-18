@@ -529,27 +529,30 @@ namespace FAMIS.Controllers
                             {
 
                                 //获取其所有子节点
-                                List<int?> ids_dic = GetSonIDs_dataDict_Para(dic_paraID);
+                                //List<int?> ids_dic = GetSonIDs_dataDict_Para(dic_paraID);
                                 data_ORG = from p in data_ORG
-                                           where ids_dic.Contains(p.addressCF)
+                                           //where ids_dic.Contains(p.addressCF)
+                                           where p.addressCF==dic_paraID
                                            select p;
                             }; break;
 
                         case SystemConfig.nameFlag_2_SYBM:
                             {
                                 //获取部门所有节点
-                                List<int?> ids_dic = GetSonIDs_Department(dic_paraID);
+                                //List<int?> ids_dic = GetSonIDs_Department(dic_paraID);
                                 data_ORG = from p in data_ORG
-                                           where ids_dic.Contains(p.department_Using)
+                                           where p.department_Using==dic_paraID
+                                           //where ids_dic.Contains(p.department_Using)
                                            select p;
                             }; break;
 
                         case SystemConfig.nameFlag_2_ZCLB:
                             {
 
-                                List<int?> ids_dic = GetSonID_AsseType(dic_paraID);
+                                //List<int?> ids_dic = GetSonID_AsseType(dic_paraID);
                                 data_ORG = from p in data_ORG
-                                           where ids_dic.Contains(p.type_Asset)
+                                           //where ids_dic.Contains(p.type_Asset)
+                                           where p.type_Asset==dic_paraID
                                            select p;
                             }; break;
                         case SystemConfig.nameFlag_2_SYRY:
