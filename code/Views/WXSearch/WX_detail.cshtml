@@ -26,21 +26,24 @@
                 document.getElementById("reminderDIV").style.display = "block";
             }
           
-
+            var id = "@ViewBag.ID";
             //加载相应的图片
             $.ajax({
+
                 url: "/WXSearch/PictureToload",
                 type: 'POST',
                 data: {
-                    "id": "@ViewBag.ID"
+                    "id": id
                 },
                 success: function (data) {
                     if (data) {
                         var pidiv = document.getElementById("PICDIV");
                         for (var i = 0; i < data.length; i++) {
                             var picI = document.createElement("img");
-                            picI.width = document.body.clientWidth - 50;
-                            picI.height = document.body.clientWidth - 50;
+                            picI.style.minHeight = 100;
+                            picI.style.minWidth = 100;
+                            picI.style.maxWidth = document.body.clientWidth - 50;
+                            picI.style.maxHeight = document.body.clientWidth - 50;
                             picI.src = data[i];
                             pidiv.appendChild(picI);
 
@@ -64,6 +67,8 @@
     </style>
 </head>
 <body>
+            <input type="text" id="id_asset" value="@ViewBag.ID" readonly="readonly">
+
     <div id="detail_right" style="display:none">
         <table>
             <tr>

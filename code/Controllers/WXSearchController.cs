@@ -161,8 +161,7 @@ namespace FAMIS.Controllers
         public ActionResult WX_detail(String code,String openid)
         {
 
-            //openid='';
-
+            
             if (openidExist(openid))
             {
                 ViewBag.jump = 1;
@@ -188,6 +187,7 @@ namespace FAMIS.Controllers
                 ViewBag.dj = data.dj;
                 ViewBag.sl = data.sl;
                 ViewBag.zj = data.zj;
+                ViewBag.ID = data.ID;
             }
 
             HttpContext.Response.AppendHeader("Access-Control-Allow-Origin", "*");
@@ -374,7 +374,8 @@ namespace FAMIS.Controllers
                          state=ST.name_para,
                          supplier=SP.name_supplier,
                          zcxh=p.specification,
-                         zj=p.value
+                         zj=p.value,
+                         ID=p.ID
                      };
 
             if (data.Count() > 0)
