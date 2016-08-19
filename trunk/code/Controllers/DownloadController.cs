@@ -155,6 +155,7 @@ namespace FAMIS.Controllers
                         var data_listDetail_ORG = from o in db.tb_Asset_collar
                                    join od in db.tb_Asset_collar_detail on o.ID equals od.ID_collar
                                    join asset in db.tb_Asset on od.ID_asset equals asset.ID
+                                   where asset.flag==true
                                    join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
                                    join op in db.tb_user on o._operator equals op.ID into temp_op
@@ -282,6 +283,7 @@ namespace FAMIS.Controllers
                         var data_listDetail_ORG = from o in db.tb_Asset_Borrow
                                    join od in db.tb_Asset_Borrow_detail on o.ID equals od.ID_borrow
                                    join asset in db.tb_Asset on od.ID_Asset equals asset.ID
+                                   where asset.flag==true
                                    join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
                                    join op in db.tb_user on o.userID_operated equals op.ID into temp_op
@@ -412,6 +414,7 @@ namespace FAMIS.Controllers
                                    join depp in db.tb_department on o.department_allocation equals depp.ID
                                    join od in db.tb_Asset_allocation_detail on o.ID equals od.ID_allocation
                                    join asset in db.tb_Asset on od.ID_asset equals asset.ID
+                                   where asset.flag == true
                                    join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
                                    join op in db.tb_user on o._operator equals op.ID
@@ -542,6 +545,7 @@ namespace FAMIS.Controllers
 
                         var data = from o in db.tb_Asset_Repair
                                    join asset in db.tb_Asset on o.ID_Asset equals asset.ID
+                                   where asset.flag == true
                                    join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
                                    join at in db.tb_AssetType on asset.type_Asset equals at.ID into temp_at
@@ -670,6 +674,7 @@ namespace FAMIS.Controllers
                         var data = from o in db.tb_Asset_Return
                                    join od in db.tb_Asset_Return_detail on o.ID equals od.ID_Return
                                    join asset in db.tb_Asset on od.ID_Asset equals asset.ID
+                                   where asset.flag == true
                                    join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
                                    join at in db.tb_AssetType on asset.type_Asset equals at.ID into temp_at
@@ -781,6 +786,7 @@ namespace FAMIS.Controllers
                                    join uu in db.tb_user on o.userID_approver equals uu.ID
                                    join od in db.tb_Asset_Reduction_detail on o.ID equals od.ID_reduction
                                    join asset in db.tb_Asset on od.ID_Asset equals asset.ID
+                                   where asset.flag == true
                                    join dep in db.tb_department on asset.department_Using equals dep.ID into temp_dep
                                    from ddep in temp_dep.DefaultIfEmpty()
                                    join at in db.tb_AssetType on asset.type_Asset equals at.ID into temp_at
