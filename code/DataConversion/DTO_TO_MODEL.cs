@@ -65,6 +65,12 @@ namespace FAMIS.DataConversion
             {
                 tb_Asset tb = new tb_Asset();
                 flag = true;
+
+                if (row[ColumnListConf.Asset_Name] == null || row[ColumnListConf.Asset_Name].ToString().Trim() == "")
+                {
+                    continue;
+                }
+
                 foreach (String cl in staticColumns)
                 {
                     if (!flag)
@@ -72,6 +78,7 @@ namespace FAMIS.DataConversion
                         faildString.Add(row.ToString());
                         continue;
                     }
+
                     if (columns.Contains(cl))
                     {
                         
@@ -266,7 +273,7 @@ namespace FAMIS.DataConversion
                 //获取自定义属性
                 foreach (String cl in autoCAttrListCL)
                 {
-                    String clVlaue = row[cl].ToString();
+                    String clVlaue = row[cl].ToString().Trim();
                     if (CAttrList.ContainsKey(cl) && CAttrAssetTypeList.ContainsKey(cl))
                     {
                     }
