@@ -259,7 +259,7 @@ function LoadInitData_Detail() {
                     },
                     { field: 'note', title: '备注', width: 50 }
                 ]],
-                singleSelect: true, //允许选择多行
+                singleSelect: false, //允许选择多行
                 selectOnCheck: true,//true勾选会选择行，false勾选不选择行, 1.3以后有此选项
                 checkOnSelect: true //true选择行勾选，false选择行不勾选, 1.3以后有此选项
             });
