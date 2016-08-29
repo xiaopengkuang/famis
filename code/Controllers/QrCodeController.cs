@@ -13,7 +13,7 @@ namespace FAMIS.Controllers
     public class QrCodeController : Controller
     {
         FAMISDBTBModels DB_C = new FAMISDBTBModels();
-
+        CommonConversion ccv = new CommonConversion();
         // GET: QrCode
         public ActionResult Index()
         {
@@ -451,16 +451,49 @@ namespace FAMIS.Controllers
             System.Drawing.Image bitmap_qrcode = CreateQRCode(data, QRCodeEncoder.ENCODE_MODE.BYTE, QRCodeEncoder.ERROR_CORRECTION.H, 8, 7, 295, 15);
             //在指定位置并且按指定大小绘制原图片的指定部分  
             g.DrawImage(bitmap_qrcode, new Rectangle(0, 0, bitmap_qrcode.Width, bitmap_qrcode.Height));
-
             //g.DrawImage(bitmap_qrcode, new Rectangle(0, 10, 215, 215),
             // new Rectangle(0, 0, 925, 295),
             // GraphicsUnit.Pixel);
-
             //画文字图片
             g.DrawString(infoAsset, font_text, Brushes.Black, new PointF(295, 30));
             return bitmap_back;
         }
 
+
+
+        public int deleteQRCODE(String idstr)
+        {
+
+            List<String> codelist = ccv.StringToIntList_QRCODE(idstr);
+
+            var data = from p in DB_C.tb_Asset_code128
+                       where codelist.Contains(p.code128)
+                       select p;
+
+            try {
+                foreach (var item in data)
+                {
+                    item.ID_Asset = null;
+                    //删除相应的文件
+                    String filepath = AppDomain.CurrentDomain.BaseDirectory + item.path_qrcode_img;
+                    if (System.IO.File.Exists(filepath))
+                    {
+                        System.IO.File.Delete(filepath);
+                    }
+                }
+                //要不要将记录也删掉？
+                //DB_C.tb_Asset_code128.RemoveRange(data);
+                DB_C.SaveChanges();
+                return 1;
+            }
+            catch (Exception e)
+            {
+ 
+            }
+            return -1;
+
+
+        }
 
 
 

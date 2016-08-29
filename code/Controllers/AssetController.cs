@@ -685,7 +685,7 @@ namespace FAMIS.Controllers
                                    unit_price = p.unit_price,
                                    value = p.value.ToString(),
                                    YearService_month = p.YearService_month.ToString(),
-                                   barcode=BC.code128,
+                                   barcode = BC.code128,
                                    note=p.note
                                    
                                };
@@ -697,8 +697,6 @@ namespace FAMIS.Controllers
                         String json_result = jss.Serialize(data).ToString().Replace("\\", "");
                         return json_result;
                     }
-
-
                     int skipindex = ((int)page - 1) * (int)rows;
                     int rowsNeed = (int)rows;
                     var json = new{
@@ -1861,7 +1859,7 @@ namespace FAMIS.Controllers
              fileName = System.IO.Path.GetFileName(file.FileName);
              if (fileName != "")
              {
-                 if (file.ContentLength >= 1024 * 1024 * 8)
+                 if (file.ContentLength >= 1024 * 1024 * 100)
                  {
                      infos = "上传文件太大，目前仅支持8M以内的图片上传！";
                  }
