@@ -476,7 +476,7 @@ namespace FAMIS.Controllers
                     item.ID_Asset = null;
                     //删除相应的文件
                     String filepath = AppDomain.CurrentDomain.BaseDirectory + item.path_qrcode_img;
-                    if (System.IO.File.Exists(filepath))
+                    if (item.path_qrcode_img!=null&&item.path_qrcode_img.Trim()!=""&&System.IO.File.Exists(filepath))
                     {
                         System.IO.File.Delete(filepath);
                     }
