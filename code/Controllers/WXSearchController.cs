@@ -306,13 +306,20 @@ namespace FAMIS.Controllers
                 {
 
                     String code_temp= codeStrList[1];
+                    String name_asset=null;
+                    if (codeStrList.Length > 3)
+                    {
+                        name_asset = codeStrList[3];
+                    }
+
                     var data = from p in DB_C.tb_Asset
-                               where p.code_OLDSYS == code_temp
+                               where p.code_OLDSYS == code_temp 
+                               where p.name_Asset==name_asset||name_asset==null
                                join tb_code128 in DB_C.tb_Asset_code128 on p.ID equals tb_code128.ID_Asset
                                select new {
                                code=tb_code128.code128
                                };
-                    if (data.Count() ==1)
+                    if (data.Count()>0)
                     {
                         foreach (var item in data)
                         {
@@ -326,8 +333,6 @@ namespace FAMIS.Controllers
                 else {
                     return "";
                 }
- 
-
             }
             else {
                 return code;
