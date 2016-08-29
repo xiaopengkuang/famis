@@ -200,11 +200,10 @@ function loadPageTool_Detail() {
                
                 //获取选中项
               var rows = $('#TableList_0_1').datagrid('getSelections');
-                if (rows.length != 1)
-                {
-                    MessShow("请选择1项数据！暂不支持多选");
-                    return;
-                }
+              if (rows.length <1) {
+                  MessShow("请选择1项数据！");
+                  return;
+              }
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
                    // alert(rows[i].ID);
