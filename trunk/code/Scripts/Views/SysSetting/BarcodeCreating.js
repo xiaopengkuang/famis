@@ -200,33 +200,17 @@ function loadPageTool_Detail() {
                
                 //获取选中项
               var rows = $('#TableList_0_1').datagrid('getSelections');
-              if (rows.length <1) {
-                  MessShow("请选择1项数据！");
-                  return;
-              }
+                if (rows.length != 1)
+                {
+                    MessShow("请选择1项数据！暂不支持多选");
+                    return;
+                }
                 var IDS = [];
                 for (var i = 0; i < rows.length; i++) {
                    // alert(rows[i].ID);
                     myPreview3(rows[i].ID);
                 } 
-
                 var id = rows[0].ID;
-
-
-
-
-                ////将数据传入后台
-                //$.ajax({
-                //    url: '/SysSetting/printBarcode',
-                //    data: { "selectedIDs": IDS },
-                //    //data: _list,  
-                //    dataType: "json",
-                //    type: "POST",
-                //    traditional: true,
-                //    success: function () {
-                //        $('#TableList_0_1').datagrid('reload');
-                //    }
-                //});
             }
         },{
             text: '下载二维码（ZIP）',
@@ -255,13 +239,54 @@ function loadPageTool_Detail() {
                 var id = rows[0].ID;
                 exportData(idsStr);
             }
+        }, {
+            text: '删除二维码',
+            iconCls: 'icon-remove',
+            height: 50,
+            handler: function () {
+
+                //获取选中项
+                var rows = $('#TableList_0_1').datagrid('getSelections');
+                if (rows.length < 1) {
+                    MessShow("请选择数据！");
+                    return;
+                }
+                var IDS = [];
+                var idsStr = "";
+                for (var i = 0; i < rows.length; i++) {
+                    IDS[i] = rows[i].barcode;
+                    if (i == 0) {
+                        idsStr = rows[i].barcode;
+                    } else {
+                        idsStr = idsStr + "_" + rows[i].barcode;
+
+                    }
+                }
+                deleteQRCODE(idsStr);
+            }
         }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'
     });
 }
-
+function deleteQRCODE(ids)
+{
+    $.ajax({
+        url: "/QrCode/deleteQRCODE",
+        type: 'POST',
+        data: { idstr: ids },
+        beforeSend: ajaxLoading,
+        success: function (data) {
+            ajaxLoadEnd();
+            if (data > 0) {
+                $('#TableList_0_1').datagrid("reload");
+            } else {
+                MessShow("删除失败！");
+                }
+        }
+      });
+}
 
 function exportData(ids)
 {

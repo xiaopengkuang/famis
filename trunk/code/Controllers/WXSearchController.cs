@@ -304,8 +304,10 @@ namespace FAMIS.Controllers
                 String[] codeStrList = code.Split('{');
                 if (codeStrList.Length > 1)
                 {
+
+                    String code_temp= codeStrList[1];
                     var data = from p in DB_C.tb_Asset
-                               where p.code_OLDSYS == codeStrList[1]
+                               where p.code_OLDSYS == code_temp
                                join tb_code128 in DB_C.tb_Asset_code128 on p.ID equals tb_code128.ID_Asset
                                select new {
                                code=tb_code128.code128

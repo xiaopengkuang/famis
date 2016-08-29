@@ -55,6 +55,34 @@ namespace FAMIS.DataConversion
 
             return results;
         }
+
+
+        public List<String> StringToIntList_QRCODE(String idStr)
+        {
+            List<String> results = new List<String>();
+            if (idStr == null || idStr == "")
+            {
+                return results;
+            }
+            try
+            {
+                if (idStr != null && idStr != "")
+                {
+                    String[] ids = idStr.Split('_');
+
+                    foreach (String i in ids)
+                    {
+                        results.Add(i);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+
+            return results;
+        }
         /// <summary>
         /// 将list类型转换成String类型
         /// </summary>
