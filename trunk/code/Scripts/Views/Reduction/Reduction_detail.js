@@ -147,7 +147,29 @@ function LoadInitData_datagrid()
 function loadPageTool_Detail() {
     var pager = $('#datagrid_reduction_add').datagrid('getPager');	// get the pager of datagrid
     pager.pagination({
-        buttons: [],
+       
+    buttons: [{
+        text: '下载明细',
+        height: 50,
+        iconCls: 'icon-reload',
+        handler: function () {
+            //取消当前编辑行把当前编辑行罢undefined回滚改变的数据,取消选择的行
+            var serial = $("#serialNum").val();
+            //alert(serial);
+            var form = $("<form>");//定义一个form表单
+            form.attr("style", "display:none");
+            form.attr("target", "");
+            form.attr("method", "post");
+            form.attr("action", "/Verify/Export?serial=" + serial + "&type=" + "JS");
+            var input1 = $("<input>");
+            input1.attr("type", "hidden");
+            input1.attr("name", "exportData");
+            input1.attr("value", (new Date()).getMilliseconds());
+            $("body").append(form);//将表单放置在web中
+            form.append(input1);
+            form.submit();//表单提交
+        }
+    }],
         beforePageText: '第',//页数文本框前显示的汉字  
         afterPageText: '页    共 {pages} 页',
         displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录'

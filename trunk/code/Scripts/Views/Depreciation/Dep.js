@@ -255,7 +255,7 @@ function LoadInitData_Detail(searchCondtiion) {
             { field: 'serial_number', title: '资产编号', width: 120 },
             { field: 'name_Asset', title: '资产名称', width: 100 },
 
-            { field: 'specification', title: '型号规范', width: 150 },
+            { field: 'specification', title: '型号规范', width: 180 },
             {
                 field: 'unit_price', title: '单价', width: 80,
                 formatter: function (money) {
@@ -314,7 +314,7 @@ function LoadInitData_Detail(searchCondtiion) {
                 }
             },
              {
-                 field: 'depreciation_tatol', title: '累计折旧', width: 150,
+                 field: 'depreciation_tatol', title: '累计折旧', width: 120,
                  formatter: function (money) {
                      if (money == null)
                          return "";
