@@ -60,7 +60,8 @@ function CreatePrintPage() {
 function Get_BitMap() {
 
 }
-function myPreview3(ID) {
+ 
+function myPreview3(ID,type) {
 
     $.ajax({
 
@@ -72,15 +73,16 @@ function myPreview3(ID) {
         success: function (result) {
             LODOP = getLodop();
 
-            LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_打印图片3");
+            LODOP.PRINT_INIT("条形码打印机_SH");
 
 
             LODOP.SET_PRINT_PAGESIZE(1, 790, 220, "4×1"); 
             LODOP.ADD_PRINT_IMAGE(0, 60, 790, 200, '<img border="0" src="' + "data:image/png;base64," + result + '"  />');//"<img border='0' src='http://s1.sinaimg.cn/middle/4fe4ba17hb5afe2caa990&690' />");
             LODOP.SET_PRINT_STYLEA(0, "Stretch", 2);//按原图比例(不变形)缩放模式
-
-           // LODOP.PRINT();
-            LODOP.PREVIEW();
+           
+                LODOP.PRINT();
+            
+           // LODOP.PREVIEW();
         }, error: function (msg) {
 
             alert("msg");
