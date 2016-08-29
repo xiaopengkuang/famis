@@ -2129,9 +2129,9 @@ namespace FAMIS.Controllers
             fileName = System.IO.Path.GetFileName(file.FileName);
             if (fileName != "")
             {
-                if (file.ContentLength >= 1024 * 1024 * 4)
+                if (file.ContentLength >= 1024 * 1024 * 100)
                 {
-                 infos = "上传文件太大，目前仅支持4M以内的文件上传！";
+                 infos = "上传文件太大，目前仅支持100M以内的文件上传！";
                 }
                 else
                 {
@@ -2139,7 +2139,7 @@ namespace FAMIS.Controllers
                     String[] allowedExtensions = { ".jpg", ".jpeg", ".gif", ".bmp", ".png", ".icon",".doc",".docx",".pdf",".xls",".txt",".ppt",".pptx"};
                         for (int i = 0; i < allowedExtensions.Length; i++)
                         {
-                            if (fileExtension == allowedExtensions[i])
+                            if (fileExtension.ToLower() == allowedExtensions[i])
                             {
                             fileOK = true;
                             break;
@@ -2175,9 +2175,9 @@ namespace FAMIS.Controllers
             fileName = System.IO.Path.GetFileName(file.FileName);
             if (fileName != "")
             {
-                if (file.ContentLength >= 1024 * 1024 * 4)
+                if (file.ContentLength >= 1024 * 1024 * 100)
                 {
-                    infos = "上传文件太大，目前仅支持4M以内的图片上传！";
+                    infos = "上传文件太大，目前仅支持100M以内的图片上传！";
                 }
                 else
                 {
@@ -2185,7 +2185,7 @@ namespace FAMIS.Controllers
                     String[] allowedExtensions = { ".jpg", ".jpeg", ".gif", ".bmp", ".png", ".icon"};
                     for (int i = 0; i < allowedExtensions.Length; i++)
                     {
-                        if (fileExtension == allowedExtensions[i])
+                        if (fileExtension.ToLower() == allowedExtensions[i])
                         {
                             fileOK = true;
                             break;
