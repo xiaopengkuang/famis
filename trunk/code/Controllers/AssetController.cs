@@ -822,10 +822,10 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-            if (exist_codeOldSys(dto_aa.code_oldSYS,null))
-            {
-                return -11;
-            }
+            //if (exist_codeOldSys(dto_aa.code_oldSYS,null))
+            //{
+            //    return -11;
+            //}
 
             //先判断是添加单个函数批量添加
             if (dto_aa.d_Check_PLZJ_add == true)//单数添加
@@ -924,10 +924,10 @@ namespace FAMIS.Controllers
             {
                 return -1;
             }
-            if (exist_codeOldSys(json_data.code_oldSYS,json_data.ID))
-            {
-                return -11;
-            }
+            //if (exist_codeOldSys(json_data.code_oldSYS,json_data.ID))
+            //{
+            //    return -11;
+            //}
             try
             {
                 //获取tb_Asset
