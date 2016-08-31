@@ -71,6 +71,8 @@ namespace FAMIS.DTO
         public String name_owner { get; set; }
         
         public List<Json_asset_cattr_ad> cattrs { get; set; }
+
+        public List<Json_Asset_History_Operate> operations { get; set; }
         public String note { get; set; }
         public String code_oldSYS { get; set; }
     }
