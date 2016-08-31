@@ -401,6 +401,8 @@ namespace FAMIS.Controllers
                        from DP in temp_DP.DefaultIfEmpty()
                        join tb_DW in DB_C.tb_dataDict_para on p.measurement equals tb_DW.ID into  temp_DW
                        from DW in temp_DW.DefaultIfEmpty()
+                       join tb_AD in DB_C.tb_dataDict_para on p.addressCF equals tb_AD.ID into temp_AD
+                       from AD in temp_AD.DefaultIfEmpty()
                        select new
                        {
                            ID = p.ID,
@@ -409,6 +411,7 @@ namespace FAMIS.Controllers
                            specification = p.specification,
                            department = DP.name_Department == null ? "" : DP.name_Department,
                            measurment = DW.name_para == null ? "" : DW.name_para,
+                           address = AD.name_para == null ? "" : AD.name_para,
                            code128=ean13.code128,
                            path_qrcode=ean13.path_qrcode_img
                        };
@@ -420,9 +423,8 @@ namespace FAMIS.Controllers
                     if (item.code128 != null && item.code128 != "")
                     {
                         String str_ean13 = item.code128;
-                        String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification+"\r\n使用部门："+item.department+"\r\n计量单位："+item.measurment;
+                        String info_Asset = "资产名称：" + item.name_Asset + "\r\n" + "资产编号：" + item.serial_number + "\r\n资产型号：" + item.specification + "\r\n使用部门：" + item.department + "\r\n存放地点：" + item.address;
                         return createBitmapQrcode(str_ean13,info_Asset);
-                      
                     }
                     return null;
                 }
@@ -475,11 +477,11 @@ namespace FAMIS.Controllers
                 {
                     item.ID_Asset = null;
                     //删除相应的文件
-                    String filepath = AppDomain.CurrentDomain.BaseDirectory + item.path_qrcode_img;
-                    if (item.path_qrcode_img!=null&&item.path_qrcode_img.Trim()!=""&&System.IO.File.Exists(filepath))
-                    {
-                        System.IO.File.Delete(filepath);
-                    }
+                    //String filepath = AppDomain.CurrentDomain.BaseDirectory + item.path_qrcode_img;
+                    //if (item.path_qrcode_img!=null&&item.path_qrcode_img.Trim()!=""&&System.IO.File.Exists(filepath))
+                    //{
+                    //    //System.IO.File.Delete(filepath);
+                    //}
                 }
                 //要不要将记录也删掉？
                 //DB_C.tb_Asset_code128.RemoveRange(data);

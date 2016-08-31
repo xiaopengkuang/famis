@@ -495,6 +495,7 @@ namespace FAMIS.Controllers
                     {
                         item.state_list = commonConversion.getStateListID(Json_data.id_state);
                         item.content_repairState = Json_data.review;
+                        item.date_create = DateTime.Now;
                     }
                     DB_C.SaveChanges();
                     //获取

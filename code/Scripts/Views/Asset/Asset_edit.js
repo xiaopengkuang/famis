@@ -130,6 +130,13 @@ function bindData(id)
                 load_sub_picture(datagrid_picture, ID_Asset_Current);
                 load_sub_equiment(datagrid_equipment,ID_Asset_Current);
                 //延迟加载
+                //加载历史操作记录记录
+                if (data.operations)
+                {
+                    //alert(data.operations.length);
+                    fillOperationHistory(data.operations);
+                }
+
 
             } else {
             }
@@ -137,6 +144,96 @@ function bindData(id)
     });
     clearTimeout(timeID);
 }
+
+
+function fillOperationHistory(HisInfo)
+{
+    var DIV_HISOP = document.getElementById("History_oprateing");
+
+    $("#History_oprateing").empty();
+    var tb_HIS = document.createElement("table");
+    for (var i = 0; i < HisInfo.length; i++)
+    {
+        var tr1 = document.createElement("tr");
+        var tr2 = document.createElement("tr");
+        var tr3 = document.createElement("tr");
+        var tr4 = document.createElement("tr");
+        var tr5 = document.createElement("tr");
+        
+        var td1 = document.createElement("td");
+        var td2 = document.createElement("td");
+        var td3 = document.createElement("td");
+        var td4 = document.createElement("td");
+        var td5 = document.createElement("td");
+
+
+
+        var td6 = document.createElement("td");
+        var td7 = document.createElement("td");
+        var td8 = document.createElement("td");
+        var td9 = document.createElement("td");
+
+
+        var opeName = document.createElement("label");
+
+       
+        //opeName.innerHTML = HisInfo[i].OperateName;
+        opeName.innerHTML = " <span style='color:#F00'>" + HisInfo[i].OperateName + "</span> ";
+
+        var opeUserPRE = document.createElement("label");
+        opeUserPRE.innerHTML = "操作用户：";
+
+        var opeUser = document.createElement("label");
+        opeUser.innerHTML = HisInfo[i].OperateUser;
+        opeUser.innerHTML = " <span style='color:#F00'>" + HisInfo[i].OperateUser + "</span> ";
+
+        var brF = document.createElement("br");
+        var opeTimeType = document.createElement("label");
+        opeTimeType.innerHTML = HisInfo[i].OperateTime_Type+":";
+
+        var opeTime = document.createElement("label");
+        opeTime.innerHTML = dateString(HisInfo[i].OperateTime);
+
+
+
+        var opeSerialNumPRE = document.createElement("label");
+        opeSerialNumPRE.innerHTML = "单据号：";
+
+        var opeSerialNum = document.createElement("label");
+        opeSerialNum.innerHTML = " <span style='color:#F00'>" + HisInfo[i].serialNum + "</span> ";
+
+
+        td1.appendChild(opeName);
+        td2.appendChild(opeUserPRE);
+        td3.appendChild(opeUser);
+        td4.appendChild(opeTimeType);
+        td5.appendChild(opeTime);
+
+        td8.appendChild(opeSerialNumPRE);
+        td9.appendChild(opeSerialNum);
+
+        tr1.appendChild(td1);
+        tr1.appendChild(td2);
+        tr1.appendChild(td3);
+        tr2.appendChild(td4);
+        tr2.appendChild(td5);
+
+        tr3.appendChild(td8);
+        tr3.appendChild(td9);
+        tr4.appendChild(td7);
+        tr4.appendChild(td6);
+
+        tb_HIS.appendChild(tr1);
+        tb_HIS.appendChild(tr2);
+        tb_HIS.appendChild(tr3);
+        tb_HIS.appendChild(tr4);
+        tb_HIS.appendChild(tr5);
+    }
+    DIV_HISOP.appendChild(tb_HIS);
+}
+
+
+
 
 function load_ZCLB_add() {
     $('#ZCLB_add').combotree

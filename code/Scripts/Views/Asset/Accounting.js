@@ -220,7 +220,7 @@ function LoadInitData_Detail() {
                     { field: 'ID', checkbox: true, width: 50 },
                     { field: 'serial_number', title: '资产编号', width: 50 },
                     { field: 'name_Asset', title: '资产名称', width: 50 },
-                    { field: 'type_Asset', title: '资产类型', width: 50 },
+                    //{ field: 'type_Asset', title: '资产类型', width: 50 },
                     { field: 'specification', title: '型号规格', width: 50 },
                     {
                         field: 'unit_price', title: '单价', width: 50,

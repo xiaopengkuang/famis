@@ -215,14 +215,14 @@ namespace FAMIS.Controllers
         /// <param name="exportFlag"></param>
         /// <returns></returns>
         [HttpPost]
-        public String LoadAssets(int? page, int? rows, int tableType, String searchCondtiion, bool? exportFlag)
+        public JsonResult LoadAssets(int? page, int? rows, int tableType, String searchCondtiion, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
 
             int? role=commonConversion.getRoleID();
 
-            String result = "";
+            JsonResult result = NULL_dataGrid();
              JavaScriptSerializer serializer = new JavaScriptSerializer();
             dto_SC_Asset dto_condition = null;
             if (searchCondtiion != null)
@@ -255,11 +255,11 @@ namespace FAMIS.Controllers
         /// <param name="dataType"></param>
         /// <param name="exportFlag"></param>
         /// <returns></returns>
-        public String loadAsset_By_Type(int? page, int? rows, int? role, dto_SC_Asset dto_condition, List<int> selectedIDs, int dataType, bool? exportFlag)
+        public JsonResult loadAsset_By_Type(int? page, int? rows, int? role, dto_SC_Asset dto_condition, List<int> selectedIDs, int dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
-            String json = "";
+            JsonResult json = NULL_dataGrid();
 
             JavaScriptSerializer jss = new JavaScriptSerializer();
            
@@ -300,7 +300,7 @@ namespace FAMIS.Controllers
         /// <param name="dataType"></param>
         /// <param name="exportFlag"></param>
         /// <returns></returns>
-        public String loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs, int? dataType, bool? exportFlag)
+        public JsonResult loadAssetByLikeCondition(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs, int? dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -453,9 +453,9 @@ namespace FAMIS.Controllers
                     data = data.OrderByDescending(a => a.Time_Operated);
                     if (exportFlag != null && exportFlag == true)
                     {
-                        //return Json(data, JsonRequestBehavior.AllowGet);
-                        String json_result = jss.Serialize(data).ToString().Replace("\\", "");
-                        return json_result;
+                        return Json(data, JsonRequestBehavior.AllowGet);
+                        //String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                        //return json_result;
                     }
                     int skipindex = ((int)page - 1) * (int)rows;
                     int rowsNeed = (int)rows;
@@ -464,10 +464,10 @@ namespace FAMIS.Controllers
                         rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                         //rows = data.ToList().ToArray()
                     };
-                    String result = jss.Serialize(json).ToString().Replace("\\", "");
-                    return result;
+                    //String result = jss.Serialize(json).ToString().Replace("\\", "");
+                    //return result;
 
-                    //return Json(json, JsonRequestBehavior.AllowGet);
+                    return Json(json, JsonRequestBehavior.AllowGet);
                 };break;
                 case SystemConfig.tableType_summary:{
                                //在进行数据绑定
@@ -502,9 +502,9 @@ namespace FAMIS.Controllers
                         data = data.OrderByDescending(a => a.AssetName);
                         if (exportFlag != null && exportFlag == true)
                         {
-                            //return Json(data, JsonRequestBehavior.AllowGet); 
-                            String json_result = jss.Serialize(data).ToString().Replace("\\", "");
-                            return json_result;
+                            return Json(data, JsonRequestBehavior.AllowGet); 
+                            //String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                            //return json_result;
                         }
                         int skipindex = ((int)page - 1) * (int)rows;
                         int rowsNeed = (int)rows;
@@ -514,13 +514,13 @@ namespace FAMIS.Controllers
                             rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                             //rows = data.ToList().ToArray()
                         };
-                        //return Json(json, JsonRequestBehavior.AllowGet);
-                        String result = jss.Serialize(json).ToString().Replace("\\", "");
-                        return result;
+                        return Json(json, JsonRequestBehavior.AllowGet);
+                        //String result = jss.Serialize(json).ToString().Replace("\\", "");
+                        //return result;
                 };break;
                 default:{
-                    //return NULL_dataGrid();
-                    return NULL_dataGridSTring();
+                    return NULL_dataGrid();
+                    //return NULL_dataGridSTring();
                 };break;
             }
 
@@ -536,7 +536,7 @@ namespace FAMIS.Controllers
         /// <param name="idsRight_deparment"></param>
         /// <param name="idsRight_assetType"></param>
         /// <returns></returns>
-        public String loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs, int? dataType, bool? exportFlag)
+        public JsonResult  loadAssetByDataDict(int? page, int? rows, int? role, dto_SC_Asset cond, List<int?> idsRight_deparment, List<int?> idsRight_assetType, List<int> selectedIDs, int? dataType, bool? exportFlag)
         {
             page = page == null ? 1 : page;
             rows = rows == null ? 15 : rows;
@@ -560,8 +560,8 @@ namespace FAMIS.Controllers
                 nameFlag = item.nameFlag;
             }
             if (nameFlag==null){
-                //return NULL_dataGrid();
-                return NULL_dataGridSTring();
+                return NULL_dataGrid();
+                //return NULL_dataGridSTring();
             }
             //获取原始数据
             var data_ORG = (from p in DB_C.tb_Asset
@@ -693,9 +693,9 @@ namespace FAMIS.Controllers
 
                     if (exportFlag != null && exportFlag == true)
                     {
-                        //return Json(data, JsonRequestBehavior.AllowGet);
-                        String json_result = jss.Serialize(data).ToString().Replace("\\", "");
-                        return json_result;
+                        return Json(data, JsonRequestBehavior.AllowGet);
+                        //String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                        //return json_result;
                     }
                     int skipindex = ((int)page - 1) * (int)rows;
                     int rowsNeed = (int)rows;
@@ -704,9 +704,9 @@ namespace FAMIS.Controllers
                         rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                         //rows = data.ToList().ToArray()
                     };
-                    //return Json(json, JsonRequestBehavior.AllowGet);
-                    String result = jss.Serialize(json).ToString().Replace("\\", "");
-                    return result;
+                    return Json(json, JsonRequestBehavior.AllowGet);
+                    //String result = jss.Serialize(json).ToString().Replace("\\", "");
+                    //return result;
                 };break;
                 case SystemConfig.tableType_summary:{
                                //在进行数据绑定
@@ -740,9 +740,9 @@ namespace FAMIS.Controllers
                                   }).Distinct();
                        if (exportFlag != null && exportFlag == true)
                        {
-                           //return Json(data, JsonRequestBehavior.AllowGet);
-                           String json_result = jss.Serialize(data).ToString().Replace("\\", "");
-                           return json_result;
+                           return Json(data, JsonRequestBehavior.AllowGet);
+                           //String json_result = jss.Serialize(data).ToString().Replace("\\", "");
+                           //return json_result;
                        }
                         data = data.OrderByDescending(a => a.AssetName);
                         int skipindex = ((int)page - 1) * (int)rows;
@@ -753,13 +753,13 @@ namespace FAMIS.Controllers
                             rows = data.Skip(skipindex).Take(rowsNeed).ToList().ToArray()
                             //rows = data.ToList().ToArray()
                         };
-                        //return Json(json, JsonRequestBehavior.AllowGet);
-                        String result = jss.Serialize(json).ToString().Replace("\\", "");
-                        return result;
+                        return Json(json, JsonRequestBehavior.AllowGet);
+                        //String result = jss.Serialize(json).ToString().Replace("\\", "");
+                        //return result;
                 };break;
                 default:{
-                    //return NULL_dataGrid();
-                    return NULL_dataGridSTring(); ;
+                    return NULL_dataGrid();
+                    //return NULL_dataGridSTring(); ;
                 };break;
             }
         }
@@ -852,6 +852,7 @@ namespace FAMIS.Controllers
                     dto_aa.OperateTime =DateTime.Now;
                     tb_Asset newItem = JTM.ConverJsonToTable(dto_aa);
                     newItem.state_asset = commonConversion.getStateIDByName(SystemConfig.state_asset_free);
+                    newItem.user_add = commonConversion.getUSERID();
                     if(dto_aa.code_oldSYS==null||dto_aa.code_oldSYS=="")
                     {
                         newItem.code_OLDSYS=serailNums[i].ToString().Trim();
@@ -1244,12 +1245,259 @@ namespace FAMIS.Controllers
                                  };
 
                 result.cattrs = data_CAttr.ToList();
+                result.operations = getOperation_HISTORY(id);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else {
                 return null;
             }
         }
+
+        //获取历史操作记录
+        public List<Json_Asset_History_Operate> getOperation_HISTORY(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> result = new List<Json_Asset_History_Operate>();
+
+            result.AddRange(getOperation_Asset(id_asset));
+            List<Json_Asset_History_Operate> tempList = new List<Json_Asset_History_Operate>();
+            tempList.AddRange(getOperation_Collar(id_asset));
+            tempList.AddRange(getOperation_Allocation(id_asset));
+            tempList.AddRange(getOperation_Borrow(id_asset));
+            tempList.AddRange(getOperation_Reduction(id_asset));
+            tempList.AddRange(getOperation_Repair(id_asset));
+            tempList.AddRange(getOperation_Return(id_asset));
+            tempList.OrderBy(a => a.OperateTime);
+            var data = from item in tempList
+                       orderby item.OperateTime
+                       select item;
+
+            result.AddRange(data.ToList());
+            return result;
+        }
+
+
+
+        public List<Json_Asset_History_Operate> getOperation_Asset(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> list = new List<Json_Asset_History_Operate>();
+            var data = from p in DB_C.tb_Asset
+                       where p.flag == true
+                       where p.ID == id_asset
+                       join us in DB_C.tb_user on p.user_add equals us.ID into temp_us
+                       from us_tb in temp_us.DefaultIfEmpty()
+                       select new {
+                       userName=us_tb.true_Name,
+                       serialNum=p.serial_number,
+                       timeOP=p.Time_add
+                       };
+            foreach (var item in data)
+            {
+                Json_Asset_History_Operate his = new Json_Asset_History_Operate();
+                his.OperateName = "新增资产";
+                his.OperateUser = item.userName==null?"":item.userName;
+                his.OperateTime_Type = "最近操作时间";
+                his.serialNum = item.serialNum;
+                his.OperateTime = item.timeOP;
+                list.Add(his);
+            }
+            return list;
+        }
+
+
+        public List<Json_Asset_History_Operate> getOperation_Collar(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> list = new List<Json_Asset_History_Operate>();
+            var data = from p in DB_C.tb_Asset_collar_detail
+                       where p.flag == true
+                       where p.ID_asset == id_asset
+                      join  co in DB_C.tb_Asset_collar on p.ID_collar equals co.ID
+                      join stl in DB_C.tb_State_List on co.state_List equals stl.id
+                       where stl.Name == SystemConfig.state_List_YSH
+                       join us in DB_C.tb_user on co._operator equals us.ID into temp_us
+                       from us_tb in temp_us.DefaultIfEmpty()
+                       select new
+                       {
+                           userName = us_tb.true_Name,
+                           serialNum = co.serial_number,
+                           timeOP = co.date
+                       };
+            foreach (var item in data)
+            {
+                Json_Asset_History_Operate his = new Json_Asset_History_Operate();
+                his.OperateName = "资产领用";
+                his.OperateUser = item.userName == null ? "" : item.userName;
+                his.OperateTime_Type = "领用时间";
+                his.serialNum = item.serialNum;
+                his.OperateTime = item.timeOP;
+                list.Add(his);
+            }
+            return list;
+        }
+
+
+        public List<Json_Asset_History_Operate> getOperation_Allocation(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> list = new List<Json_Asset_History_Operate>();
+            var data = from p in DB_C.tb_Asset_allocation_detail
+                       where p.flag == true
+                       where p.ID_asset == id_asset
+                       join allo in DB_C.tb_Asset_allocation on p.ID_allocation equals allo.ID
+                       join stl in DB_C.tb_State_List on allo.state_List equals stl.id
+                       where stl.Name == SystemConfig.state_List_YSH
+                       join us in DB_C.tb_user on allo._operator equals us.ID into temp_us
+                       from us_tb in temp_us.DefaultIfEmpty()
+                       select new
+                       {
+                           userName = us_tb.true_Name,
+                           serialNum = allo.serial_number,
+                           timeOP = allo.date
+                       };
+            foreach (var item in data)
+            {
+                Json_Asset_History_Operate his = new Json_Asset_History_Operate();
+                his.OperateName = "资产调拨";
+                his.OperateUser = item.userName == null ? "" : item.userName;
+                his.OperateTime_Type = "调拨时间";
+                his.serialNum = item.serialNum;
+                his.OperateTime = item.timeOP;
+                list.Add(his);
+            }
+            return list;
+        }
+
+
+        public List<Json_Asset_History_Operate> getOperation_Reduction(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> list = new List<Json_Asset_History_Operate>();
+            var data = from p in DB_C.tb_Asset_Reduction_detail
+                       where p.flag == true
+                       where p.ID_Asset == id_asset
+                       join list_tb in DB_C.tb_Asset_Reduction on p.ID_reduction equals list_tb.ID
+                       join stl in DB_C.tb_State_List on list_tb.state_List equals stl.id
+                       where stl.Name == SystemConfig.state_List_YSH
+                       join us in DB_C.tb_user on list_tb.userID_operate equals us.ID into temp_us
+                       from us_tb in temp_us.DefaultIfEmpty()
+                       select new
+                       {
+                           userName = us_tb.true_Name,
+                           serialNum = list_tb.Serial_number,
+                           timeOP = list_tb.date_reduction
+                       };
+            foreach (var item in data)
+            {
+                Json_Asset_History_Operate his = new Json_Asset_History_Operate();
+                his.OperateName = "资产减少";
+                his.OperateUser = item.userName == null ? "" : item.userName;
+                his.OperateTime_Type = "减少时间";
+                his.serialNum = item.serialNum;
+                his.OperateTime = item.timeOP;
+                list.Add(his);
+            }
+            return list;
+        }
+
+
+        public List<Json_Asset_History_Operate> getOperation_Borrow(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> list = new List<Json_Asset_History_Operate>();
+            var data = from p in DB_C.tb_Asset_Borrow_detail
+                       where p.flag == true
+                       where p.ID_Asset == id_asset
+                       join list_tb in DB_C.tb_Asset_Borrow on p.ID_borrow equals list_tb.ID
+                       join stl in DB_C.tb_State_List on list_tb.state_list equals stl.id
+                       where stl.Name == SystemConfig.state_List_YSH
+                       join us in DB_C.tb_user on list_tb.userID_operated equals us.ID into temp_us
+                       from us_tb in temp_us.DefaultIfEmpty()
+                       select new
+                       {
+                           userName = us_tb.true_Name,
+                           serialNum = list_tb.serialNum,
+                           timeOP = list_tb.date_borrow
+                       };
+            foreach (var item in data)
+            {
+                Json_Asset_History_Operate his = new Json_Asset_History_Operate();
+                his.OperateName = "资产减少";
+                his.OperateUser = item.userName == null ? "" : item.userName;
+                his.OperateTime_Type = "减少时间";
+                his.serialNum = item.serialNum;
+                his.OperateTime = item.timeOP;
+                list.Add(his);
+            }
+            return list;
+        }
+
+        public List<Json_Asset_History_Operate> getOperation_Return(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> list = new List<Json_Asset_History_Operate>();
+            var data = from p in DB_C.tb_Asset_Return_detail
+                       where p.flag == true
+                       where p.ID_Asset == id_asset
+                       join list_tb in DB_C.tb_Asset_Return on p.ID_Return equals list_tb.ID
+                       join stl in DB_C.tb_State_List on list_tb.state_list equals stl.id
+                       where stl.Name == SystemConfig.state_List_YSH
+                       join us in DB_C.tb_user on list_tb.userID_operated equals us.ID into temp_us
+                       from us_tb in temp_us.DefaultIfEmpty()
+                       select new
+                       {
+                           userName = us_tb.true_Name,
+                           serialNum = list_tb.serialNum,
+                           timeOP = list_tb.date_return
+                       };
+            foreach (var item in data)
+            {
+                Json_Asset_History_Operate his = new Json_Asset_History_Operate();
+                his.OperateName = "资产归还";
+                his.OperateUser = item.userName == null ? "" : item.userName;
+                his.OperateTime_Type = "归还时间";
+                his.serialNum = item.serialNum;
+                his.OperateTime = item.timeOP;
+                list.Add(his);
+            }
+            return list;
+        }
+
+        public List<Json_Asset_History_Operate> getOperation_Repair(int? id_asset)
+        {
+            List<Json_Asset_History_Operate> list = new List<Json_Asset_History_Operate>();
+            var data = from p in DB_C.tb_Asset_Repair
+                       where p.flag == true
+                       where p.ID_Asset == id_asset
+                       join stl in DB_C.tb_State_List on p.state_list equals stl.id
+                       where stl.Name == SystemConfig.state_List_YSH ||stl.Name ==SystemConfig.state_List_YGH
+                       join us in DB_C.tb_user on p.userID_create equals us.ID into temp_us
+                       from us_tb in temp_us.DefaultIfEmpty()
+                       select new
+                       {
+                           userName = us_tb.true_Name,
+                           serialNum = p.serialNumber,
+                           timeOP = p.date_ToRepair,
+                           stName=stl.Name
+                       };
+            foreach (var item in data)
+            {
+                Json_Asset_History_Operate his = new Json_Asset_History_Operate();
+                his.OperateName = "资产维修";
+                his.OperateUser = item.userName == null ? "" : item.userName;
+                if (item.stName == SystemConfig.state_List_YGH)
+                {
+                    his.OperateTime_Type = "送修时间(已归还)";
+                }
+                else {
+                    his.OperateTime_Type = "送修时间";
+                }
+                his.serialNum = item.serialNum;
+                his.OperateTime = item.timeOP;
+                list.Add(his);
+            }
+            return list;
+        }
+
+
+
+
+
+
 
 
 
@@ -1774,15 +2022,16 @@ namespace FAMIS.Controllers
                 resultInfo = "<script>alert('no asset!')</script>";
                 return;
             }
+            String TimePre = DateTime.Now.ToString("yyyyMMddhhmmssfff");
             if (FileCollect.Count > 0)
             {
-                fileSavedPath = upSingleFile(FileCollect[0], name);
+                fileSavedPath = upSingleFile(FileCollect[0], TimePre);
             }
-            if (fileSavedPath==name)
+            if (fileSavedPath == TimePre)
             {
 
                 //保存为相对路径
-                fileSavedPath = SystemConfig.FOLDER_DOCU_ASSET_SUB + System.IO.Path.GetFileName(FileCollect[0].FileName);
+                fileSavedPath = SystemConfig.FOLDER_DOCU_ASSET_SUB +TimePre+"_"+ System.IO.Path.GetFileName(FileCollect[0].FileName);
                 //fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
                 //保存数据
                 tb_Asset_sub_document newItem = new tb_Asset_sub_document();
@@ -2021,15 +2270,16 @@ namespace FAMIS.Controllers
                  resultInfo = "<script>alert('no asset!')</script>";
                  return;
              }
+             String TimePre = DateTime.Now.ToString("yyyyMMddhhmmssfff");
              if (FileCollect.Count > 0)
              {
-                 fileSavedPath = upSinglePicture(FileCollect[0], name);
+                 fileSavedPath = upSinglePicture(FileCollect[0], TimePre);
              }
-             if (fileSavedPath == name)
+             if (fileSavedPath == TimePre)
              {
                  //保存相对路径
                  //fileSavedPath = System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + System.IO.Path.GetFileName(FileCollect[0].FileName);
-                 fileSavedPath = SystemConfig.FOLDER_IMAGE_ASSET_SUB + System.IO.Path.GetFileName(FileCollect[0].FileName);
+                 fileSavedPath = SystemConfig.FOLDER_IMAGE_ASSET_SUB +TimePre+"_"+ System.IO.Path.GetFileName(FileCollect[0].FileName);
                  //保存数据
                  tb_Asset_sub_picture newItem = new tb_Asset_sub_picture();
                  newItem.date_add = DateTime.Now;
@@ -2119,13 +2369,13 @@ namespace FAMIS.Controllers
         /// <param name="file"></param>
         /// <param name="theFileName"></param>
         /// <returns></returns>
-        private string upSingleFile(HttpPostedFile file, String theFileName)
+        private string upSingleFile(HttpPostedFile file, String theFileName_TimePre)
         {
             string infos = "";
             bool fileOK = false;
             string fileName, fileExtension ;
-            fileName = System.IO.Path.GetFileName(file.FileName);
-            if (fileName != "")
+            fileName = theFileName_TimePre+"_"+System.IO.Path.GetFileName(file.FileName);
+            if (fileName != ""&&fileName!=(theFileName_TimePre+"_"))
             {
                 if (file.ContentLength >= 1024 * 1024 * 100)
                 {
@@ -2150,7 +2400,7 @@ namespace FAMIS.Controllers
                         else
                         {
                             file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_DOCU_ASSET_SUB) + fileName);
-                            infos = theFileName;
+                            infos = theFileName_TimePre;
                         }
                 }
             }
@@ -2165,13 +2415,13 @@ namespace FAMIS.Controllers
 
 
         //上次单个图片
-        private string upSinglePicture(HttpPostedFile file, String theFileName)
+        private string upSinglePicture(HttpPostedFile file, String theFileName_TimePre)
         {
             string infos = "";
             bool fileOK = false;
             string fileName, fileExtension;
-            fileName = System.IO.Path.GetFileName(file.FileName);
-            if (fileName != "")
+            fileName =theFileName_TimePre+"_"+ System.IO.Path.GetFileName(file.FileName);
+            if (fileName != "" && fileName != (theFileName_TimePre + "_"))
             {
                 if (file.ContentLength >= 1024 * 1024 * 100)
                 {
@@ -2196,7 +2446,7 @@ namespace FAMIS.Controllers
                     else
                     {
                         file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_IMAGE_ASSET_SUB) + fileName);
-                        infos = theFileName;
+                        infos = theFileName_TimePre;
                     }
                 }
             }

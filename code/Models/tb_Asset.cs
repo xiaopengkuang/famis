@@ -68,5 +68,7 @@ namespace FAMIS.Models
 
         [StringLength(50)]
         public string code_OLDSYS { get; set; }
+
+        public int? user_add { get; set; }
     }
 }
