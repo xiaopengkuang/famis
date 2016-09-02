@@ -1796,7 +1796,7 @@ namespace FAMIS.Controllers
                         }
                     }
                 }
-                Directory.Delete(path);
+                //Directory.Delete(path);
 
                 return true;
             }
@@ -2071,11 +2071,14 @@ namespace FAMIS.Controllers
              HttpFileCollection FileCollect = System.Web.HttpContext.Current.Request.Files;
              if (FileCollect.Count > 0)
              {
-                 String fileName =Server.MapPath(SystemConfig.FOLDER_Download_TEMP)+ System.IO.Path.GetFileName(FileCollect[0].FileName);
+                 if (!Directory.Exists(Server.MapPath(SystemConfig.FOLDER_Download_TEMP)))
+                 {
+                        Directory.CreateDirectory(Server.MapPath(SystemConfig.FOLDER_Download_TEMP));
+                 }
+                 String fileName =Server.MapPath(SystemConfig.FOLDER_Download_TEMP)+DateTime.Now.ToString("yyyyMMddhhmmssfff")+"_"+ System.IO.Path.GetFileName(FileCollect[0].FileName);
                  String filePath=uploadTempFile(FileCollect[0], fileName);
                  if (System.IO.File.Exists(filePath))
                  {
-
                      Excel_Helper excelHelper = new Excel_Helper();
                      DataTable tb_asset_excel = excelHelper.ImportExcelFile(filePath);
                      HashSet<String> columns = new HashSet<string>();
@@ -2136,7 +2139,7 @@ namespace FAMIS.Controllers
                              Directory.CreateDirectory(Server.MapPath(SystemConfig.FOLDER_Download_TEMP));
                          }
 
-                         file.SaveAs(System.Web.HttpContext.Current.Request.MapPath(SystemConfig.FOLDER_Download_TEMP) + fileName);
+                         file.SaveAs(FileName);
                          infos = FileName;
                      }
                  }

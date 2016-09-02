@@ -260,6 +260,7 @@ namespace FAMIS.DataConversion
                 //    tb.note = null;
                 //}
 
+                tb.user_add = comCVT.getUSERID();
                 DB_C.tb_Asset.Add(tb);
                 DB_C.SaveChanges();
                 //获取ID
