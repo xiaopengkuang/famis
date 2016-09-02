@@ -1113,7 +1113,7 @@ namespace FAMIS.Controllers
                         }
                     }
                 }
-                Directory.Delete(path);
+                //Directory.Delete(path);
 
                 return true;
             }
