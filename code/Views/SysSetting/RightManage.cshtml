@@ -75,7 +75,7 @@
                 var fnodes = $('#lefttree').tree('getChecked', 'indeterminate');
                 var nodes = $('#lefttree').tree('getChecked');
                 var s = "";
-
+              //  alert("1: " + fnodes.length);
                 for (var i = 0; i < fnodes.length; i++) {
                    
                   
@@ -94,8 +94,7 @@
                     var JS_Data = RoleID;
                 else
                     var JS_Data = RoleID + "o" + s;//这个地方先不用公共方法获取roleid,因为想在测试的时候可以在不登录的情况下更改角色权限。
-              //  alert(JS_Data);
-
+                  // alert("菜单 "+JS_Data);
                 $.ajax({
 
                     type: "post",
@@ -118,14 +117,15 @@
 
             }
             function submitATdata() {
-                var fnodes = $('#rightttree').tree('getChecked', 'indeterminate');
+                var fnodes = $('#righttree').tree('getChecked', 'indeterminate');
                 var nodes = $('#righttree').tree('getChecked');
                 var s = "";
 
+               // alert("2: "+ fnodes.length);
                for (var i = 0; i < fnodes.length; i++) {
                     //if (s != '') s += ',';
                    
-                   
+                 //  alert(fnodes[i].id);
                         s +=  fnodes[i].id + ",";
                 }
                 for (var i = 0; i < nodes.length; i++) {
@@ -141,7 +141,7 @@
                     var JS_Data = RoleID;
                 else
                     var JS_Data = RoleID + "," + s;
-                //alert(JS_Data);
+               // alert("资产类别 "+JS_Data);
 
                 $.ajax({
 
@@ -169,7 +169,7 @@
                 var fnodes = $('#mtree').tree('getChecked', 'indeterminate'); 
                 var nodes = $('#mtree').tree('getChecked');
                 var s = "";
-
+               // alert("3: " + fnodes.length);
               for (var i = 0; i < fnodes.length; i++) {
                  
                   
@@ -192,7 +192,7 @@
                 else
                     var JS_Data = RoleID + "," + s;
 
-               //alert(JS_Data);
+                //alert("部门 " + JS_Data);
                 $.ajax({
 
                     type: "post",
